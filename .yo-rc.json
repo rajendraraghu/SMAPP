@@ -1,0 +1,40 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.canny.snowflakemigration",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "6.1.2",
+    "applicationType": "monolith",
+    "baseName": "snowpole",
+    "packageName": "com.canny.snowflakemigration",
+    "packageFolder": "com/canny/snowflakemigration",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "ZmQyNDkzZmRlOWM0YjYwYWY3ZTBkOGE0OWFmYWI5MjM4ZDE1MTVkOWZhMmE0ZTdkODQ3YzBlYzlhMWJhYTM3ZDZkMDQ4OGVhYmY4Zjc5OWVjOGRhY2Y3MTc3YmM3ODViMmM1OGI5ZGZlOGVjYTAwNDg5ODg5YzI4ZDAyN2JlMWU=",
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "superhero",
+    "clientThemeVariant": "dark",
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "nativeLanguage": "en",
+    "languages": ["en", "zh-cn", "fr", "de", "ja"]
+  }
+}
