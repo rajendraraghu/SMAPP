@@ -46,9 +46,23 @@ Logo styles
 ========================================================================== */
 .logo-img {
   height: 45px;
-  width: 45px;
+  // width: 45px;
+  width: -webkit-fill-available;
   display: inline-block;
   vertical-align: middle;
-  background: url('../../../content/images/logo-jhipster.png') no-repeat center center;
+  // background: url('../../../content/images/logo-jhipster.png') no-repeat center center;
+  background: url('../../../content/images/canny-logo.svg') no-repeat center center;
   background-size: contain;
+}
+
+.navbar-fixed-top {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+}
+
+.navbar-fixed-top {
+  top: 0;
+  border-width: 0 0 1px;
 }
