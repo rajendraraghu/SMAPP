@@ -1,0 +1,34 @@
+{
+  "snowpoleApp": {
+    "sourceConnection": {
+      "home": {
+        "title": "Source Connections",
+        "createLabel": "Source Connection erstellen",
+        "createOrEditLabel": "Source Connection erstellen oder bearbeiten",
+        "notFound": "No Source Connection found"
+      },
+      "created": "Source Connection erstellt mit ID {{ param }}",
+      "updated": "Source Connection aktualisiert mit ID {{ param }}",
+      "deleted": "Source Connection gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Source Connection {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Source Connection"
+      },
+      "name": "Name",
+      "description": "Description",
+      "system": "System",
+      "url": "Url",
+      "username": "Username",
+      "password": "Password",
+      "database": "Database",
+      "schema": "Schema",
+      "valid": "Valid",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date"
+    }
+  }
+}

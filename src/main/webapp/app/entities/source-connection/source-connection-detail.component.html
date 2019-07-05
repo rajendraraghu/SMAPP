@@ -1,0 +1,75 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="sourceConnection">
+            <h2><span jhiTranslate="snowpoleApp.sourceConnection.detail.title">Source Connection</span> {{sourceConnection.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="snowpoleApp.sourceConnection.name">Name</span></dt>
+                <dd>
+                    <span>{{sourceConnection.name}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.sourceConnection.description">Description</span></dt>
+                <dd>
+                    <span>{{sourceConnection.description}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.sourceConnection.system">System</span></dt>
+                <dd>
+                    <span>{{sourceConnection.system}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.sourceConnection.url">Url</span></dt>
+                <dd>
+                    <span>{{sourceConnection.url}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.sourceConnection.username">Username</span></dt>
+                <dd>
+                    <span>{{sourceConnection.username}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.sourceConnection.password">Password</span></dt>
+                <dd>
+                    <span>{{sourceConnection.password}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.sourceConnection.database">Database</span></dt>
+                <dd>
+                    <span>{{sourceConnection.database}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.sourceConnection.schema">Schema</span></dt>
+                <dd>
+                    <span>{{sourceConnection.schema}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.sourceConnection.valid">Valid</span></dt>
+                <dd>
+                    <span>{{sourceConnection.valid}}</span>
+                </dd>
+                <!-- <dt><span jhiTranslate="snowpoleApp.sourceConnection.createdBy">Created By</span></dt>
+                <dd>
+                    <span>{{sourceConnection.createdBy}}</span>
+                </dd> -->
+                <dt><span jhiTranslate="snowpoleApp.sourceConnection.createdDate">Created Date</span></dt>
+                <dd>
+                    <span>{{sourceConnection.createdDate}}</span>
+                </dd>
+                <!-- <dt><span jhiTranslate="snowpoleApp.sourceConnection.lastModifiedBy">Last Modified By</span></dt>
+                <dd>
+                    <span>{{sourceConnection.lastModifiedBy}}</span>
+                </dd> -->
+                <dt><span jhiTranslate="snowpoleApp.sourceConnection.lastModifiedDate">Last Modified Date</span></dt>
+                <dd>
+                    <span>{{sourceConnection.lastModifiedDate}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/source-connection', sourceConnection.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
