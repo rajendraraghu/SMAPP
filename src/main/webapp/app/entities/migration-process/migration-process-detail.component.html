@@ -70,4 +70,22 @@
             </button>
         </div>
     </div>
+    <div class="col-4">
+        <fieldset>
+            <legend>Select the tables to be migrated</legend>
+            <div class="form-group has-search">
+                <fa-icon class="form-control-feedback" [icon]="'search'"></fa-icon>
+                <input type="text" class="form-control" placeholder="Search for tables" (input)="searchForTables($event.target.value)">
+            </div>
+            <div class="form-group" style="height: 40vh; overflow-y: auto;">
+                <div class="custom-control custom-checkbox" *ngFor="let item of tables; let i=index">
+                    <input type="checkbox" class="custom-control-input" [id]="i" [checked]="isChecked(item)" (change)="onSelectionChange(item)">
+                    <label class="custom-control-label" [for]="i">{{item}}</label>
+                </div>
+            </div>
+        </fieldset>
+        <button type="button" class="btn btn-primary" (click)="testAndMigrate()">
+            <fa-icon [icon]="'tasks'"></fa-icon>&nbsp;<span> Test & Migrate</span>
+        </button>
+    </div>
 </div>

@@ -27,6 +27,11 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
+import java.util.Arrays;
+import java.sql.SQLException;
+
+import static com.canny.snowflakemigration.service.util.listTables.listTable;
 
 /**
  * REST controller for managing {@link com.canny.snowflakemigration.domain.MigrationProcess}.
@@ -145,4 +150,11 @@ public class MigrationProcessResource {
         migrationProcessService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
+
+    @PostMapping(value = "/migration-processes/retrieveTableList")
+    public @ResponseBody String[] listTables(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO) throws SQLException,ClassNotFoundException {
+        String[] tableName = listTable(migrationProcessDTO);
+        return tableName;
+    }
+
 }
