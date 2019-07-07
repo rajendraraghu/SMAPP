@@ -1,0 +1,73 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="migrationProcess">
+            <h2><span jhiTranslate="snowpoleApp.migrationProcess.detail.title">Migration Process</span> {{migrationProcess.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="snowpoleApp.migrationProcess.name">Name</span></dt>
+                <dd>
+                    <span>{{migrationProcess.name}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.migrationProcess.description">Description</span></dt>
+                <dd>
+                    <span>{{migrationProcess.description}}</span>
+                </dd>
+
+                <dt><span jhiTranslate="snowpoleApp.migrationProcess.sourceConnection">Source Connection</span></dt>
+                <dd>
+                    <div *ngIf="migrationProcess.sourceConnectionId">
+                        <a [routerLink]="['/source-connection', migrationProcess.sourceConnectionId, 'view']">{{migrationProcess.sourceConnectionName}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.migrationProcess.snowflakeConnection">Snowflake Connection</span></dt>
+                <dd>
+                    <div *ngIf="migrationProcess.snowflakeConnectionId">
+                        <a [routerLink]="['/snowflake-connection', migrationProcess.snowflakeConnectionId, 'view']">{{migrationProcess.snowflakeConnectionName}}</a>
+                    </div>
+                </dd>
+
+                <!-- <dt><span jhiTranslate="snowpoleApp.migrationProcess.type">Type</span></dt>
+                <dd>
+                    <span>{{migrationProcess.type}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.migrationProcess.tablesToMigrate">Tables To Migrate</span></dt>
+                <dd>
+                    <span>{{migrationProcess.tablesToMigrate}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.migrationProcess.lastStatus">Last Status</span></dt>
+                <dd>
+                    <span>{{migrationProcess.lastStatus}}</span>
+                </dd> -->
+                <!-- <dt><span jhiTranslate="snowpoleApp.migrationProcess.createdBy">Created By</span></dt>
+                <dd>
+                    <span>{{migrationProcess.createdBy}}</span>
+                </dd> -->
+                <dt><span jhiTranslate="snowpoleApp.migrationProcess.createdDate">Created Date</span></dt>
+                <dd>
+                    <span>{{migrationProcess.createdDate}}</span>
+                </dd>
+                <!-- <dt><span jhiTranslate="snowpoleApp.migrationProcess.lastModifiedBy">Last Modified By</span></dt>
+                <dd>
+                    <span>{{migrationProcess.lastModifiedBy}}</span>
+                </dd> -->
+                <dt><span jhiTranslate="snowpoleApp.migrationProcess.lastModifiedDate">Last Modified Date</span></dt>
+                <dd>
+                    <span>{{migrationProcess.lastModifiedDate}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/migration-process', migrationProcess.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

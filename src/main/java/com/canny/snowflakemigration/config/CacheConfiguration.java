@@ -45,6 +45,7 @@ public class CacheConfiguration {
             createCache(cm, com.canny.snowflakemigration.domain.User.class.getName() + ".authorities");
             createCache(cm, com.canny.snowflakemigration.domain.SourceConnection.class.getName());
             createCache(cm, com.canny.snowflakemigration.domain.SnowflakeConnection.class.getName());
+            createCache(cm, com.canny.snowflakemigration.domain.MigrationProcess.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

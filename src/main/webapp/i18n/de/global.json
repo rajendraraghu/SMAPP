@@ -9,6 +9,7 @@
         "main": "Entitäten",
         "sourceConnection": "Source Connection",
         "snowflakeConnection": "Snowflake Connection",
+        "migrationProcess": "Migration Process",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

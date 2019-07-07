@@ -11,6 +11,10 @@ import { RouterModule } from '@angular/router';
       {
         path: 'snowflake-connection',
         loadChildren: './snowflake-connection/snowflake-connection.module#SnowpoleSnowflakeConnectionModule'
+      },
+      {
+        path: 'migration-process',
+        loadChildren: './migration-process/migration-process.module#SnowpoleMigrationProcessModule'
       }
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ])

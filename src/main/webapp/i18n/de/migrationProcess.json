@@ -1,0 +1,32 @@
+{
+  "snowpoleApp": {
+    "migrationProcess": {
+      "home": {
+        "title": "Migration Processes",
+        "createLabel": "Migration Process erstellen",
+        "createOrEditLabel": "Migration Process erstellen oder bearbeiten",
+        "notFound": "No Migration Process found"
+      },
+      "created": "Migration Process erstellt mit ID {{ param }}",
+      "updated": "Migration Process aktualisiert mit ID {{ param }}",
+      "deleted": "Migration Process gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Migration Process {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Migration Process"
+      },
+      "name": "Name",
+      "description": "Description",
+      "type": "Type",
+      "tablesToMigrate": "Tables To Migrate",
+      "lastStatus": "Last Status",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
+      "sourceConnection": "Source Connection",
+      "snowflakeConnection": "Snowflake Connection"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "snowpoleApp": {
+    "migrationProcess": {
+      "home": {
+        "title": "Migration Processes",
+        "createLabel": "创建新 Migration Process",
+        "createOrEditLabel": "创建或编辑 Migration Process",
+        "notFound": "No Migration Process found"
+      },
+      "created": "Migration Process {{ param }} 创建成功",
+      "updated": "Migration Process {{ param }} 更新成功",
+      "deleted": "Migration Process {{ param }} 删除成功",
+      "delete": {
+        "question": "你确定要删除 Migration Process {{ id }} 吗？"
+      },
+      "detail": {
+        "title": "Migration Process"
+      },
+      "name": "Name",
+      "description": "Description",
+      "type": "Type",
+      "tablesToMigrate": "Tables To Migrate",
+      "lastStatus": "Last Status",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
+      "sourceConnection": "Source Connection",
+      "snowflakeConnection": "Snowflake Connection"
+    }
+  }
+}
