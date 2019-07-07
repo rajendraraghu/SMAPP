@@ -36,6 +36,16 @@ public class MigrationProcessDTO implements Serializable {
 
     private String sourceConnectionName;
 
+    private String sourceConnectionUrl;
+
+    private String sourceConnectionUsername;
+
+    private String sourceConnectionPassword;
+
+    private String sourceConnectionDatabase;
+
+    private String sourceConnectionSchema;
+
     private Long snowflakeConnectionId;
 
     private String snowflakeConnectionName;
@@ -134,6 +144,46 @@ public class MigrationProcessDTO implements Serializable {
 
     public void setSourceConnectionName(String sourceConnectionName) {
         this.sourceConnectionName = sourceConnectionName;
+    }
+
+    public String getSourceConnectionUrl() {
+        return sourceConnectionUrl;
+    }
+
+    public void setSourceConnectionUrl(String sourceConnectionUrl) {
+        this.sourceConnectionUrl = sourceConnectionUrl;
+    }
+
+    public String getSourceConnectionUsername() {
+        return sourceConnectionUsername;
+    }
+
+    public void setSourceConnectionUsername(String sourceConnectionUsername) {
+        this.sourceConnectionUsername = sourceConnectionUsername;
+    }
+
+    public String getSourceConnectionPassword() {
+        return sourceConnectionPassword;
+    }
+
+    public void setSourceConnectionPassword(String sourceConnectionPassword) {
+        this.sourceConnectionPassword = sourceConnectionPassword;
+    }
+
+    public String getSourceConnectionDatabase() {
+        return sourceConnectionDatabase;
+    }
+
+    public void setSourceConnectionDatabase(String sourceConnectionDatabase) {
+        this.sourceConnectionDatabase = sourceConnectionDatabase;
+    }
+
+    public String getSourceConnectionSchema() {
+        return sourceConnectionSchema;
+    }
+
+    public void setSourceConnectionSchema(String sourceConnectionSchema) {
+        this.sourceConnectionSchema = sourceConnectionSchema;
     }
 
     public Long getSnowflakeConnectionId() {

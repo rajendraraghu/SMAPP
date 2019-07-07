@@ -13,6 +13,11 @@ public interface MigrationProcessMapper extends EntityMapper<MigrationProcessDTO
 
     @Mapping(source = "sourceConnection.id", target = "sourceConnectionId")
     @Mapping(source = "sourceConnection.name", target = "sourceConnectionName")
+    @Mapping(source = "sourceConnection.url", target = "sourceConnectionUrl")
+    @Mapping(source = "sourceConnection.username", target = "sourceConnectionUsername")
+    @Mapping(source = "sourceConnection.password", target = "sourceConnectionPassword")
+    @Mapping(source = "sourceConnection.database", target = "sourceConnectionDatabase")
+    @Mapping(source = "sourceConnection.schema", target = "sourceConnectionSchema")
     @Mapping(source = "snowflakeConnection.id", target = "snowflakeConnectionId")
     @Mapping(source = "snowflakeConnection.name", target = "snowflakeConnectionName")
     MigrationProcessDTO toDto(MigrationProcess migrationProcess);
