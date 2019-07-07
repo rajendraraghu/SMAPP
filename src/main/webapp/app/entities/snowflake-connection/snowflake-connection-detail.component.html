@@ -1,0 +1,79 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="snowflakeConnection">
+            <h2><span jhiTranslate="snowpoleApp.snowflakeConnection.detail.title">Snowflake Connection</span> {{snowflakeConnection.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.name">Name</span></dt>
+                <dd>
+                    <span>{{snowflakeConnection.name}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.description">Description</span></dt>
+                <dd>
+                    <span>{{snowflakeConnection.description}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.url">Url</span></dt>
+                <dd>
+                    <span>{{snowflakeConnection.url}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.username">Username</span></dt>
+                <dd>
+                    <span>{{snowflakeConnection.username}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.password">Password</span></dt>
+                <dd>
+                    <span>{{snowflakeConnection.password}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.acct">Acct</span></dt>
+                <dd>
+                    <span>{{snowflakeConnection.acct}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.warehouse">Warehouse</span></dt>
+                <dd>
+                    <span>{{snowflakeConnection.warehouse}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.database">Database</span></dt>
+                <dd>
+                    <span>{{snowflakeConnection.database}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.schema">Schema</span></dt>
+                <dd>
+                    <span>{{snowflakeConnection.schema}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.valid">Valid</span></dt>
+                <dd>
+                    <span>{{snowflakeConnection.valid}}</span>
+                </dd>
+                <!-- <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.createdBy">Created By</span></dt>
+                <dd>
+                    <span>{{snowflakeConnection.createdBy}}</span>
+                </dd> -->
+                <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.createdDate">Created Date</span></dt>
+                <dd>
+                    <span>{{snowflakeConnection.createdDate}}</span>
+                </dd>
+                <!-- <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedBy">Last Modified By</span></dt>
+                <dd>
+                    <span>{{snowflakeConnection.lastModifiedBy}}</span>
+                </dd> -->
+                <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedDate">Last Modified Date</span></dt>
+                <dd>
+                    <span>{{snowflakeConnection.lastModifiedDate}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/snowflake-connection', snowflakeConnection.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

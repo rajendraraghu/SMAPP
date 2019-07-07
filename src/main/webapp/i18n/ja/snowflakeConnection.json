@@ -1,0 +1,35 @@
+{
+  "snowpoleApp": {
+    "snowflakeConnection": {
+      "home": {
+        "title": "SnowflakeConnections",
+        "createLabel": "Snowflake Connection を追加",
+        "createOrEditLabel": "Snowflake Connectionを追加または編集",
+        "notFound": "No Snowflake Connection found"
+      },
+      "created": "A new Snowflake Connection is created with identifier {{ param }}",
+      "updated": "A Snowflake Connection is updated with identifier {{ param }}",
+      "deleted": "A Snowflake Connection is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Snowflake Connection {{ id }}を削除してもよろしいですか？"
+      },
+      "detail": {
+        "title": "Snowflake Connection"
+      },
+      "name": "Name",
+      "description": "Description",
+      "url": "Url",
+      "username": "Username",
+      "password": "Password",
+      "acct": "Acct",
+      "warehouse": "Warehouse",
+      "database": "Database",
+      "schema": "Schema",
+      "valid": "Valid",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date"
+    }
+  }
+}

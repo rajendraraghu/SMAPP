@@ -8,6 +8,7 @@
       "entities": {
         "main": "エンティティ",
         "sourceConnection": "Source Connection",
+        "snowflakeConnection": "Snowflake Connection",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

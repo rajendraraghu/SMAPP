@@ -1,0 +1,87 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="snowpoleApp.snowflakeConnection.home.title">Snowflake Connections</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-snowflake-connection" [routerLink]="['/snowflake-connection/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="snowpoleApp.snowflakeConnection.home.createLabel">
+            Create new Snowflake Connection
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="alert alert-warning" *ngIf="snowflakeConnections?.length === 0">
+        <span jhiTranslate="snowpoleApp.snowflakeConnection.home.notFound">No snowflakeConnections found</span>
+    </div>
+    <div class="table-responsive" *ngIf="snowflakeConnections?.length > 0">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="name"><span jhiTranslate="snowpoleApp.snowflakeConnection.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <!-- <th jhiSortBy="url"><span jhiTranslate="snowpoleApp.snowflakeConnection.url">Url</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="username"><span jhiTranslate="snowpoleApp.snowflakeConnection.username">Username</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <!-- <th jhiSortBy="acct"><span jhiTranslate="snowpoleApp.snowflakeConnection.acct">Acct</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="warehouse"><span jhiTranslate="snowpoleApp.snowflakeConnection.warehouse">Warehouse</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="database"><span jhiTranslate="snowpoleApp.snowflakeConnection.database">Database</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="schema"><span jhiTranslate="snowpoleApp.snowflakeConnection.schema">Schema</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="valid"><span jhiTranslate="snowpoleApp.snowflakeConnection.valid">Valid</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <!-- <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.snowflakeConnection.createdBy">Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="createdDate"><span jhiTranslate="snowpoleApp.snowflakeConnection.createdDate">Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <!-- <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedBy">Last Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="lastModifiedDate"><span jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedDate">Last Modified Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let snowflakeConnection of snowflakeConnections ;trackBy: trackId">
+                <td><a [routerLink]="['/snowflake-connection', snowflakeConnection.id, 'view' ]">{{snowflakeConnection.id}}</a></td>
+                <td>{{snowflakeConnection.name}}</td>
+                <!-- <td>{{snowflakeConnection.url}}</td> -->
+                <td>{{snowflakeConnection.username}}</td>
+                <!-- <td>{{snowflakeConnection.acct}}</td> -->
+                <td>{{snowflakeConnection.warehouse}}</td>
+                <td>{{snowflakeConnection.database}}</td>
+                <td>{{snowflakeConnection.schema}}</td>
+                <td>{{snowflakeConnection.valid}}</td>
+                <!-- <td>{{snowflakeConnection.createdBy}}</td> -->
+                <td>{{snowflakeConnection.createdDate | date:'medium'}}</td>
+                <!-- <td>{{snowflakeConnection.lastModifiedBy}}</td> -->
+                <td>{{snowflakeConnection.lastModifiedDate | date:'medium'}}</td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['/snowflake-connection', snowflakeConnection.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/snowflake-connection', snowflakeConnection.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'snowflake-connection', { outlets: { popup: snowflakeConnection.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div [hidden]="snowflakeConnections?.length === 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>
