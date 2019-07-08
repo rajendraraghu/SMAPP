@@ -35,8 +35,17 @@ public class MigrationProcess implements Serializable {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "tables_to_migrate")
+    @Size(max = 3200)
+    @Column(name = "tables_to_migrate", length = 3200)
     private String tablesToMigrate;
+
+    @Size(max = 3200)
+    @Column(name = "cdc", length = 3200)
+    private String cdc;
+
+    @Size(max = 3200)
+    @Column(name = "bulk", length = 3200)
+    private String bulk;
 
     @Column(name = "last_status")
     private String lastStatus;
@@ -120,6 +129,33 @@ public class MigrationProcess implements Serializable {
 
     public void setTablesToMigrate(String tablesToMigrate) {
         this.tablesToMigrate = tablesToMigrate;
+    }
+
+    public String getCdc() {
+        return cdc;
+    }
+
+    public MigrationProcess cdc(String cdc) {
+        this.cdc = cdc;
+        return this;
+    }
+
+    public void setCdc(String cdc) {
+        this.cdc = cdc;
+    }
+
+
+    public String getBulk() {
+        return bulk;
+    }
+
+    public MigrationProcess bulk(String bulk) {
+        this.bulk = bulk;
+        return this;
+    }
+
+    public void setBulk(String bulk) {
+        this.bulk = bulk;
     }
 
     public String getLastStatus() {
@@ -238,6 +274,8 @@ public class MigrationProcess implements Serializable {
             ", description='" + getDescription() + "'" +
             ", type='" + getType() + "'" +
             ", tablesToMigrate='" + getTablesToMigrate() + "'" +
+            ", cdc='" + getCdc() + "'" +
+            ", bulk='" + getBulk() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +

@@ -27,7 +27,15 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="tables_to_migrate" type="varchar(255)">
+            <column name="tables_to_migrate" type="varchar(3200)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="cdc" type="varchar(3200)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="bulk" type="varchar(3200)">
                 <constraints nullable="true" />
             </column>
 

@@ -21,6 +21,10 @@ public class MigrationProcessDTO implements Serializable {
 
     private String tablesToMigrate;
 
+    private String cdc;
+
+    private String bulk;
+
     private String lastStatus;
 
     private String createdBy;
@@ -102,6 +106,22 @@ public class MigrationProcessDTO implements Serializable {
 
     public void setTablesToMigrate(String tablesToMigrate) {
         this.tablesToMigrate = tablesToMigrate;
+    }
+
+    public String getCdc() {
+        return cdc;
+    }
+
+    public void setCdc(String cdc) {
+        this.cdc = cdc;
+    }
+
+    public String getBulk() {
+        return bulk;
+    }
+
+    public void setBulk(String bulk) {
+        this.bulk = bulk;
     }
 
     public String getLastStatus() {
@@ -301,6 +321,8 @@ public class MigrationProcessDTO implements Serializable {
             ", description='" + getDescription() + "'" +
             ", type='" + getType() + "'" +
             ", tablesToMigrate='" + getTablesToMigrate() + "'" +
+            ", cdc='" + getCdc() + "'" +
+            ", bulk='" + getBulk() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +

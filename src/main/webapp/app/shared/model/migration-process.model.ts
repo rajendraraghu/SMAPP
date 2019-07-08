@@ -6,6 +6,8 @@ export interface IMigrationProcess {
   description?: string;
   type?: string;
   tablesToMigrate?: string;
+  cdc?: string;
+  bulk?: string;
   lastStatus?: string;
   createdBy?: string;
   createdDate?: Moment;
@@ -24,6 +26,8 @@ export class MigrationProcess implements IMigrationProcess {
     public description?: string,
     public type?: string,
     public tablesToMigrate?: string,
+    public cdc?: string,
+    public bulk?: string,
     public lastStatus?: string,
     public createdBy?: string,
     public createdDate?: Moment,

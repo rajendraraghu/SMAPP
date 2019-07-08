@@ -30,7 +30,7 @@ export class MigrationProcessUpdateComponent implements OnInit {
     name: [null, [Validators.required]],
     description: [null, [Validators.maxLength(650)]],
     type: [],
-    tablesToMigrate: [],
+    tablesToMigrate: [null, [Validators.maxLength(3200)]],
     lastStatus: [],
     createdBy: [],
     createdDate: [],
