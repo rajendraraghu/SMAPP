@@ -50,6 +50,20 @@ public class MigrationProcessDTO implements Serializable {
 
     private String snowflakeConnectionName;
 
+    private String snowflakeConnectionUrl;
+
+    private String snowflakeConnectionUsername;
+
+    private String snowflakeConnectionPassword;
+
+    private String snowflakeConnectionAcct;
+
+    private String snowflakeConnectionWarehouse;
+
+    private String snowflakeConnectionDatabase;
+
+    private String snowflakeConnectionSchema;
+
     public Long getId() {
         return id;
     }
@@ -200,6 +214,62 @@ public class MigrationProcessDTO implements Serializable {
 
     public void setSnowflakeConnectionName(String snowflakeConnectionName) {
         this.snowflakeConnectionName = snowflakeConnectionName;
+    }
+
+    public String getSnowflakeConnectionUrl() {
+        return snowflakeConnectionUrl;
+    }
+
+    public void setSnowflakeConnectionUrl(String snowflakeConnectionUrl) {
+        this.snowflakeConnectionUrl = snowflakeConnectionUrl;
+    }
+
+    public String getSnowflakeConnectionUsername() {
+        return snowflakeConnectionUsername;
+    }
+
+    public void setSnowflakeConnectionUsername(String snowflakeConnectionUsername) {
+        this.snowflakeConnectionUsername = snowflakeConnectionUsername;
+    }
+
+    public String getSnowflakeConnectionPassword() {
+        return snowflakeConnectionPassword;
+    }
+
+    public void setSnowflakeConnectionPassword(String snowflakeConnectionPassword) {
+        this.snowflakeConnectionPassword = snowflakeConnectionPassword;
+    }
+
+    public String getSnowflakeConnectionAcct() {
+        return snowflakeConnectionAcct;
+    }
+
+    public void setSnowflakeConnectionAcct(String snowflakeConnectionAcct) {
+        this.snowflakeConnectionAcct = snowflakeConnectionAcct;
+    }
+
+    public String getSnowflakeConnectionWarehouse() {
+        return snowflakeConnectionWarehouse;
+    }
+
+    public void setSnowflakeConnectionWarehouse(String snowflakeConnectionWarehouse) {
+        this.snowflakeConnectionWarehouse = snowflakeConnectionWarehouse;
+    }
+
+    public String getSnowflakeConnectionDatabase() {
+        return snowflakeConnectionDatabase;
+    }
+
+    public void setSnowflakeConnectionDatabase(String snowflakeConnectionDatabase) {
+        this.snowflakeConnectionDatabase = snowflakeConnectionDatabase;
+    }
+
+    public String getSnowflakeConnectionSchema() {
+        return snowflakeConnectionSchema;
+    }
+
+    public void setSnowflakeConnectionSchema(String snowflakeConnectionSchema) {
+        this.snowflakeConnectionSchema = snowflakeConnectionSchema;
     }
 
     @Override
