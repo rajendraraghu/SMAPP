@@ -62,6 +62,20 @@
                             <span jhiTranslate="global.menu.admin.userManagement">User management</span>
                         </a>
                     </li>
+
+                    <li>
+                        <a class="dropdown-item" routerLink="source-connection" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.sourceConnection">Source Connection</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="snowflake-connection" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.snowflakeConnection">Snowflake Connection</span>
+                        </a>
+                    </li>
+
                     <li>
                         <a class="dropdown-item" routerLink="admin/jhi-metrics" routerLinkActive="active" (click)="collapseNavbar()">
                             <fa-icon icon="tachometer-alt" fixedWidth="true"></fa-icon>
