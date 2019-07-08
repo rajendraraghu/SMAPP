@@ -43,7 +43,8 @@
                 </dd>
                 <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.valid">Valid</span></dt>
                 <dd>
-                    <span>{{snowflakeConnection.valid}}</span>
+                    <span *ngIf="snowflakeConnection.valid" class="badge badge-success">Yes</span>
+                    <span *ngIf="!snowflakeConnection.valid" class="badge badge-danger">No</span>
                 </dd>
                 <!-- <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.createdBy">Created By</span></dt>
                 <dd>

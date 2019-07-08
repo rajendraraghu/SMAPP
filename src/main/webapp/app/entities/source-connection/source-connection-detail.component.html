@@ -39,7 +39,8 @@
                 </dd>
                 <dt><span jhiTranslate="snowpoleApp.sourceConnection.valid">Valid</span></dt>
                 <dd>
-                    <span>{{sourceConnection.valid}}</span>
+                    <span *ngIf="sourceConnection.valid" class="badge badge-success">Yes</span>
+                    <span *ngIf="!sourceConnection.valid" class="badge badge-danger">No</span>
                 </dd>
                 <!-- <dt><span jhiTranslate="snowpoleApp.sourceConnection.createdBy">Created By</span></dt>
                 <dd>

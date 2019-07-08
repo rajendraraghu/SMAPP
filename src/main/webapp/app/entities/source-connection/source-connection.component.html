@@ -43,7 +43,10 @@
                 <!-- <td>{{sourceConnection.password}}</td> -->
                 <td>{{sourceConnection.database}}</td>
                 <td>{{sourceConnection.schema}}</td>
-                <td>{{sourceConnection.valid}}</td>
+                <td>
+                    <span *ngIf="sourceConnection.valid" class="badge badge-success">Yes</span>
+                    <span *ngIf="!sourceConnection.valid" class="badge badge-danger">No</span>
+                </td>
                 <!-- <td>{{sourceConnection.createdBy}}</td> -->
                 <td>{{sourceConnection.createdDate | date:'medium'}}</td>
                 <!-- <td>{{sourceConnection.lastModifiedBy}}</td> -->

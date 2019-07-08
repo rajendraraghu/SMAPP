@@ -43,7 +43,10 @@
                 <td>{{snowflakeConnection.warehouse}}</td>
                 <td>{{snowflakeConnection.database}}</td>
                 <td>{{snowflakeConnection.schema}}</td>
-                <td>{{snowflakeConnection.valid}}</td>
+                <td>
+                    <span *ngIf="snowflakeConnection.valid" class="badge badge-success">Yes</span>
+                    <span *ngIf="!snowflakeConnection.valid" class="badge badge-danger">No</span>
+                </td>
                 <!-- <td>{{snowflakeConnection.createdBy}}</td> -->
                 <td>{{snowflakeConnection.createdDate | date:'medium'}}</td>
                 <!-- <td>{{snowflakeConnection.lastModifiedBy}}</td> -->
