@@ -80,6 +80,7 @@ export class MigrationProcessDetailComponent implements OnInit {
     if (index === -1) {
       return false;
     } else {
+      item.selected = true;
       return true;
     }
   }
@@ -89,6 +90,7 @@ export class MigrationProcessDetailComponent implements OnInit {
     if (index === -1) {
       return false;
     } else {
+      item.bulk = true;
       return true;
     }
   }
