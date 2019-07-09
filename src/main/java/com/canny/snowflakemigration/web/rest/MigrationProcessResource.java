@@ -29,9 +29,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 import java.util.Arrays;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import static com.canny.snowflakemigration.service.util.listTables.listTable;
+import static com.canny.snowflakemigration.service.util.sendTableList.sendSelectedTables;
 
 /**
  * REST controller for managing {@link com.canny.snowflakemigration.domain.MigrationProcess}.
@@ -156,5 +161,18 @@ public class MigrationProcessResource {
         String[] tableName = listTable(migrationProcessDTO);
         return tableName;
     }
+    
+    @PostMapping(value = "/migration-processes/sendTableListforHistProcess")
+    public @ResponseBody String sendTableList(@Valid @RequestBody  MigrationProcessDTO migrationProcessDTO)throws SQLException,ClassNotFoundException  {
+    	//Optional<MigrationProcessDTO>  migrationProcessDTO = migrationProcessService.findOne(processid);
+    	String result = sendSelectedTables(migrationProcessDTO);    
+        return result;
+    }
+  /*  @PostMapping(value="/migration-processes/TestConnection")
+    public @ResponseBody boolean TestingConnection(ConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
+        Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());
+        boolean result = con1.isValid(10);
+        return result;
+    }*/
 
 }
