@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { JhiAlertService } from 'ng-jhipster';
 import { callbackify } from 'util';
+import { sample } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-migration-process-detail',
@@ -31,9 +32,9 @@ export class MigrationProcessDetailComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.data.subscribe(({ migrationProcess }) => {
       this.migrationProcess = migrationProcess;
-      this.selectedTables = this.migrationProcess.tablesToMigrate ? JSON.parse(this.migrationProcess.tablesToMigrate) : [];
-      this.cdcTables = this.migrationProcess.cdc ? JSON.parse(this.migrationProcess.cdc) : [];
       this.bulkTables = this.migrationProcess.bulk ? JSON.parse(this.migrationProcess.bulk) : [];
+      this.cdcTables = this.migrationProcess.cdc ? JSON.parse(this.migrationProcess.cdc) : [];
+      this.selectedTables = this.migrationProcess.tablesToMigrate ? JSON.parse(this.migrationProcess.tablesToMigrate) : [];
       this.getTableList();
     });
     this.isSaving = false;
@@ -53,7 +54,7 @@ export class MigrationProcessDetailComponent implements OnInit {
   prepareData(tables) {
     this.tables = [];
     tables.forEach(element => {
-      const table = { name: element, selected: false, bulk: false };
+      const table = { name: element, selected: this.isChecked(element), bulk: this.isBulk(element) };
       this.tables.push(table);
     });
     this.tablesCopy = this.tables;
@@ -72,25 +73,25 @@ export class MigrationProcessDetailComponent implements OnInit {
   }
 
   onProcessSelection(item) {
-    item.bulk = !item.bulk;
+    item.bulk = item.bulk ? false : true;
   }
 
   isChecked(item) {
-    const index = this.selectedTables.indexOf(item.name);
+    const index = this.selectedTables.indexOf(item);
     if (index === -1) {
       return false;
     } else {
-      item.selected = true;
+      // item.selected = true;
       return true;
     }
   }
 
   isBulk(item) {
-    const index = this.bulkTables.indexOf(item.name);
+    const index = this.bulkTables.indexOf(item);
     if (index === -1) {
       return false;
     } else {
-      item.bulk = true;
+      // item.bulk = true;
       return true;
     }
   }

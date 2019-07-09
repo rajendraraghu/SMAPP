@@ -82,13 +82,13 @@
                 <div class="row m-0" *ngFor="let item of tables; let i=index">
                     <div class="col-9 pl-0">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" [id]="i" [checked]="isChecked(item)" (change)="onSelectionChange(item)">
+                            <input type="checkbox" class="custom-control-input" [id]="i" [checked]="item.selected" (change)="onSelectionChange(item)">
                             <label class="custom-control-label" [for]="i">{{item.name}}</label>
                         </div>
                     </div>
                     <div class="col-3 text-right">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" [id]="customSwitchId(i)" [checked]="isBulk(item)"(change)="onProcessSelection(item)">
+                            <input type="checkbox" class="custom-control-input" [id]="customSwitchId(i)" [disabled]="!item.selected" [checked]="item.bulk" (change)="onProcessSelection(item);">
                             <label class="custom-control-label" [for]="customSwitchId(i)">Bulk</label>
                         </div>
                         <!-- <div class="custom-control custom-radio">
