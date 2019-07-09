@@ -7,13 +7,18 @@
     },
     "question": "Wenn Sie Fragen zu JHipster haben:",
     "link": {
-      "homepage": "JHipster Hauptseite",
+      "homepage": "Canny Technology Solutions Hauptseite",
       "stackoverflow": "JHipster auf Stack Overflow",
       "bugtracker": "JHipster Fehlereinträge",
       "chat": "JHipster Chat",
-      "follow": "kontaktieren Sie uns mit @java_hipster auf Twitter"
+      "follow": "kontaktieren Sie uns mit @java_hipster auf Twitter",
+      "services": "Canny Technology Solutions services",
+      "techStack": "Canny Technology Solutions tech stack",
+      "tools": "Canny Technology Solutions automation tools",
+      "contact": "Canny Technology Solutions contact"
     },
-    "like": "Wenn Sie JHipster mögen, vergessen Sie nicht uns einen Stern zu geben auf",
-    "github": "GitHub"
+    "like": "Wenn Sie SnowPole mögen, vergessen Sie nicht uns einen Stern zu geben auf",
+    "github": "GitHub",
+    "linkedin": "LinkedIn"
   }
 }

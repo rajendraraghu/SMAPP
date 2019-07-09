@@ -7,13 +7,18 @@
     },
     "question": "JHipsterに関して質問があれば:",
     "link": {
-      "homepage": "JHipsterのサイト",
+      "homepage": "Canny Technology Solutionsのサイト",
       "stackoverflow": "Stack Overflow のJHipster",
       "bugtracker": "JHipsterのバグトラッカー",
       "chat": "JHipster public chat room",
-      "follow": "Twitterの @java_hipster"
+      "follow": "Twitterの @java_hipster",
+      "services": "Canny Technology Solutions services",
+      "techStack": "Canny Technology Solutions tech stack",
+      "tools": "Canny Technology Solutions automation tools",
+      "contact": "Canny Technology Solutions contact"
     },
-    "like": "JHipsterを気に入ったら、是非スターをつけてください。",
-    "github": "GitHub"
+    "like": "SnowPoleを気に入ったら、是非スターをつけてください。",
+    "github": "GitHub",
+    "linkedin": "LinkedIn"
   }
 }

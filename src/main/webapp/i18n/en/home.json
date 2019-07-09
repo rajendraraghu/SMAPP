@@ -5,15 +5,20 @@
     "logged": {
       "message": "You are logged in as user \"{{username}}\"."
     },
-    "question": "If you have any question on JHipster:",
+    "question": "If you have any question on Canny Technology Solutions:",
     "link": {
-      "homepage": "JHipster homepage",
+      "homepage": "Canny Technology Solutions homepage",
       "stackoverflow": "JHipster on Stack Overflow",
       "bugtracker": "JHipster bug tracker",
       "chat": "JHipster public chat room",
-      "follow": "follow @java_hipster on Twitter"
+      "follow": "follow @java_hipster on Twitter",
+      "services": "Canny Technology Solutions services",
+      "techStack": "Canny Technology Solutions tech stack",
+      "tools": "Canny Technology Solutions automation tools",
+      "contact": "Canny Technology Solutions contact"
     },
-    "like": "If you like JHipster, don't forget to give us a star on",
-    "github": "GitHub"
+    "like": "If you like SnowPole, don't forget to follow us on",
+    "github": "GitHub",
+    "linkedin": "LinkedIn"
   }
 }

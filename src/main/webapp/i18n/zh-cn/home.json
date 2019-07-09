@@ -7,13 +7,18 @@
     },
     "question": "如果您有任何有关 JHipster 的问题, 可以查阅下列资源:",
     "link": {
-      "homepage": "JHipster 首頁",
+      "homepage": "Canny Technology Solutions 首頁",
       "stackoverflow": "Stack Overflow 上关于 JHipster 的讨论",
       "bugtracker": "JHipster 的缺陷追踪",
       "chat": "JHipster public chat room",
-      "follow": "在 Twitter 上联络 @java_hipster"
+      "follow": "在 Twitter 上联络 @java_hipster",
+      "services": "Canny Technology Solutions services",
+      "techStack": "Canny Technology Solutions tech stack",
+      "tools": "Canny Technology Solutions automation tools",
+      "contact": "Canny Technology Solutions contact"
     },
-    "like": "如果您喜欢 JHipster, 请记得给我们加星在",
-    "github": "GitHub"
+    "like": "如果您喜欢 SnowPole, 请记得给我们加星在",
+    "github": "GitHub",
+    "linkedin": "LinkedIn"
   }
 }
