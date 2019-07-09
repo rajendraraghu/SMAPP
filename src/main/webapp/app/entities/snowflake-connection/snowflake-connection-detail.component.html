@@ -1,7 +1,7 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="snowflakeConnection">
-            <h2><span jhiTranslate="snowpoleApp.snowflakeConnection.detail.title">Snowflake Connection</span> {{snowflakeConnection.id}}</h2>
+            <h2><span jhiTranslate="snowpoleApp.snowflakeConnection.detail.title">Snowflake Connection</span></h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
@@ -52,7 +52,7 @@
                 </dd> -->
                 <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.createdDate">Created Date</span></dt>
                 <dd>
-                    <span>{{snowflakeConnection.createdDate}}</span>
+                    <span>{{snowflakeConnection.createdDate | date:'medium'}}</span>
                 </dd>
                 <!-- <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedBy">Last Modified By</span></dt>
                 <dd>
@@ -60,7 +60,7 @@
                 </dd> -->
                 <dt><span jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedDate">Last Modified Date</span></dt>
                 <dd>
-                    <span>{{snowflakeConnection.lastModifiedDate}}</span>
+                    <span>{{snowflakeConnection.lastModifiedDate | date:'medium'}}</span>
                 </dd>
             </dl>
 

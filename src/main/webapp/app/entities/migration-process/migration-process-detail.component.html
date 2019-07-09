@@ -1,7 +1,7 @@
 <div class="row justify-content-center">
-    <div class="col-5">
+    <div class="col-4">
         <div *ngIf="migrationProcess">
-            <h2><span jhiTranslate="snowpoleApp.migrationProcess.detail.title">Migration Process</span> {{migrationProcess.id}}</h2>
+            <h2><span jhiTranslate="snowpoleApp.migrationProcess.detail.title">Migration Process</span></h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
@@ -45,7 +45,7 @@
                 </dd> -->
                 <dt><span jhiTranslate="snowpoleApp.migrationProcess.createdDate">Created Date</span></dt>
                 <dd>
-                    <span>{{migrationProcess.createdDate}}</span>
+                    <span>{{migrationProcess.createdDate | date:'medium'}}</span>
                 </dd>
                 <!-- <dt><span jhiTranslate="snowpoleApp.migrationProcess.lastModifiedBy">Last Modified By</span></dt>
                 <dd>
@@ -53,7 +53,7 @@
                 </dd> -->
                 <dt><span jhiTranslate="snowpoleApp.migrationProcess.lastModifiedDate">Last Modified Date</span></dt>
                 <dd>
-                    <span>{{migrationProcess.lastModifiedDate}}</span>
+                    <span>{{migrationProcess.lastModifiedDate | date:'medium'}}</span>
                 </dd>
             </dl>
 
@@ -70,9 +70,9 @@
             </button>
         </div>
     </div>
-    <div class="col-3">
+    <div class="col-4">
         <fieldset>
-            <h2>Select the tables to be migrated</h2>
+            <h3>Select the tables to be migrated</h3>
             <hr>
             <div class="form-group has-search">
                 <fa-icon class="form-control-feedback" [icon]="'search'"></fa-icon>
@@ -107,8 +107,8 @@
                 </div> -->
             </div>
         </fieldset>
-        <button type="button" class="btn btn-primary" (click)="testAndMigrate()">
-            <fa-icon [icon]="'tasks'"></fa-icon>&nbsp;<span>Save tables tobe Migrated</span>
+        <button type="button" class="btn btn-primary" (click)="testAndMigrate()" style="width: 100%;">
+            <fa-icon [icon]="'tasks'"></fa-icon>&nbsp;<span>Save tables to be migrated</span>
         </button>
     </div>
 </div>
