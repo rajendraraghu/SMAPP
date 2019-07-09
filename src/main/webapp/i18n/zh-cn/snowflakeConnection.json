@@ -21,7 +21,7 @@
       "url": "Url",
       "username": "Username",
       "password": "Password",
-      "acct": "Acct",
+      "acct": "Account",
       "warehouse": "Warehouse",
       "database": "Database",
       "schema": "Schema",
