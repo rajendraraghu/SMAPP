@@ -22,12 +22,12 @@
                     <span>
                         <fa-icon icon="th-list"></fa-icon>
                         <span jhiTranslate="global.menu.entities.main">
-                            Entities
+                            process
                         </span>
                     </span>
                 </a>
                 <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entity-menu">
-                    <li>
+                    <!-- <li>
                         <a class="dropdown-item" routerLink="source-connection" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
                             <span jhiTranslate="global.menu.entities.sourceConnection">Source Connection</span>
@@ -38,7 +38,7 @@
                             <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
                             <span jhiTranslate="global.menu.entities.snowflakeConnection">Snowflake Connection</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li>
                         <a class="dropdown-item" routerLink="migration-process" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
@@ -76,7 +76,7 @@
                         </a>
                     </li>
 
-                    <li>
+                    <!-- <li>
                         <a class="dropdown-item" routerLink="admin/jhi-metrics" routerLinkActive="active" (click)="collapseNavbar()">
                             <fa-icon icon="tachometer-alt" fixedWidth="true"></fa-icon>
                             <span jhiTranslate="global.menu.admin.metrics">Metrics</span>
@@ -105,11 +105,11 @@
                             <fa-icon icon="tasks" fixedWidth="true"></fa-icon>
                             <span jhiTranslate="global.menu.admin.logs">Logs</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li *ngIf="swaggerEnabled">
                         <a class="dropdown-item" routerLink="admin/docs" routerLinkActive="active" (click)="collapseNavbar()">
                             <fa-icon icon="book" fixedWidth="true"></fa-icon>
-                            <span jhiTranslate="global.menu.admin.apidocs">API</span>
+                            <span jhiTranslate="global.menu.admin.apidocs">API</span> <span> ( for Developers )</span>
                         </a>
                     </li>
                     <!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
