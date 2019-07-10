@@ -27,6 +27,7 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.stream.StreamSupport;
 import java.util.Arrays;
 import java.sql.Connection;
@@ -37,6 +38,14 @@ import java.sql.Statement;
 
 import static com.canny.snowflakemigration.service.util.listTables.listTable;
 import static com.canny.snowflakemigration.service.util.sendTableList.sendSelectedTables;
+
+
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+//import org.json.JSONArray;
+//import org.json.JSONObject;
+
 
 /**
  * REST controller for managing {@link com.canny.snowflakemigration.domain.MigrationProcess}.
@@ -174,5 +183,45 @@ public class MigrationProcessResource {
         boolean result = con1.isValid(10);
         return result;
     }*/
+    
+     @PostMapping(value = "/migration-processes/Reports")
+    public @ResponseBody String Reports(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO)throws SQLException,ClassNotFoundException  {
+        Properties properties = new Properties();
+		properties.put("user", migrationProcessDTO.getSnowflakeConnectionUsername());
+		properties.put("password", migrationProcessDTO.getSnowflakeConnectionPassword());
+		properties.put("account", migrationProcessDTO.getSnowflakeConnectionAcct());
+        properties.put("warehouse",migrationProcessDTO.getSnowflakeConnectionWarehouse());
+		properties.put("db",migrationProcessDTO.getSnowflakeConnectionDatabase());
+	    properties.put("schema",migrationProcessDTO.getSnowflakeConnectionSchema());
+		Connection con2=DriverManager.getConnection(migrationProcessDTO.getSnowflakeConnectionUrl(),properties);
+        Statement stmt0=con2.createStatement(); 
+        ResultSet rs0 = stmt0.executeQuery("SELECT * FROM tableLoadStatus WHERE processid ="+migrationProcessDTO.getId());
+        
+        JsonObject jsonResponse = new JsonObject();	
+		JsonArray data = new JsonArray();
+		while(rs0.next() ) 
+		{
+			System.out.println("Inside while loop:"+rs0.getString(3));
+		JsonArray row = new JsonArray();
+		row.add(new JsonPrimitive(rs0.getInt(1)));
+		row.add(new JsonPrimitive(rs0.getInt(2)));
+		row.add(new JsonPrimitive(rs0.getString(3)));
+		//row.add(new JsonPrimitive(rs0.getString(4)));
+		//row.add(new JsonPrimitive(rs0.getString(5)));
+		row.add(new JsonPrimitive(rs0.getString(6)));
+		row.add(new JsonPrimitive(rs0.getInt(7)));
+		row.add(new JsonPrimitive(rs0.getInt(8)));
+		row.add(new JsonPrimitive(rs0.getInt(9)));
+		//row.add(new JsonPrimitive(rs0.getString(10)));
+		row.add(new JsonPrimitive(rs0.getString(11)));
+		row.add(new JsonPrimitive(rs0.getString(12)));
+		row.add(new JsonPrimitive(rs0.getString(13)));
+		row.add(new JsonPrimitive(rs0.getString(14)));
+		
+        data.add(row);
+        }
+        jsonResponse.add("Audit Data:", data);
+        return jsonResponse.toString();
+    }
 
 }
