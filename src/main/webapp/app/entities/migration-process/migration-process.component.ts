@@ -119,6 +119,13 @@ export class MigrationProcessComponent implements OnInit, OnDestroy {
     return result;
   }
 
+  sendTableList(migrationProcess) {
+    this.migrationProcessService.sendTableList(migrationProcess).subscribe(response => {
+      // this.tables = this.tablesCopy = response.body;
+      alert('Sent table list to back-end');
+    });
+  }
+
   protected paginateMigrationProcesses(data: IMigrationProcess[], headers: HttpHeaders) {
     this.links = this.parseLinks.parse(headers.get('link'));
     this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
