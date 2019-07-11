@@ -73,6 +73,12 @@
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
                         <button type="submit"
+                                (click)="viewReport(migrationProcess.id)"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">Report</span>
+                        </button>
+                        <button type="submit"
                                 [routerLink]="['/', 'migration-process', { outlets: { popup: migrationProcess.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"

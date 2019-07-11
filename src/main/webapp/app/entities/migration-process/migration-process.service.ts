@@ -57,6 +57,10 @@ export class MigrationProcessService {
     return this.http.post<IMigrationProcess>(`${this.resourceUrl}/sendTableListforHistProcess`, migrationProcess, { observe: 'response' });
   }
 
+  getReports(migrationProcess: IMigrationProcess): Observable<EntityResponseType> {
+    return this.http.post<IMigrationProcess>(`${this.resourceUrl}/Reports`, migrationProcess, { observe: 'response' });
+  }
+
   protected convertDateFromClient(migrationProcess: IMigrationProcess): IMigrationProcess {
     const copy: IMigrationProcess = Object.assign({}, migrationProcess, {
       createdDate:

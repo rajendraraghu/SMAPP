@@ -13,6 +13,7 @@ import {
   migrationProcessRoute,
   migrationProcessPopupRoute
 } from './';
+import { ReportComponent } from 'app/entities/migration-process/report.component';
 
 const ENTITY_STATES = [...migrationProcessRoute, ...migrationProcessPopupRoute];
 
@@ -23,7 +24,8 @@ const ENTITY_STATES = [...migrationProcessRoute, ...migrationProcessPopupRoute];
     MigrationProcessDetailComponent,
     MigrationProcessUpdateComponent,
     MigrationProcessDeleteDialogComponent,
-    MigrationProcessDeletePopupComponent
+    MigrationProcessDeletePopupComponent,
+    ReportComponent
   ],
   entryComponents: [
     MigrationProcessComponent,

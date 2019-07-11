@@ -12,6 +12,7 @@ import { MigrationProcessDetailComponent } from './migration-process-detail.comp
 import { MigrationProcessUpdateComponent } from './migration-process-update.component';
 import { MigrationProcessDeletePopupComponent } from './migration-process-delete-dialog.component';
 import { IMigrationProcess } from 'app/shared/model/migration-process.model';
+import { ReportComponent } from 'app/entities/migration-process/report.component';
 
 @Injectable({ providedIn: 'root' })
 export class MigrationProcessResolve implements Resolve<IMigrationProcess> {
@@ -58,6 +59,18 @@ export const migrationProcessRoute: Routes = [
   {
     path: 'new',
     component: MigrationProcessUpdateComponent,
+    resolve: {
+      migrationProcess: MigrationProcessResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'snowpoleApp.migrationProcess.home.title'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/history',
+    component: ReportComponent,
     resolve: {
       migrationProcess: MigrationProcessResolve
     },
