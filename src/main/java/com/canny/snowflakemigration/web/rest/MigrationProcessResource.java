@@ -195,7 +195,7 @@ public class MigrationProcessResource {
 	    properties.put("schema",migrationProcessDTO.getSnowflakeConnectionSchema());
 		Connection con2=DriverManager.getConnection(migrationProcessDTO.getSnowflakeConnectionUrl(),properties);
         Statement stmt0=con2.createStatement(); 
-        ResultSet rs0 = stmt0.executeQuery("SELECT * FROM tableLoadStatus WHERE processid ="+migrationProcessDTO.getId());
+        ResultSet rs0 = stmt0.executeQuery("SELECT * FROM tableLoadStatus WHERE processid ="+migrationProcessDTO.getId() +" order by tableloadstarttime desc");
         
         JsonObject jsonResponse = new JsonObject();	
 		JsonArray data = new JsonArray();
@@ -206,8 +206,8 @@ public class MigrationProcessResource {
 		row.add(new JsonPrimitive(rs0.getInt(1)));
 		row.add(new JsonPrimitive(rs0.getInt(2)));
 		row.add(new JsonPrimitive(rs0.getString(3)));
-		//row.add(new JsonPrimitive(rs0.getString(4)));
-		//row.add(new JsonPrimitive(rs0.getString(5)));
+		row.add(new JsonPrimitive(rs0.getString(4)));
+		row.add(new JsonPrimitive(rs0.getString(5)));
 		row.add(new JsonPrimitive(rs0.getString(6)));
 		row.add(new JsonPrimitive(rs0.getInt(7)));
 		row.add(new JsonPrimitive(rs0.getInt(8)));
@@ -220,7 +220,7 @@ public class MigrationProcessResource {
 		
         data.add(row);
         }
-        jsonResponse.add("Audit Data:", data);
+        jsonResponse.add("audit_data", data);
         return jsonResponse.toString();
     }
 
