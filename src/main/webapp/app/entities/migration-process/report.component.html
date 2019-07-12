@@ -22,9 +22,10 @@
             <tr>
             <th><span jhiTranslate="global.field.id">ID</span></th>
             <th><span>Process Id</span></th>
-            <th><span>Process Name</span></th>
-            <th><span>Source Connection</span></th>
-            <th><span>Snowflake Connection</span></th>
+            <th><span>Table Name</span></th>
+            <th><span># Inser</span></th>
+            <th><span># update</span></th>
+            <th><span># Delete</span></th>
             <th><span>Start</span></th>
             <th><span>End</span></th>
             <th><span>Status</span></th>
@@ -34,9 +35,10 @@
             <tr *ngFor="let migrationProcess of reports.audit_data">
                 <td>{{migrationProcess[0]}}</td> 
                 <td>{{migrationProcess[9]}}</td>
-                <td>{{migrationProcess[10]}}</td>
-                <td>{{migrationProcess[11]}}</td>
-                <td>{{migrationProcess[12]}}</td>
+                <td>{{migrationProcess[2]}}</td>
+                <td>{{migrationProcess[6]}}</td>
+                <td>{{migrationProcess[7]}}</td>
+                <td>{{migrationProcess[8]}}</td>
                 <td>{{migrationProcess[3] | date:'medium'}}</td>
                 <td>{{migrationProcess[4] | date:'medium'}}</td>
                 <td>{{migrationProcess[5]}}</td>
