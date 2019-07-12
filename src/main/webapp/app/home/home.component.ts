@@ -3,6 +3,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { LoginModalService, AccountService, Account } from 'app/core';
+import { JoyrideService } from 'ngx-joyride';
 
 @Component({
   selector: 'jhi-home',
@@ -16,7 +17,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private accountService: AccountService,
     private loginModalService: LoginModalService,
-    private eventManager: JhiEventManager
+    private eventManager: JhiEventManager,
+    private readonly joyrideService: JoyrideService
   ) {}
 
   ngOnInit() {
@@ -24,6 +26,30 @@ export class HomeComponent implements OnInit {
       this.account = account;
     });
     this.registerAuthenticationSuccess();
+  }
+
+  onClick() {
+    this.joyrideService.startTour({
+      steps: [
+        'firstStep@',
+        'secondStep@source-connection',
+        'thirdStep@source-connection/new',
+        'fourthStep@source-connection/new',
+        'fifthStep@source-connection/new',
+        'sixthStep@source-connection/new',
+        'seventhStep@source-connection/new',
+        'eigthStep@source-connection/new',
+        'ninethStep@source-connection/new',
+        'tengthStep@snowflake-connection',
+        'elevengthStep@snowflake-connection/new',
+        'twelthStep@migration-process',
+        'thirteenthStep@migration-process/new'
+      ],
+      stepDefaultPosition: 'bottom'
+    });
+    this.joyrideService.startTour(
+      { steps: ['firstStep', 'secondStep'] } // Your steps order
+    );
   }
 
   registerAuthenticationSuccess() {

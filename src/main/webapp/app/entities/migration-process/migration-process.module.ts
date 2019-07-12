@@ -14,11 +14,12 @@ import {
   migrationProcessPopupRoute
 } from './';
 import { ReportComponent } from 'app/entities/migration-process/report.component';
+import { JoyrideModule } from 'ngx-joyride';
 
 const ENTITY_STATES = [...migrationProcessRoute, ...migrationProcessPopupRoute];
 
 @NgModule({
-  imports: [SnowpoleSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SnowpoleSharedModule, RouterModule.forChild(ENTITY_STATES), JoyrideModule.forChild()],
   declarations: [
     MigrationProcessComponent,
     MigrationProcessDetailComponent,

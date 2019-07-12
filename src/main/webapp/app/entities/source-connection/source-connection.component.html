@@ -1,7 +1,9 @@
 <div>
     <h2 id="page-heading">
         <span jhiTranslate="snowpoleApp.sourceConnection.home.title">Source Connections</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-source-connection" [routerLink]="['/source-connection/new']">
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-source-connection" 
+            [routerLink]="['/source-connection/new']"
+            joyrideStep="secondStep" title="Source Connection" text="Create new Source Connection">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span  jhiTranslate="snowpoleApp.sourceConnection.home.createLabel">
             Create new Source Connection

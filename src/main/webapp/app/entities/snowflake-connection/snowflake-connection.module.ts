@@ -13,11 +13,12 @@ import {
   snowflakeConnectionRoute,
   snowflakeConnectionPopupRoute
 } from './';
+import { JoyrideModule } from 'ngx-joyride';
 
 const ENTITY_STATES = [...snowflakeConnectionRoute, ...snowflakeConnectionPopupRoute];
 
 @NgModule({
-  imports: [SnowpoleSharedModule, RouterModule.forChild(ENTITY_STATES)],
+  imports: [SnowpoleSharedModule, RouterModule.forChild(ENTITY_STATES), JoyrideModule.forChild()],
   declarations: [
     SnowflakeConnectionComponent,
     SnowflakeConnectionDetailComponent,

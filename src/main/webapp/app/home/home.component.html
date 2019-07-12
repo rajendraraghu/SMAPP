@@ -5,11 +5,16 @@
     <div class="col-md-9">
         <h1 jhiTranslate="home.title">Welcome, Snowflake Migration Web Application!</h1>
         <p class="lead" jhiTranslate="home.subtitle">This is your homepage</p>
-
         <div [ngSwitch]="isAuthenticated()">
             <div class="alert alert-success" *ngSwitchCase="true">
                 <span id="home-logged-message" *ngIf="account" jhiTranslate="home.logged.message"
-                    [translateValues]="{username: account.login}"> You are logged in as user "{{account.login}}". </span>
+                [translateValues]="{username: account.login}"> You are logged in as user "{{account.login}}". </span>
+            </div>
+            <div *ngSwitchCase="true">
+                <button class="btn btn-primary btn-sm" (click)="onClick()"
+                 joyrideStep="firstStep" title="Start the tour" text="Once clicked this button the Tour starts.">
+                    <fa-icon [icon]="'eye'"></fa-icon> Take Tour
+                </button>
             </div>
 
             <div class="alert alert-warning" *ngSwitchCase="false">
