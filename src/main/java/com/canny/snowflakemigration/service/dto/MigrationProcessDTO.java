@@ -39,6 +39,8 @@ public class MigrationProcessDTO implements Serializable {
     private Long sourceConnectionId;
 
     private String sourceConnectionName;
+    
+    private String sourceSystem;
 
     private String sourceConnectionUrl;
 
@@ -172,6 +174,13 @@ public class MigrationProcessDTO implements Serializable {
         this.sourceConnectionId = sourceConnectionId;
     }
 
+    public String getSourceSystem() {
+        return sourceSystem;
+    }
+
+    public void setsourceSystem(String sourceSystem) {
+        this.sourceSystem = sourceSystem;
+    }
     public String getSourceConnectionName() {
         return sourceConnectionName;
     }

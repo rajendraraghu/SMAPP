@@ -24,40 +24,54 @@ public class sendTableList  {
 		String status = new String();
 		try{
 			int jobid=0;
-			 
-	    Connection con1 = DriverManager.getConnection(processDTO.getSourceConnectionUrl(), processDTO.getSourceConnectionUsername(), processDTO.getSourceConnectionPassword());
-	    Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");  
-		Properties properties = new Properties();
-		properties.put("user", processDTO.getSnowflakeConnectionUsername());
-		properties.put("password", processDTO.getSnowflakeConnectionPassword());
-		properties.put("account", processDTO.getSnowflakeConnectionAcct());
-        properties.put("warehouse",processDTO.getSnowflakeConnectionWarehouse());
-		properties.put("db",processDTO.getSnowflakeConnectionDatabase());
-	    properties.put("schema",processDTO.getSnowflakeConnectionSchema());
-		Connection con2=DriverManager.getConnection(processDTO.getSnowflakeConnectionUrl(),properties);
+			
+			Properties properties0 = new Properties();
+			properties0.put("user", processDTO.getSourceConnectionUsername());
+			properties0.put("password", processDTO.getSourceConnectionPassword());
+			properties0.put("db",processDTO.getSourceConnectionDatabase());
+		    properties0.put("schema",processDTO.getSourceConnectionSchema());				 
+	        Connection con1 = DriverManager.getConnection(processDTO.getSourceConnectionUrl(), properties0);
+	        
+	        Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");  
+		    Properties properties = new Properties();
+		    properties.put("user", processDTO.getSnowflakeConnectionUsername());
+		    properties.put("password", processDTO.getSnowflakeConnectionPassword());
+		    properties.put("account", processDTO.getSnowflakeConnectionAcct());
+            properties.put("warehouse",processDTO.getSnowflakeConnectionWarehouse());
+		    properties.put("db",processDTO.getSnowflakeConnectionDatabase());
+	        properties.put("schema",processDTO.getSnowflakeConnectionSchema());
+		    Connection con2=DriverManager.getConnection(processDTO.getSnowflakeConnectionUrl(),properties);
 		
-		String cdc = processDTO.getCdc();
-		String bulk = processDTO.getBulk();
-		String[] tableNamescdc = cdc.split(",");
-		String[] tableNamesbulk = bulk.split(",");
+		    Statement st0 = con2.createStatement();
+		    ResultSet r0 = st0.executeQuery("CREATE TABLE IF NOT EXISTS jobRunStatus (jobId int identity(1,1),JobStartTime datetime, JobEndTime datetime,JobStatus varchar(1000),processid bigint);");
+		    ResultSet r1 = st0.executeQuery("CREATE TABLE IF NOT EXISTS tableLoadStatus (jobid int,tableLoadid int,tablename varchar(50),tableLoadStartTime datetime,tableLoadEndTime datetime,tableLoadStatus varchar(15),insertcount int,updatecount int, deletecount int, runtype varchar(20),processid bigint,processname varchar(100),sourcename varchar(100),destname varchar(100));");
+		    System.out.println("tables created");
+		    
+		    String cdc = processDTO.getCdc();
+    		String bulk = processDTO.getBulk();
+		    String[] tableNamescdc = cdc.split(",");
+		    String[] tableNamesbulk = bulk.split(",");
 		
-		System.out.println("cdc array length :"+tableNamescdc.length);
-		System.out.println("cdc array length :"+tableNamesbulk.length);
+		    System.out.println("cdc array length :"+tableNamescdc.length);
+		    System.out.println("bulk array length :"+tableNamesbulk.length);
 		
-		int i = 0;
-		int j = 0;
-		int tableLoadid = 0;
-		//int flag = 0;
-		//String query = new String();
-		String lastruntime = new String();
+		    int i = 0;
+		    int j = 0;
+		    int tableLoadid = 0;
+     		String lastruntime = new String();
 		
 		
-		Statement stmt0=con2.createStatement(); 
-		ResultSet rs0 = stmt0.executeQuery("SELECT IFNULL(jobStartTime,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)) FROM jobRunstatus WHERE jobid = (SELECT IFNULL(MAX(jobId),0) FROM jobRunStatus);");
-		if(rs0.next())
+		    Statement stmt0=con2.createStatement(); 
+		    ResultSet rs0 = stmt0.executeQuery("SELECT IFNULL(jobStartTime,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)) FROM jobRunstatus WHERE jobid = (SELECT IFNULL(MAX(jobId),0) FROM jobRunStatus);");
+		    Statement stmt1=con2.createStatement();
+		    ResultSet rs9 = stmt1.executeQuery("SELECT COUNT(*) as cnt FROM jobRunstatus");
+		    rs9.next();
+		    int cnt = rs9.getInt(1);
+		    if(rs0.next() || (cnt == 0))
 		    {
-			  lastruntime = rs0.getString(1);
-		      System.out.println("Lastruntime: "+ lastruntime);
+		      if(cnt == 0) {lastruntime = "2005-12-31 00:00:00.000";}	
+		      else{lastruntime = rs0.getString(1);}
+			  System.out.println("Lastruntime: "+ lastruntime);
 		      System.out.println("rs0 complete");
 		      ResultSet rs1 = stmt0.executeQuery("SELECT IFNULL(MAX(tableLoadId),0) as tableLoadId FROM tableLoadStatus;");
 		      if(rs1.next()) 
@@ -66,18 +80,18 @@ public class sendTableList  {
 			    System.out.println("TableLoadId: "+ tableLoadid);
 			  	System.out.println("rs1 complete");
 		        ResultSet rs3 = stmt0.executeQuery("SELECT IFNULL(MAX(jobId),0) FROM jobRunStatus");
-		        if(rs3.next())
+		        if((rs3.next()) || (cnt == 0 ))
 		        {
 			     jobid = rs3.getInt(1);
 			     jobid = jobid + 1;
-			     stmt0.executeQuery("INSERT INTO jobRunstatus VALUES("+jobid+",TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,"+processDTO.getId()+");");
-
+			     stmt0.executeQuery("INSERT INTO jobRunstatus VALUES("+jobid+",TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,"+processDTO.getId()+");");               
+                 String system = processDTO.getSourceConnectionName();
 		       	 while(i<tableNamescdc.length && !status.equals("FAILURE")&& tableNamescdc.length >0 && !tableNamescdc[i].equals("[]"))
 		         {
 			        System.out.println("length is :"+tableNamescdc.length+"i value is :"+i);
-		            stmt0.executeQuery("INSERT INTO tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableNamescdc[i]+"',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,0,0,0,NULL,"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
+		            stmt0.executeQuery("INSERT INTO tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableNamescdc[i]+"',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,0,0,0,'cdc',"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
         	    	System.out.println("starting cdc delta process for the table: "+tableNamescdc[i]);
-				    cdcprocess(lastruntime,tableNamescdc[i],con1,con2,jobid,tableLoadid,processDTO.getId());
+				    cdcprocess(lastruntime,tableNamescdc[i],con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase());
 				    stmt0.executeQuery("UPDATE tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'SUCCESS' WHERE tableLoadid = "+tableLoadid+";");
 				    i= i +1;
 				    tableLoadid = tableLoadid + 1;
@@ -85,9 +99,9 @@ public class sendTableList  {
 		       	 while(j<tableNamesbulk.length && !status.equals("FAILURE")&& tableNamesbulk.length >0 && !tableNamesbulk[j].equals("[]"))
 		         {
 			        System.out.println("length is :"+tableNamesbulk.length+"i value is :"+i);
-		            stmt0.executeQuery("INSERT INTO tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableNamesbulk[j]+"',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,0,0,0,NULL,"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
-        	    	System.out.println("starting cdc delta process for the table: "+tableNamesbulk[j]);
-        	    	bulkprocess(tableNamesbulk[j],con1,con2,jobid,tableLoadid,processDTO.getId());
+		            stmt0.executeQuery("INSERT INTO tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableNamesbulk[j]+"',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,0,0,0,'bulk',"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
+        	    	System.out.println("starting bulk process for the table: "+tableNamesbulk[j]);
+        	    	bulkprocess(tableNamesbulk[j],con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase());
 				    stmt0.executeQuery("UPDATE tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'SUCCESS' WHERE tableLoadid = "+tableLoadid+";");
 				    j = j+1;
 				    tableLoadid = tableLoadid + 1;
@@ -133,8 +147,10 @@ public class sendTableList  {
 		    properties.put("schema",processDTO.getSnowflakeConnectionSchema());
 			Connection con2=DriverManager.getConnection(processDTO.getSnowflakeConnectionUrl(),properties);
 			Statement stmt0 = con2.createStatement();
-			stmt0.executeQuery("UPDATE jobRunStatus SET JobEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , JobStatus = 'FAILURE' WHERE jobid = (SELECT MAX(jobId) FROM jobRunStatus);");
-			status = "FAILURE - catch";
+			System.out.println("UPDATE jobRunStatus SET JobEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , JobStatus = 'FAILURE--"+e.toString().replace("'", "")+"' WHERE jobid = (SELECT MAX(jobId) FROM jobRunStatus);");
+			stmt0.executeQuery("UPDATE jobRunStatus SET JobEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , JobStatus = 'FAILURE--"+e.toString().replace("'", "")+"' WHERE jobid = (SELECT MAX(jobId) FROM jobRunStatus);");
+			stmt0.executeQuery("UPDATE tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'FAILURE' WHERE tableLoadid = (SELECT MAX(tableLoadId) FROM tableLoadStatus);");
+			status = "FAILURE - catch"+ e;
 			
 		}  
 	    return status;
@@ -161,18 +177,19 @@ public class sendTableList  {
 
 	    csvWriter.close();
 	}
-	public static void bulkprocess(String tableName,Connection con1, Connection con2, int jobid, int tableLoadid,long processid)
+	public static void bulkprocess(String tableName,Connection con1, Connection con2, int jobid, int tableLoadid,long processid,String system,String dbname)
 	throws SQLException, IOException{
 	
 	String query = new String();	
 	String tn = tableName.replace("[\"", "");
 	String tn1 = tn.replace("\"]", "");
 	query = "select * from " +tn1;
-	String srcCols = stageLoad(query,con1,con2,tn1);
+	System.out.println("query is :"+query);
+	String srcCols = stageLoad(query,con1,con2,tn1,system,dbname);
 	histLoad(con2,tn1,"BULK", srcCols,jobid,tableLoadid,processid);	
 
 	}
-	public static void cdcprocess(String lastruntime,String tableName,Connection con1, Connection con2,int jobid, int tableLoadid,long processid) 
+	public static void cdcprocess(String lastruntime,String tableName,Connection con1, Connection con2,int jobid, int tableLoadid,long processid, String system,String dbname) 
       throws SQLException, IOException
 	{
 		String query = new String();	
@@ -189,89 +206,38 @@ public class sendTableList  {
 		}
 		else {
 		query = "select * from " +tn1+ " where payment_date >'" + lastruntime+"';";
-		String srcCols =stageLoad(query,con1,con2,tn1);
+		String srcCols =stageLoad(query,con1,con2,tn1,system,dbname);
 		histLoad(con2,tn1,"CDC", srcCols,jobid,tableLoadid,processid);		
 		}
 	}
-    public static String getColNames(ResultSet rs) throws SQLException {
-    	ResultSetMetaData rsmd = rs.getMetaData();
-    	int columnCount = rsmd.getColumnCount();
-    	String ColName = new String();
-    	ColName = ",";
-    	for (int i = 1; i <= columnCount; i++ ) {
-    		  ColName = ColName.concat(rsmd.getColumnName(i));
-    		  ColName = ColName.concat(",");    		  
-    		}
-    	return ColName.substring(1,ColName.length() - 1);
-    }
     public static String gethashColNames(String ColName) {
     	String hashColName = ColName.replace(",","||'~'||");
     	return hashColName;
     }
-    public static Connection getConnection2(String source) throws SQLException {
-    	 try {
-    		 	if(source.equals("Snowflake"))	      Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");
-    		 	else if (source.equals("MySQL"))      Class.forName("com.mysql.cj.jdbc.Driver");
-    		 	else if (source.equals("SQLServer"))  Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-    		 	else if (source.equals("Oracle"))     Class.forName("oracle.jdbc.driver.OracleDriver");
-    		 	else if (source.equals("Teradata"))   Class.forName("com.teradata.jdbc.TeraDriver");
-   	     } 
-    	 catch (ClassNotFoundException ex) {
-   	      System.err.println("Driver not found");
-   	    }
-
-   	    // build connection properties
-   	    Properties properties = new Properties();
-   	    properties.put("user", "Sowmya");     
-   	    properties.put("password", "Canny@831007"); 
-   	    //properties.put("account", "iv97465");   
-   	    //properties.put("warehouse", "COMPUTE_WH"); 
-   	    //properties.put("db", "DEMO_DB");     
-   	    //properties.put("schema", "PUBLIC");  
-   	   
-   	    String connectStr = new String();
-	 	if(source.equals("Snowflake"))	      connectStr = "jdbc:snowflake://iv97465.east-us-2.azure.snowflakecomputing.com";
-	 	else if (source.equals("MySQL"))      connectStr = "jdbc:mysql://localhost:3306/mysqldemodb";
-	 	else if (source.equals("SQLServer"))  connectStr = "jdbc:sqlserver://localhost:1433;";
-	 	else if (source.equals("Oracle"))     connectStr = "jdbc:oracle:thin:@localhost:1521/orcl";
-	 	else if (source.equals("Teradata"))   connectStr = "jdbc:teradata://tdwprod.egtry.com";
-   	 
-   	    
-   	    return DriverManager.getConnection(connectStr, properties);
-    	
-    }
-    public static Connection getConnection() throws SQLException, IOException, ClassNotFoundException{
-    	FileInputStream fis=new FileInputStream("connection.prop");
-    	Properties p=new Properties (); 
-        p.load (fis); 
-        String dname= (String) p.get ("Dname"); 
-        String url= (String) p.get ("URL"); 
-        String username= (String) p.get ("Uname"); 
-        String password= (String) p.get ("password"); 
-        Class.forName(dname); 
-        
-        return DriverManager.getConnection(url, username, password); 
-    }
-    public static String getColNames2(Connection con, String tablename, String dname) throws SQLException
+    public static String getColNames2(Connection con, String tablename, String dname,String dbname) throws SQLException
     {
+    	System.out.println("getcolnames entry");
     	String s = new String();
     	Statement stmt0  = con.createStatement();
     	ResultSet rs9 ;
     	if(dname.contains("oracle")) 
     		rs9 = stmt0.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '"+tablename+"'");    		
     	else
-    		rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"+tablename+"'"); 
+    		rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"+tablename+"' AND TABLE_SCHEMA = '"+dbname+"';"); 
     	while(rs9.next())
     	{
     	 s = s.concat(rs9.getString(1));
+    	 s = s.concat(",");
     	}
-    	return s;
+    	System.out.println("getcolnames exit");
+    	return s.substring(0,s.length()-1);
     }
-    public static String stageLoad(String query, Connection con1,Connection con2,String tableName) throws SQLException, IOException
+    public static String stageLoad(String query, Connection con1,Connection con2,String tableName,String system,String dbname) throws SQLException, IOException
     {
     	Statement stmt1=con1.createStatement(); 
     	ResultSet rs1=stmt1.executeQuery(query);
-    	String srcCols = getColNames(rs1);
+    	//String srcCols = getColNames(rs1);
+    	String srcCols = getColNames2(con1,tableName,system,dbname);
     	//using local file now. Should be replaced with S3 or other filespace
     	String csvFilename = "F:/POC/CSV/"+tableName+".csv";
     	toCSV(rs1,csvFilename);   	
@@ -279,19 +245,21 @@ public class sendTableList  {
     	
     	//This section moves file data to stage table and then to snow flake table(staging). Adds columns to hold MD5 hash values.
     	Statement stmt2=con2.createStatement();
-    	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
+    	System.out.println("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
+    	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");    	
     	stmt2.executeQuery("PUT 'file://F:/POC/CSV/"+tableName+".csv' @"+tableName+"_stage;");
-    	int j = 1;
+    	int m = 1;
     	int k = srcCols.replaceAll("[^,]","").length();
     	String stageCols = "t.$1,";
-    	while(j<k) {
-    		j = j+1;
-    		stageCols =stageCols + "t.$"+j+",";
+    	while(m<k) {
+    		m = m+1;
+    		stageCols =stageCols + "t.$"+m+",";
     		}
     	stageCols =stageCols.substring(0,stageCols.length() - 1);
     	String hashCol = gethashColNames(stageCols);
-    	//createAlterDDL(Connection con2,String tableName);
-    	stmt2.executeQuery("INSERT INTO "+tableName+" SELECT "+stageCols+",MD5("+hashCol+") as md5hash,MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as md5hash_pk, 0 as isdeleted FROM @"+tableName+"_stage t;"); 	
+    	createAlterDDL(con1,con2,tableName);
+    	System.out.println("stagecols:"+stageCols);
+    	stmt2.executeQuery("INSERT INTO "+tableName+" SELECT "+stageCols+",0 as isdeleted,MD5("+hashCol+") as md5hash,MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as md5hash_pk FROM @"+tableName+"_stage t;"); 	
     	System.out.println("table creation  and loading (stg) complete");
     	return srcCols;
     }
@@ -337,7 +305,7 @@ public class sendTableList  {
     	System.out.println("Insert : "+ targetInsertCount);
     	System.out.println("Update : "+ targetUpdateCount);
     	System.out.println("Delete : "+ targetDeleteCount);
-    	stmt3.executeQuery("UPDATE tableLoadStatus SET insertcount ="+targetInsertCount+", updatecount ="+targetUpdateCount+",deletecount ="+targetDeleteCount+",runtype='"+process+"' WHERE jobid ="+jobid+" and tableLoadid ="+tableLoadid+" and processid ="+processid+";");
+    	stmt3.executeQuery("UPDATE tableLoadStatus SET insertcount ="+targetInsertCount+", updatecount ="+targetUpdateCount+",deletecount ="+targetDeleteCount+" WHERE jobid ="+jobid+" and tableLoadid ="+tableLoadid+" and processid ="+processid+";");
     }
     public static String pkgen(Connection con2,String tableName)
     {
@@ -380,7 +348,7 @@ public class sendTableList  {
     public static void createAlterDDL(Connection con1,Connection con2,String tableName)  throws SQLException
     {
     	Statement stmt1=con1.createStatement();
-    	ResultSet rs1=stmt1.executeQuery("SHOW CREATE TABLE "+tableName);
+    	ResultSet rs1=stmt1.executeQuery("SHOW CREATE TABLE "+tableName);//exec sp_columns YourTableName//sp_help 'tablename' online//DESC
     	rs1.next();
 		String ddl = rs1.getString("Create Table");
 		int ind1 = ddl.indexOf("ENGINE");
@@ -388,11 +356,17 @@ public class sendTableList  {
 		String ddl3 = ddl2.replaceAll("int\\([0-9]+\\)","int");
 		String ddl4 = ddl3.substring(ddl3.indexOf("("));
 		String ddl5 = ddl4.replaceAll("`","");
+		String ddl6 = ddl5.substring(0, ddl5.length()-2);
+		String stagecreate = ddl6.concat(",MD5HASH TEXT,MD5HASH_PK TEXT);");
 		
+		String histcreate = ddl6.concat(",current_ind boolean,updatedtime timestamp,MD5HASH TEXT,createdTime timestamp,MD5HASH_PK TEXT);");
 		
 		Statement stmt2 = con2.createStatement();
-		ResultSet rs2= stmt2.executeQuery("");
-		ResultSet rs3 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+ ddl5);
+//		ResultSet rs2= stmt2.executeQuery("");
+		System.out.println("CREATE TABLE IF NOT EXISTS "+tableName+ stagecreate);
+		System.out.println("CREATE TABLE IF NOT EXISTS "+tableName+"hist "+histcreate);
+		ResultSet rs2 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+ stagecreate);
+		ResultSet rs3 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+"hist "+histcreate);
 		
 		
     	
