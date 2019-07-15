@@ -224,4 +224,46 @@ public class MigrationProcessResource {
         return jsonResponse.toString();
     }
 
+     @PostMapping(value = "/migration-processes/ReportsPerJob")
+    public @ResponseBody String ReportsPerJob(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO)throws SQLException,ClassNotFoundException  {
+        Properties properties = new Properties();
+		properties.put("user", migrationProcessDTO.getSnowflakeConnectionUsername());
+		properties.put("password", migrationProcessDTO.getSnowflakeConnectionPassword());
+		properties.put("account", migrationProcessDTO.getSnowflakeConnectionAcct());
+        properties.put("warehouse",migrationProcessDTO.getSnowflakeConnectionWarehouse());
+		properties.put("db",migrationProcessDTO.getSnowflakeConnectionDatabase());
+	    properties.put("schema",migrationProcessDTO.getSnowflakeConnectionSchema());
+		Connection con2=DriverManager.getConnection(migrationProcessDTO.getSnowflakeConnectionUrl(),properties);
+        Statement stmt0=con2.createStatement(); 
+        ResultSet rs0 = stmt0.executeQuery("SELECT MAX(jobid) FROM jobRunStatus");
+        rs0.next();
+        System.out.println("SELECT * FROM tableLoadStatus WHERE processid ="+migrationProcessDTO.getId() +" AND jobid ="+rs0.getInt(1)+" order by tableloadstarttime desc");
+        ResultSet rs1 = stmt0.executeQuery("SELECT * FROM tableLoadStatus WHERE processid ="+migrationProcessDTO.getId() +" AND jobid ="+rs0.getInt(1)+" order by tableloadstarttime desc");
+        
+        JsonObject jsonResponse = new JsonObject();	
+		JsonArray data = new JsonArray();
+		while(rs1.next() ) 
+		{
+			System.out.println("Inside while loop:"+rs1.getString(3));
+		JsonArray row = new JsonArray();
+		row.add(new JsonPrimitive(rs1.getInt(1)));
+		row.add(new JsonPrimitive(rs1.getInt(2)));
+		row.add(new JsonPrimitive(rs1.getString(3)==null?"":rs1.getString(3)));
+		row.add(new JsonPrimitive(rs1.getString(4)==null?"":rs1.getString(4)));
+		row.add(new JsonPrimitive(rs1.getString(5)==null?"":rs1.getString(5)));
+		row.add(new JsonPrimitive(rs1.getString(6)==null?"":rs1.getString(6)));
+		row.add(new JsonPrimitive(rs1.getInt(7)));
+		row.add(new JsonPrimitive(rs1.getInt(8)));
+		row.add(new JsonPrimitive(rs1.getInt(9)));
+		//row.add(new JsonPrimitive(rs0.getString(10)));
+		row.add(new JsonPrimitive(rs1.getString(11)==null?"":rs1.getString(11)));
+		row.add(new JsonPrimitive(rs1.getString(12)==null?"":rs1.getString(12)));
+		row.add(new JsonPrimitive(rs1.getString(13)==null?"":rs1.getString(13)));
+		row.add(new JsonPrimitive(rs1.getString(14)==null?"":rs1.getString(14)));
+		
+        data.add(row);
+        }
+        jsonResponse.add("audit_data", data);
+        return jsonResponse.toString();
+    }
 }
