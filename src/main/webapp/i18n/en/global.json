@@ -1,6 +1,6 @@
 {
   "global": {
-    "title": "Snowpole",
+    "title": "SnowPole",
     "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/?locale=en\">upgrade your browser</a> to improve your experience.",
     "menu": {
       "home": "Home",
@@ -10,6 +10,10 @@
         "sourceConnection": "Source Connection",
         "snowflakeConnection": "Snowflake Connection",
         "migrationProcess": "Data Acquisition Hub",
+        "historyMigration": "History Migration",
+        "sourceDelta": "Source Delta",
+        "snowParse": "Snow Parse",
+        "snowDDL": "Snow DDL",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
@@ -17,13 +21,13 @@
         "settings": "Settings",
         "password": "Password",
         "sessions": "Sessions",
-        "login": "Sign in",
-        "logout": "Sign out",
+        "login": "Sign In",
+        "logout": "Sign Out",
         "register": "Register"
       },
       "admin": {
         "main": "Administration",
-        "userManagement": "User management",
+        "userManagement": "User Management",
         "tracker": "User tracker",
         "metrics": "Metrics",
         "health": "Health",

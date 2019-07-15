@@ -1,7 +1,8 @@
 <nav class="navbar navbar-dark navbar-expand-md bg-dark">
     <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
         <span class="logo-img"></span>
-        <span jhiTranslate="global.title" class="navbar-title">Snowpole</span> <span class="navbar-version">{{version}}</span>
+        <span jhiTranslate="global.title" class="navbar-title">SnowPole</span> 
+        <!-- <span class="navbar-version">{{version}}</span> -->
     </a>
     <a class="navbar-toggler d-lg-none" href="javascript:void(0);" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleNavbar()">
         <fa-icon icon="bars"></fa-icon>
@@ -41,8 +42,34 @@
                     </li> -->
                     <li>
                         <a class="dropdown-item" routerLink="migration-process" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <!-- <fa-icon icon="asterisk" fixedWidth="true"></fa-icon> -->
+                            <i class="fa fa-database" aria-hidden="true"></i>
+                            <span jhiTranslate="global.menu.entities.migrationProcess">Data Acquisition Hub</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item disabled" routerLink="migration-process" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <!-- <fa-icon icon="asterisk" fixedWidth="true"></fa-icon> -->
+                            <i class="fa fa-telegram" aria-hidden="true"></i>
+                            <span jhiTranslate="global.menu.entities.historyMigration">History Migration</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item disabled" routerLink="migration-process" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
-                            <span jhiTranslate="global.menu.entities.migrationProcess">Migration Process</span>
+                            <span jhiTranslate="global.menu.entities.sourceDelta">Source Delta</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item disabled" routerLink="migration-process" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <i class="fa fa-cloud" aria-hidden="true"></i>
+                            <span jhiTranslate="global.menu.entities.snowParse">Snow Parse</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item disabled" routerLink="migration-process" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <i class="fa fa-cog" aria-hidden="true"></i>
+                            <span jhiTranslate="global.menu.entities.snowDDL">Snow DDL</span>
                         </a>
                     </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
@@ -59,20 +86,21 @@
                     <li>
                         <a class="dropdown-item" routerLink="admin/user-management" routerLinkActive="active" (click)="collapseNavbar()">
                             <fa-icon icon="user" fixedWidth="true"></fa-icon>
-                            <span jhiTranslate="global.menu.admin.userManagement">User management</span>
+                            <!-- <i class="fa fa-user" aria-hidden="true"></i> -->
+                            <span jhiTranslate="global.menu.admin.userManagement">User Management</span>
                         </a>
                     </li>
 
                     <li>
                         <a class="dropdown-item" routerLink="source-connection" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
-                            <span jhiTranslate="global.menu.entities.sourceConnection">Source Connection</span>
+                            <i class="fa fa-database" aria-hidden="true" style="padding-left: 3px;"></i>
+                            <span jhiTranslate="global.menu.entities.sourceConnection" style="padding-left: 6px;">Source Connection</span>
                         </a>
                     </li>
                     <li>
                         <a class="dropdown-item" routerLink="snowflake-connection" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
-                            <span jhiTranslate="global.menu.entities.snowflakeConnection">Snowflake Connection</span>
+                            <i class="fa fa-snowflake-o" aria-hidden="true" style="padding-left: 3px;"></i>
+                            <span jhiTranslate="global.menu.entities.snowflakeConnection" style="padding-left: 6px;">Snowflake Connection</span>
                         </a>
                     </li>
 
@@ -106,12 +134,12 @@
                             <span jhiTranslate="global.menu.admin.logs">Logs</span>
                         </a>
                     </li> -->
-                    <li *ngIf="swaggerEnabled">
+                    <!-- <li *ngIf="swaggerEnabled">
                         <a class="dropdown-item" routerLink="admin/docs" routerLinkActive="active" (click)="collapseNavbar()">
                             <fa-icon icon="book" fixedWidth="true"></fa-icon>
                             <span jhiTranslate="global.menu.admin.apidocs">API</span> <span> ( for Developers )</span>
                         </a>
-                    </li>
+                    </li> -->
                     <!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
                 </ul>
             </li>
@@ -156,13 +184,13 @@
                     <li *ngSwitchCase="true">
                         <a class="dropdown-item" (click)="logout()" id="logout">
                             <fa-icon icon="sign-out-alt" fixedWidth="true"></fa-icon>
-                            <span jhiTranslate="global.menu.account.logout">Sign out</span>
+                            <span jhiTranslate="global.menu.account.logout">Sign Out</span>
                         </a>
                     </li>
                     <li *ngSwitchCase="false">
                         <a class="dropdown-item" (click)="login()" id="login">
                             <fa-icon icon="sign-in-alt" fixedWidth="true"></fa-icon>
-                            <span jhiTranslate="global.menu.account.login">Sign in</span>
+                            <span jhiTranslate="global.menu.account.login">Sign In</span>
                         </a>
                     </li>
                     <li *ngSwitchCase="false">
