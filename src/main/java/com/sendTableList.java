@@ -89,20 +89,24 @@ public class sendTableList  {
 		       	 while(i<tableNamescdc.length && !status.equals("FAILURE")&& tableNamescdc.length >0 && !tableNamescdc[i].equals("[]"))
 		         {
 			        System.out.println("length is :"+tableNamescdc.length+"i value is :"+i);
-		            stmt0.executeQuery("INSERT INTO tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableNamescdc[i]+"',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,0,0,0,'cdc',"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
-        	    	System.out.println("starting cdc delta process for the table: "+tableNamescdc[i]);
-				    cdcprocess(lastruntime,tableNamescdc[i],con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase());
-				    stmt0.executeQuery("UPDATE tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'SUCCESS' WHERE tableLoadid = "+tableLoadid+";");
+					String tn = tableNamescdc[i].replace("[\"", "");
+					String tableName = tn.replaceAll("\"]|\"", "");
+		            stmt0.executeQuery("INSERT INTO tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableName+"',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,0,0,0,'cdc',"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
+        	    	System.out.println("starting cdc delta process for the table: "+tableName);
+					cdcprocess(lastruntime,tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase());
+				    stmt0.executeQuery("UPDATE tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'SUCCESS' WHERE tableLoadid = "+tableLoadid+" AND jobid = "+ jobid +";");
 				    i= i +1;
 				    tableLoadid = tableLoadid + 1;
 				  }
 		       	 while(j<tableNamesbulk.length && !status.equals("FAILURE")&& tableNamesbulk.length >0 && !tableNamesbulk[j].equals("[]"))
 		         {
 			        System.out.println("length is :"+tableNamesbulk.length+"i value is :"+i);
-		            stmt0.executeQuery("INSERT INTO tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableNamesbulk[j]+"',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,0,0,0,'bulk',"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
-        	    	System.out.println("starting bulk process for the table: "+tableNamesbulk[j]);
-        	    	bulkprocess(tableNamesbulk[j],con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase());
-				    stmt0.executeQuery("UPDATE tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'SUCCESS' WHERE tableLoadid = "+tableLoadid+";");
+		            String tn = tableNamesbulk[j].replace("[\"", "");
+					String tableName = tn.replaceAll("\"]|\"", "");
+					stmt0.executeQuery("INSERT INTO tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableName+"',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,0,0,0,'bulk',"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
+        	    	System.out.println("starting bulk process for the table: "+tableName);
+					bulkprocess(tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase());
+				    stmt0.executeQuery("UPDATE tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'SUCCESS' WHERE tableLoadid = "+tableLoadid+" AND jobid = "+ jobid +";");
 				    j = j+1;
 				    tableLoadid = tableLoadid + 1;
 				  }	
@@ -110,14 +114,11 @@ public class sendTableList  {
         			}
 			        else
 			        {
-			        	stmt0.executeQuery("UPDATE tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'FAILURE' WHERE tableLoadid = "+tableLoadid+";");
+			        	stmt0.executeQuery("UPDATE tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'FAILURE' WHERE jobid = "+jobid+";");
 			        	status = "FAILURE";
 			        }
-			        
-
-			
+			        	
 		}
-		       	 
 		stmt0.executeQuery("UPDATE jobRunstatus SET JobEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , JobStatus = 'SUCCESS' WHERE jobid ="+jobid+";");
 		status = (status=="FAILURE"?"FAILURE":"SUCCESS");
 
@@ -181,22 +182,21 @@ public class sendTableList  {
 	throws SQLException, IOException{
 	
 	String query = new String();	
-	String tn = tableName.replace("[\"", "");
-	String tn1 = tn.replace("\"]", "");
-	query = "select * from " +tn1;
+	//String tn = tableName.replace("[\"", "");
+	//String tn1 = tn.replace("\"]", "");
+	query = "select * from " +tableName;
 	System.out.println("query is :"+query);
-	String srcCols = stageLoad(query,con1,con2,tn1,system,dbname);
-	histLoad(con2,tn1,"BULK", srcCols,jobid,tableLoadid,processid);	
-
+	String srcCols = stageLoad(query,con1,con2,tableName,system,dbname);
+	histLoad(con2,tableName,"BULK", srcCols,jobid,tableLoadid,processid);	
 	}
 	public static void cdcprocess(String lastruntime,String tableName,Connection con1, Connection con2,int jobid, int tableLoadid,long processid, String system,String dbname) 
       throws SQLException, IOException
 	{
 		String query = new String();	
 		System.out.println("TN is:"+tableName);
-		String tn = tableName.replace("[\"", "");
-		String tn1 = tn.replace("\"]", "");
-		System.out.println("New TN is:"+tn1);
+		//String tn = tableName.replace("[\"", "");
+		//String tn1 = tn.replace("\"]", "");
+		System.out.println("New TN is:"+tableName);
 		
 		//cdc column to be made dynamic
 		lastruntime = "2005-12-31 00:00:00.000";
@@ -205,9 +205,9 @@ public class sendTableList  {
 			System.out.println("No job history available in JobRunStatus.Cannot run CDC load.");
 		}
 		else {
-		query = "select * from " +tn1+ " where payment_date >'" + lastruntime+"';";
-		String srcCols =stageLoad(query,con1,con2,tn1,system,dbname);
-		histLoad(con2,tn1,"CDC", srcCols,jobid,tableLoadid,processid);		
+		query = "select * from " +tableName+ " where payment_date >'" + lastruntime+"';";
+		String srcCols =stageLoad(query,con1,con2,tableName,system,dbname);
+		histLoad(con2,tableName,"CDC", srcCols,jobid,tableLoadid,processid);		
 		}
 	}
     public static String gethashColNames(String ColName) {
@@ -241,15 +241,14 @@ public class sendTableList  {
     	//using local file now. Should be replaced with S3 or other filespace
     	String csvFilename = "F:/POC/CSV/"+tableName+".csv";
     	toCSV(rs1,csvFilename);   	
-    	System.out.println("Stage file writing complete");
-    	
+    	System.out.println("Stage file writing complete");    	
     	//This section moves file data to stage table and then to snow flake table(staging). Adds columns to hold MD5 hash values.
     	Statement stmt2=con2.createStatement();
     	System.out.println("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
     	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");    	
     	stmt2.executeQuery("PUT 'file://F:/POC/CSV/"+tableName+".csv' @"+tableName+"_stage;");
     	int m = 1;
-    	int k = srcCols.replaceAll("[^,]","").length();
+    	int k = srcCols.replaceAll("[^,]","").length() + 1;
     	String stageCols = "t.$1,";
     	while(m<k) {
     		m = m+1;
@@ -260,6 +259,7 @@ public class sendTableList  {
     	createAlterDDL(con1,con2,tableName);
     	System.out.println("stagecols:"+stageCols);
     	stmt2.executeQuery("INSERT INTO "+tableName+" SELECT "+stageCols+",0 as isdeleted,MD5("+hashCol+") as md5hash,MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as md5hash_pk FROM @"+tableName+"_stage t;"); 	
+		// stmt2.executeQuery("INSERT INTO "+tableName+" SELECT "+stageCols+",MD5("+hashCol+") as md5hash,MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as md5hash_pk FROM @"+tableName+"_stage t;"); 	
     	System.out.println("table creation  and loading (stg) complete");
     	return srcCols;
     }
@@ -271,7 +271,8 @@ public class sendTableList  {
     	String pk1 = pk.replace("src","a");
     	String pk2 = pk1.replace("tgt", "b");
     	int secondmergecount;
-    //insert new record for Insert and update    	
+    //insert new record for Insert and update  
+	System.out.println("HIST LOAD START");  	
     	int firstmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on "+pk+" and tgt.md5hash = src.MD5HASH and tgt.current_ind =1 when not matched then INSERT ("+srcCols +",current_ind ,createdTime,updatedtime,md5hash,md5hash_pk) VALUES (src."+srcCols.replace(",", ",src.")+",1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.md5hash,src.md5hash_pk)");
     	System.out.println("end of first merge" + firstmergecount);
     
@@ -357,9 +358,9 @@ public class sendTableList  {
 		String ddl4 = ddl3.substring(ddl3.indexOf("("));
 		String ddl5 = ddl4.replaceAll("`","");
 		String ddl6 = ddl5.substring(0, ddl5.length()-2);
-		String stagecreate = ddl6.concat(",MD5HASH TEXT,MD5HASH_PK TEXT);");
+		String stagecreate = ddl6.concat(",isdeleted INT,MD5HASH TEXT,MD5HASH_PK TEXT);");
 		
-		String histcreate = ddl6.concat(",current_ind boolean,updatedtime timestamp,MD5HASH TEXT,createdTime timestamp,MD5HASH_PK TEXT);");
+		String histcreate = ddl6.concat(",isdeleted INT,current_ind boolean,updatedtime timestamp,MD5HASH TEXT,createdTime timestamp,MD5HASH_PK TEXT);");
 		
 		Statement stmt2 = con2.createStatement();
 //		ResultSet rs2= stmt2.executeQuery("");

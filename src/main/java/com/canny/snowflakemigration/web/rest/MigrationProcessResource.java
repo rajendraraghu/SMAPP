@@ -205,18 +205,18 @@ public class MigrationProcessResource {
 		JsonArray row = new JsonArray();
 		row.add(new JsonPrimitive(rs0.getInt(1)));
 		row.add(new JsonPrimitive(rs0.getInt(2)));
-		row.add(new JsonPrimitive(rs0.getString(3)));
-		row.add(new JsonPrimitive(rs0.getString(4)));
-		row.add(new JsonPrimitive(rs0.getString(5)));
-		row.add(new JsonPrimitive(rs0.getString(6)));
+		row.add(new JsonPrimitive(rs0.getString(3)==null?"":rs0.getString(3)));
+		row.add(new JsonPrimitive(rs0.getString(4)==null?"":rs0.getString(4)));
+		row.add(new JsonPrimitive(rs0.getString(5)==null?"":rs0.getString(5)));
+		row.add(new JsonPrimitive(rs0.getString(6)==null?"":rs0.getString(6)));
 		row.add(new JsonPrimitive(rs0.getInt(7)));
 		row.add(new JsonPrimitive(rs0.getInt(8)));
 		row.add(new JsonPrimitive(rs0.getInt(9)));
 		//row.add(new JsonPrimitive(rs0.getString(10)));
-		row.add(new JsonPrimitive(rs0.getString(11)));
-		row.add(new JsonPrimitive(rs0.getString(12)));
-		row.add(new JsonPrimitive(rs0.getString(13)));
-		row.add(new JsonPrimitive(rs0.getString(14)));
+		row.add(new JsonPrimitive(rs0.getString(11)==null?"":rs0.getString(11)));
+		row.add(new JsonPrimitive(rs0.getString(12)==null?"":rs0.getString(12)));
+		row.add(new JsonPrimitive(rs0.getString(13)==null?"":rs0.getString(13)));
+		row.add(new JsonPrimitive(rs0.getString(14)==null?"":rs0.getString(14)));
 		
         data.add(row);
         }
