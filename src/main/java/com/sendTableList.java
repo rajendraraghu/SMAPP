@@ -257,6 +257,7 @@ public class sendTableList  {
     	createAlterDDL(con1,con2,tableName);
     	System.out.println("stagecols:"+stageCols);
 		stmt2.executeQuery("TRUNCATE TABLE "+tableName);
+		System.out.println("Truncating "+tableName);
     	stmt2.executeQuery("INSERT INTO "+tableName+" SELECT "+stageCols+",0 as isdeleted,MD5("+hashCol+") as md5hash,MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as md5hash_pk FROM @"+tableName+"_stage t;"); 	
 		// stmt2.executeQuery("INSERT INTO "+tableName+" SELECT "+stageCols+",MD5("+hashCol+") as md5hash,MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as md5hash_pk FROM @"+tableName+"_stage t;"); 	
     	System.out.println("table creation  and loading (stg) complete");

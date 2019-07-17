@@ -3,7 +3,8 @@
         <button type="submit" (click)="previousState()" class="btn btn-info">
             <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
         </button>
-        <span>Report History For {{this.migrationProcess.name}}</span>
+        <!-- <span>Report History For {{this.migrationProcess.name}}</span> -->
+        <span>Job Status</span>
         <button class="btn btn-primary float-right" (click)="refresh()">
             <fa-icon [icon]="'sync'"></fa-icon> <span jhiTranslate="health.refresh.button">Refresh</span>
         </button>
