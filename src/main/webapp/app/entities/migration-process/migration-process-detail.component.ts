@@ -22,7 +22,6 @@ export class MigrationProcessDetailComponent implements OnInit {
   cdcTables = [];
   bulkTables = [];
   isSaving: boolean;
-
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
@@ -54,7 +53,7 @@ export class MigrationProcessDetailComponent implements OnInit {
   prepareData(tables) {
     this.tables = [];
     tables.forEach(element => {
-      const table = { name: element, selected: this.isChecked(element), bulk: this.isBulk(element) };
+      const table = { name: element, selected: this.isChecked(element), cdc: this.isCDC(element) };
       this.tables.push(table);
     });
     this.tablesCopy = this.tables;
@@ -73,7 +72,7 @@ export class MigrationProcessDetailComponent implements OnInit {
   }
 
   onProcessSelection(item) {
-    item.bulk = item.bulk ? false : true;
+    item.cdc = item.cdc ? false : true;
   }
 
   isChecked(item) {
@@ -86,8 +85,8 @@ export class MigrationProcessDetailComponent implements OnInit {
     }
   }
 
-  isBulk(item) {
-    const index = this.bulkTables.indexOf(item);
+  isCDC(item) {
+    const index = this.cdcTables.indexOf(item);
     if (index === -1) {
       return false;
     } else {
@@ -116,10 +115,10 @@ export class MigrationProcessDetailComponent implements OnInit {
     const cdc = [];
     this.tables.forEach(element => {
       if (element.selected) {
-        if (element.bulk) {
-          bulk.push(element.name);
-        } else {
+        if (element.cdc) {
           cdc.push(element.name);
+        } else {
+          bulk.push(element.name);
         }
       }
     });

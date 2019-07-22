@@ -88,8 +88,8 @@
                     </div>
                     <div class="col-3 text-right">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" [id]="customSwitchId(i)" [disabled]="!item.selected" [checked]="item.bulk" (change)="onProcessSelection(item);">
-                            <label class="custom-control-label" [for]="customSwitchId(i)">Bulk</label>
+                            <input type="checkbox" class="custom-control-input" [id]="customSwitchId(i)" [disabled]="!item.selected" [checked]="item.cdc" (change)="onProcessSelection(item);">
+                            <label class="custom-control-label" [for]="customSwitchId(i)">CDC</label>
                         </div>
                         <!-- <div class="custom-control custom-radio">
                             <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input" checked="">
