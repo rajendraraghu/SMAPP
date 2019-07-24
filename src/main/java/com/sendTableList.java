@@ -372,5 +372,33 @@ public class sendTableList  {
 		
     	
     }
+  /*  public static void pkgen2( Connection con1,Connection con2,String tableName,String system,String dbname)
+    {
+    	
+        Statement stmt0 = con1.createStatement();
+        if(system == 'MySQL') {ResultSet rs1 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_KEY = 'PRI' and TABLE_SCHEMA = '"+dbname+"' and TABLE_NAME = '"+tableName+"';");}
+        else if (system == 'SQLServer') {ResultSet rs1 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_CATALOG = '"+dbname+"TABLE_NAME = '"+tableName+"';");}
+    	//_v_sys_columns
+    	int i = 1;
+		String pk="";
+		while(rs1.next())
+	    {
+			System.out.println("inside while loop");
+			for(i = 2;i<12;i++) 
+			{
+				if (rs1.getString(i)!= null) 
+				{
+					pk = pk.concat(" and tgt.");
+					pk = pk.concat(rs1.getString(i));
+					pk = pk.concat("=src.");
+					pk = pk.concat(rs1.getString(i));
+				    System.out.println(pk);
+				}
+			}
+		 System.out.println("out of for loop");
+		}
+		return pk.substring(5);
+    }*/
+    }
+    
 
-}
