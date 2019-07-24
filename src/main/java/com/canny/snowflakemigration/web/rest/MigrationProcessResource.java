@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.StreamSupport;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -205,18 +206,18 @@ public class MigrationProcessResource {
 		JsonArray row = new JsonArray();
 		row.add(new JsonPrimitive(rs0.getInt(1)));
 		row.add(new JsonPrimitive(rs0.getInt(2)));
-		row.add(new JsonPrimitive(rs0.getString(3)));
-		row.add(new JsonPrimitive(rs0.getString(4)));
-		row.add(new JsonPrimitive(rs0.getString(5)));
-		row.add(new JsonPrimitive(rs0.getString(6)));
+		row.add(new JsonPrimitive(rs0.getString(3)==null?"":rs0.getString(3)));
+		row.add(new JsonPrimitive(rs0.getString(4)==null?"":rs0.getString(4)));
+		row.add(new JsonPrimitive(rs0.getString(5)==null?"":rs0.getString(5)));
+		row.add(new JsonPrimitive(rs0.getString(6)==null?"":rs0.getString(6)));
 		row.add(new JsonPrimitive(rs0.getInt(7)));
 		row.add(new JsonPrimitive(rs0.getInt(8)));
 		row.add(new JsonPrimitive(rs0.getInt(9)));
 		//row.add(new JsonPrimitive(rs0.getString(10)));
-		row.add(new JsonPrimitive(rs0.getString(11)));
-		row.add(new JsonPrimitive(rs0.getString(12)));
-		row.add(new JsonPrimitive(rs0.getString(13)));
-		row.add(new JsonPrimitive(rs0.getString(14)));
+		row.add(new JsonPrimitive(rs0.getString(11)==null?"":rs0.getString(11)));
+		row.add(new JsonPrimitive(rs0.getString(12)==null?"":rs0.getString(12)));
+		row.add(new JsonPrimitive(rs0.getString(13)==null?"":rs0.getString(13)));
+		row.add(new JsonPrimitive(rs0.getString(14)==null?"":rs0.getString(14)));
 		
         data.add(row);
         }
@@ -266,4 +267,22 @@ public class MigrationProcessResource {
         jsonResponse.add("audit_data", data);
         return jsonResponse.toString();
     }
+     @PostMapping(value = "/migration-processes/retrieveColumnList")
+     public @ResponseBody String[] listColumns(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO, String tableName) throws SQLException,ClassNotFoundException {
+    	 Properties properties0 = new Properties();
+ 		properties0.put("user", migrationProcessDTO.getSourceConnectionUsername());
+ 		properties0.put("password", migrationProcessDTO.getSourceConnectionPassword());
+ 		properties0.put("db",migrationProcessDTO.getSourceConnectionDatabase());
+ 	    properties0.put("schema",migrationProcessDTO.getSourceConnectionSchema());	
+ 	    Connection con = DriverManager.getConnection(migrationProcessDTO.getSourceConnectionUrl(),properties0);
+         Statement stmt = con.createStatement();
+         ResultSet rs1 = stmt.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME ='"+tableName+"' AND TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"';");
+         ArrayList tn = new ArrayList();
+         while(rs1.next())
+         {
+             tn.add(rs1.getString("COLUMN_NAME"));
+         }
+         String[] colNames = (String[])tn.toArray(new String[tn.size()]);
+    	 return colNames;
+     }
 }
