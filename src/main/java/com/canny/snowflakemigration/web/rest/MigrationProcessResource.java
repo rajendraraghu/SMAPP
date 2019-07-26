@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.StreamSupport;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -266,4 +267,22 @@ public class MigrationProcessResource {
         jsonResponse.add("audit_data", data);
         return jsonResponse.toString();
     }
+     @PostMapping(value = "/migration-processes/retrieveColumnList")
+     public @ResponseBody String[] listColumns(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO, String tableName) throws SQLException,ClassNotFoundException {
+    	 Properties properties0 = new Properties();
+ 		properties0.put("user", migrationProcessDTO.getSourceConnectionUsername());
+ 		properties0.put("password", migrationProcessDTO.getSourceConnectionPassword());
+ 		properties0.put("db",migrationProcessDTO.getSourceConnectionDatabase());
+ 	    properties0.put("schema",migrationProcessDTO.getSourceConnectionSchema());	
+ 	    Connection con = DriverManager.getConnection(migrationProcessDTO.getSourceConnectionUrl(),properties0);
+         Statement stmt = con.createStatement();
+         ResultSet rs1 = stmt.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME ='"+tableName+"' AND TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"';");
+         ArrayList tn = new ArrayList();
+         while(rs1.next())
+         {
+             tn.add(rs1.getString("COLUMN_NAME"));
+         }
+         String[] colNames = (String[])tn.toArray(new String[tn.size()]);
+    	 return colNames;
+     }
 }
