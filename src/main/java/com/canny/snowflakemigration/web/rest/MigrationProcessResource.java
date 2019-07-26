@@ -167,8 +167,8 @@ public class MigrationProcessResource {
     }
 
     @PostMapping(value = "/migration-processes/retrieveTableList")
-    public @ResponseBody String[] listTables(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO) throws SQLException,ClassNotFoundException {
-        String[] tableName = listTable(migrationProcessDTO);
+    public @ResponseBody String listTables(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO) throws SQLException,ClassNotFoundException {
+        String tableName = listTable(migrationProcessDTO);
         return tableName;
     }
     

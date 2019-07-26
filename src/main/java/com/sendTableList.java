@@ -43,8 +43,8 @@ public class sendTableList  {
 		    Connection con2=DriverManager.getConnection(processDTO.getSnowflakeConnectionUrl(),properties);
 		
 		    Statement st0 = con2.createStatement();
-		    ResultSet r0 = st0.executeQuery("CREATE TABLE IF NOT EXISTS jobRunStatus (jobId int identity(1,1),JobStartTime datetime, JobEndTime datetime,JobStatus varchar(1000),processid bigint);");
-		    ResultSet r1 = st0.executeQuery("CREATE TABLE IF NOT EXISTS tableLoadStatus (jobid int,tableLoadid int,tablename varchar(50),tableLoadStartTime datetime,tableLoadEndTime datetime,tableLoadStatus varchar(15),insertcount int,updatecount int, deletecount int, runtype varchar(20),processid bigint,processname varchar(100),sourcename varchar(100),destname varchar(100));");
+		    ResultSet r0 = st0.executeQuery("CREATE TABLE IF NOT EXISTS sah_jobrunstatus (jobId int identity(1,1),JobStartTime datetime, JobEndTime datetime,JobStatus varchar(1000),processid bigint);");
+		    ResultSet r1 = st0.executeQuery("CREATE TABLE IF NOT EXISTS sah_tableLoadStatus (jobid int,tableLoadid int,tablename varchar(50),tableLoadStartTime datetime,tableLoadEndTime datetime,tableLoadStatus varchar(15),insertcount int,updatecount int, deletecount int, runtype varchar(20),processid bigint,processname varchar(100),sourcename varchar(100),destname varchar(100));");
 		    System.out.println("tables created");
 		    
 		    String cdc = processDTO.getCdc();
@@ -62,9 +62,9 @@ public class sendTableList  {
 		
 		
 		    Statement stmt0=con2.createStatement(); 
-		    ResultSet rs0 = stmt0.executeQuery("SELECT IFNULL(jobStartTime,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)) FROM jobRunstatus WHERE jobid = (SELECT IFNULL(MAX(jobId),0) FROM jobRunStatus);");
+		    ResultSet rs0 = stmt0.executeQuery("SELECT IFNULL(jobStartTime,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)) FROM sah_jobrunstatus WHERE jobid = (SELECT IFNULL(MAX(jobId),0) FROM sah_jobrunstatus);");
 		    Statement stmt1=con2.createStatement();
-		    ResultSet rs9 = stmt1.executeQuery("SELECT COUNT(*) as cnt FROM jobRunstatus");
+		    ResultSet rs9 = stmt1.executeQuery("SELECT COUNT(*) as cnt FROM sah_jobrunstatus");
 		    rs9.next();
 		    int cnt = rs9.getInt(1);
 		    if(rs0.next() || (cnt == 0))
@@ -73,28 +73,28 @@ public class sendTableList  {
 		      else{lastruntime = rs0.getString(1);}
 			  System.out.println("Lastruntime: "+ lastruntime);
 		      System.out.println("rs0 complete");
-		      ResultSet rs1 = stmt0.executeQuery("SELECT IFNULL(MAX(tableLoadId),0) as tableLoadId FROM tableLoadStatus;");
+		      ResultSet rs1 = stmt0.executeQuery("SELECT IFNULL(MAX(tableLoadId),0) as tableLoadId FROM sah_tableLoadStatus;");
 		      if(rs1.next()) 
 		      {
 			    tableLoadid = rs1.getInt(1);
 			    System.out.println("TableLoadId: "+ tableLoadid);
 			  	System.out.println("rs1 complete");
-		        ResultSet rs3 = stmt0.executeQuery("SELECT IFNULL(MAX(jobId),0) FROM jobRunStatus");
+		        ResultSet rs3 = stmt0.executeQuery("SELECT IFNULL(MAX(jobId),0) FROM sah_jobrunstatus");
 		        if((rs3.next()) || (cnt == 0 ))
 		        {
 			     jobid = rs3.getInt(1);
 			     jobid = jobid + 1;
-			     stmt0.executeQuery("INSERT INTO jobRunstatus VALUES("+jobid+",TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,"+processDTO.getId()+");");               
+			     stmt0.executeQuery("INSERT INTO sah_jobrunstatus VALUES("+jobid+",TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,"+processDTO.getId()+");");               
                  String system = processDTO.getSourceConnectionName();
 		       	 while(i<tableNamescdc.length && !status.equals("FAILURE")&& tableNamescdc.length >0 && !tableNamescdc[i].equals("[]"))
 		         {
 			        System.out.println("length is :"+tableNamescdc.length+"i value is :"+i);
 					String tn = tableNamescdc[i].replace("[\"", "");
 					String tableName = tn.replaceAll("\"]|\"", "");
-		            stmt0.executeQuery("INSERT INTO tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableName+"',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,0,0,0,'cdc',"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
+		            stmt0.executeQuery("INSERT INTO sah_tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableName+"',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,0,0,0,'cdc',"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
         	    	System.out.println("starting cdc delta process for the table: "+tableName);
 					cdcprocess(lastruntime,tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase());
-				    stmt0.executeQuery("UPDATE tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'SUCCESS' WHERE tableLoadid = "+tableLoadid+" AND jobid = "+ jobid +";");
+				    stmt0.executeQuery("UPDATE sah_tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'SUCCESS' WHERE tableLoadid = "+tableLoadid+" AND jobid = "+ jobid +";");
 				    i= i +1;
 				    tableLoadid = tableLoadid + 1;
 				  }
@@ -103,10 +103,10 @@ public class sendTableList  {
 			        System.out.println("length is :"+tableNamesbulk.length+"i value is :"+i);
 		            String tn = tableNamesbulk[j].replace("[\"", "");
 					String tableName = tn.replaceAll("\"]|\"", "");
-					stmt0.executeQuery("INSERT INTO tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableName+"',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,0,0,0,'bulk',"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
+					stmt0.executeQuery("INSERT INTO sah_tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableName+"',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,0,0,0,'bulk',"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
         	    	System.out.println("starting bulk process for the table: "+tableName);
 					bulkprocess(tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase());
-				    stmt0.executeQuery("UPDATE tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'SUCCESS' WHERE tableLoadid = "+tableLoadid+" AND jobid = "+ jobid +";");
+				    stmt0.executeQuery("UPDATE sah_tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'SUCCESS' WHERE tableLoadid = "+tableLoadid+" AND jobid = "+ jobid +";");
 				    j = j+1;
 				    tableLoadid = tableLoadid + 1;
 				  }	
@@ -114,12 +114,12 @@ public class sendTableList  {
         			}
 			        else
 			        {
-			        	stmt0.executeQuery("UPDATE tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'FAILURE' WHERE jobid = "+jobid+";");
+			        	stmt0.executeQuery("UPDATE sah_tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'FAILURE' WHERE jobid = "+jobid+";");
 			        	status = "FAILURE";
 			        }
 			        	
 		}
-		stmt0.executeQuery("UPDATE jobRunstatus SET JobEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , JobStatus = 'SUCCESS' WHERE jobid ="+jobid+";");
+		stmt0.executeQuery("UPDATE sah_jobrunstatus SET JobEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , JobStatus = 'SUCCESS' WHERE jobid ="+jobid+";");
 		status = (status=="FAILURE"?"FAILURE":"SUCCESS");
 
     }
@@ -146,9 +146,9 @@ public class sendTableList  {
 		    properties.put("schema",processDTO.getSnowflakeConnectionSchema());
 			Connection con2=DriverManager.getConnection(processDTO.getSnowflakeConnectionUrl(),properties);
 			Statement stmt0 = con2.createStatement();
-			System.out.println("UPDATE jobRunStatus SET JobEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , JobStatus = 'FAILURE--"+e.toString().replace("'", "")+"' WHERE jobid = (SELECT MAX(jobId) FROM jobRunStatus);");
-			stmt0.executeQuery("UPDATE jobRunStatus SET JobEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , JobStatus = 'FAILURE--"+e.toString().replace("'", "")+"' WHERE jobid = (SELECT MAX(jobId) FROM jobRunStatus);");
-			stmt0.executeQuery("UPDATE tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'FAILURE' WHERE tableLoadid = (SELECT MAX(tableLoadId) FROM tableLoadStatus);");
+			System.out.println("UPDATE sah_jobrunstatus SET JobEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , JobStatus = 'FAILURE--"+e.toString().replace("'", "")+"' WHERE jobid = (SELECT MAX(jobId) FROM sah_jobrunstatus);");
+			stmt0.executeQuery("UPDATE sah_jobrunstatus SET JobEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , JobStatus = 'FAILURE--"+e.toString().replace("'", "")+"' WHERE jobid = (SELECT MAX(jobId) FROM sah_jobrunstatus);");
+			stmt0.executeQuery("UPDATE sah_tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'FAILURE' WHERE tableLoadid = (SELECT MAX(tableLoadId) FROM sah_tableLoadStatus);");
 			status = "FAILURE - catch"+ e;
 			
 		}  
@@ -200,7 +200,7 @@ public class sendTableList  {
 		lastruntime = "2005-12-31 00:00:00.000";
 		if(lastruntime.isEmpty())
 		{
-			System.out.println("No job history available in JobRunStatus.Cannot run CDC load.");
+			System.out.println("No job history available in sah_jobrunstatus.Cannot run CDC load.");
 		}
 		else {
 		query = "select * from " +tableName+ " where payment_date >'" + lastruntime+"';";
@@ -258,7 +258,7 @@ public class sendTableList  {
     	System.out.println("stagecols:"+stageCols);
 		stmt2.executeQuery("TRUNCATE TABLE "+tableName);
 		System.out.println("Truncating "+tableName);
-    	stmt2.executeQuery("INSERT INTO "+tableName+" SELECT "+stageCols+",0 as isdeleted,MD5("+hashCol+") as md5hash,MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as md5hash_pk FROM @"+tableName+"_stage t;"); 	
+    	stmt2.executeQuery("INSERT INTO "+tableName+" SELECT "+stageCols+",0 as sah_isdeleted,MD5("+hashCol+") as sah_md5hash,sah_MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as sah_md5hashpk FROM @"+tableName+"_stage t;"); 	
 		// stmt2.executeQuery("INSERT INTO "+tableName+" SELECT "+stageCols+",MD5("+hashCol+") as md5hash,MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as md5hash_pk FROM @"+tableName+"_stage t;"); 	
     	System.out.println("table creation  and loading (stg) complete");
     	return srcCols;
@@ -273,29 +273,29 @@ public class sendTableList  {
     	int secondmergecount;
     //insert new record for Insert and update  
 	System.out.println("HIST LOAD START");  	
-    	int firstmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on "+pk+" and tgt.md5hash = src.MD5HASH and tgt.current_ind =1 when not matched then INSERT ("+srcCols +",current_ind ,createdTime,updatedtime,md5hash,md5hash_pk) VALUES (src."+srcCols.replace(",", ",src.")+",1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.md5hash,src.md5hash_pk)");
+    	int firstmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on "+pk+" and tgt.sah_md5hash = src.sah_MD5HASH and tgt.sah_currentind =1 when not matched then INSERT ("+srcCols +",sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
     	System.out.println("end of first merge" + firstmergecount);
     
     	if (process.equals("BULK"))
     	{
     	  //insert new record for delete
-    			secondmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using(select a.* from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.current_ind =1  and a.isdeleted <> 1 and b.md5hash_pk is null)src ON tgt.md5hash_pk = src.md5hash_pk and tgt.isdeleted = 1 when not matched then INSERT ("+srcCols+",current_ind ,createdTime,updatedtime,md5hash,md5hash_pk) VALUES (src."+srcCols.replace(",", ",src.")+",1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.md5hash,src.md5hash_pk)");
+    			secondmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using(select a.* from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.sah_currentind =1  and a.sah_isdeleted <> 1 and b.sah_md5hashpk is null)src ON tgt.sah_md5hashpk = src.sah_md5hashpk and tgt.sah_isdeleted = 1 when not matched then INSERT ("+srcCols+",sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
     			System.out.println("end of second merge" + secondmergecount);
          //expire previous record for delete
-    			int thirdmergecount = stmt3.executeUpdate("merge into "+tableName+"hist tgt using(select a.* from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.current_ind =1  and a.isdeleted <> 1 and b.md5hash_pk is null)src  ON tgt.md5hash_pk = src.md5hash_pk and tgt.isdeleted <>1 and tgt.current_ind=1 when matched  then UPDATE SET tgt.current_ind = 0 AND tgt.updatedtime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)");
+    			int thirdmergecount = stmt3.executeUpdate("merge into "+tableName+"hist tgt using(select a.* from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.sah_currentind =1  and a.sah_isdeleted <> 1 and b.sah_md5hashpk is null)src  ON tgt.sah_md5hashpk = src.sah_md5hashpk and tgt.sah_isdeleted <>1 and tgt.sah_currentind=1 when matched  then UPDATE SET tgt.sah_currentind = 0 AND tgt.sah_updatedtime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)");
     			System.out.println("end of third merge" + thirdmergecount);
     	}
     	else
     	{
     		//insert new record for delete	
-    			secondmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on tgt.current_ind =1  and tgt.isdeleted = 1 when not matched and src.isdeleted = 1 then INSERT("+srcCols+",current_ind ,createdTime,updatedtime,md5hash,md5hash_pk) VALUES (src."+srcCols.replace(",", ",src.")+",1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.md5hash,src.md5hash_pk)");
+    			secondmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on tgt.sah_currentind =1  and tgt.sah_isdeleted = 1 when not matched and src.sah_isdeleted = 1 then INSERT("+srcCols+",sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
     			System.out.println("end of second merge" + secondmergecount);
             //expire previous record for delete
-    			int thirdmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using(select a.md5hash_pk from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.current_ind =1  and a.isdeleted <> 1 and b.isdeleted = 1)src  ON tgt.md5hash_pk = src.md5hash_pk and tgt.isdeleted <>1 and tgt.current_ind=1 when matched  then UPDATE SET tgt.current_ind = 0 AND tgt.updatedtime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)");
+    			int thirdmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using(select a.sah_md5hashpk from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.sah_currentind =1  and a.sah_isdeleted <> 1 and b.sah_isdeleted = 1)src  ON tgt.sah_md5hashpk = src.sah_md5hashpk and tgt.sah_isdeleted <>1 and tgt.sah_currentind=1 when matched  then UPDATE SET tgt.sah_currentind = 0 AND tgt.sah_updatedtime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)");
     			System.out.println("end of third merge" + thirdmergecount);
     	}
     //expire previous record for update
-    	int fourthmergecount = stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on "+pk+" and tgt.md5hash <> src.MD5HASH and tgt.current_ind = 1 when matched  then UPDATE SET tgt.current_ind = 0 AND tgt.updatedtime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)");
+    	int fourthmergecount = stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on "+pk+" and tgt.sah_md5hash <> src.sah_MD5HASH and tgt.sah_currentind = 1 when matched  then UPDATE SET tgt.sah_currentind = 0 AND tgt.sah_updatedtime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)");
     	System.out.println("end of fourth merge" + fourthmergecount);	
     	System.out.println("Merge hist queries complete");
     	
@@ -306,7 +306,7 @@ public class sendTableList  {
     	System.out.println("Insert : "+ targetInsertCount);
     	System.out.println("Update : "+ targetUpdateCount);
     	System.out.println("Delete : "+ targetDeleteCount);
-    	stmt3.executeQuery("UPDATE tableLoadStatus SET insertcount ="+targetInsertCount+", updatecount ="+targetUpdateCount+",deletecount ="+targetDeleteCount+" WHERE jobid ="+jobid+" and tableLoadid ="+tableLoadid+" and processid ="+processid+";");
+    	stmt3.executeQuery("UPDATE sah_tableLoadStatus SET insertcount ="+targetInsertCount+", updatecount ="+targetUpdateCount+",deletecount ="+targetDeleteCount+" WHERE jobid ="+jobid+" and tableLoadid ="+tableLoadid+" and processid ="+processid+";");
     }
     public static String pkgen(Connection con2,String tableName)
     {
@@ -358,9 +358,9 @@ public class sendTableList  {
 		String ddl4 = ddl3.substring(ddl3.indexOf("("));
 		String ddl5 = ddl4.replaceAll("`","");
 		String ddl6 = ddl5.substring(0, ddl5.length()-2);
-		String stagecreate = ddl6.concat(",isdeleted INT,MD5HASH TEXT,MD5HASH_PK TEXT);");
+		String stagecreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT);");
 		
-		String histcreate = ddl6.concat(",isdeleted INT,current_ind boolean,updatedtime timestamp,MD5HASH TEXT,createdTime timestamp,MD5HASH_PK TEXT);");
+		String histcreate = ddl6.concat(",sah_isdeleted INT,sah_currentind boolean,sah_updatedtime timestamp,sah_MD5HASH TEXT,sah_createdTime timestamp,sah_MD5HASHPK TEXT);");
 		
 		Statement stmt2 = con2.createStatement();
 //		ResultSet rs2= stmt2.executeQuery("");
