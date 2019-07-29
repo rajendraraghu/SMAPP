@@ -10,9 +10,12 @@ import com.canny.snowflakemigration.service.dto.MigrationProcessDTO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class listTables {
-    public static String[] listTable(MigrationProcessDTO migrationProcessDTO) throws SQLException,ClassNotFoundException,NullPointerException {
+    public static String listTable(MigrationProcessDTO migrationProcessDTO) throws SQLException,ClassNotFoundException,NullPointerException {
        // Connection con = DriverManager.getConnection(migrationProcessDTO.getSourceConnectionUrl(), migrationProcessDTO.getSourceConnectionUsername(), migrationProcessDTO.getSourceConnectionPassword());
         //Statement stmt = con.createStatement();
         Properties properties0 = new Properties();
@@ -21,11 +24,44 @@ public class listTables {
 		properties0.put("db",migrationProcessDTO.getSourceConnectionDatabase());
 	    properties0.put("schema",migrationProcessDTO.getSourceConnectionSchema());	
 	    Connection con = DriverManager.getConnection(migrationProcessDTO.getSourceConnectionUrl(),properties0);
-        Statement stmt = con.createStatement();
-		 
+        Statement stmt0 = con.createStatement();
+        Statement stmt1 = con.createStatement();
+        Statement stmt2 = con.createStatement();
+        JsonObject jsonResponse = new JsonObject(); 
+        JsonArray data = new JsonArray();
+        
+        
   
-        ResultSet rs1 = stmt.executeQuery("SELECT a.TABLE_NAME,b.COLUMN_NAME as PrimaryKey FROM INFORMATION_SCHEMA.TABLES a JOIN INFORMATION_SCHEMA.COLUMNS b ON a.TABLE_NAME = b.TABLE_NAME AND b.COLUMN_KEY = 'PRI' AND a.TABLE_SCHEMA = b.TABLE_SCHEMA  WHERE a.TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"';");
-        ArrayList tn = new ArrayList();
+        ResultSet rs1 = stmt0.executeQuery("SELECT a.TABLE_NAME,b.COLUMN_NAME as PrimaryKey FROM INFORMATION_SCHEMA.TABLES a JOIN INFORMATION_SCHEMA.COLUMNS b ON a.TABLE_NAME = b.TABLE_NAME AND b.COLUMN_KEY = 'PRI' AND a.TABLE_SCHEMA = b.TABLE_SCHEMA  WHERE a.TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"';");
+        while(rs1.next()) {
+        	JsonObject row = new JsonObject();
+        	//JsonElement element1 = new JsonElement();
+            //JsonElement element2 = new JsonElement();
+            //element1 = (JsonElement)rs1.getString("TABLE_NAME");
+        	row.addProperty("tableName",rs1.getString("TABLE_NAME"));
+        	row.addProperty("PrimaryKey",rs1.getString("PrimaryKey"));
+        	ResultSet rs2 = stmt1.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"' AND TABLE_NAME = '"+rs1.getString("TABLE_NAME")+"';");
+        	JsonArray cols = new JsonArray();
+        	while(rs2.next() ) 
+    		{
+    		  //JsonArray row = new JsonArray();
+    		  cols.add(new JsonPrimitive(rs2.getString("COLUMN_NAME")));    		
+            }
+        	row.add("columnList",cols);
+        	ResultSet rs3 = stmt2.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"' AND TABLE_NAME = '"+rs1.getString("TABLE_NAME")+"' AND DATA_TYPE IN ('timestamp','datetime');");
+        	JsonArray cdccols = new JsonArray();
+        	while(rs3.next() ) 
+    		{
+    		  //JsonArray row = new JsonArray();
+    		  cdccols.add(new JsonPrimitive(rs3.getString("COLUMN_NAME")));    		
+            }
+        	row.add("cdcColumnList",cdccols);
+        	data.add(row);
+        }
+        jsonResponse.add("tableinfo",data);
+        return jsonResponse.toString();
+        
+       /* ArrayList tn = new ArrayList();
         while(rs1.next())
         {
         	String s1 = rs1.getString("TABLE_NAME");
@@ -33,7 +69,7 @@ public class listTables {
             tn.add(s1.concat(rs1.getString("PrimaryKey")));
         }
         String[] tableNames = (String[])tn.toArray(new String[tn.size()]);
-        return tableNames;
+        return tableNames;*/
     }
 }
 //SELECT * FROM _v_tables;
