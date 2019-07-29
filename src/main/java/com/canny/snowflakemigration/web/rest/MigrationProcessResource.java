@@ -3,6 +3,8 @@ package com.canny.snowflakemigration.web.rest;
 import com.canny.snowflakemigration.service.MigrationProcessService;
 import com.canny.snowflakemigration.web.rest.errors.BadRequestAlertException;
 import com.canny.snowflakemigration.service.dto.MigrationProcessDTO;
+import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
+import com.canny.snowflakemigration.service.dto.SnowflakeConnectionDTO;
 import com.canny.snowflakemigration.service.dto.MigrationProcessCriteria;
 import com.canny.snowflakemigration.service.MigrationProcessQueryService;
 
@@ -178,12 +180,33 @@ public class MigrationProcessResource {
     	String result = sendSelectedTables(migrationProcessDTO);    
         return result;
     }
-  /*  @PostMapping(value="/migration-processes/TestConnection")
-    public @ResponseBody boolean TestingConnection(ConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
-        Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());
-        boolean result = con1.isValid(10);
-        return result;
-    }*/
+    @PostMapping(value="/migration-processes/TestConnectionSource")
+    public @ResponseBody boolean TestingConnection(SourceConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
+        boolean result = false;
+		try {
+    	Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());
+        result = con1.isValid(10);
+        }
+        catch(Exception e) 
+        {
+        	result = false;
+        }
+        finally { return result;}
+    }
+    
+    @PostMapping(value="/migration-processes/TestConnectionDest")
+    public @ResponseBody boolean TestingConnection(SnowflakeConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
+        boolean result = false;
+		try {
+    	Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());
+        result = con1.isValid(10);
+        }
+        catch(Exception e) 
+        {
+        	result = false;
+        }
+        finally { return result;}
+    }
     
      @PostMapping(value = "/migration-processes/Reports")
     public @ResponseBody String Reports(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO)throws SQLException,ClassNotFoundException  {
