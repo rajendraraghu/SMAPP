@@ -58,11 +58,12 @@ export class SourceConnectionUpdateComponent implements OnInit {
       password: sourceConnection.password,
       database: sourceConnection.database,
       schema: sourceConnection.schema,
-      valid: sourceConnection.valid,
-      createdBy: sourceConnection.createdBy,
-      createdDate: sourceConnection.createdDate != null ? sourceConnection.createdDate.format(DATE_TIME_FORMAT) : null,
-      lastModifiedBy: sourceConnection.lastModifiedBy,
-      lastModifiedDate: sourceConnection.lastModifiedDate != null ? sourceConnection.lastModifiedDate.format(DATE_TIME_FORMAT) : null
+      valid: sourceConnection.valid
+      // ,
+      // createdBy: sourceConnection.createdBy,
+      // createdDate: sourceConnection.createdDate != null ? sourceConnection.createdDate.format(DATE_TIME_FORMAT) : null,
+      // lastModifiedBy: sourceConnection.lastModifiedBy,
+      // lastModifiedDate: sourceConnection.lastModifiedDate != null ? sourceConnection.lastModifiedDate.format(DATE_TIME_FORMAT) : null
     });
   }
 
@@ -92,15 +93,16 @@ export class SourceConnectionUpdateComponent implements OnInit {
       password: this.editForm.get(['password']).value,
       database: this.editForm.get(['database']).value,
       schema: this.editForm.get(['schema']).value,
-      valid: this.editForm.get(['valid']).value,
-      createdBy: this.editForm.get(['createdBy']).value,
-      createdDate:
-        this.editForm.get(['createdDate']).value != null ? moment(this.editForm.get(['createdDate']).value, DATE_TIME_FORMAT) : undefined,
-      lastModifiedBy: this.editForm.get(['lastModifiedBy']).value,
-      lastModifiedDate:
-        this.editForm.get(['lastModifiedDate']).value != null
-          ? moment(this.editForm.get(['lastModifiedDate']).value, DATE_TIME_FORMAT)
-          : undefined
+      valid: this.editForm.get(['valid']).value
+      // ,
+      // createdBy: this.editForm.get(['createdBy']).value,
+      // createdDate:
+      //   this.editForm.get(['createdDate']).value != null ? moment(this.editForm.get(['createdDate']).value, DATE_TIME_FORMAT) : undefined,
+      // lastModifiedBy: this.editForm.get(['lastModifiedBy']).value,
+      // lastModifiedDate:
+      //   this.editForm.get(['lastModifiedDate']).value != null
+      //     ? moment(this.editForm.get(['lastModifiedDate']).value, DATE_TIME_FORMAT)
+      //     : undefined
     };
   }
 

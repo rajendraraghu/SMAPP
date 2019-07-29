@@ -78,10 +78,10 @@ export class MigrationProcessUpdateComponent implements OnInit {
       type: migrationProcess.type,
       tablesToMigrate: migrationProcess.tablesToMigrate,
       lastStatus: migrationProcess.lastStatus,
-      createdBy: migrationProcess.createdBy,
-      createdDate: migrationProcess.createdDate != null ? migrationProcess.createdDate.format(DATE_TIME_FORMAT) : null,
-      lastModifiedBy: migrationProcess.lastModifiedBy,
-      lastModifiedDate: migrationProcess.lastModifiedDate != null ? migrationProcess.lastModifiedDate.format(DATE_TIME_FORMAT) : null,
+      // createdBy: migrationProcess.createdBy,
+      // createdDate: migrationProcess.createdDate != null ? migrationProcess.createdDate.format(DATE_TIME_FORMAT) : null,
+      // lastModifiedBy: migrationProcess.lastModifiedBy,
+      // lastModifiedDate: migrationProcess.lastModifiedDate != null ? migrationProcess.lastModifiedDate.format(DATE_TIME_FORMAT) : null,
       sourceConnectionId: migrationProcess.sourceConnectionId,
       snowflakeConnectionId: migrationProcess.snowflakeConnectionId
     });
@@ -110,14 +110,14 @@ export class MigrationProcessUpdateComponent implements OnInit {
       type: this.editForm.get(['type']).value,
       tablesToMigrate: this.editForm.get(['tablesToMigrate']).value,
       lastStatus: this.editForm.get(['lastStatus']).value,
-      createdBy: this.editForm.get(['createdBy']).value,
-      createdDate:
-        this.editForm.get(['createdDate']).value != null ? moment(this.editForm.get(['createdDate']).value, DATE_TIME_FORMAT) : undefined,
-      lastModifiedBy: this.editForm.get(['lastModifiedBy']).value,
-      lastModifiedDate:
-        this.editForm.get(['lastModifiedDate']).value != null
-          ? moment(this.editForm.get(['lastModifiedDate']).value, DATE_TIME_FORMAT)
-          : undefined,
+      // createdBy: this.editForm.get(['createdBy']).value,
+      // createdDate:
+      //   this.editForm.get(['createdDate']).value != null ? moment(this.editForm.get(['createdDate']).value, DATE_TIME_FORMAT) : undefined,
+      // lastModifiedBy: this.editForm.get(['lastModifiedBy']).value,
+      // lastModifiedDate:
+      //   this.editForm.get(['lastModifiedDate']).value != null
+      //     ? moment(this.editForm.get(['lastModifiedDate']).value, DATE_TIME_FORMAT)
+      //     : undefined,
       sourceConnectionId: this.editForm.get(['sourceConnectionId']).value,
       snowflakeConnectionId: this.editForm.get(['snowflakeConnectionId']).value
     };
