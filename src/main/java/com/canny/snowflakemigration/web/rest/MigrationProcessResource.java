@@ -196,7 +196,7 @@ public class MigrationProcessResource {
     
     @PostMapping(value="/migration-processes/TestConnectionDest")
     public @ResponseBody boolean TestingConnection(SnowflakeConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
-        boolean result = false;
+        boolean result  = false;
 		try {
     	Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());
         result = con1.isValid(10);
