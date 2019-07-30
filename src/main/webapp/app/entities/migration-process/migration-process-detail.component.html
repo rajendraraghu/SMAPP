@@ -1,7 +1,7 @@
 <div class="row justify-content-center">
     <div class="col-4">
         <div *ngIf="migrationProcess">
-            <h2><span jhiTranslate="snowpoleApp.migrationProcess.detail.title">Migration Process</span></h2>
+            <h2><span jhiTranslate="snowpoleApp.migrationProcess.detail.title">Snow Acquisition Hub </span></h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
@@ -17,13 +17,16 @@
                 <dt><span jhiTranslate="snowpoleApp.migrationProcess.sourceConnection">Source Connection</span></dt>
                 <dd>
                     <div *ngIf="migrationProcess.sourceConnectionId">
-                        <a [routerLink]="['/source-connection', migrationProcess.sourceConnectionId, 'view']">{{migrationProcess.sourceConnectionName}}</a>
+                        <a
+                            [routerLink]="['/source-connection', migrationProcess.sourceConnectionId, 'view']">{{migrationProcess.sourceConnectionName}}</a>
                     </div>
                 </dd>
-                <dt><span jhiTranslate="snowpoleApp.migrationProcess.snowflakeConnection">Snowflake Connection</span></dt>
+                <dt><span jhiTranslate="snowpoleApp.migrationProcess.snowflakeConnection">Snowflake Connection</span>
+                </dt>
                 <dd>
                     <div *ngIf="migrationProcess.snowflakeConnectionId">
-                        <a [routerLink]="['/snowflake-connection', migrationProcess.snowflakeConnectionId, 'view']">{{migrationProcess.snowflakeConnectionName}}</a>
+                        <a
+                            [routerLink]="['/snowflake-connection', migrationProcess.snowflakeConnectionId, 'view']">{{migrationProcess.snowflakeConnectionName}}</a>
                     </div>
                 </dd>
 
@@ -39,59 +42,84 @@
                 <dd>
                     <span>{{migrationProcess.lastStatus}}</span>
                 </dd> -->
-                <!-- <dt><span jhiTranslate="snowpoleApp.migrationProcess.createdBy">Created By</span></dt>
+                <dt><span jhiTranslate="snowpoleApp.migrationProcess.createdBy">Created By</span></dt>
                 <dd>
                     <span>{{migrationProcess.createdBy}}</span>
-                </dd> -->
+                </dd>
                 <dt><span jhiTranslate="snowpoleApp.migrationProcess.createdDate">Created Date</span></dt>
                 <dd>
                     <span>{{migrationProcess.createdDate | date:'medium'}}</span>
                 </dd>
-                <!-- <dt><span jhiTranslate="snowpoleApp.migrationProcess.lastModifiedBy">Last Modified By</span></dt>
+                <dt><span jhiTranslate="snowpoleApp.migrationProcess.lastModifiedBy">Last Modified By</span></dt>
                 <dd>
                     <span>{{migrationProcess.lastModifiedBy}}</span>
-                </dd> -->
+                </dd>
                 <dt><span jhiTranslate="snowpoleApp.migrationProcess.lastModifiedDate">Last Modified Date</span></dt>
                 <dd>
                     <span>{{migrationProcess.lastModifiedDate | date:'medium'}}</span>
                 </dd>
             </dl>
 
-            <button type="submit"
-                    (click)="previousState()"
-                    class="btn btn-info">
+            <button type="submit" (click)="previousState()" class="btn btn-info">
                 <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
             </button>
 
-            <button type="button"
-                    [routerLink]="['/migration-process', migrationProcess.id, 'edit']"
-                    class="btn btn-primary">
+            <button type="button" [routerLink]="['/migration-process', migrationProcess.id, 'edit']"
+                class="btn btn-primary">
                 <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
             </button>
         </div>
     </div>
     <div class="col-4">
         <fieldset>
-            <h3>Select the tables to be migrated</h3>
+            <h4>Select the tables to be migrated</h4>
             <hr>
             <div class="form-group has-search">
                 <fa-icon class="form-control-feedback" [icon]="'search'"></fa-icon>
-                <input type="text" class="form-control" placeholder="Search for tables" (input)="searchForTables($event.target.value)">
+                <input type="text" class="form-control" placeholder="Search for tables"
+                    (input)="searchForTables($event.target.value)">
             </div>
             <div class="form-group" style="height: 40vh; overflow-y: auto;">
+                <div class="row m-0">
+                    <div class="col-3 pl-0">
+                        <h6> Tables Name </h6>
+                    </div>
+                    <div class="col-3 pl-0">
+                        <h6> Primary Key </h6>
+                    </div>
+                    <div class="col-2 pl-0">
+                        <h6> CDC </h6>
+                    </div>
+                    <div class="col-4 pl-0">
+                        <h6> CDC Columns </h6>
+                    </div>
+                </div>
                 <div class="row m-0" *ngFor="let item of tables; let i=index">
-                    <div class="col-9 pl-0">
+                    <div class="col-3 pl-0">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" [id]="i" [checked]="item.selected" (change)="onSelectionChange(item)">
+                            <input type="checkbox" class="custom-control-input" [id]="i" [checked]="item.selected"
+                                (change)="onSelectionChange(item)">
                             <label class="custom-control-label" [for]="i">{{item.name}}</label>
                         </div>
                     </div>
-                    <div class="col-3 text-right">
+                    <div class="col-3 pl-0">
+                        <label  [for]="i">{{item.primaryKey}}</label>
+                        <!-- <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" [id]="i" [checked]="item.selected"
+                                (change)="onSelectionChange(item)">
+                            <label class="custom-control-label" [for]="i">{{item.PrimaryKey}}</label>
+                        </div> -->
+                        <!-- <select class="form-control" id="field_system" name="system">
+                            <option *ngFor="let column of item.columnList" [value]="item.PrimaryKey">{{column}}</option>
+                        </select> -->
+                    </div>
+                    <div class="col-2 pl-0 ">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" [id]="customSwitchId(i)" [disabled]="!item.selected" [checked]="item.cdc" (change)="onProcessSelection(item);">
-                            <label class="custom-control-label" [for]="customSwitchId(i)">
-                                <span *ngIf=item.cdc>CDC</span>
-                            <span *ngIf=!item.cdc>Bulk</span></label>
+                            <input type="checkbox" class="custom-control-input" [id]="customSwitchId(i)"
+                                [disabled]="!item.selected" [checked]="item.cdc" (change)="onProcessSelection(item);">
+                            <label class="custom-control-label" [for]="customSwitchId(i)"> </label>
+                                <!-- <span *ngIf=item.cdc>CDC</span> 
+                                <span *ngIf=!item.cdc>Bulk</span> -->
                         </div>
                         <!-- <div class="custom-control custom-radio">
                             <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input" checked="">
@@ -101,6 +129,16 @@
                             <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
                             <label class="custom-control-label" for="customRadio2">Bulk</label>
                         </div> -->
+                    </div>
+                    <div class="col-4 pl-0">
+                        <!-- <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" [id]="i" [checked]="item.selected"
+                                (change)="onSelectionChange(item)">
+                            <label class="custom-control-label" [for]="i">{{item.PrimaryKey}}</label>
+                        </div> -->
+                        <select class="form-control" id="field_system" name="system" [disabled]="!item.cdc">
+                            <option *ngFor="let cdcColumn of item.cdcColumnList">{{cdcColumn}}</option>
+                        </select>
                     </div>
                 </div>
                 <!-- <div class="custom-control custom-checkbox" *ngFor="let item of tables; let i=index">

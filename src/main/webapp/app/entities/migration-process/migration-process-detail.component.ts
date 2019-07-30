@@ -21,7 +21,10 @@ export class MigrationProcessDetailComponent implements OnInit {
   selectedTables = [];
   cdcTables = [];
   bulkTables = [];
+  cdcPrimaryKey = [];
+  bulkPrimaryKey = [];
   isSaving: boolean;
+  cdcColumns = [];
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
@@ -34,6 +37,9 @@ export class MigrationProcessDetailComponent implements OnInit {
       this.bulkTables = this.migrationProcess.bulk ? JSON.parse(this.migrationProcess.bulk) : [];
       this.cdcTables = this.migrationProcess.cdc ? JSON.parse(this.migrationProcess.cdc) : [];
       this.selectedTables = this.migrationProcess.tablesToMigrate ? JSON.parse(this.migrationProcess.tablesToMigrate) : [];
+      this.cdcColumns = this.migrationProcess.cdcColumns ? JSON.parse(this.migrationProcess.cdcColumns) : [];
+      this.cdcPrimaryKey = this.migrationProcess.cdcPrimaryKey ? JSON.parse(this.migrationProcess.cdcPrimaryKey) : [];
+      this.bulkPrimaryKey = this.migrationProcess.bulkPrimaryKey ? JSON.parse(this.migrationProcess.bulkPrimaryKey) : [];
       this.getTableList();
     });
     this.isSaving = false;
@@ -50,14 +56,28 @@ export class MigrationProcessDetailComponent implements OnInit {
     });
   }
 
-  prepareData(tables) {
+  prepareData(response) {
     this.tables = [];
-    tables.forEach(element => {
-      const table = { name: element, selected: this.isChecked(element), cdc: this.isCDC(element) };
+    response.tableinfo.forEach(element => {
+      const table = {
+        name: element.tableName,
+        primaryKey: element.PrimaryKey,
+        selected: this.isChecked(element.tableName),
+        cdc: this.isCDC(element.tableName),
+        cdcColumnList: element.cdcColumnList
+      };
       this.tables.push(table);
     });
     this.tablesCopy = this.tables;
   }
+  // for (let i=0; i<response.tableinfo.length; i++){
+  //   const tabName: string[] = response.tableinfo[i].tableName;
+  //   const pk: string[] = response.tableinfo[i].primaryKey;
+  //   const table =  { name: tabName , primaryKey: pk ,selected: this.isChecked(tabName), cdc: this.isCDC(tabName) };
+  //   this.tables.push(table);
+  // };
+  // console.log(copy);
+  // let sam:string = copy.tableName.
 
   onSelectionChange(item) {
     item.selected = !item.selected;
@@ -113,12 +133,16 @@ export class MigrationProcessDetailComponent implements OnInit {
   testAndMigrate() {
     const bulk = [];
     const cdc = [];
+    const cdcColumns = [];
     this.tables.forEach(element => {
       if (element.selected) {
         if (element.cdc) {
           cdc.push(element.name);
+          this.cdcColumns.push(element.cdcColumnList);
+          this.cdcPrimaryKey.push(element.primaryKey);
         } else {
           bulk.push(element.name);
+          this.bulkPrimaryKey.push(element.primaryKey);
         }
       }
     });

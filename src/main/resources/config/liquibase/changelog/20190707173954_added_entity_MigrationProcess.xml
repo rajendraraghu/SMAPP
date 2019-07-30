@@ -35,7 +35,19 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="cdc_pk" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="cdc_cols" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="bulk" type="varchar(3200)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="bulk_pk" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 

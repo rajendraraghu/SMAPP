@@ -23,6 +23,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="source_path" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="last_status" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -79,6 +83,7 @@
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
             <column name="description" type="string"/>
+            <column name="source_path" type="string"/>
             <column name="last_status" type="string"/>
             <column name="created_by" type="string"/>
             <column name="created_date" type="datetime"/>
