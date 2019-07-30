@@ -119,6 +119,16 @@ export class SourceConnectionComponent implements OnInit, OnDestroy {
     return result;
   }
 
+  testConnection(connection) {
+    this.sourceConnectionService.testConnection(connection).subscribe(response => {
+      console.log(response.body);
+      if (connection.valid !== response.body) {
+        connection.valid = response.body;
+        this.sourceConnectionService.update(connection).subscribe(res => {});
+      }
+    });
+  }
+
   protected paginateSourceConnections(data: ISourceConnection[], headers: HttpHeaders) {
     this.links = this.parseLinks.parse(headers.get('link'));
     this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
