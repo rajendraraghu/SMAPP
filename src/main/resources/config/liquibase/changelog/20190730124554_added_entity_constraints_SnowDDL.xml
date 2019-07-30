@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <!--
+        Added the constraints for entity MigrationProcess.
+    -->
+    <changeSet id="20190730124554-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="source_connection_id"
+                                 baseTableName="snow_ddl"
+                                 constraintName="fk_snow_ddl_source_connection_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="source_connection"/>
+
+        <addForeignKeyConstraint baseColumnNames="snowflake_connection_id"
+                                 baseTableName="snow_ddl"
+                                 constraintName="fk_snow_ddl_snowflake_connection_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="snowflake_connection"/>
+
+    </changeSet>
+</databaseChangeLog>

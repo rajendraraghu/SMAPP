@@ -15,6 +15,10 @@ import { RouterModule } from '@angular/router';
       {
         path: 'migration-process',
         loadChildren: './migration-process/migration-process.module#SnowpoleMigrationProcessModule'
+      },
+      {
+        path: 'snow-ddl',
+        loadChildren: './snow-ddl/snow-ddl.module#SnowpoleSnowDDLModule'
       }
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ])

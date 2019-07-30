@@ -1,0 +1,119 @@
+<div class="row justify-content-center">
+    <div class="col-4">
+        <div *ngIf="snowDDL">
+            <h2><span jhiTranslate="snowpoleApp.snowDDL.detail.title">Snow DDL Conversion</span></h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="snowpoleApp.snowDDL.name">Name</span></dt>
+                <dd>
+                    <span>{{snowDDL.name}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowDDL.description">Description</span></dt>
+                <dd>
+                    <span>{{snowDDL.description}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowDDL.type">Source Type</span></dt>
+                <dd>
+                    <span>{{snowDDL.type}}</span>
+                </dd>
+
+
+                <dt><span jhiTranslate="snowpoleApp.snowDDL.sourceConnection">Source Connection</span></dt>
+                <dd>
+                    <div *ngIf="snowDDL.sourceConnectionId">
+                        <a [routerLink]="['/source-connection', snowDDL.sourceConnectionId, 'view']">{{snowDDL.sourceConnectionName}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowDDL.snowflakeConnection">Snowflake Connection</span></dt>
+                <dd>
+                    <div *ngIf="snowDDL.snowflakeConnectionId">
+                        <a [routerLink]="['/snowflake-connection', snowDDL.snowflakeConnectionId, 'view']">{{snowDDL.snowflakeConnectionName}}</a>
+                    </div>
+                </dd>
+
+                <!-- <dt><span jhiTranslate="snowpoleApp.snowDDL.type">Type</span></dt>
+                <dd>
+                    <span>{{snowDDL.type}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowDDL.tablesToMigrate">Tables To Migrate</span></dt>
+                <dd>
+                    <span>{{snowDDL.tablesToMigrate}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowDDL.lastStatus">Last Status</span></dt>
+                <dd>
+                    <span>{{snowDDL.lastStatus}}</span>
+                </dd> -->
+                <!-- <dt><span jhiTranslate="snowpoleApp.snowDDL.createdBy">Created By</span></dt>
+                <dd>
+                    <span>{{snowDDL.createdBy}}</span>
+                </dd> -->
+                <dt><span jhiTranslate="snowpoleApp.snowDDL.createdDate">Created Date</span></dt>
+                <dd>
+                    <span>{{snowDDL.createdDate | date:'medium'}}</span>
+                </dd>
+                <!-- <dt><span jhiTranslate="snowpoleApp.snowDDL.lastModifiedBy">Last Modified By</span></dt>
+                <dd>
+                    <span>{{snowDDL.lastModifiedBy}}</span>
+                </dd> -->
+                <dt><span jhiTranslate="snowpoleApp.snowDDL.lastModifiedDate">Last Modified Date</span></dt>
+                <dd>
+                    <span>{{snowDDL.lastModifiedDate | date:'medium'}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/migration-process', snowDDL.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+    <div class="col-4">
+        <fieldset>
+            <h3>Select the tables to be migrated</h3>
+            <hr>
+            <div class="form-group has-search">
+                <fa-icon class="form-control-feedback" [icon]="'search'"></fa-icon>
+                <input type="text" class="form-control" placeholder="Search for tables" (input)="searchForTables($event.target.value)">
+            </div>
+            <div class="form-group" style="height: 40vh; overflow-y: auto;">
+                <div class="row m-0" *ngFor="let item of tables; let i=index">
+                    <div class="col-9 pl-0">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" [id]="i" [checked]="item.selected" (change)="onSelectionChange(item)">
+                            <label class="custom-control-label" [for]="i">{{item.name}}</label>
+                        </div>
+                    </div>
+                    <div class="col-3 text-right">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" [id]="customSwitchId(i)" [disabled]="!item.selected" [checked]="item.bulk" (change)="onProcessSelection(item);">
+                            <label class="custom-control-label" [for]="customSwitchId(i)">Bulk</label>
+                        </div>
+                        <!-- <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input" checked="">
+                            <label class="custom-control-label" for="customRadio1">CDC</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
+                            <label class="custom-control-label" for="customRadio2">Bulk</label>
+                        </div> -->
+                    </div>
+                </div>
+                <!-- <div class="custom-control custom-checkbox" *ngFor="let item of tables; let i=index">
+                    <input type="checkbox" class="custom-control-input" [id]="i" [checked]="isChecked(item)" (change)="onSelectionChange(item)">
+                    <label class="custom-control-label" [for]="i">{{item}}</label>
+                </div> -->
+            </div>
+        </fieldset>
+        <button type="button" class="btn btn-primary" (click)="testAndMigrate()" style="width: 100%;">
+            <fa-icon [icon]="'tasks'"></fa-icon>&nbsp;<span>Save tables to be migrated</span>
+        </button>
+    </div>
+</div>

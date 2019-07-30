@@ -19,5 +19,7 @@
     <include file="config/liquibase/changelog/20190707173954_added_entity_MigrationProcess.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20190707173954_added_entity_constraints_MigrationProcess.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190730124554_added_entity_SnowDDL.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190730124554_added_entity_constraints_SnowDDL.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>
