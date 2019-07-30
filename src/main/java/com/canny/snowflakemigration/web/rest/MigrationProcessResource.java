@@ -181,7 +181,7 @@ public class MigrationProcessResource {
         return result;
     }
     @PostMapping(value="/migration-processes/TestConnectionSource")
-    public @ResponseBody boolean TestingConnection(SourceConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
+    public @ResponseBody boolean TestingConnection(@RequestBody SourceConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
         boolean result = false;
 		try {
     	Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());
@@ -195,7 +195,7 @@ public class MigrationProcessResource {
     }
     
     @PostMapping(value="/migration-processes/TestConnectionDest")
-    public @ResponseBody boolean TestingConnection(SnowflakeConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
+    public @ResponseBody boolean TestingConnection(@RequestBody SnowflakeConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
         boolean result  = false;
 		try {
     	Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());
