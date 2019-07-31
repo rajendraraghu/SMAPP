@@ -37,9 +37,9 @@ export class MigrationProcessDetailComponent implements OnInit {
       this.bulkTables = this.migrationProcess.bulk ? JSON.parse(this.migrationProcess.bulk) : [];
       this.cdcTables = this.migrationProcess.cdc ? JSON.parse(this.migrationProcess.cdc) : [];
       this.selectedTables = this.migrationProcess.tablesToMigrate ? JSON.parse(this.migrationProcess.tablesToMigrate) : [];
-      this.cdcColumns = this.migrationProcess.cdcColumns ? JSON.parse(this.migrationProcess.cdcColumns) : [];
-      this.cdcPrimaryKey = this.migrationProcess.cdcPrimaryKey ? JSON.parse(this.migrationProcess.cdcPrimaryKey) : [];
-      this.bulkPrimaryKey = this.migrationProcess.bulkPrimaryKey ? JSON.parse(this.migrationProcess.bulkPrimaryKey) : [];
+      this.cdcColumns = this.migrationProcess.cdcCols ? JSON.parse(this.migrationProcess.cdcCols) : [];
+      this.cdcPrimaryKey = this.migrationProcess.cdcPk ? JSON.parse(this.migrationProcess.cdcPk) : [];
+      this.bulkPrimaryKey = this.migrationProcess.bulkPk ? JSON.parse(this.migrationProcess.bulkPk) : [];
       this.getTableList();
     });
     this.isSaving = false;
@@ -133,12 +133,13 @@ export class MigrationProcessDetailComponent implements OnInit {
   testAndMigrate() {
     const bulk = [];
     const cdc = [];
-    const cdcColumns = [];
+    // const cdcColumns = [];
     this.tables.forEach(element => {
       if (element.selected) {
         if (element.cdc) {
           cdc.push(element.name);
           this.cdcColumns.push(element.cdcColumnList);
+          console.log(this.cdcColumns);
           this.cdcPrimaryKey.push(element.primaryKey);
         } else {
           bulk.push(element.name);
@@ -149,6 +150,9 @@ export class MigrationProcessDetailComponent implements OnInit {
     this.migrationProcess.tablesToMigrate = JSON.stringify(this.selectedTables);
     this.migrationProcess.cdc = cdc ? JSON.stringify(cdc) : null;
     this.migrationProcess.bulk = bulk ? JSON.stringify(bulk) : null;
+    this.migrationProcess.cdcPk = this.cdcPrimaryKey ? JSON.stringify(this.cdcPrimaryKey) : null;
+    this.migrationProcess.bulkPk = this.bulkPrimaryKey ? JSON.stringify(this.bulkPrimaryKey) : null;
+    this.migrationProcess.cdcCols = this.cdcColumns ? JSON.stringify(this.cdcColumns) : null;
     this.subscribeToSaveResponse(this.migrationProcessService.update(this.migrationProcess));
   }
 
