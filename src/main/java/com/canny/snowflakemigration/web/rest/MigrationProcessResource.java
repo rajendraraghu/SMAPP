@@ -219,7 +219,7 @@ public class MigrationProcessResource {
 	    properties.put("schema",migrationProcessDTO.getSnowflakeConnectionSchema());
 		Connection con2=DriverManager.getConnection(migrationProcessDTO.getSnowflakeConnectionUrl(),properties);
         Statement stmt0=con2.createStatement(); 
-        ResultSet rs0 = stmt0.executeQuery("SELECT * FROM tableLoadStatus WHERE processid ="+migrationProcessDTO.getId() +" order by tableloadstarttime desc");
+        ResultSet rs0 = stmt0.executeQuery("SELECT * FROM sah_tableLoadStatus WHERE processid ="+migrationProcessDTO.getId() +" order by tableloadstarttime desc");
         
         JsonObject jsonResponse = new JsonObject();	
 		JsonArray data = new JsonArray();
@@ -259,10 +259,10 @@ public class MigrationProcessResource {
 	    properties.put("schema",migrationProcessDTO.getSnowflakeConnectionSchema());
 		Connection con2=DriverManager.getConnection(migrationProcessDTO.getSnowflakeConnectionUrl(),properties);
         Statement stmt0=con2.createStatement(); 
-        ResultSet rs0 = stmt0.executeQuery("SELECT MAX(jobid) FROM jobRunStatus");
+        ResultSet rs0 = stmt0.executeQuery("SELECT MAX(jobid) FROM sah_jobRunStatus");
         rs0.next();
-        System.out.println("SELECT * FROM tableLoadStatus WHERE processid ="+migrationProcessDTO.getId() +" AND jobid ="+rs0.getInt(1)+" order by tableloadstarttime desc");
-        ResultSet rs1 = stmt0.executeQuery("SELECT * FROM tableLoadStatus WHERE processid ="+migrationProcessDTO.getId() +" AND jobid ="+rs0.getInt(1)+" order by tableloadstarttime desc");
+        System.out.println("SELECT * FROM sah_tableLoadStatus WHERE processid ="+migrationProcessDTO.getId() +" AND jobid ="+rs0.getInt(1)+" order by tableloadstarttime desc");
+        ResultSet rs1 = stmt0.executeQuery("SELECT * FROM sah_tableLoadStatus WHERE processid ="+migrationProcessDTO.getId() +" AND jobid ="+rs0.getInt(1)+" order by tableloadstarttime desc");
         
         JsonObject jsonResponse = new JsonObject();	
 		JsonArray data = new JsonArray();

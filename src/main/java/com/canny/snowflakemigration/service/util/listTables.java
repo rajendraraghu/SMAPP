@@ -32,7 +32,7 @@ public class listTables {
         
         
   
-        ResultSet rs1 = stmt0.executeQuery("SELECT a.TABLE_NAME,GROUP_CONCAT(b.COLUMN_NAME) b.COLUMN_NAME as PrimaryKey FROM INFORMATION_SCHEMA.TABLES a LEFT JOIN INFORMATION_SCHEMA.COLUMNS b ON a.TABLE_NAME = b.TABLE_NAME AND b.COLUMN_KEY = 'PRI' AND a.TABLE_SCHEMA = b.TABLE_SCHEMA  WHERE a.TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"';");
+        ResultSet rs1 = stmt0.executeQuery("SELECT a.TABLE_NAME,group_concat(b.COLUMN_NAME SEPARATOR'-') as PrimaryKey FROM INFORMATION_SCHEMA.TABLES a LEFT JOIN INFORMATION_SCHEMA.COLUMNS b ON a.TABLE_NAME = b.TABLE_NAME AND b.COLUMN_KEY = 'PRI' AND a.TABLE_SCHEMA = b.TABLE_SCHEMA  WHERE a.TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"' GROUP BY a.TABLE_NAME;");
         while(rs1.next()) {
         	JsonObject row = new JsonObject();
         	//JsonElement element1 = new JsonElement();
@@ -48,7 +48,7 @@ public class listTables {
     		  cols.add(new JsonPrimitive(rs2.getString("COLUMN_NAME")));    		
             }
         	row.add("columnList",cols);
-        	ResultSet rs3 = stmt2.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"' AND TABLE_NAME = '"+rs1.getString("TABLE_NAME")+"' AND DATA_TYPE IN ('timestamp','datetime');");
+        	ResultSet rs3 = stmt2.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"' AND TABLE_NAME = '"+rs1.getString("TABLE_NAME")+"' AND DATA_TYPE IN ('timestamp');");/*,'datetime');");*/
         	JsonArray cdccols = new JsonArray();
         	while(rs3.next() ) 
     		{
