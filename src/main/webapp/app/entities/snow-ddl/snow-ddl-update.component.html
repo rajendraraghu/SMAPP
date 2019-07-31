@@ -31,14 +31,13 @@
                         </small>
                     </div>
                 </div>
-
-                 <!-- <div class="form-group" *ngIf="systems && systems.length > 0"
-				                    joyrideStep="fourthStep" title="Datasource" text="select the source connection system type">
-				                    <label jhiTranslate="snowpoleApp.sourceConnection.system">Source Type</label>
-				                    <select class="form-control" id="field_system" name="system" formControlName="system">
-				                        <option *ngFor="let system of systems" [value]="system">{{system}}</option>
+                <div class="form-group" *ngIf="sourceSystems && sourceSystems.length > 0"
+				                    joyrideStep="fourthStep" title="Source System" text="select the source connection source system type">
+				                    <label jhiTranslate="snowpoleApp.sourceConnection.system">Source System</label>
+				                    <select class="form-control" id="field_sourceSystem" name="sourceSystem" formControlName="sourceSystem">
+				                        <option *ngFor="let sourceSystem of sourceSystems" [value]="sourceSystem">{{sourceSystem}}</option>
 				                    </select>
-                </div> -->
+                </div>
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="snowpoleApp.snowDDL.sourceConnection" for="field_sourceConnection">Source Connection</label>
@@ -63,10 +62,9 @@
 				            </small>
 				        </div>
                 </div>
-                
 
                 <div class="custom-control custom-switch">
-				                            <input type="checkbox" class="custom-control-input" id="customSwitchId" disabled="!item.selected" unchecked="item.sfc" >
+				                            <input type="checkbox" class="custom-control-input" id="customSwitchId" unchecked="item.sfc" >
 				                            <label class="custom-control-label" for="customSwitchId">Create in Snowflake</label>
 				                        </div>
 

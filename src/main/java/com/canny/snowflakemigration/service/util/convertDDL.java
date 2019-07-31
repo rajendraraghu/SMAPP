@@ -3,6 +3,8 @@ package com.canny.snowflakemigration.service.util;
 import java.io.*;
 import java.util.List;
 import com.opencsv.*;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ClassPathResource;
 import com.canny.snowflakemigration.service.dto.SnowDDLDTO;
 
 public class convertDDL {
@@ -11,16 +13,21 @@ public class convertDDL {
 	{
 		String status = null;
 		try{
+			System.out.println("Start of try block");
 			String line,tblNm = null;
 			boolean parse = false;
 			BufferedWriter opSql = null;
-			BufferedReader inpSql = new BufferedReader(new FileReader("./src/main/java/com/canny/snowflakemigration/service/util/resources/input.sql"));
-			BufferedReader convFile = new BufferedReader(new FileReader("./src/main/java/com/canny/snowflakemigration/service/util/resources/conversion.csv"));
-			BufferedReader ignoFile = new BufferedReader(new FileReader("./src/main/java/com/canny/snowflakemigration/service/util/resources/ignore.csv"));
+			String inpPath = processDTO.getSourcePath();
+			Resource resource1 = new ClassPathResource("/snowddl_lib/conversion.csv");
+			Resource resource2 = new ClassPathResource("/snowddl_lib/ignore.csv");
+			BufferedReader inpSql = new BufferedReader(new FileReader(inpPath));
+			BufferedReader convFile = new BufferedReader(new FileReader(resource1.getFile().getPath()));
+			BufferedReader ignoFile = new BufferedReader(new FileReader(resource2.getFile().getPath()));
 			CSVReader convReader = new CSVReaderBuilder(convFile).withSkipLines(1).build();
 			CSVReader ignoReader = new CSVReaderBuilder(ignoFile).withSkipLines(1).build();
 			List<String[]> convRecords = convReader.readAll();
 			List<String[]> ignoRecords = ignoReader.readAll();
+			System.out.println("Start of loops");
 			outer : while ((line = inpSql.readLine()) != null) {
 				line = line.toLowerCase();
 				if(line.contains("create table")) {
@@ -30,7 +37,7 @@ public class convertDDL {
 						opSql.write(");");
 						opSql.close();
 					}
-					opSql = new BufferedWriter(new FileWriter("./src/main/java/com/canny/snowflakemigration/service/util/resources/DDL/"+tblNm+".sql"));
+					opSql = new BufferedWriter(new FileWriter("F:/POC/snowDDL/"+tblNm+".sql"));
 					parse = true;
 				}
 				for (String [] record : convRecords) {
@@ -43,7 +50,6 @@ public class convertDDL {
 						continue outer;
 					}
 				}
-				System.out.println(line);
 				opSql.write(line);
 				opSql.newLine();
 			}
@@ -54,6 +60,7 @@ public class convertDDL {
 		}
 		catch(Exception e) {
 			status = "FAILURE";
+			System.out.println(e);
 		}
 	return status;
 	}

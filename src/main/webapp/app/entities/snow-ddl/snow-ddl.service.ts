@@ -53,8 +53,8 @@ export class SnowDDLService {
     return this.http.post<ISnowDDL>(`${this.resourceUrl}/retrieveTableList`, snowDDL, { observe: 'response' });
   }
 
-  sendDDLList(snowDDL: ISnowDDL): Observable<EntityResponseType> {
-    return this.http.post<ISnowDDL>(`${this.resourceUrl}/sendDDLListforHistProcess`, snowDDL, { observe: 'response' });
+  convertDDL(snowDDL: ISnowDDL): Observable<EntityResponseType> {
+    return this.http.post<ISnowDDL>(`${this.resourceUrl}/sendDDLtoConvert`, snowDDL, { observe: 'response' });
   }
 
   getReports(snowDDL: ISnowDDL): Observable<EntityResponseType> {

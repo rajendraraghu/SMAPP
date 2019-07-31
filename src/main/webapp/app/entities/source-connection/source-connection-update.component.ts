@@ -41,7 +41,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
 
   ngOnInit() {
     this.isSaving = false;
-    this.systems = ['MySQL', 'Teradata', 'Oracle', 'Others'];
+    this.systems = ['MySQL', 'Teradata', 'Oracle', 'Netezza', 'Others'];
     this.activatedRoute.data.subscribe(({ sourceConnection }) => {
       this.updateForm(sourceConnection);
     });

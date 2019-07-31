@@ -25,10 +25,13 @@ export class SnowDDLUpdateComponent implements OnInit {
 
   snowflakeconnections: ISnowflakeConnection[];
 
+  sourceSystems: any[];
+
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
     description: [null, [Validators.maxLength(650)]],
+    sourceSystem: [null, [Validators.required]],
     sourcePath: [],
     sourceConnectionId: [null, Validators.required],
     snowflakeConnectionId: [null, Validators.required]
@@ -45,6 +48,7 @@ export class SnowDDLUpdateComponent implements OnInit {
 
   ngOnInit() {
     this.isSaving = false;
+    this.sourceSystems = ['MySQL', 'Teradata', 'Oracle', 'Netezza', 'Others'];
     this.activatedRoute.data.subscribe(({ snowDDL }) => {
       this.updateForm(snowDDL);
     });
@@ -69,6 +73,7 @@ export class SnowDDLUpdateComponent implements OnInit {
       id: snowDDL.id,
       name: snowDDL.name,
       description: snowDDL.description,
+      sourceSystem: snowDDL.sourceSystem,
       sourcePath: snowDDL.sourcePath,
       // createdBy: snowDDL.createdBy,
       // createdDate: snowDDL.createdDate != null ? snowDDL.createdDate.format(DATE_TIME_FORMAT) : null,
@@ -99,6 +104,7 @@ export class SnowDDLUpdateComponent implements OnInit {
       id: this.editForm.get(['id']).value,
       name: this.editForm.get(['name']).value,
       description: this.editForm.get(['description']).value,
+      sourceSystem: this.editForm.get(['sourceSystem']).value,
       sourcePath: this.editForm.get(['sourcePath']).value,
       // createdBy: this.editForm.get(['createdBy']).value,
       // createdDate:

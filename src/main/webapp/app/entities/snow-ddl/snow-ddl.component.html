@@ -31,7 +31,7 @@
             <tbody>
             <tr *ngFor="let snowDDL of snowDDLs ;trackBy: trackId">
                 <!-- <td><a [routerLink]="['/snow-ddl', snowDDL.id, 'view' ]">{{snowDDL.id}}</a></td> -->
-                <td><a>{{snowDDL.id}}</a></td>
+                <td>{{snowDDL.id}}</td>
                 <td>{{snowDDL.name}}</td>
                 <td>
                     <div *ngIf="snowDDL.sourceConnectionId">
@@ -45,23 +45,23 @@
                 <td class="text-right">
                     <div class="btn-group">
                         <button type="submit"
-                                (click)="sendDBList(snowDDL)"
+                                (click)="convertDDL(snowDDL)"
                                 class="btn btn-info btn-sm">
                                 <i class="fa fa-play" aria-hidden="true"></i>
-                            <span class="d-none d-md-inline">Run</span>
+                            <span class="d-none d-md-inline">Generate</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/snow-ddl', snowDDL.id, 'view']"
+                                [routerLink]="['/snow-ddl', snowDDL.id, 'edit']"
                                 class="btn btn-primary btn-sm">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
-                        <button type="submit"
+                        <!-- <button type="submit"
                                 (click)="viewReport_snowDDL(snowDDL.id)"
                                 class="btn btn-info btn-sm">
                             <fa-icon icon="book" fixedWidth="true"></fa-icon>
                             <span class="d-none d-md-inline">Report</span>
-                        </button>
+                        </button> -->
                         <button type="submit"
                                 [routerLink]="['/', 'snow-ddl', { outlets: { popup: snowDDL.id + '/delete'} }]"
                                 replaceUrl="true"
