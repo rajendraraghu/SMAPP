@@ -209,7 +209,7 @@ public class sendTableList  {
 		System.out.println("New TN is:"+tableName);
 		
 		//cdc column to be made dynamic
-		lastruntime = "2005-12-31 00:00:00.000";
+		//lastruntime = "2005-12-31 00:00:00.000";
 		if(lastruntime.isEmpty())
 		{
 			System.out.println("No job history available in sah_jobrunstatus.Cannot run CDC load.");
