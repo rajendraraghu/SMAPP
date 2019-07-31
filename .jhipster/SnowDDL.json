@@ -38,6 +38,10 @@
             "fieldValidateRulesMaxlength": "650"
         },
         {
+            "fieldName": "sourcePath",
+            "fieldType": "String"
+        },
+        {
             "fieldName": "lastStatus",
             "fieldType": "String"
         },

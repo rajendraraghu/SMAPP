@@ -11,10 +11,10 @@
     </h2>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="alert alert-warning" *ngIf="snowDDL?.length === 0">
+    <div class="alert alert-warning" *ngIf="snowDDLs?.length === 0">
         <span jhiTranslate="snowpoleApp.snowDDL.home.notFound">No SnowDDL Conversions found</span>
     </div>
-    <div class="table-responsive" *ngIf="snowDDL?.length > 0">
+    <div class="table-responsive" *ngIf="snowDDLs?.length > 0">
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
@@ -24,13 +24,14 @@
             <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.snowDDL.createdBy">Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="createdDate"><span jhiTranslate="snowpoleApp.snowDDL.createdDate">Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.snowDDL.lastModifiedBy">Last Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="lastModifiedDate"><span jhiTranslate="snowpoleApp.snowDDL.lastModifiedDate">Last Modified Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="lastModifiedDate"><span jhiTranslatpe="snowpoleApp.snowDDL.lastModifiedDate">Last Modified Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let snowDDL of snowDDLs ;trackBy: trackId">
-                <td><a [routerLink]="['/snow-ddl', snowDDL.id, 'view' ]">{{snowDDL.id}}</a></td>
+                <!-- <td><a [routerLink]="['/snow-ddl', snowDDL.id, 'view' ]">{{snowDDL.id}}</a></td> -->
+                <td><a>{{snowDDL.id}}</a></td>
                 <td>{{snowDDL.name}}</td>
                 <td>
                     <div *ngIf="snowDDL.sourceConnectionId">

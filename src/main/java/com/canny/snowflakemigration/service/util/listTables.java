@@ -32,7 +32,7 @@ public class listTables {
         
         
   
-        ResultSet rs1 = stmt0.executeQuery("SELECT a.TABLE_NAME,b.COLUMN_NAME as PrimaryKey FROM INFORMATION_SCHEMA.TABLES a JOIN INFORMATION_SCHEMA.COLUMNS b ON a.TABLE_NAME = b.TABLE_NAME AND b.COLUMN_KEY = 'PRI' AND a.TABLE_SCHEMA = b.TABLE_SCHEMA  WHERE a.TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"';");
+        ResultSet rs1 = stmt0.executeQuery("SELECT a.TABLE_NAME,b.COLUMN_NAME as PrimaryKey FROM INFORMATION_SCHEMA.TABLES a LEFT JOIN INFORMATION_SCHEMA.COLUMNS b ON a.TABLE_NAME = b.TABLE_NAME AND b.COLUMN_KEY = 'PRI' AND a.TABLE_SCHEMA = b.TABLE_SCHEMA  WHERE a.TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"';");
         while(rs1.next()) {
         	JsonObject row = new JsonObject();
         	//JsonElement element1 = new JsonElement();

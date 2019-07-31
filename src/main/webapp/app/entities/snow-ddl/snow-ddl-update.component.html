@@ -32,13 +32,13 @@
                     </div>
                 </div>
 
-                 <div class="form-group" *ngIf="systems && systems.length > 0"
+                 <!-- <div class="form-group" *ngIf="systems && systems.length > 0"
 				                    joyrideStep="fourthStep" title="Datasource" text="select the source connection system type">
 				                    <label jhiTranslate="snowpoleApp.sourceConnection.system">Source Type</label>
 				                    <select class="form-control" id="field_system" name="system" formControlName="system">
 				                        <option *ngFor="let system of systems" [value]="system">{{system}}</option>
 				                    </select>
-                </div>
+                </div> -->
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="snowpoleApp.snowDDL.sourceConnection" for="field_sourceConnection">Source Connection</label>
@@ -55,16 +55,15 @@
                 </div>
 
                 <div class="form-group">
-				                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowDDL.path" for="field_description">Directory Path</label>
-				                    <input type="text" class="form-control" name="path" id="field_path"
-				                           formControlName="path"/>
-				                    <div *ngIf="editForm.get('path').invalid && (editForm.get('path').dirty || editForm.get('path').touched)">
-				                        <small class="form-text text-danger"
-				                               *ngIf="editForm.get('path').errors.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 650 }">
+				    <label class="form-control-label" jhiTranslate="snowpoleApp.snowDDL.sourcePath" for="field_sourcePath">Source Path</label>
+				    <input type="text" class="form-control" name="sourcePath" id="field_sourcePath" formControlName="sourcePath"/>
+				         <div *ngIf="editForm.get('sourcePath').invalid && (editForm.get('sourcePath').dirty || editForm.get('sourcePath').touched)">
+				            <small class="form-text text-danger" *ngIf="editForm.get('sourcePath').errors.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 650 }">
 				                        This field cannot be longer than 650 characters.
-				                        </small>
-				                    </div>
+				            </small>
+				        </div>
                 </div>
+                
 
                 <div class="custom-control custom-switch">
 				                            <input type="checkbox" class="custom-control-input" id="customSwitchId" disabled="!item.selected" unchecked="item.sfc" >
@@ -84,9 +83,6 @@
                         This field is required.
                     </small>
                 </div>
-
-
-
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

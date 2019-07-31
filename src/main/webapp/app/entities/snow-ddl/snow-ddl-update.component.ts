@@ -29,11 +29,7 @@ export class SnowDDLUpdateComponent implements OnInit {
     id: [],
     name: [null, [Validators.required]],
     description: [null, [Validators.maxLength(650)]],
-    lastStatus: [],
-    createdBy: [],
-    createdDate: [],
-    lastModifiedBy: [],
-    lastModifiedDate: [],
+    sourcePath: [],
     sourceConnectionId: [null, Validators.required],
     snowflakeConnectionId: [null, Validators.required]
   });
@@ -73,10 +69,11 @@ export class SnowDDLUpdateComponent implements OnInit {
       id: snowDDL.id,
       name: snowDDL.name,
       description: snowDDL.description,
-      createdBy: snowDDL.createdBy,
-      createdDate: snowDDL.createdDate != null ? snowDDL.createdDate.format(DATE_TIME_FORMAT) : null,
-      lastModifiedBy: snowDDL.lastModifiedBy,
-      lastModifiedDate: snowDDL.lastModifiedDate != null ? snowDDL.lastModifiedDate.format(DATE_TIME_FORMAT) : null,
+      sourcePath: snowDDL.sourcePath,
+      // createdBy: snowDDL.createdBy,
+      // createdDate: snowDDL.createdDate != null ? snowDDL.createdDate.format(DATE_TIME_FORMAT) : null,
+      // lastModifiedBy: snowDDL.lastModifiedBy,
+      // lastModifiedDate: snowDDL.lastModifiedDate != null ? snowDDL.lastModifiedDate.format(DATE_TIME_FORMAT) : null,
       sourceConnectionId: snowDDL.sourceConnectionId,
       snowflakeConnectionId: snowDDL.snowflakeConnectionId
     });
@@ -102,15 +99,15 @@ export class SnowDDLUpdateComponent implements OnInit {
       id: this.editForm.get(['id']).value,
       name: this.editForm.get(['name']).value,
       description: this.editForm.get(['description']).value,
-      lastStatus: this.editForm.get(['lastStatus']).value,
-      createdBy: this.editForm.get(['createdBy']).value,
-      createdDate:
-        this.editForm.get(['createdDate']).value != null ? moment(this.editForm.get(['createdDate']).value, DATE_TIME_FORMAT) : undefined,
-      lastModifiedBy: this.editForm.get(['lastModifiedBy']).value,
-      lastModifiedDate:
-        this.editForm.get(['lastModifiedDate']).value != null
-          ? moment(this.editForm.get(['lastModifiedDate']).value, DATE_TIME_FORMAT)
-          : undefined,
+      sourcePath: this.editForm.get(['sourcePath']).value,
+      // createdBy: this.editForm.get(['createdBy']).value,
+      // createdDate:
+      //   this.editForm.get(['createdDate']).value != null ? moment(this.editForm.get(['createdDate']).value, DATE_TIME_FORMAT) : undefined,
+      // lastModifiedBy: this.editForm.get(['lastModifiedBy']).value,
+      // lastModifiedDate:
+      //   this.editForm.get(['lastModifiedDate']).value != null
+      //     ? moment(this.editForm.get(['lastModifiedDate']).value, DATE_TIME_FORMAT)
+      //     : undefined,
       sourceConnectionId: this.editForm.get(['sourceConnectionId']).value,
       snowflakeConnectionId: this.editForm.get(['snowflakeConnectionId']).value
     };

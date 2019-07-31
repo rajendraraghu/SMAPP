@@ -48,11 +48,8 @@ public class SnowDDLResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final String DEFAULT_TYPE = "AAAAAAAAAA";
-    private static final String UPDATED_TYPE = "BBBBBBBBBB";
-
-    private static final String DEFAULT_TABLES_TO_MIGRATE = "AAAAAAAAAA";
-    private static final String UPDATED_TABLES_TO_MIGRATE = "BBBBBBBBBB";
+    private static final String DEFAULT_SOURCE_PATH = "AAAAAAAAAA";
+    private static final String UPDATED_SOURCE_PATH = "BBBBBBBBBB";
 
     private static final String DEFAULT_LAST_STATUS = "AAAAAAAAAA";
     private static final String UPDATED_LAST_STATUS = "BBBBBBBBBB";
@@ -122,8 +119,8 @@ public class SnowDDLResourceIT {
         SnowDDL SnowDDL = new SnowDDL()
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
-            .lastStatus(DEFAULT_LAST_STATUS);
-            // .createdBy(DEFAULT_CREATED_BY)
+            .lastStatus(DEFAULT_LAST_STATUS)
+            .sourcePath(DEFAULT_SOURCE_PATH);
             // .createdDate(DEFAULT_CREATED_DATE)
             // .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
             // .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
@@ -159,7 +156,8 @@ public class SnowDDLResourceIT {
         SnowDDL SnowDDL = new SnowDDL()
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .lastStatus(UPDATED_LAST_STATUS);
+            .lastStatus(UPDATED_LAST_STATUS)
+            .sourcePath(UPDATED_SOURCE_PATH);
             // .createdBy(UPDATED_CREATED_BY)
             // .createdDate(UPDATED_CREATED_DATE)
             // .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
@@ -210,6 +208,7 @@ public class SnowDDLResourceIT {
         SnowDDL testSnowDDL = SnowDDLList.get(SnowDDLList.size() - 1);
         assertThat(testSnowDDL.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testSnowDDL.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testSnowDDL.getSourcePath()).isEqualTo(DEFAULT_SOURCE_PATH);
         assertThat(testSnowDDL.getLastStatus()).isEqualTo(DEFAULT_LAST_STATUS);
         assertThat(testSnowDDL.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
         assertThat(testSnowDDL.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
@@ -270,8 +269,8 @@ public class SnowDDLResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(SnowDDL.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
-            .andExpect(jsonPath("$.[*].lastStatus").value(hasItem(DEFAULT_LAST_STATUS.toString())));
-            // .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())))
+            .andExpect(jsonPath("$.[*].lastStatus").value(hasItem(DEFAULT_LAST_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].sourcePath").value(hasItem(DEFAULT_SOURCE_PATH.toString())));
             // .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
             // .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY.toString())))
             // .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
@@ -290,8 +289,8 @@ public class SnowDDLResourceIT {
             .andExpect(jsonPath("$.id").value(SnowDDL.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
-            .andExpect(jsonPath("$.lastStatus").value(DEFAULT_LAST_STATUS.toString()));
-            // .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY.toString()))
+            .andExpect(jsonPath("$.lastStatus").value(DEFAULT_LAST_STATUS.toString()))
+            .andExpect(jsonPath("$.sourcePath").value(DEFAULT_SOURCE_PATH.toString()));
             // .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
             // .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY.toString()))
             // .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
@@ -375,6 +374,45 @@ public class SnowDDLResourceIT {
         defaultSnowDDLShouldNotBeFound("description.specified=false");
     }
     
+    @Test
+    @Transactional
+    public void getAllSnowDDLesBySourcePathIsEqualToSomething() throws Exception {
+        // Initialize the database
+        SnowDDLRepository.saveAndFlush(SnowDDL);
+
+        // Get all the SnowDDLList where sourcePath equals to DEFAULT_SOURCE_PATH
+        defaultSnowDDLShouldBeFound("sourcePath.equals=" + DEFAULT_SOURCE_PATH);
+
+        // Get all the SnowDDLList where sourcePath equals to UPDATED_SOURCE_PATH
+        defaultSnowDDLShouldNotBeFound("sourcePath.equals=" + UPDATED_SOURCE_PATH);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSnowDDLesBySourcePathIsInShouldWork() throws Exception {
+        // Initialize the database
+        SnowDDLRepository.saveAndFlush(SnowDDL);
+
+        // Get all the SnowDDLList where sourcePath in DEFAULT_SOURCE_PATH or UPDATED_SOURCE_PATH
+        defaultSnowDDLShouldBeFound("sourcePath.in=" + DEFAULT_SOURCE_PATH + "," + UPDATED_SOURCE_PATH);
+
+        // Get all the SnowDDLList where sourcePath equals to UPDATED_SOURCE_PATH
+        defaultSnowDDLShouldNotBeFound("sourcePath.in=" + UPDATED_SOURCE_PATH);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSnowDDLesBySourcePathIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        SnowDDLRepository.saveAndFlush(SnowDDL);
+
+        // Get all the SnowDDLList where sourcePath is not null
+        defaultSnowDDLShouldBeFound("sourcePath.specified=true");
+
+        // Get all the SnowDDLList where sourcePath is null
+        defaultSnowDDLShouldNotBeFound("sourcePath.specified=false");
+    }
+
     @Test
     @Transactional
     public void getAllSnowDDLesByLastStatusIsEqualToSomething() throws Exception {
@@ -611,8 +649,8 @@ public class SnowDDLResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(SnowDDL.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].lastStatus").value(hasItem(DEFAULT_LAST_STATUS)));
-            // .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].lastStatus").value(hasItem(DEFAULT_LAST_STATUS)))
+            .andExpect(jsonPath("$.[*].sourcePath").value(hasItem(DEFAULT_SOURCE_PATH)));
             // .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
             // .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
             // .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
@@ -665,8 +703,8 @@ public class SnowDDLResourceIT {
         updatedSnowDDL
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .lastStatus(UPDATED_LAST_STATUS);
-            // .createdBy(UPDATED_CREATED_BY)
+            .lastStatus(UPDATED_LAST_STATUS)
+            .sourcePath(UPDATED_SOURCE_PATH);
             // .createdDate(UPDATED_CREATED_DATE)
             // .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
             // .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
@@ -683,6 +721,7 @@ public class SnowDDLResourceIT {
         SnowDDL testSnowDDL = SnowDDLList.get(SnowDDLList.size() - 1);
         assertThat(testSnowDDL.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testSnowDDL.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testSnowDDL.getSourcePath()).isEqualTo(UPDATED_SOURCE_PATH);
         assertThat(testSnowDDL.getLastStatus()).isEqualTo(UPDATED_LAST_STATUS);
         assertThat(testSnowDDL.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
         assertThat(testSnowDDL.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
