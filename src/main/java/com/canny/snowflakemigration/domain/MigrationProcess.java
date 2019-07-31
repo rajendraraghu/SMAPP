@@ -46,9 +46,24 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
     @Size(max = 3200)
     @Column(name = "bulk", length = 3200)
     private String bulk;
+    
+    @Size(max = 3200)
+    @Column(name = "cdc_pk", length = 3200)
+    private String cdcPk;
+
+    @Size(max = 3200)   
+    @Column(name = "bulk_pk", length = 3200)
+    private String bulkPk;
+
+    @Size(max = 3200)
+    @Column(name = "cdc_cols", length = 3200)
+    private String cdcCols;
 
     @Column(name = "last_status")
     private String lastStatus;
+
+    // @Column(name = "selected_all")
+    // private Boolean selectedAll;
 
     // @Column(name = "created_by")
     // private String createdBy;
@@ -158,6 +173,45 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
         this.bulk = bulk;
     }
 
+    public String getCdcPk() {
+        return cdcPk;
+    }
+
+    public MigrationProcess cdcPk(String cdcPk) {
+        this.cdcPk = cdcPk;
+        return this;
+    }
+
+    public void setCdcPk(String cdcPk) {
+        this.cdcPk = cdcPk;
+    }
+
+    public String getBulkPk() {
+        return bulkPk;
+    }
+
+    public MigrationProcess bulkPk(String bulkPk) {
+        this.bulkPk = bulkPk;
+        return this;
+    }
+
+    public void setBulkPk(String bulkPk) {
+        this.bulkPk = bulkPk;
+    }
+
+    public String getCdcCols() {
+        return cdcCols;
+    }
+
+    public MigrationProcess cdcCols(String cdcCols) {
+        this.cdcCols = cdcCols;
+        return this;
+    }
+
+    public void setCdcCols(String cdcCols) {
+        this.cdcCols = cdcCols;
+    }
+
     public String getLastStatus() {
         return lastStatus;
     }
@@ -170,6 +224,19 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
     public void setLastStatus(String lastStatus) {
         this.lastStatus = lastStatus;
     }
+
+    // public Boolean getSelectedAll() {
+    //     return selectedAll;
+    // }
+
+    // public MigrationProcess selectedAll(Boolean selectedAll) {
+    //     this.selectedAll = selectedAll;
+    //     return this;
+    // }
+
+    // public void setSelecteAll(Boolean selectedAll) {
+    //     this.selectedAll = selectedAll;
+    // }
 
     // public String getCreatedBy() {
     //     return createdBy;
@@ -276,7 +343,11 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
             ", tablesToMigrate='" + getTablesToMigrate() + "'" +
             ", cdc='" + getCdc() + "'" +
             ", bulk='" + getBulk() + "'" +
+            ", cdcPk='" + getCdcPk() + "'" +
+            ", bulkPk='" + getBulkPk() + "'" +
+            ", cdcCols='" + getCdcCols() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
+            //", selectedAll='" + getSelectedAll() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +

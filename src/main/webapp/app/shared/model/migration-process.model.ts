@@ -8,9 +8,9 @@ export interface IMigrationProcess {
   tablesToMigrate?: string;
   cdc?: string;
   bulk?: string;
-  cdcPrimaryKey?: string;
-  bulkPrimaryKey?: string;
-  cdcColumns?: string;
+  cdcPk?: string;
+  bulkPk?: string;
+  cdcCols?: string;
   lastStatus?: string;
   createdBy?: string;
   createdDate?: Moment;
@@ -31,9 +31,9 @@ export class MigrationProcess implements IMigrationProcess {
     public tablesToMigrate?: string,
     public cdc?: string,
     public bulk?: string,
-    public bulkPrimaryKey?: string,
-    public cdcPrimaryKey?: string,
-    public cdcColumns?: string,
+    public bulkPk?: string,
+    public cdcPk?: string,
+    public cdcCols?: string,
     public lastStatus?: string,
     public createdBy?: string,
     public createdDate?: Moment,

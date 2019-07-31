@@ -24,6 +24,12 @@ public class MigrationProcessDTO implements Serializable {
     private String cdc;
 
     private String bulk;
+    
+    private String cdcPk;
+    
+    private String bulkPk;
+    
+    private String cdcCols;
 
     private String lastStatus;
 
@@ -34,7 +40,6 @@ public class MigrationProcessDTO implements Serializable {
     private String lastModifiedBy;
 
     private Instant lastModifiedDate;
-
 
     private Long sourceConnectionId;
 
@@ -118,6 +123,22 @@ public class MigrationProcessDTO implements Serializable {
         this.cdc = cdc;
     }
 
+    public String getCdcPk() {
+        return cdcPk;
+    }
+
+    public void setCdcPk(String cdcPk) {
+        this.cdcPk = cdcPk;
+    }
+    
+    public String getCdcCols() {
+        return cdcCols;
+    }
+
+    public void setCdcCols(String cdcCols) {
+        this.cdcCols = cdcCols;
+    }
+    
     public String getBulk() {
         return bulk;
     }
@@ -125,7 +146,14 @@ public class MigrationProcessDTO implements Serializable {
     public void setBulk(String bulk) {
         this.bulk = bulk;
     }
+    
+    public String getBulkPk() {
+        return bulkPk;
+    }
 
+    public void setBulkPk(String bulkPk) {
+        this.bulkPk = bulkPk;
+    }
     public String getLastStatus() {
         return lastStatus;
     }
@@ -332,6 +360,9 @@ public class MigrationProcessDTO implements Serializable {
             ", tablesToMigrate='" + getTablesToMigrate() + "'" +
             ", cdc='" + getCdc() + "'" +
             ", bulk='" + getBulk() + "'" +
+            ", cdcPk='" + getCdcPk() + "'" +
+            ", bulkPk='" + getBulkPk() + "'" +
+            ", cdcCols='" + getCdcCols() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
