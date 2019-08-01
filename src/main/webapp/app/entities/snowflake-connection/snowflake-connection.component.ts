@@ -119,16 +119,6 @@ export class SnowflakeConnectionComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  testConnection(connection) {
-    this.snowflakeConnectionService.testConnection(connection).subscribe(response => {
-      console.log(response.body);
-      if (connection.valid !== response.body) {
-        connection.valid = response.body;
-        this.snowflakeConnectionService.update(connection).subscribe(res => {});
-      }
-    });
-  }
-
   protected paginateSnowflakeConnections(data: ISnowflakeConnection[], headers: HttpHeaders) {
     this.links = this.parseLinks.parse(headers.get('link'));
     this.totalItems = parseInt(headers.get('X-Total-Count'), 10);

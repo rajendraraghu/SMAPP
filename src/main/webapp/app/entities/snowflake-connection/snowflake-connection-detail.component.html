@@ -69,7 +69,10 @@
                     class="btn btn-info">
                 <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
             </button>
-
+            <button type="submit" (click)="testConnection(snowflakeConnection)" class="btn btn-info">
+                <fa-icon [icon]="'eye'"></fa-icon>
+                <span class="d-none d-md-inline">Test Connection</span>
+            </button>
             <button type="button"
                     [routerLink]="['/snowflake-connection', snowflakeConnection.id, 'edit']"
                     class="btn btn-primary">

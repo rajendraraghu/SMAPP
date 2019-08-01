@@ -121,9 +121,11 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
                 </button>
-                <button type="button" id="Test-Connection" class="btn btn-secondary"  (click)="previousState()">
-                    <span>Test Connection</span>
-                    </button>
+                <button type="submit" (click)="testConnection()" [disabled]="editForm.invalid || isSaving"
+                    class="btn btn-info">
+                    <fa-icon [icon]="'save'"></fa-icon>
+                    <span class="d-none d-md-inline">Test & Save Connection</span>
+                </button>
                 <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary"
                     joyrideStep="elevengthStep" stepPosition="top" title="Snowflake Connection" 
                     text="Create new Snowflake Connection with Name, target Url, Snowflake username, password, account, warehouse, database and schema">
