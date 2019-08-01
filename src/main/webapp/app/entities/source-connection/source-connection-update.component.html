@@ -136,9 +136,10 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
                 </button>
-                <button type="button" id="Test-Connection" class="btn btn-secondary"  (click)= "alert()">
-                    <span >Test Connection</span>
-                    </button>
+                <button type="submit" (click)="testConnection()" [disabled]="editForm.invalid || isSaving" class="btn btn-info">
+                    <fa-icon [icon]="'save'"></fa-icon>
+                    <span class="d-none d-md-inline">Test & Save Connection</span>
+                </button>
                 <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary"
                     joyrideStep="ninethStep" stepPosition="top" title="Source Connection" text="Create new Source Connection ">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>

@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { ISourceConnection, SourceConnection } from 'app/shared/model/source-connection.model';
 import { SourceConnectionService } from './source-connection.service';
+import { JhiAlertService } from 'ng-jhipster';
 
 @Component({
   selector: 'jhi-source-connection-update',
@@ -36,7 +37,8 @@ export class SourceConnectionUpdateComponent implements OnInit {
   constructor(
     protected sourceConnectionService: SourceConnectionService,
     protected activatedRoute: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private jhiAlertService: JhiAlertService
   ) {}
 
   ngOnInit() {
@@ -117,5 +119,19 @@ export class SourceConnectionUpdateComponent implements OnInit {
 
   protected onSaveError() {
     this.isSaving = false;
+  }
+
+  testConnection() {
+    const connection = this.createFromForm();
+    this.sourceConnectionService.testConnection(connection).subscribe(response => {
+      if (!response.body) {
+        const errorMessage = 'snowpoleApp.snowflakeConnection.invalid';
+        this.jhiAlertService.error(errorMessage, null, null);
+      }
+      if (connection.valid !== response.body) {
+        connection.valid = !!response.body;
+        this.sourceConnectionService.update(connection).subscribe(res => {});
+      }
+    });
   }
 }
