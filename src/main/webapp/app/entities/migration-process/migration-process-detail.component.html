@@ -79,6 +79,8 @@
                 <input type="text" class="form-control" placeholder="Search for tables"
                     (input)="searchForTables($event.target.value)">
             </div>
+            <input type="checkbox"  id="selectAll" [checked]="migrationProcess.selectedAll" (change)="selectAll()">
+                <label for="selectAll"><span style="color:darkorange;font-weight:bold" >Select All</span></label>
             <div class="form-group" style="height: 40vh; overflow-y: auto;">
                 <div class="row m-0">
                     <div class="col-3 pl-0">
@@ -97,7 +99,7 @@
                 <div class="row m-0" *ngFor="let item of tables; let i=index">
                     <div class="col-3 pl-0">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" [id]="i" [checked]="item.selected"
+                            <input type="checkbox" class="custom-control-input" [id]="i" [checked]="item.selected || migrationProcess.selectedAll"
                                 (change)="onSelectionChange(item)">
                             <label class="custom-control-label" [for]="i">{{item.name}}</label>
                         </div>
@@ -136,8 +138,8 @@
                                 (change)="onSelectionChange(item)">
                             <label class="custom-control-label" [for]="i">{{item.PrimaryKey}}</label>
                         </div> -->
-                        <select class="form-control" id="field_system" name="system" [disabled]="!item.cdc">
-                            <option *ngFor="let cdcColumn of item.cdcColumnList">{{cdcColumn}}</option>
+                        <select class="form-control" id="field_system" name="system"  [disabled]="!item.cdc">
+                            <option *ngFor="let cdcColumn of item.cdcColumnList" [value]="cdcColumn">{{cdcColumn}}</option>
                         </select>
                     </div>
                 </div>

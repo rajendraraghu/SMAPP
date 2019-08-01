@@ -21,10 +21,7 @@ export class MigrationProcessDetailComponent implements OnInit {
   selectedTables = [];
   cdcTables = [];
   bulkTables = [];
-  cdcPrimaryKey = [];
-  bulkPrimaryKey = [];
   isSaving: boolean;
-  cdcColumns = [];
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
@@ -37,9 +34,6 @@ export class MigrationProcessDetailComponent implements OnInit {
       this.bulkTables = this.migrationProcess.bulk ? JSON.parse(this.migrationProcess.bulk) : [];
       this.cdcTables = this.migrationProcess.cdc ? JSON.parse(this.migrationProcess.cdc) : [];
       this.selectedTables = this.migrationProcess.tablesToMigrate ? JSON.parse(this.migrationProcess.tablesToMigrate) : [];
-      this.cdcColumns = this.migrationProcess.cdcCols ? JSON.parse(this.migrationProcess.cdcCols) : [];
-      this.cdcPrimaryKey = this.migrationProcess.cdcPk ? JSON.parse(this.migrationProcess.cdcPk) : [];
-      this.bulkPrimaryKey = this.migrationProcess.bulkPk ? JSON.parse(this.migrationProcess.bulkPk) : [];
       this.getTableList();
     });
     this.isSaving = false;
@@ -91,6 +85,16 @@ export class MigrationProcessDetailComponent implements OnInit {
     }
   }
 
+  // selectAll() {
+  //   this.migrationProcess.selectedAll = !this.migrationProcess.selectedAll;
+  //   this.selectedTables = [];
+  //   if (this.migrationProcess.selectedAll) {
+  //     this.tables.forEach(element => {
+  //       this.selectedTables.push(element.name);
+  //     });
+  //   }
+  // }
+
   onProcessSelection(item) {
     item.cdc = item.cdc ? false : true;
   }
@@ -130,29 +134,34 @@ export class MigrationProcessDetailComponent implements OnInit {
     }
   }
 
+  // onCdcColumnSelected(value) {
+  //   console.log(value);
+  // }
+
   testAndMigrate() {
     const bulk = [];
     const cdc = [];
-    // const cdcColumns = [];
+    const cdcColumns = [],
+      cdcPrimaryKey = [],
+      bulkPrimaryKey = [];
     this.tables.forEach(element => {
       if (element.selected) {
         if (element.cdc) {
           cdc.push(element.name);
-          this.cdcColumns.push(element.cdcColumnList);
-          console.log(this.cdcColumns);
-          this.cdcPrimaryKey.push(element.primaryKey);
+          cdcColumns.push(element.cdcColumnList);
+          cdcPrimaryKey.push(element.primaryKey);
         } else {
           bulk.push(element.name);
-          this.bulkPrimaryKey.push(element.primaryKey);
+          bulkPrimaryKey.push(element.primaryKey);
         }
       }
     });
     this.migrationProcess.tablesToMigrate = JSON.stringify(this.selectedTables);
     this.migrationProcess.cdc = cdc ? JSON.stringify(cdc) : null;
     this.migrationProcess.bulk = bulk ? JSON.stringify(bulk) : null;
-    this.migrationProcess.cdcPk = this.cdcPrimaryKey ? JSON.stringify(this.cdcPrimaryKey) : null;
-    this.migrationProcess.bulkPk = this.bulkPrimaryKey ? JSON.stringify(this.bulkPrimaryKey) : null;
-    this.migrationProcess.cdcCols = this.cdcColumns ? JSON.stringify(this.cdcColumns) : null;
+    this.migrationProcess.cdcPk = cdcPrimaryKey ? JSON.stringify(cdcPrimaryKey) : null;
+    this.migrationProcess.bulkPk = bulkPrimaryKey ? JSON.stringify(bulkPrimaryKey) : null;
+    this.migrationProcess.cdcCols = cdcColumns ? JSON.stringify(cdcColumns) : null;
     this.subscribeToSaveResponse(this.migrationProcessService.update(this.migrationProcess));
   }
 
