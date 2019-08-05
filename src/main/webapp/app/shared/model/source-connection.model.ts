@@ -4,7 +4,7 @@ export interface ISourceConnection {
   id?: number;
   name?: string;
   description?: string;
-  system?: string;
+  sourceType?: string;
   url?: string;
   username?: string;
   password?: string;
@@ -22,7 +22,7 @@ export class SourceConnection implements ISourceConnection {
     public id?: number,
     public name?: string,
     public description?: string,
-    public system?: string,
+    public sourceType?: string,
     public url?: string,
     public username?: string,
     public password?: string,

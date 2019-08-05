@@ -18,7 +18,7 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <!-- <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
             <th jhiSortBy="name"><span jhiTranslate="snowpoleApp.snowflakeConnection.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <!-- <th jhiSortBy="url"><span jhiTranslate="snowpoleApp.snowflakeConnection.url">Url</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
             <th jhiSortBy="username"><span jhiTranslate="snowpoleApp.snowflakeConnection.username">Username</span> <fa-icon [icon]="'sort'"></fa-icon></th>
@@ -27,16 +27,16 @@
             <th jhiSortBy="database"><span jhiTranslate="snowpoleApp.snowflakeConnection.database">Database</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="schema"><span jhiTranslate="snowpoleApp.snowflakeConnection.schema">Schema</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="valid"><span jhiTranslate="snowpoleApp.snowflakeConnection.valid">Valid</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <!-- <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.snowflakeConnection.createdBy">Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.snowflakeConnection.createdBy">Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th> 
             <th jhiSortBy="createdDate"><span jhiTranslate="snowpoleApp.snowflakeConnection.createdDate">Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <!-- <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedBy">Last Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedBy">Last Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th> 
             <th jhiSortBy="lastModifiedDate"><span jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedDate">Last Modified Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let snowflakeConnection of snowflakeConnections ;trackBy: trackId">
-                <td><a [routerLink]="['/snowflake-connection', snowflakeConnection.id, 'view' ]">{{snowflakeConnection.id}}</a></td>
+                <!-- <td><a [routerLink]="['/snowflake-connection', snowflakeConnection.id, 'view' ]">{{snowflakeConnection.id}}</a></td> -->
                 <td>{{snowflakeConnection.name}}</td>
                 <!-- <td>{{snowflakeConnection.url}}</td> -->
                 <td>{{snowflakeConnection.username}}</td>
@@ -48,9 +48,9 @@
                     <span *ngIf="snowflakeConnection.valid" class="badge badge-success">Yes</span>
                     <span *ngIf="!snowflakeConnection.valid" class="badge badge-danger">No</span>
                 </td>
-                <!-- <td>{{snowflakeConnection.createdBy}}</td> -->
+                 <td>{{snowflakeConnection.createdBy}}</td> 
                 <td>{{snowflakeConnection.createdDate | date:'medium'}}</td>
-                <!-- <td>{{snowflakeConnection.lastModifiedBy}}</td> -->
+                <td>{{snowflakeConnection.lastModifiedBy}}</td> 
                 <td>{{snowflakeConnection.lastModifiedDate | date:'medium'}}</td>
                 <td class="text-right">
                     <div class="btn-group">

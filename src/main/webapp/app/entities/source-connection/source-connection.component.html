@@ -19,25 +19,25 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <!-- <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
             <th jhiSortBy="name"><span jhiTranslate="snowpoleApp.sourceConnection.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="system"><span jhiTranslate="snowpoleApp.sourceConnection.system">System</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="sourceType"><span jhiTranslate="snowpoleApp.sourceConnection.sourceType">Source Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <!-- <th jhiSortBy="url"><span jhiTranslate="snowpoleApp.sourceConnection.url">Url</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
             <th jhiSortBy="username"><span jhiTranslate="snowpoleApp.sourceConnection.username">Username</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <!-- <th jhiSortBy="password"><span jhiTranslate="snowpoleApp.sourceConnection.password">Password</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
             <th jhiSortBy="database"><span jhiTranslate="snowpoleApp.sourceConnection.database">Database</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="schema"><span jhiTranslate="snowpoleApp.sourceConnection.schema">Schema</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="valid"><span jhiTranslate="snowpoleApp.sourceConnection.valid">Valid</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <!-- <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.sourceConnection.createdBy">Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.sourceConnection.createdBy">Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th> 
             <th jhiSortBy="createdDate"><span jhiTranslate="snowpoleApp.sourceConnection.createdDate">Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <!-- <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.sourceConnection.lastModifiedBy">Last Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.sourceConnection.lastModifiedBy">Last Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th> 
             <th jhiSortBy="lastModifiedDate"><span jhiTranslate="snowpoleApp.sourceConnection.lastModifiedDate">Last Modified Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let sourceConnection of sourceConnections ;trackBy: trackId">
-                <td><a [routerLink]="['/source-connection', sourceConnection.id, 'view' ]">{{sourceConnection.id}}</a></td>
+                <!-- <td><a [routerLink]="['/source-connection', sourceConnection.id, 'view' ]">{{sourceConnection.id}}</a></td> -->
                 <td>{{sourceConnection.name}}</td>
                 <td>{{sourceConnection.system}}</td>
                 <!-- <td>{{sourceConnection.url}}</td> -->
@@ -49,9 +49,9 @@
                     <span *ngIf="sourceConnection.valid" class="badge badge-success">Yes</span>
                     <span *ngIf="!sourceConnection.valid" class="badge badge-danger">No</span>
                 </td>
-                <!-- <td>{{sourceConnection.createdBy}}</td> -->
+                <td>{{sourceConnection.createdBy}}</td> 
                 <td>{{sourceConnection.createdDate | date:'medium'}}</td>
-                <!-- <td>{{sourceConnection.lastModifiedBy}}</td> -->
+                <td>{{sourceConnection.lastModifiedBy}}</td> 
                 <td>{{sourceConnection.lastModifiedDate | date:'medium'}}</td>
                 <td class="text-right">
                     <div class="btn-group">

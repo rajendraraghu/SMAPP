@@ -15,13 +15,13 @@ import { JhiAlertService } from 'ng-jhipster';
 })
 export class SourceConnectionUpdateComponent implements OnInit {
   isSaving: boolean;
-  systems: any[];
+  sourceTypes: any[];
 
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
     description: [null, [Validators.maxLength(650)]],
-    system: [null, [Validators.required]],
+    sourceType: [null, [Validators.required]],
     url: [null, [Validators.required, Validators.maxLength(1200)]],
     username: [null, [Validators.required]],
     password: [null, [Validators.required]],
@@ -43,7 +43,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
 
   ngOnInit() {
     this.isSaving = false;
-    this.systems = ['MySQL', 'Teradata', 'Oracle', 'Netezza', 'Others'];
+    this.sourceTypes = ['MySQL', 'Netezza', 'Teradata', 'Oracle'];
     this.activatedRoute.data.subscribe(({ sourceConnection }) => {
       this.updateForm(sourceConnection);
     });
@@ -54,7 +54,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
       id: sourceConnection.id,
       name: sourceConnection.name,
       description: sourceConnection.description,
-      system: sourceConnection.system,
+      sourceType: sourceConnection.sourceType,
       url: sourceConnection.url,
       username: sourceConnection.username,
       password: sourceConnection.password,
@@ -89,7 +89,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
       id: this.editForm.get(['id']).value,
       name: this.editForm.get(['name']).value,
       description: this.editForm.get(['description']).value,
-      system: this.editForm.get(['system']).value,
+      sourceType: this.editForm.get(['sourceType']).value,
       url: this.editForm.get(['url']).value,
       username: this.editForm.get(['username']).value,
       password: this.editForm.get(['password']).value,

@@ -4,7 +4,7 @@
       "home": {
         "title": "Source Connections",
         "createLabel": "Create a new Source Connection",
-        "createOrEditLabel": "Create or edit a Source Connection",
+        "editLabel": "Update Source Connection",
         "notFound": "No Source Connection found"
       },
       "created": "A new Source Connection is created with identifier {{ param }}",
@@ -18,7 +18,7 @@
       },
       "name": "Name",
       "description": "Description",
-      "system": "System",
+      "sourceType": "Source Type",
       "url": "Url",
       "username": "Username",
       "password": "Password",

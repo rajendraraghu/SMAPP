@@ -18,23 +18,23 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <!-- <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
             <th jhiSortBy="name"><span jhiTranslate="snowpoleApp.migrationProcess.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <!-- <th jhiSortBy="type"><span jhiTranslate="snowpoleApp.migrationProcess.type">Type</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
             <!-- <th jhiSortBy="tablesToMigrate"><span jhiTranslate="snowpoleApp.migrationProcess.tablesToMigrate">Tables To Migrate</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
             <th jhiSortBy="sourceConnectionName"><span jhiTranslate="snowpoleApp.migrationProcess.sourceConnection">Source Connection</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="snowflakeConnectionName"><span jhiTranslate="snowpoleApp.migrationProcess.snowflakeConnection">Snowflake Connection</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <!-- <th jhiSortBy="lastStatus"><span jhiTranslate="snowpoleApp.migrationProcess.lastStatus">Last Status</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
-            <!-- <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.migrationProcess.createdBy">Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.migrationProcess.createdBy">Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th> 
             <th jhiSortBy="createdDate"><span jhiTranslate="snowpoleApp.migrationProcess.createdDate">Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <!-- <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.migrationProcess.lastModifiedBy">Last Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.migrationProcess.lastModifiedBy">Last Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th> 
             <th jhiSortBy="lastModifiedDate"><span jhiTranslate="snowpoleApp.migrationProcess.lastModifiedDate">Last Modified Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let migrationProcess of migrationProcesses ;trackBy: trackId">
-                <td><a [routerLink]="['/migration-process', migrationProcess.id, 'view' ]">{{migrationProcess.id}}</a></td>
+                <!-- <td><a [routerLink]="['/migration-process', migrationProcess.id, 'view' ]">{{migrationProcess.id}}</a></td> -->
                 <td>{{migrationProcess.name}}</td>
                 <!-- <td>{{migrationProcess.type}}</td> -->
                 <!-- <td>{{migrationProcess.tablesToMigrate}}</td> -->
@@ -49,9 +49,9 @@
                     </div>
                 </td>
                 <!-- <td>{{migrationProcess.lastStatus}}</td> -->
-                <!-- <td>{{migrationProcess.createdBy}}</td> -->
+                 <td>{{migrationProcess.createdBy}}</td> 
                 <td>{{migrationProcess.createdDate | date:'medium'}}</td>
-                <!-- <td>{{migrationProcess.lastModifiedBy}}</td> -->
+               <td>{{migrationProcess.lastModifiedBy}}</td> 
                 <td>{{migrationProcess.lastModifiedDate | date:'medium'}}</td>
                 <td class="text-right">
                     <div class="btn-group">
