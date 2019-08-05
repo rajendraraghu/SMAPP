@@ -56,6 +56,7 @@ public class listTables {
     		  cdccols.add(new JsonPrimitive(rs3.getString("COLUMN_NAME")));    		
             }
         	row.add("cdcColumnList",cdccols);
+            row.addProperty("selectedcdccol","");
         	data.add(row);
         }
         jsonResponse.add("tableinfo",data);

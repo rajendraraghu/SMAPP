@@ -120,6 +120,7 @@ export class MigrationProcessComponent implements OnInit, OnDestroy {
   }
 
   sendTableList(migrationProcess) {
+    migrationProcess.runBy = this.currentAccount.login;
     this.migrationProcessService.sendTableList(migrationProcess).subscribe(response => {
       // this.tables = this.tablesCopy = response.body;
       alert('Sent table list to back-end');

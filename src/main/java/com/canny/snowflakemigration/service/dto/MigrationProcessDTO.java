@@ -41,6 +41,8 @@ public class MigrationProcessDTO implements Serializable {
 
     private Instant lastModifiedDate;
 
+    private String runBy;
+
     private Long sourceConnectionId;
 
     private String sourceConnectionName;
@@ -192,6 +194,14 @@ public class MigrationProcessDTO implements Serializable {
 
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public String getRunBy() {
+        return runBy;
+    }
+
+    public void setRunBy(String runBy) {
+        this.runBy = runBy;
     }
 
     public Long getSourceConnectionId() {
@@ -368,6 +378,7 @@ public class MigrationProcessDTO implements Serializable {
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
+            ", runBy='" + getRunBy() + "'" +
             ", sourceConnection=" + getSourceConnectionId() +
             ", sourceConnection='" + getSourceConnectionName() + "'" +
             ", snowflakeConnection=" + getSnowflakeConnectionId() +

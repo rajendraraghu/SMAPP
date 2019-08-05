@@ -16,10 +16,12 @@ export interface IMigrationProcess {
   createdDate?: Moment;
   lastModifiedBy?: string;
   lastModifiedDate?: Moment;
+  // selectedAll?: Boolean;
   sourceConnectionName?: string;
   sourceConnectionId?: number;
   snowflakeConnectionName?: string;
   snowflakeConnectionId?: number;
+  runBy?: string;
 }
 
 export class MigrationProcess implements IMigrationProcess {
@@ -39,9 +41,11 @@ export class MigrationProcess implements IMigrationProcess {
     public createdDate?: Moment,
     public lastModifiedBy?: string,
     public lastModifiedDate?: Moment,
+    // public selectedAll?: Boolean,
     public sourceConnectionName?: string,
     public sourceConnectionId?: number,
     public snowflakeConnectionName?: string,
-    public snowflakeConnectionId?: number
+    public snowflakeConnectionId?: number,
+    public runBy?: string
   ) {}
 }
