@@ -10,7 +10,7 @@ import { JhiLanguageHelper, User, UserService } from 'app/core';
 })
 export class UserMgmtUpdateComponent implements OnInit {
   user: User;
-  languages: any[];
+  // languages: any[];
   authorities: any[];
   isSaving: boolean;
 
@@ -21,7 +21,7 @@ export class UserMgmtUpdateComponent implements OnInit {
     lastName: ['', [Validators.maxLength(50)]],
     email: ['', [Validators.minLength(5), Validators.maxLength(254), Validators.email]],
     activated: [true],
-    langKey: [],
+    // langKey: [],
     authorities: []
   });
 
@@ -43,9 +43,9 @@ export class UserMgmtUpdateComponent implements OnInit {
     this.userService.authorities().subscribe(authorities => {
       this.authorities = authorities;
     });
-    this.languageHelper.getAll().then(languages => {
-      this.languages = languages;
-    });
+    // this.languageHelper.getAll().then(languages => {
+    //   this.languages = languages;
+    // });
   }
 
   private updateForm(user: User): void {
@@ -56,7 +56,7 @@ export class UserMgmtUpdateComponent implements OnInit {
       lastName: user.lastName,
       email: user.email,
       activated: user.activated,
-      langKey: user.langKey,
+      // langKey: user.langKey,
       authorities: user.authorities
     });
   }
@@ -81,7 +81,7 @@ export class UserMgmtUpdateComponent implements OnInit {
     user.lastName = this.editForm.get(['lastName']).value;
     user.email = this.editForm.get(['email']).value;
     user.activated = this.editForm.get(['activated']).value;
-    user.langKey = this.editForm.get(['langKey']).value;
+    // user.langKey = this.editForm.get(['langKey']).value;
     user.authorities = this.editForm.get(['authorities']).value;
   }
 
