@@ -41,10 +41,12 @@ public class sendTableList  {
 		    properties.put("db",processDTO.getSnowflakeConnectionDatabase());
 	        properties.put("schema",processDTO.getSnowflakeConnectionSchema());
 		    Connection con2=DriverManager.getConnection(processDTO.getSnowflakeConnectionUrl(),properties);
-		
-		    Statement st0 = con2.createStatement();
-		    ResultSet r0 = st0.executeQuery("CREATE TABLE IF NOT EXISTS sah_jobrunstatus (jobId int identity(1,1),JobStartTime datetime, JobEndTime datetime,JobStatus varchar(1000),processid bigint);");
-		    ResultSet r1 = st0.executeQuery("CREATE TABLE IF NOT EXISTS sah_tableLoadStatus (jobid int,tableLoadid int,tablename varchar(50),tableLoadStartTime datetime,tableLoadEndTime datetime,tableLoadStatus varchar(15),insertcount int,updatecount int, deletecount int, runtype varchar(20),processid bigint,processname varchar(100),sourcename varchar(100),destname varchar(100));");
+		    
+		    Connection con3 = DriverManager.getConnection("jdbc:postgresql://localhost:5432/smapp","postgres","password");
+		    Statement st0 = con3.createStatement();
+		    
+		    st0.executeUpdate("CREATE TABLE IF NOT EXISTS sah_jobrunstatus (jobId int,JobStartTime timestamp, JobEndTime timestamp,JobStatus varchar(1000),processid bigint,runby varchar(300),tablecount int,SuccessCount int,FailureCount int);");
+		    st0.executeUpdate("CREATE TABLE IF NOT EXISTS sah_tableLoadStatus (jobid int,tableLoadid int,tablename varchar(50),tableLoadStartTime timestamp,tableLoadEndTime timestamp,tableLoadStatus varchar(15),insertcount int,updatecount int, deletecount int, runtype varchar(20),processid bigint,processname varchar(100),sourcename varchar(100),destname varchar(100));");
 		    System.out.println("tables created");
 		    
 		    String cdc = processDTO.getCdc();
@@ -52,12 +54,15 @@ public class sendTableList  {
     		String cdcpk = processDTO.getCdcPk();
     		String bulkpk = processDTO.getBulkPk();
     		String cdccol = processDTO.getCdcCols();
+    		String tablestoMigrate = processDTO.getTablesToMigrate();
 		    String[] tableNamescdc = cdc.split(",");
 		    String[] tableNamesbulk = bulk.split(",");
 		    String[] pkcdc = cdcpk.split(",");
 		    String[] pkbulk = bulkpk.split(",");
 		    String[] cdcColumn = cdccol.split(",");
+		    String[] tablesToMigrate = tablestoMigrate.split(",");
 		
+		    int tablecount = tablesToMigrate.length;
 		    System.out.println("cdc array length :"+tableNamescdc.length);
 		    System.out.println("bulk array length :"+tableNamesbulk.length);
 		
@@ -67,32 +72,32 @@ public class sendTableList  {
      		String lastruntime = new String();
 		
 		
-		    Statement stmt0=con2.createStatement(); 
-		    ResultSet rs0 = stmt0.executeQuery("SELECT IFNULL(jobStartTime,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)) FROM sah_jobrunstatus WHERE jobid = (SELECT IFNULL(MAX(jobId),0) FROM sah_jobrunstatus);");
-		    Statement stmt1=con2.createStatement();
-		    ResultSet rs9 = stmt1.executeQuery("SELECT COUNT(*) as cnt FROM sah_jobrunstatus");
+		     
+		    ResultSet rs0 = st0.executeQuery("SELECT COALESCE(jobStartTime,now()::timestamp) FROM sah_jobrunstatus WHERE jobid = (SELECT COALESCE(MAX(jobId),0) FROM sah_jobrunstatus);");
+		    Statement st1=con3.createStatement();
+		    ResultSet rs9 = st1.executeQuery("SELECT COUNT(*) as cnt FROM sah_jobrunstatus");
 		    rs9.next();
 		    int cnt = rs9.getInt(1);
-		    if(rs0.next() || (cnt == 0))
-		    {
+		    Statement stmt0=con2.createStatement();
+		  
 		      if(cnt == 0) {lastruntime = "2005-12-31 00:00:00.000";}	
-		      else{lastruntime = rs0.getString(1);}
+		      else{rs0.next();lastruntime = rs0.getString(1);}
 			  System.out.println("Lastruntime: "+ lastruntime);
 		      System.out.println("rs0 complete");
-		      ResultSet rs1 = stmt0.executeQuery("SELECT IFNULL(MAX(tableLoadId),0) as tableLoadId FROM sah_tableLoadStatus;");
+		      ResultSet rs1 = st0.executeQuery("SELECT COALESCE(MAX(tableLoadId),0) as tableLoadId FROM sah_tableLoadStatus;");
 		      if(rs1.next()) 
 		      {
 			    tableLoadid = rs1.getInt(1);
 			    System.out.println("TableLoadId: "+ tableLoadid);
 			  	System.out.println("rs1 complete");
-		        ResultSet rs3 = stmt0.executeQuery("SELECT IFNULL(MAX(jobId),0) FROM sah_jobrunstatus");
-		        if((rs3.next()) || (cnt == 0 ))
+		        ResultSet rs3 = st0.executeQuery("SELECT COALESCE(MAX(jobId),0) FROM sah_jobrunstatus");
+		        if((rs3.next()))
 		        {
-			     jobid = rs3.getInt(1);
+		         jobid = rs3.getInt(1);
 			     jobid = jobid + 1;
-			     stmt0.executeQuery("INSERT INTO sah_jobrunstatus VALUES("+jobid+",TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,"+processDTO.getId()+");");               
+			     st0.executeUpdate("INSERT INTO sah_jobrunstatus VALUES("+jobid+",now()::timestamp,NULL,NULL,"+processDTO.getId()+",'"+processDTO.getRunBy()+"',"+tablecount+",0,0);");               
                  String system = processDTO.getSourceConnectionName();
-		       	 while(i<tableNamescdc.length && !status.equals("FAILURE")&& tableNamescdc.length >0 && !tableNamescdc[i].equals("[]"))
+		       	 while(i<tableNamescdc.length && tableNamescdc.length >0 && !tableNamescdc[i].equals("[]"))
 		         {
 			        System.out.println("length is :"+tableNamescdc.length+"i value is :"+i);
 					String tn = tableNamescdc[i].replace("[\"", "");
@@ -101,24 +106,24 @@ public class sendTableList  {
 					String key2 = key1.replaceAll("\"]|\"", "");
 					String col1  = cdcColumn[i].replace("[\"", "");
 					String col2 = col1.replaceAll("\"]|\"", "");
-		            stmt0.executeQuery("INSERT INTO sah_tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableName+"',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,0,0,0,'cdc',"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
+		            st0.executeUpdate("INSERT INTO sah_tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableName+"',now()::timestamp,NULL,NULL,0,0,0,'cdc',"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
         	    	System.out.println("starting cdc delta process for the table: "+tableName);
 					cdcprocess(lastruntime,tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase(),key2,col2);
-				    stmt0.executeQuery("UPDATE sah_tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'SUCCESS' WHERE tableLoadid = "+tableLoadid+" AND jobid = "+ jobid +";");
+				    st0.executeUpdate("UPDATE sah_tableLoadStatus SET tableLoadEndTime = now()::timestamp , tableLoadStatus = 'SUCCESS' WHERE tableLoadid = "+tableLoadid+" AND jobid = "+ jobid +";");
 				    i= i +1;
 				    tableLoadid = tableLoadid + 1;
 				  }
-		       	 while(j<tableNamesbulk.length && !status.equals("FAILURE")&& tableNamesbulk.length >0 && !tableNamesbulk[j].equals("[]"))
+		       	 while(j<tableNamesbulk.length &&  tableNamesbulk.length >0 && !tableNamesbulk[j].equals("[]"))
 		         {
 			        System.out.println("length is :"+tableNamesbulk.length+"i value is :"+i);
 		            String tn = tableNamesbulk[j].replace("[\"", "");
 					String tableName = tn.replaceAll("\"]|\"", "");
 					String bkey1  = pkbulk[j].replace("[\"", "");
 					String bkey2 = bkey1.replaceAll("\"]|\"", "");
-					stmt0.executeQuery("INSERT INTO sah_tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableName+"',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,NULL,0,0,0,'bulk',"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
+					st0.executeUpdate("INSERT INTO sah_tableLoadStatus VALUES("+jobid+","+tableLoadid+",'"+tableName+"',now()::timestamp,NULL,NULL,0,0,0,'bulk',"+processDTO.getId()+",'"+processDTO.getName()+"','"+processDTO.getSourceConnectionName()+"','"+processDTO.getSnowflakeConnectionName()+"');");
         	    	System.out.println("starting bulk process for the table: "+tableName);
 					bulkprocess(tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase(),bkey2);
-				    stmt0.executeQuery("UPDATE sah_tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'SUCCESS' WHERE tableLoadid = "+tableLoadid+" AND jobid = "+ jobid +";");
+				    st0.executeUpdate("UPDATE sah_tableLoadStatus SET tableLoadEndTime = now()::timestamp , tableLoadStatus = 'SUCCESS' WHERE tableLoadid = "+tableLoadid+" AND jobid = "+ jobid +";");
 				    j = j+1;
 				    tableLoadid = tableLoadid + 1;
 				  }	
@@ -126,29 +131,27 @@ public class sendTableList  {
         			}
 			        else
 			        {
-			        	stmt0.executeQuery("UPDATE sah_tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'FAILURE' WHERE jobid = "+jobid+";");
+			        	st0.executeUpdate("UPDATE sah_tableLoadStatus SET tableLoadEndTime = now()::timestamp , tableLoadStatus = 'FAILURE' WHERE jobid = "+jobid+";");
 			        	status = "FAILURE";
 			        }
 			        	
 		}
-		stmt0.executeQuery("UPDATE sah_jobrunstatus SET JobEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , JobStatus = 'SUCCESS' WHERE jobid ="+jobid+";");
 		status = (status=="FAILURE"?"FAILURE":"SUCCESS");
-
-    }
-   else
-   {
-	   status = "FAILURE - first if loop";
-   }
-	        
-			     
-		
+		ResultSet rs7 = st0.executeQuery("SELECT COUNT(tableName) as Successcnt FROM sah_tableLoadStatus WHERE jobid ="+jobid+" and processid = "+processDTO.getId()+" and tableLoadstatus = 'SUCCESS';"); 
+	    rs7.next();
+	    int successcnt = rs7.getInt("Successcnt");  
+	    ResultSet rs8 = st0.executeQuery("SELECT COUNT(tableName) as Failurecnt FROM sah_tableLoadStatus WHERE jobid ="+jobid+" and processid = "+processDTO.getId()+" and tableLoadstatus = 'FAILURE';"); 
+	    rs8.next();
+	    int failurecnt = rs8.getInt("Failurecnt"); 
+		st0.executeUpdate("UPDATE sah_jobrunstatus SET JobEndTime = now()::timestamp , JobStatus ='"+status+"', SuccessCount = "+successcnt+" ,FailureCount = "+failurecnt+" WHERE jobid ="+jobid+";");
+	
 		con1.close();
 		con2.close();
 		}
 			catch(Exception e)
 		{
 			System.out.println("catch exception:"+e);
-			Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");
+			/*Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");
 			Properties properties = new Properties();
 			properties.put("user", processDTO.getSnowflakeConnectionUsername());
 			properties.put("password", processDTO.getSnowflakeConnectionPassword());
@@ -156,11 +159,12 @@ public class sendTableList  {
 	        properties.put("warehouse",processDTO.getSnowflakeConnectionWarehouse());
 			properties.put("db",processDTO.getSnowflakeConnectionDatabase());
 		    properties.put("schema",processDTO.getSnowflakeConnectionSchema());
-			Connection con2=DriverManager.getConnection(processDTO.getSnowflakeConnectionUrl(),properties);
-			Statement stmt0 = con2.createStatement();
-			System.out.println("UPDATE sah_jobrunstatus SET JobEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , JobStatus = 'FAILURE--"+e.toString().replace("'", "")+"' WHERE jobid = (SELECT MAX(jobId) FROM sah_jobrunstatus);");
-			stmt0.executeQuery("UPDATE sah_jobrunstatus SET JobEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , JobStatus = 'FAILURE--"+e.toString().replace("'", "")+"' WHERE jobid = (SELECT MAX(jobId) FROM sah_jobrunstatus);");
-			stmt0.executeQuery("UPDATE sah_tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'FAILURE' WHERE tableLoadid = (SELECT MAX(tableLoadId) FROM sah_tableLoadStatus);");
+			Connection con2=DriverManager.getConnection(processDTO.getSnowflakeConnectionUrl(),properties);*/
+			Connection con3 = DriverManager.getConnection("jdbc:postgresql://localhost:5432/smapp","postgres","password");
+			Statement st0 = con3.createStatement();
+			System.out.println("UPDATE sah_jobrunstatus SET JobEndTime = now()::timestamp , JobStatus = 'FAILURE--"+e.toString().replace("'", "")+"' WHERE jobid = (SELECT MAX(jobId) FROM sah_jobrunstatus);");
+			st0.executeUpdate("UPDATE sah_jobrunstatus SET JobEndTime = now()::timestamp , JobStatus = 'FAILURE--"+e.toString().replace("'", "")+"' WHERE jobid = (SELECT MAX(jobId) FROM sah_jobrunstatus);");
+			st0.executeUpdate("UPDATE sah_tableLoadStatus SET tableLoadEndTime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) , tableLoadStatus = 'FAILURE' WHERE tableLoadid = (SELECT MAX(tableLoadId) FROM sah_tableLoadStatus);");
 			status = "FAILURE - catch"+ e;
 			
 		}  
@@ -279,6 +283,9 @@ public class sendTableList  {
     {
     	
     	Statement stmt3=con2.createStatement();
+    	Connection con3 = DriverManager.getConnection("jdbc:postgresql://localhost:5432/smapp","postgres","password");
+		Statement st0 = con3.createStatement();
+    	
     	String pk = pkgenNew(primarykey);
     	String pk1 = pk.replace("src","a");
     	String pk2 = pk1.replace("tgt", "b");
@@ -318,7 +325,7 @@ public class sendTableList  {
     	System.out.println("Insert : "+ targetInsertCount);
     	System.out.println("Update : "+ targetUpdateCount);
     	System.out.println("Delete : "+ targetDeleteCount);
-    	stmt3.executeQuery("UPDATE sah_tableLoadStatus SET insertcount ="+targetInsertCount+", updatecount ="+targetUpdateCount+",deletecount ="+targetDeleteCount+" WHERE jobid ="+jobid+" and tableLoadid ="+tableLoadid+" and processid ="+processid+";");
+    	st0.executeUpdate("UPDATE sah_tableLoadStatus SET insertcount ="+targetInsertCount+", updatecount ="+targetUpdateCount+",deletecount ="+targetDeleteCount+" WHERE jobid ="+jobid+" and tableLoadid ="+tableLoadid+" and processid ="+processid+";");
     }
     public static String pkgen(Connection con2,String tableName)
     {
