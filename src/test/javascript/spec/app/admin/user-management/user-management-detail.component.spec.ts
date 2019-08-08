@@ -11,7 +11,7 @@ describe('Component Tests', () => {
     let comp: UserMgmtDetailComponent;
     let fixture: ComponentFixture<UserMgmtDetailComponent>;
     const route = ({
-      data: of({ user: new User(1, 'user', 'first', 'last', 'first@last.com', true, 'en', ['ROLE_USER'], 'admin', null, null, null) })
+      data: of({ user: new User(1, 'user', 'first', 'last', 'first@last.com', true, ['ROLE_USER'], 'admin', null, null, null) })
     } as any) as ActivatedRoute;
 
     beforeEach(async(() => {
@@ -50,7 +50,7 @@ describe('Component Tests', () => {
             lastName: 'last',
             email: 'first@last.com',
             activated: true,
-            langKey: 'en',
+            // langKey: 'en',
             authorities: ['ROLE_USER'],
             createdBy: 'admin',
             createdDate: null,
