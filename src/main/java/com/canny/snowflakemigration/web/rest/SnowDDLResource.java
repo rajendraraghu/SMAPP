@@ -3,6 +3,7 @@ package com.canny.snowflakemigration.web.rest;
 import com.canny.snowflakemigration.service.SnowDDLService;
 import com.canny.snowflakemigration.web.rest.errors.BadRequestAlertException;
 import com.canny.snowflakemigration.service.dto.SnowDDLDTO;
+import com.canny.snowflakemigration.service.dto.SnowDDLProcessStatusDTO;
 import com.canny.snowflakemigration.service.dto.SnowDDLCriteria;
 import com.canny.snowflakemigration.service.SnowDDLQueryService;
 
@@ -58,7 +59,7 @@ public class SnowDDLResource {
 
     private final Logger log = LoggerFactory.getLogger(SnowDDLResource.class);
 
-    private static final String ENTITY_NAME = "SnowDDL";
+    private static final String ENTITY_NAME = "snowDDL";
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -180,45 +181,12 @@ public class SnowDDLResource {
         return result;
     }*/
     
-     @PostMapping(value = "/snow-ddl/Reports")
-    public @ResponseBody String Reports(@Valid @RequestBody SnowDDLDTO SnowDDLDTO)throws SQLException,ClassNotFoundException  {
-        Properties properties = new Properties();
-		properties.put("user", SnowDDLDTO.getSnowflakeConnectionUsername());
-		properties.put("password", SnowDDLDTO.getSnowflakeConnectionPassword());
-		properties.put("account", SnowDDLDTO.getSnowflakeConnectionAcct());
-        properties.put("warehouse",SnowDDLDTO.getSnowflakeConnectionWarehouse());
-		properties.put("db",SnowDDLDTO.getSnowflakeConnectionDatabase());
-	    properties.put("schema",SnowDDLDTO.getSnowflakeConnectionSchema());
-		Connection con2=DriverManager.getConnection(SnowDDLDTO.getSnowflakeConnectionUrl(),properties);
-        Statement stmt0=con2.createStatement(); 
-        ResultSet rs0 = stmt0.executeQuery("SELECT * FROM tableLoadStatus WHERE processid ="+SnowDDLDTO.getId() +" order by tableloadstarttime desc");
-        
-        JsonObject jsonResponse = new JsonObject();	
-		JsonArray data = new JsonArray();
-		while(rs0.next() ) 
-		{
-			System.out.println("Inside while loop:"+rs0.getString(3));
-		JsonArray row = new JsonArray();
-		row.add(new JsonPrimitive(rs0.getInt(1)));
-		row.add(new JsonPrimitive(rs0.getInt(2)));
-		row.add(new JsonPrimitive(rs0.getString(3)==null?"":rs0.getString(3)));
-		row.add(new JsonPrimitive(rs0.getString(4)==null?"":rs0.getString(4)));
-		row.add(new JsonPrimitive(rs0.getString(5)==null?"":rs0.getString(5)));
-		row.add(new JsonPrimitive(rs0.getString(6)==null?"":rs0.getString(6)));
-		row.add(new JsonPrimitive(rs0.getInt(7)));
-		row.add(new JsonPrimitive(rs0.getInt(8)));
-		row.add(new JsonPrimitive(rs0.getInt(9)));
-		//row.add(new JsonPrimitive(rs0.getString(10)));
-		row.add(new JsonPrimitive(rs0.getString(11)==null?"":rs0.getString(11)));
-		row.add(new JsonPrimitive(rs0.getString(12)==null?"":rs0.getString(12)));
-		row.add(new JsonPrimitive(rs0.getString(13)==null?"":rs0.getString(13)));
-		row.add(new JsonPrimitive(rs0.getString(14)==null?"":rs0.getString(14)));
-		
-        data.add(row);
-        }
-        jsonResponse.add("audit_data", data);
-        return jsonResponse.toString();
-    }
+    // @GetMapping(value = "/snow-ddl/Reports/{id}")
+    // public ResponseEntity<String> Reports(@PathVariable Long id)throws SQLException,ClassNotFoundException  {      
+    //     log.debug("REST request to get SnowDDLProcessStatus : {}", id);
+    //     Optional<SnowDDLProcessStatusDTO> SnowDDLProcessStatusDTO = SnowDDLService.findOne(id);
+    //     return ResponseEntity.ok();
+    // }
 
      @PostMapping(value = "/snow-ddl/ReportsPerJob")
     public @ResponseBody String ReportsPerJob(@Valid @RequestBody SnowDDLDTO SnowDDLDTO)throws SQLException,ClassNotFoundException  {
