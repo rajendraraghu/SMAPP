@@ -12,14 +12,22 @@ import {
   snowDDLRoute,
   snowDDLPopupRoute
 } from './';
-import { ReportComponent } from 'app/entities/snow-ddl/report.component';
+import { SnowDDLProcessStatusComponent } from 'app/entities/snow-ddl/snow-ddl-process-status.component';
 import { JoyrideModule } from 'ngx-joyride';
+import { SnowDDLJobStatusComponent } from './snow-ddl-job-status.component';
 
 const ENTITY_STATES = [...snowDDLRoute, ...snowDDLPopupRoute];
 
 @NgModule({
   imports: [SnowpoleSharedModule, RouterModule.forChild(ENTITY_STATES), JoyrideModule.forChild()],
-  declarations: [SnowDDLComponent, SnowDDLUpdateComponent, SnowDDLDeleteDialogComponent, SnowDDLDeletePopupComponent, ReportComponent],
+  declarations: [
+    SnowDDLComponent,
+    SnowDDLUpdateComponent,
+    SnowDDLDeleteDialogComponent,
+    SnowDDLDeletePopupComponent,
+    SnowDDLProcessStatusComponent,
+    SnowDDLJobStatusComponent
+  ],
   entryComponents: [SnowDDLComponent, SnowDDLUpdateComponent, SnowDDLDeleteDialogComponent, SnowDDLDeletePopupComponent],
   providers: [{ provide: JhiLanguageService, useClass: JhiLanguageService }],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -8,9 +8,13 @@ import { map } from 'rxjs/operators';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { ISnowDDL } from 'app/shared/model/snow-ddl.model';
+import { ISnowDDLProcessStatus } from 'app/shared/model/snow-ddl-process-status.model';
+import { ISnowDDLJobStatus } from 'app/shared/model/snow-ddl-job-status.model';
 
 type EntityResponseType = HttpResponse<ISnowDDL>;
 type EntityArrayResponseType = HttpResponse<ISnowDDL[]>;
+type ReportArrayResponseType = HttpResponse<ISnowDDLProcessStatus[]>;
+type JobArrayResponseType = HttpResponse<ISnowDDLJobStatus[]>;
 
 @Injectable({ providedIn: 'root' })
 export class SnowDDLService {
@@ -57,8 +61,12 @@ export class SnowDDLService {
     return this.http.post<ISnowDDL>(`${this.resourceUrl}/sendDDLtoConvert`, snowDDL, { observe: 'response' });
   }
 
-  getReports(snowDDL: ISnowDDL): Observable<EntityResponseType> {
-    return this.http.post<ISnowDDL>(`${this.resourceUrl}/Reports`, snowDDL, { observe: 'response' });
+  getProcessStatus(id: number): Observable<ReportArrayResponseType> {
+    return this.http.get<ISnowDDLProcessStatus[]>(`${this.resourceUrl}/Reports/${id}`, { observe: 'response' });
+  }
+
+  getJobStatus(id: number): Observable<JobArrayResponseType> {
+    return this.http.get<ISnowDDLJobStatus[]>(`${this.resourceUrl}/jobStatus/${id}`, { observe: 'response' });
   }
 
   protected convertDateFromClient(snowDDL: ISnowDDL): ISnowDDL {
