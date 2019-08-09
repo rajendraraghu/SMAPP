@@ -48,7 +48,7 @@ public class listTables {
     		  cols.add(new JsonPrimitive(rs2.getString("COLUMN_NAME")));    		
             }
         	row.add("columnList",cols);
-        	ResultSet rs3 = stmt2.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"' AND TABLE_NAME = '"+rs1.getString("TABLE_NAME")+"' AND DATA_TYPE IN ('timestamp');");/*,'datetime');");*/
+        	ResultSet rs3 = stmt2.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"' AND TABLE_NAME = '"+rs1.getString("TABLE_NAME")+"' AND DATA_TYPE IN ('timestamp','datetime');");
         	JsonArray cdccols = new JsonArray();
         	while(rs3.next() ) 
     		{

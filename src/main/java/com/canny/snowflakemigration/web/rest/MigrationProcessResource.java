@@ -210,7 +210,7 @@ public class MigrationProcessResource {
     
      @PostMapping(value = "/migration-processes/Reports")
     public @ResponseBody String Reports(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO)throws SQLException,ClassNotFoundException  {
-        Properties properties = new Properties();
+        /*Properties properties = new Properties();
 		properties.put("user", migrationProcessDTO.getSnowflakeConnectionUsername());
 		properties.put("password", migrationProcessDTO.getSnowflakeConnectionPassword());
 		properties.put("account", migrationProcessDTO.getSnowflakeConnectionAcct());
@@ -218,8 +218,10 @@ public class MigrationProcessResource {
 		properties.put("db",migrationProcessDTO.getSnowflakeConnectionDatabase());
 	    properties.put("schema",migrationProcessDTO.getSnowflakeConnectionSchema());
 		Connection con2=DriverManager.getConnection(migrationProcessDTO.getSnowflakeConnectionUrl(),properties);
-        Statement stmt0=con2.createStatement(); 
-        ResultSet rs0 = stmt0.executeQuery("SELECT * FROM sah_tableLoadStatus WHERE processid ="+migrationProcessDTO.getId() +" order by tableloadstarttime desc");
+        Statement stmt0=con2.createStatement(); */
+        Connection con3 = DriverManager.getConnection("jdbc:postgresql://localhost:5432/smapp","postgres","password");
+	    Statement st0 = con3.createStatement();
+        ResultSet rs0 = st0.executeQuery("SELECT * FROM sah_tableLoadStatus WHERE processid ="+migrationProcessDTO.getId() +" order by tableloadstarttime desc");
         
         JsonObject jsonResponse = new JsonObject();	
 		JsonArray data = new JsonArray();
