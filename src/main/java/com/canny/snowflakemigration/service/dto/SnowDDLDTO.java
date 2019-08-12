@@ -63,6 +63,8 @@ public class SnowDDLDTO implements Serializable {
 
     private String snowflakeConnectionSchema;
 
+    private String runBy;
+
     public Long getId() {
         return id;
     }
@@ -270,6 +272,14 @@ public class SnowDDLDTO implements Serializable {
         this.snowflakeConnectionSchema = snowflakeConnectionSchema;
     }
 
+    public String getRunBy() {
+        return runBy;
+    }
+
+    public void setRunBy(String runBy) {
+        this.runBy = runBy;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -306,6 +316,7 @@ public class SnowDDLDTO implements Serializable {
             ", sourceConnectionName='" + getSourceConnectionName() + "'" +
             ", snowflakeConnectionId=" + getSnowflakeConnectionId() +
             ", snowflakeConnectionName='" + getSnowflakeConnectionName() + "'" +
+            ", runBy='" + getRunBy() + "'" +
             "}";
     }
 }

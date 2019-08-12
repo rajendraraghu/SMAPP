@@ -19,14 +19,22 @@
       "name": "Name",
       "description": "Description",
       "sourcePath": "Source Path",
-      "system": "System",
+      "system": "Source System",
       "lastStatus": "Last Status",
       "createdBy": "Created By",
       "createdDate": "Created Date",
       "lastModifiedBy": "Last Modified By",
       "lastModifiedDate": "Last Modified Date",
       "sourceConnection": "Source Connection",
-      "snowflakeConnection": "Snowflake Connection"
+      "snowflakeConnection": "Snowflake Connection",
+      "processStatus": {
+        "title": "DDL Conversion Status",
+        "notFound": "No DDL Conversion Status Found"
+      },
+      "jobStatus": {
+        "title": "DDL Conversion Job Status",
+        "notFound": "No DDL Conversion Job Found"
+      }
     }
   }
 }

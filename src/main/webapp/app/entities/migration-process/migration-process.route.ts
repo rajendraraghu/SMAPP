@@ -12,7 +12,8 @@ import { MigrationProcessDetailComponent } from './migration-process-detail.comp
 import { MigrationProcessUpdateComponent } from './migration-process-update.component';
 import { MigrationProcessDeletePopupComponent } from './migration-process-delete-dialog.component';
 import { IMigrationProcess } from 'app/shared/model/migration-process.model';
-import { ReportComponent } from 'app/entities/migration-process/report.component';
+import { MigrationProcessStatusComponent } from './migration-process-status.component';
+import { MigrationProcessJobStatusComponent } from './migration-process-job-status.component';
 
 @Injectable({ providedIn: 'root' })
 export class MigrationProcessResolve implements Resolve<IMigrationProcess> {
@@ -70,13 +71,25 @@ export const migrationProcessRoute: Routes = [
   },
   {
     path: ':id/history',
-    component: ReportComponent,
+    component: MigrationProcessStatusComponent,
     resolve: {
       migrationProcess: MigrationProcessResolve
     },
     data: {
       authorities: ['ROLE_USER'],
       pageTitle: 'snowpoleApp.migrationProcess.home.title'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/history/:jId/view',
+    component: MigrationProcessJobStatusComponent,
+    resolve: {
+      snowDDL: MigrationProcessResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'snowpoleApp.snowDDL.jobStatus.title'
     },
     canActivate: [UserRouteAccessService]
   },

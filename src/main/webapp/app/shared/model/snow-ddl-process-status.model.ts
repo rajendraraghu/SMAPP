@@ -5,7 +5,6 @@ export interface ISnowDDLProcessStatus {
   processId?: number;
   name?: string;
   runBy?: string;
-  // sourceSystem?: string;
   startTime?: Moment;
   endTime?: Moment;
   totalObjects?: number;
@@ -20,7 +19,6 @@ export class SnowDDLProcessStatus implements ISnowDDLProcessStatus {
     public processId?: number,
     public name?: string,
     public runBy?: string,
-    // public sourceSystem?: string,
     public startTime?: Moment,
     public endTime?: Moment,
     public totalObjects?: number,

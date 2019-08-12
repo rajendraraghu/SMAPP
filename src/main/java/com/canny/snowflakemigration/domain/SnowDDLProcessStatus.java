@@ -1,5 +1,5 @@
 package com.canny.snowflakemigration.domain;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 

@@ -8,9 +8,13 @@ import { map } from 'rxjs/operators';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { IMigrationProcess } from 'app/shared/model/migration-process.model';
+import { IMigrationProcessStatus } from 'app/shared/model/migration-process-status.model';
+import { IMigrationProcessJobStatus } from 'app/shared/model/migration-process-job-status.model';
 
 type EntityResponseType = HttpResponse<IMigrationProcess>;
 type EntityArrayResponseType = HttpResponse<IMigrationProcess[]>;
+type ReportArrayResponseType = HttpResponse<IMigrationProcessStatus[]>;
+type JobArrayResponseType = HttpResponse<IMigrationProcessJobStatus[]>;
 
 @Injectable({ providedIn: 'root' })
 export class MigrationProcessService {
@@ -57,8 +61,12 @@ export class MigrationProcessService {
     return this.http.post<IMigrationProcess>(`${this.resourceUrl}/sendTableListforHistProcess`, migrationProcess, { observe: 'response' });
   }
 
-  getReports(migrationProcess: IMigrationProcess): Observable<EntityResponseType> {
-    return this.http.post<IMigrationProcess>(`${this.resourceUrl}/Reports`, migrationProcess, { observe: 'response' });
+  getProcessStatus(id: number): Observable<ReportArrayResponseType> {
+    return this.http.get<IMigrationProcessStatus[]>(`${this.resourceUrl}/Reports/${id}`, { observe: 'response' });
+  }
+
+  getJobStatus(id: number): Observable<JobArrayResponseType> {
+    return this.http.get<IMigrationProcessJobStatus[]>(`${this.resourceUrl}/jobStatus/${id}`, { observe: 'response' });
   }
 
   protected convertDateFromClient(migrationProcess: IMigrationProcess): IMigrationProcess {

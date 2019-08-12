@@ -188,8 +188,8 @@ public class SnowDDLProcessStatusCriteria implements Serializable, Criteria {
     @Override
     public String toString() {
         return "SnowDDLProcessStatusCriteria{" +
-                (batchId != null ? "id=" + batchId + ", " : "") +
-                (processId != null ? "id=" + processId + ", " : "") +
+                (batchId != null ? "batchId=" + batchId + ", " : "") +
+                (processId != null ? "processId=" + processId + ", " : "") +
                 (name != null ? "name=" + name + ", " : "") +
                 (runBy != null ? "runBy=" + runBy + ", " : "") +
                 (startTime != null ? "startTime=" + startTime + ", " : "") +

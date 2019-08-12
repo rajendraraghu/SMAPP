@@ -5,6 +5,7 @@ import com.canny.snowflakemigration.web.rest.errors.BadRequestAlertException;
 import com.canny.snowflakemigration.service.dto.SnowDDLDTO;
 import com.canny.snowflakemigration.service.dto.SnowDDLProcessStatusDTO;
 import com.canny.snowflakemigration.service.dto.SnowDDLCriteria;
+// import com.canny.snowflakemigration.domain.DDLConversionProcessor;
 import com.canny.snowflakemigration.service.SnowDDLQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -40,7 +41,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import static com.canny.snowflakemigration.service.util.listTables.listTable;
-import static com.canny.snowflakemigration.service.util.convertDDL.convertToSnowDDL;
+import static com.canny.snowflakemigration.service.util.ConvertDDL.convertToSnowDDL;
 
 
 import com.google.gson.JsonPrimitive;
@@ -169,9 +170,10 @@ public class SnowDDLResource {
     }
     
     @PostMapping(value = "/snow-ddl/sendDDLtoConvert")
-    public @ResponseBody String sendDDL(@Valid @RequestBody  SnowDDLDTO SnowDDLDTO)throws IOException  {
-    	//Optional<SnowDDLDTO>  SnowDDLDTO = SnowDDLService.findOne(processid);
-    	String result = convertToSnowDDL(SnowDDLDTO);    
+    public @ResponseBody String sendDDL(@Valid @RequestBody  SnowDDLDTO snowDDLDTO)throws IOException  {
+        //Optional<SnowDDLDTO>  SnowDDLDTO = SnowDDLService.findOne(processid);
+        // DDLConversionProcessor processor = new DDLConversionProcessor();
+    	String result = convertToSnowDDL(snowDDLDTO);    
         return result;
     }
   /*  @PostMapping(value="/snow-ddl/TestConnection")
@@ -188,48 +190,48 @@ public class SnowDDLResource {
     //     return ResponseEntity.ok();
     // }
 
-     @PostMapping(value = "/snow-ddl/ReportsPerJob")
-    public @ResponseBody String ReportsPerJob(@Valid @RequestBody SnowDDLDTO SnowDDLDTO)throws SQLException,ClassNotFoundException  {
-        Properties properties = new Properties();
-		properties.put("user", SnowDDLDTO.getSnowflakeConnectionUsername());
-		properties.put("password", SnowDDLDTO.getSnowflakeConnectionPassword());
-		properties.put("account", SnowDDLDTO.getSnowflakeConnectionAcct());
-        properties.put("warehouse",SnowDDLDTO.getSnowflakeConnectionWarehouse());
-		properties.put("db",SnowDDLDTO.getSnowflakeConnectionDatabase());
-	    properties.put("schema",SnowDDLDTO.getSnowflakeConnectionSchema());
-		Connection con2=DriverManager.getConnection(SnowDDLDTO.getSnowflakeConnectionUrl(),properties);
-        Statement stmt0=con2.createStatement(); 
-        ResultSet rs0 = stmt0.executeQuery("SELECT MAX(jobid) FROM jobRunStatus");
-        rs0.next();
-        System.out.println("SELECT * FROM tableLoadStatus WHERE processid ="+SnowDDLDTO.getId() +" AND jobid ="+rs0.getInt(1)+" order by tableloadstarttime desc");
-        ResultSet rs1 = stmt0.executeQuery("SELECT * FROM tableLoadStatus WHERE processid ="+SnowDDLDTO.getId() +" AND jobid ="+rs0.getInt(1)+" order by tableloadstarttime desc");
+    //  @PostMapping(value = "/snow-ddl/ReportsPerJob")
+    // public @ResponseBody String ReportsPerJob(@Valid @RequestBody SnowDDLDTO SnowDDLDTO)throws SQLException,ClassNotFoundException  {
+    //     Properties properties = new Properties();
+	// 	properties.put("user", SnowDDLDTO.getSnowflakeConnectionUsername());
+	// 	properties.put("password", SnowDDLDTO.getSnowflakeConnectionPassword());
+	// 	properties.put("account", SnowDDLDTO.getSnowflakeConnectionAcct());
+    //     properties.put("warehouse",SnowDDLDTO.getSnowflakeConnectionWarehouse());
+	// 	properties.put("db",SnowDDLDTO.getSnowflakeConnectionDatabase());
+	//     properties.put("schema",SnowDDLDTO.getSnowflakeConnectionSchema());
+	// 	Connection con2=DriverManager.getConnection(SnowDDLDTO.getSnowflakeConnectionUrl(),properties);
+    //     Statement stmt0=con2.createStatement(); 
+    //     ResultSet rs0 = stmt0.executeQuery("SELECT MAX(jobid) FROM jobRunStatus");
+    //     rs0.next();
+    //     System.out.println("SELECT * FROM tableLoadStatus WHERE processid ="+SnowDDLDTO.getId() +" AND jobid ="+rs0.getInt(1)+" order by tableloadstarttime desc");
+    //     ResultSet rs1 = stmt0.executeQuery("SELECT * FROM tableLoadStatus WHERE processid ="+SnowDDLDTO.getId() +" AND jobid ="+rs0.getInt(1)+" order by tableloadstarttime desc");
         
-        JsonObject jsonResponse = new JsonObject();	
-		JsonArray data = new JsonArray();
-		while(rs1.next() ) 
-		{
-			System.out.println("Inside while loop:"+rs1.getString(3));
-		JsonArray row = new JsonArray();
-		row.add(new JsonPrimitive(rs1.getInt(1)));
-		row.add(new JsonPrimitive(rs1.getInt(2)));
-		row.add(new JsonPrimitive(rs1.getString(3)==null?"":rs1.getString(3)));
-		row.add(new JsonPrimitive(rs1.getString(4)==null?"":rs1.getString(4)));
-		row.add(new JsonPrimitive(rs1.getString(5)==null?"":rs1.getString(5)));
-		row.add(new JsonPrimitive(rs1.getString(6)==null?"":rs1.getString(6)));
-		row.add(new JsonPrimitive(rs1.getInt(7)));
-		row.add(new JsonPrimitive(rs1.getInt(8)));
-		row.add(new JsonPrimitive(rs1.getInt(9)));
-		//row.add(new JsonPrimitive(rs0.getString(10)));
-		row.add(new JsonPrimitive(rs1.getString(11)==null?"":rs1.getString(11)));
-		row.add(new JsonPrimitive(rs1.getString(12)==null?"":rs1.getString(12)));
-		row.add(new JsonPrimitive(rs1.getString(13)==null?"":rs1.getString(13)));
-		row.add(new JsonPrimitive(rs1.getString(14)==null?"":rs1.getString(14)));
+    //     JsonObject jsonResponse = new JsonObject();	
+	// 	JsonArray data = new JsonArray();
+	// 	while(rs1.next() ) 
+	// 	{
+	// 		System.out.println("Inside while loop:"+rs1.getString(3));
+	// 	JsonArray row = new JsonArray();
+	// 	row.add(new JsonPrimitive(rs1.getInt(1)));
+	// 	row.add(new JsonPrimitive(rs1.getInt(2)));
+	// 	row.add(new JsonPrimitive(rs1.getString(3)==null?"":rs1.getString(3)));
+	// 	row.add(new JsonPrimitive(rs1.getString(4)==null?"":rs1.getString(4)));
+	// 	row.add(new JsonPrimitive(rs1.getString(5)==null?"":rs1.getString(5)));
+	// 	row.add(new JsonPrimitive(rs1.getString(6)==null?"":rs1.getString(6)));
+	// 	row.add(new JsonPrimitive(rs1.getInt(7)));
+	// 	row.add(new JsonPrimitive(rs1.getInt(8)));
+	// 	row.add(new JsonPrimitive(rs1.getInt(9)));
+	// 	//row.add(new JsonPrimitive(rs0.getString(10)));
+	// 	row.add(new JsonPrimitive(rs1.getString(11)==null?"":rs1.getString(11)));
+	// 	row.add(new JsonPrimitive(rs1.getString(12)==null?"":rs1.getString(12)));
+	// 	row.add(new JsonPrimitive(rs1.getString(13)==null?"":rs1.getString(13)));
+	// 	row.add(new JsonPrimitive(rs1.getString(14)==null?"":rs1.getString(14)));
 		
-        data.add(row);
-        }
-        jsonResponse.add("audit_data", data);
-        return jsonResponse.toString();
-    }
+    //     data.add(row);
+    //     }
+    //     jsonResponse.add("audit_data", data);
+    //     return jsonResponse.toString();
+    // }
      @PostMapping(value = "/snow-ddl/retrieveColumnList")
      public @ResponseBody String[] listColumns(@Valid @RequestBody SnowDDLDTO SnowDDLDTO, String tableName) throws SQLException,ClassNotFoundException {
     	 Properties properties0 = new Properties();

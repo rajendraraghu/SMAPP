@@ -125,10 +125,10 @@ export class MigrationProcessComponent implements OnInit, OnDestroy {
       // this.tables = this.tablesCopy = response.body;
       alert('Sent table list to back-end');
     });
-    this.viewReport(migrationProcess.id);
+    this.viewProcessStatus(migrationProcess.id);
   }
 
-  viewReport(processId) {
+  viewProcessStatus(processId) {
     this.router.navigate(['/migration-process', processId, 'history']);
   }
 

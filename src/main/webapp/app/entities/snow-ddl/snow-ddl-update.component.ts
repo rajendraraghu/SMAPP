@@ -21,6 +21,10 @@ import { SnowflakeConnectionService } from 'app/entities/snowflake-connection';
 export class SnowDDLUpdateComponent implements OnInit {
   isSaving: boolean;
 
+  isSourceSelected: boolean;
+
+  isTargetSelected: boolean;
+
   sourceconnections: ISourceConnection[];
 
   snowflakeconnections: ISnowflakeConnection[];
@@ -73,7 +77,7 @@ export class SnowDDLUpdateComponent implements OnInit {
       id: snowDDL.id,
       name: snowDDL.name,
       description: snowDDL.description,
-      sourceSystem: snowDDL.sourceSystem,
+      // sourceSystem: snowDDL.sourceSystem,
       sourcePath: snowDDL.sourcePath,
       // createdBy: snowDDL.createdBy,
       // createdDate: snowDDL.createdDate != null ? snowDDL.createdDate.format(DATE_TIME_FORMAT) : null,
@@ -98,13 +102,29 @@ export class SnowDDLUpdateComponent implements OnInit {
     }
   }
 
+  onSourceSelection(event) {
+    if (event.target.checked) {
+      this.isSourceSelected = true;
+    } else {
+      this.isSourceSelected = false;
+    }
+  }
+
+  onTargetSelection(event) {
+    if (event.target.checked) {
+      this.isTargetSelected = true;
+    } else {
+      this.isTargetSelected = false;
+    }
+  }
+
   private createFromForm(): ISnowDDL {
     return {
       ...new SnowDDL(),
       id: this.editForm.get(['id']).value,
       name: this.editForm.get(['name']).value,
       description: this.editForm.get(['description']).value,
-      sourceSystem: this.editForm.get(['sourceSystem']).value,
+      // sourceSystem: this.editForm.get(['sourceSystem']).value,
       sourcePath: this.editForm.get(['sourcePath']).value,
       // createdBy: this.editForm.get(['createdBy']).value,
       // createdDate:

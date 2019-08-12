@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IMigrationProcess } from 'app/shared/model/migration-process.model';
 import { MigrationProcessService } from 'app/entities/migration-process/migration-process.service';
 
 @Component({
   selector: 'jhi-report',
-  templateUrl: './report.component.html'
+  templateUrl: './migration-process-status.component.html'
 })
-export class ReportComponent implements OnInit {
+export class MigrationProcessStatusComponent implements OnInit {
   migrationProcess: IMigrationProcess;
   reports: any;
   loading: boolean;
-  constructor(private activatedRoute: ActivatedRoute, private migrationProcessService: MigrationProcessService) {}
+  constructor(private activatedRoute: ActivatedRoute, private migrationProcessService: MigrationProcessService, protected router: Router) {}
 
   ngOnInit() {
     this.loading = true;
@@ -23,10 +23,14 @@ export class ReportComponent implements OnInit {
 
   refresh() {
     this.loading = true;
-    this.migrationProcessService.getReports(this.migrationProcess).subscribe(response => {
+    this.migrationProcessService.getProcessStatus(this.migrationProcess.id).subscribe(response => {
       this.reports = response.body;
       this.loading = false;
     });
+  }
+
+  viewJobReport(processId, batchId) {
+    this.router.navigate(['/migration-process', processId, 'history', batchId, 'view']);
   }
 
   previousState() {

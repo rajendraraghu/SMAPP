@@ -45,9 +45,9 @@ public class sendTableList  {
 		    Connection con3 = DriverManager.getConnection("jdbc:postgresql://localhost:5432/smapp","postgres","password");
 		    Statement st0 = con3.createStatement();
 		    
-		    st0.executeUpdate("CREATE TABLE IF NOT EXISTS sah_jobrunstatus (jobId int,JobStartTime timestamp, JobEndTime timestamp,JobStatus varchar(1000),processid bigint,runby varchar(300),tablecount int,SuccessCount int,FailureCount int);");
-		    st0.executeUpdate("CREATE TABLE IF NOT EXISTS sah_tableLoadStatus (jobid int,tableLoadid int,tablename varchar(50),tableLoadStartTime timestamp,tableLoadEndTime timestamp,tableLoadStatus varchar(15),insertcount int,updatecount int, deletecount int, runtype varchar(20),processid bigint,processname varchar(100),sourcename varchar(100),destname varchar(100));");
-		    System.out.println("tables created");
+		    // st0.executeUpdate("CREATE TABLE IF NOT EXISTS sah_jobrunstatus (jobId int,JobStartTime timestamp, JobEndTime timestamp,JobStatus varchar(1000),processid bigint,runby varchar(300),tablecount int,SuccessCount int,FailureCount int);");
+		    // st0.executeUpdate("CREATE TABLE IF NOT EXISTS sah_tableLoadStatus (jobid int,tableLoadid int,tablename varchar(50),tableLoadStartTime timestamp,tableLoadEndTime timestamp,tableLoadStatus varchar(15),insertcount int,updatecount int, deletecount int, runtype varchar(20),processid bigint,processname varchar(100),sourcename varchar(100),destname varchar(100));");
+		    // System.out.println("tables created");
 		    
 		    String cdc = processDTO.getCdc();
     		String bulk = processDTO.getBulk();

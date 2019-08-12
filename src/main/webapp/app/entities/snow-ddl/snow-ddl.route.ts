@@ -11,7 +11,9 @@ import { SnowDDLComponent } from './snow-ddl.component';
 import { SnowDDLUpdateComponent } from './snow-ddl-update.component';
 import { SnowDDLDeletePopupComponent } from './snow-ddl-delete-dialog.component';
 import { ISnowDDL } from 'app/shared/model/snow-ddl.model';
-import { ReportComponent } from 'app/entities/snow-ddl/report.component';
+import { SnowDDLProcessStatusComponent } from 'app/entities/snow-ddl/snow-ddl-process-status.component';
+import { SnowDDLJobStatusComponent } from './snow-ddl-job-status.component';
+import { ISnowDDLProcessStatus, SnowDDLProcessStatus } from 'app/shared/model/snow-ddl-process-status.model';
 
 @Injectable({ providedIn: 'root' })
 export class SnowDDLResolve implements Resolve<ISnowDDL> {
@@ -57,13 +59,25 @@ export const snowDDLRoute: Routes = [
   },
   {
     path: ':id/history',
-    component: ReportComponent,
+    component: SnowDDLProcessStatusComponent,
     resolve: {
       snowDDL: SnowDDLResolve
     },
     data: {
       authorities: ['ROLE_USER'],
-      pageTitle: 'snowpoleApp.snowDDL.home.title'
+      pageTitle: 'snowpoleApp.snowDDL.processStatus.title'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/history/:jId/view',
+    component: SnowDDLJobStatusComponent,
+    resolve: {
+      snowDDL: SnowDDLResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'snowpoleApp.snowDDL.jobStatus.title'
     },
     canActivate: [UserRouteAccessService]
   },

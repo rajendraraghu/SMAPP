@@ -56,12 +56,12 @@
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
-                        <!-- <button type="submit"
-                                (click)="viewReport_snowDDL(snowDDL.id)"
+                        <button type="submit"
+                                (click)="viewProcessStatus(snowDDL.id)"
                                 class="btn btn-info btn-sm">
                             <fa-icon icon="book" fixedWidth="true"></fa-icon>
                             <span class="d-none d-md-inline">Report</span>
-                        </button> -->
+                        </button>
                         <button type="submit"
                                 [routerLink]="['/', 'snow-ddl', { outlets: { popup: snowDDL.id + '/delete'} }]"
                                 replaceUrl="true"
@@ -76,7 +76,7 @@
             </tbody>
         </table>
     </div>
-    <div [hidden]="snowDDL?.length === 0">
+    <div [hidden]="snowDDLs?.length === 0">
         <div class="row justify-content-center">
             <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
         </div>

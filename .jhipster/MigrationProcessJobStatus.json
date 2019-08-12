@@ -1,0 +1,66 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "tablename",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "tableloadstarttime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "tableloadendtime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "tableloadstatus",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "insertcount",
+            "fieldType": "bigint"
+        },
+        {
+            "fieldName": "updatecount",
+            "fieldType": "bigint"
+        },
+        {
+            "fieldName": "deletecount",
+            "fieldType": "bigint"
+        },
+        {
+            "fieldName": "runtype",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "processid",
+            "fieldType": "bigint"
+        },
+        {
+            "fieldName": "processname",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "sourcename",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "destname",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20190809105436",
+    "dto": "mapstruct",
+    "searchEngine": false,
+    "service": "serviceImpl",
+    "entityTableName": "sah_tableloadstatus",
+    "databaseType": "sql",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
+}

@@ -55,6 +55,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="selected_all" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
             <column name="created_by" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -110,6 +114,7 @@
             <column name="type" type="string"/>
             <column name="tables_to_migrate" type="string"/>
             <column name="last_status" type="string"/>
+            <column name="selected_all" type="boolean"/>
             <column name="created_by" type="string"/>
             <column name="created_date" type="datetime"/>
             <column name="last_modified_by" type="string"/>

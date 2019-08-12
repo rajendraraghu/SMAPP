@@ -62,8 +62,8 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
     @Column(name = "last_status")
     private String lastStatus;
 
-    // @Column(name = "selected_all")
-    // private Boolean selectedAll;
+    @Column(name = "selected_all")
+    private Boolean selectedAll;
 
     // @Column(name = "created_by")
     // private String createdBy;
@@ -225,18 +225,18 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
         this.lastStatus = lastStatus;
     }
 
-    // public Boolean getSelectedAll() {
-    //     return selectedAll;
-    // }
+    public Boolean getSelectedAll() {
+        return selectedAll;
+    }
 
-    // public MigrationProcess selectedAll(Boolean selectedAll) {
-    //     this.selectedAll = selectedAll;
-    //     return this;
-    // }
+    public MigrationProcess selectedAll(Boolean selectedAll) {
+        this.selectedAll = selectedAll;
+        return this;
+    }
 
-    // public void setSelecteAll(Boolean selectedAll) {
-    //     this.selectedAll = selectedAll;
-    // }
+    public void setSelecteAll(Boolean selectedAll) {
+        this.selectedAll = selectedAll;
+    }
 
     // public String getCreatedBy() {
     //     return createdBy;
@@ -347,7 +347,7 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
             ", bulkPk='" + getBulkPk() + "'" +
             ", cdcCols='" + getCdcCols() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
-            //", selectedAll='" + getSelectedAll() + "'" +
+            ", selectedAll='" + getSelectedAll() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +

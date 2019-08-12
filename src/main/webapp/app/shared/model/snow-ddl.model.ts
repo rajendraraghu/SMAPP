@@ -4,7 +4,7 @@ export interface ISnowDDL {
   id?: number;
   name?: string;
   description?: string;
-  sourceSystem?: string;
+  // sourceSystem?: string;
   sourcePath?: string;
   createdBy?: string;
   createdDate?: Moment;
@@ -14,6 +14,7 @@ export interface ISnowDDL {
   sourceConnectionId?: number;
   snowflakeConnectionName?: string;
   snowflakeConnectionId?: number;
+  runBy?: string;
 }
 
 export class SnowDDL implements ISnowDDL {
@@ -21,7 +22,7 @@ export class SnowDDL implements ISnowDDL {
     public id?: number,
     public name?: string,
     public description?: string,
-    public sourceSystem?: string,
+    // public sourceSystem?: string,
     public sourcePath?: string,
     public createdBy?: string,
     public createdDate?: Moment,
@@ -30,6 +31,7 @@ export class SnowDDL implements ISnowDDL {
     public sourceConnectionName?: string,
     public sourceConnectionId?: number,
     public snowflakeConnectionName?: string,
-    public snowflakeConnectionId?: number
+    public snowflakeConnectionId?: number,
+    public runBy?: string
   ) {}
 }

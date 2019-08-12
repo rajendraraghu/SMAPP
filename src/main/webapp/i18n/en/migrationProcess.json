@@ -26,7 +26,15 @@
       "lastModifiedBy": "Last Modified By",
       "lastModifiedDate": "Last Modified Date",
       "sourceConnection": "Source Connection",
-      "snowflakeConnection": "Snowflake Connection"
+      "snowflakeConnection": "Snowflake Connection",
+      "processStatus": {
+        "title": "Migration Process Status",
+        "notFound": "No Migration Process found"
+      },
+      "jobStatus": {
+        "title": "DDL Conversion Job Status",
+        "notFound": "No Migration Process Job Found"
+      }
     }
   }
 }

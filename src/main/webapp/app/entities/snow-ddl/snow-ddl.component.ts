@@ -120,16 +120,17 @@ export class SnowDDLComponent implements OnInit, OnDestroy {
   }
 
   convertDDL(snowDDL) {
+    snowDDL.runBy = this.currentAccount.login;
     this.snowDDLService.convertDDL(snowDDL).subscribe(response => {
       // this.tables = this.tablesCopy = response.body;
       alert('Sent DB name to back-end');
     });
-    // this.viewReport(snowDDL.id);
+    this.viewProcessStatus(snowDDL.id);
   }
 
-  // viewReport(processId) {
-  //   this.router.navigate(['/snow-ddl', processId, 'history']);
-  // }
+  viewProcessStatus(processId) {
+    this.router.navigate(['/snow-ddl', processId, 'history']);
+  }
 
   protected paginatesnowDDL(data: ISnowDDL[], headers: HttpHeaders) {
     this.links = this.parseLinks.parse(headers.get('link'));

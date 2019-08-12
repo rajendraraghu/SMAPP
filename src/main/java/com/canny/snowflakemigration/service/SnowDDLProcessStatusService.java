@@ -10,12 +10,12 @@ import java.util.Optional;
 import java.util.List;
 
 /**
- * Service Interface for managing {@link com.canny.snowflakemigration.domain.SnowDDL}.
+ * Service Interface for managing {@link com.canny.snowflakemigration.domain.SnowDDLProcessStatus}.
  */
 public interface SnowDDLProcessStatusService {
 
     /**
-     * Save a SnowDDL.
+     * Save a SnowDDLProcessStatus.
      *
      * @param SnowDDLProcessStatusDTO the entity to save.
      * @return the persisted entity.
