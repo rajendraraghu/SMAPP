@@ -76,13 +76,14 @@ export class UserMgmtUpdateComponent implements OnInit {
   }
 
   private updateUser(user: User): void {
+    user.authorities = [];
     user.login = this.editForm.get(['login']).value;
     user.firstName = this.editForm.get(['firstName']).value;
     user.lastName = this.editForm.get(['lastName']).value;
     user.email = this.editForm.get(['email']).value;
     user.activated = this.editForm.get(['activated']).value;
     // user.langKey = this.editForm.get(['langKey']).value;
-    user.authorities = this.editForm.get(['authorities']).value;
+    user.authorities.push(this.editForm.get(['authorities']).value);
   }
 
   private onSaveSuccess(result) {
