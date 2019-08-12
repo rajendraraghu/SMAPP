@@ -8,6 +8,7 @@ import { HttpResponse } from '@angular/common/http';
 import { JhiAlertService } from 'ng-jhipster';
 import { callbackify } from 'util';
 import { sample } from 'rxjs/operators';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'jhi-migration-process-detail',
@@ -22,6 +23,7 @@ export class MigrationProcessDetailComponent implements OnInit {
   cdcTables = [];
   bulkTables = [];
   isSaving: boolean;
+  masterSelected: boolean;
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
@@ -35,6 +37,7 @@ export class MigrationProcessDetailComponent implements OnInit {
       this.cdcTables = this.migrationProcess.cdc ? JSON.parse(this.migrationProcess.cdc) : [];
       this.selectedTables = this.migrationProcess.tablesToMigrate ? JSON.parse(this.migrationProcess.tablesToMigrate) : [];
       this.getTableList();
+      this.masterSelected = false;
     });
     this.isSaving = false;
   }
@@ -58,23 +61,36 @@ export class MigrationProcessDetailComponent implements OnInit {
         primaryKey: element.PrimaryKey,
         selected: this.isChecked(element.tableName),
         cdc: this.isCDC(element.tableName),
-        cdcColumnList: element.cdcColumnList
+        cdcColumnList: element.cdcColumnList,
+        selectedCdcCol: element.selectedCdcCol
       };
       this.tables.push(table);
     });
     this.tablesCopy = this.tables;
+    this.isAllSelected();
   }
-  // for (let i=0; i<response.tableinfo.length; i++){
-  //   const tabName: string[] = response.tableinfo[i].tableName;
-  //   const pk: string[] = response.tableinfo[i].primaryKey;
-  //   const table =  { name: tabName , primaryKey: pk ,selected: this.isChecked(tabName), cdc: this.isCDC(tabName) };
-  //   this.tables.push(table);
-  // };
-  // console.log(copy);
-  // let sam:string = copy.tableName.
+
+  checkUncheckAll() {
+    console.log(this.tables);
+    this.selectedTables = [];
+    for (let i = 0; i < this.tables.length; i++) {
+      this.tables[i].selected = this.masterSelected;
+      this.pushTables(this.tables[i]);
+    }
+  }
+
+  isAllSelected() {
+    this.masterSelected = this.tables.every(function(item: any) {
+      return item.selected === true;
+    });
+  }
 
   onSelectionChange(item) {
-    item.selected = !item.selected;
+    this.isAllSelected();
+    this.pushTables(item);
+  }
+
+  pushTables(item) {
     const index = this.selectedTables.indexOf(item.name);
     if (index === -1) {
       // val not found, pushing onto array
@@ -85,16 +101,6 @@ export class MigrationProcessDetailComponent implements OnInit {
     }
   }
 
-  // selectAll() {
-  //   this.migrationProcess.selectedAll = !this.migrationProcess.selectedAll;
-  //   this.selectedTables = [];
-  //   if (this.migrationProcess.selectedAll) {
-  //     this.tables.forEach(element => {
-  //       this.selectedTables.push(element.name);
-  //     });
-  //   }
-  // }
-
   onProcessSelection(item) {
     item.cdc = item.cdc ? false : true;
   }
@@ -104,7 +110,6 @@ export class MigrationProcessDetailComponent implements OnInit {
     if (index === -1) {
       return false;
     } else {
-      // item.selected = true;
       return true;
     }
   }
@@ -134,10 +139,6 @@ export class MigrationProcessDetailComponent implements OnInit {
     }
   }
 
-  // onCdcColumnSelected(value) {
-  //   console.log(value);
-  // }
-
   testAndMigrate() {
     const bulk = [];
     const cdc = [];
@@ -148,7 +149,7 @@ export class MigrationProcessDetailComponent implements OnInit {
       if (element.selected) {
         if (element.cdc) {
           cdc.push(element.name);
-          cdcColumns.push(element.cdcColumnList);
+          cdcColumns.push(element.selectedCdcCol);
           cdcPrimaryKey.push(element.primaryKey);
         } else {
           bulk.push(element.name);
@@ -162,6 +163,7 @@ export class MigrationProcessDetailComponent implements OnInit {
     this.migrationProcess.cdcPk = cdcPrimaryKey ? JSON.stringify(cdcPrimaryKey) : null;
     this.migrationProcess.bulkPk = bulkPrimaryKey ? JSON.stringify(bulkPrimaryKey) : null;
     this.migrationProcess.cdcCols = cdcColumns ? JSON.stringify(cdcColumns) : null;
+    console.log(this.migrationProcess.cdcCols);
     this.subscribeToSaveResponse(this.migrationProcessService.update(this.migrationProcess));
   }
 

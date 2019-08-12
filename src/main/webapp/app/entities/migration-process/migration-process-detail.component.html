@@ -79,11 +79,13 @@
                 <input type="text" class="form-control" placeholder="Search for tables"
                     (input)="searchForTables($event.target.value)">
             </div>
-            <input type="checkbox"  id="selectAll" [checked]="migrationProcess.selectedAll" (change)="selectAll()">
-                <label for="selectAll"><span style="color:darkorange;font-weight:bold" >Select All</span></label>
+            <div>
+            <input type="checkbox" [(ngModel)]="masterSelected" name="list_name" value="m1" (change)="checkUncheckAll()"/> <strong style="color:darkorange;font-weight:bold">Select/ Unselect All</strong>
+            </div>
+
             <div class="form-group" style="height: 40vh; overflow-y: auto;">
                 <div class="row m-0">
-                    <div class="col-3 pl-0">
+                    <div class="col-4 pl-0">
                         <h6> Tables Name </h6>
                     </div>
                     <div class="col-3 pl-0">
@@ -92,61 +94,33 @@
                     <div class="col-2 pl-0">
                         <h6> CDC </h6>
                     </div>
-                    <div class="col-4 pl-0">
-                        <h6> CDC Columns </h6>
+                    <div class="col-3 pl-0">
+                        <h6> <span style="color: #f0ad4e;">*</span> CDC Columns </h6>
                     </div>
                 </div>
                 <div class="row m-0" *ngFor="let item of tables; let i=index">
-                    <div class="col-3 pl-0">
+                    <div class="col-4 pl-0">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" [id]="i" [checked]="item.selected || migrationProcess.selectedAll"
-                                (change)="onSelectionChange(item)">
+                            <input type="checkbox" class="custom-control-input" [id]="i"  name="list_name" [(ngModel)]="item.selected" value="{{item.name}}"  (change)= "onSelectionChange(item)">
                             <label class="custom-control-label" [for]="i">{{item.name}}</label>
                         </div>
                     </div>
                     <div class="col-3 pl-0">
                         <label  [for]="i">{{item.primaryKey}}</label>
-                        <!-- <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" [id]="i" [checked]="item.selected"
-                                (change)="onSelectionChange(item)">
-                            <label class="custom-control-label" [for]="i">{{item.PrimaryKey}}</label>
-                        </div> -->
-                        <!-- <select class="form-control" id="field_system" name="system">
-                            <option *ngFor="let column of item.columnList" [value]="item.PrimaryKey">{{column}}</option>
-                        </select> -->
                     </div>
                     <div class="col-2 pl-0 ">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input" [id]="customSwitchId(i)"
                                 [disabled]="!item.selected" [checked]="item.cdc" (change)="onProcessSelection(item);">
                             <label class="custom-control-label" [for]="customSwitchId(i)"> </label>
-                                <!-- <span *ngIf=item.cdc>CDC</span> 
-                                <span *ngIf=!item.cdc>Bulk</span> -->
                         </div>
-                        <!-- <div class="custom-control custom-radio">
-                            <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input" checked="">
-                            <label class="custom-control-label" for="customRadio1">CDC</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
-                            <label class="custom-control-label" for="customRadio2">Bulk</label>
-                        </div> -->
                     </div>
-                    <div class="col-4 pl-0">
-                        <!-- <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" [id]="i" [checked]="item.selected"
-                                (change)="onSelectionChange(item)">
-                            <label class="custom-control-label" [for]="i">{{item.PrimaryKey}}</label>
-                        </div> -->
-                        <select class="form-control" id="field_system" name="system"  [disabled]="!item.cdc">
-                            <option *ngFor="let cdcColumn of item.cdcColumnList" [value]="cdcColumn">{{cdcColumn}}</option>
+                    <div class="col-3 pl-0">
+                        <select class="form-control" id="field_system" name="system"  [disabled]="!item.cdc" [(ngModel)]="item.selectedCdcCol">
+                            <option *ngFor="let cdcColumn of item.cdcColumnList; let i=index " [value]="cdcColumn">{{cdcColumn}}</option>
                         </select>
                     </div>
                 </div>
-                <!-- <div class="custom-control custom-checkbox" *ngFor="let item of tables; let i=index">
-                    <input type="checkbox" class="custom-control-input" [id]="i" [checked]="isChecked(item)" (change)="onSelectionChange(item)">
-                    <label class="custom-control-label" [for]="i">{{item}}</label>
-                </div> -->
             </div>
         </fieldset>
         <button type="button" class="btn btn-primary" (click)="testAndMigrate()" style="width: 100%;">
