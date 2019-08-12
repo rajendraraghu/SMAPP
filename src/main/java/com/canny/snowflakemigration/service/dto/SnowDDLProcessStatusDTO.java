@@ -59,7 +59,7 @@ public class SnowDDLProcessStatusDTO implements Serializable {
         return runBy;
     }
 
-    public void setRunby(String runBy) {
+    public void setRunBy(String runBy) {
         this.runBy = runBy;
     }
 
@@ -136,7 +136,7 @@ public class SnowDDLProcessStatusDTO implements Serializable {
     public String toString() {
         return "SnowDDLProcessStatusDTO{" +
             "batchId=" + getBatchId() +
-            "processId=" + getProcessId() +
+            ", processId=" + getProcessId() +
             ", name='" + getName() + "'" +
             ", runBy='" + getRunBy() + "'" +
             ", startTime='" + getStartTime() + "'" +

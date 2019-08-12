@@ -1,11 +1,13 @@
 package com.canny.snowflakemigration.web.rest;
 
 import com.canny.snowflakemigration.service.MigrationProcessService;
+import com.canny.snowflakemigration.service.MigrationProcessStatusService;
 import com.canny.snowflakemigration.web.rest.errors.BadRequestAlertException;
 import com.canny.snowflakemigration.service.dto.MigrationProcessDTO;
 import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
 import com.canny.snowflakemigration.service.dto.SnowflakeConnectionDTO;
 import com.canny.snowflakemigration.service.dto.MigrationProcessCriteria;
+import com.canny.snowflakemigration.service.MigrationProcessJobStatusService;
 import com.canny.snowflakemigration.service.MigrationProcessQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -65,6 +67,10 @@ public class MigrationProcessResource {
     private String applicationName;
 
     private final MigrationProcessService migrationProcessService;
+
+    private final MigrationProcessStatusService migrationProcessStatusService;
+
+    private final MigrationProcessJobStatusService migrationProcessJobStatusService;
 
     private final MigrationProcessQueryService migrationProcessQueryService;
 
@@ -177,7 +183,7 @@ public class MigrationProcessResource {
     @PostMapping(value = "/migration-processes/sendTableListforHistProcess")
     public @ResponseBody String sendTableList(@Valid @RequestBody  MigrationProcessDTO migrationProcessDTO)throws SQLException,ClassNotFoundException  {
     	//Optional<MigrationProcessDTO>  migrationProcessDTO = migrationProcessService.findOne(processid);
-    	String result = sendSelectedTables(migrationProcessDTO);    
+    	String result = sendSelectedTables(migrationProcessDTO,migrationProcessStatusService,migrationProcessJobStatusService);    
         return result;
     }
     @PostMapping(value="/migration-processes/TestConnectionSource")

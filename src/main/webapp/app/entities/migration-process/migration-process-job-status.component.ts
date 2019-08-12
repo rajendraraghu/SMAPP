@@ -9,7 +9,7 @@ import { IMigrationProcessStatus } from 'app/shared/model/migration-process-stat
   templateUrl: './migration-process-job-status.component.html'
 })
 export class MigrationProcessJobStatusComponent implements OnInit {
-  migrationProcessProcessStatus: IMigrationProcessStatus;
+  migrationProcessStatus: IMigrationProcessStatus;
   jId: number;
   reports: any;
   loading: boolean;

@@ -7,6 +7,8 @@ import com.canny.snowflakemigration.service.dto.SnowDDLProcessStatusDTO;
 import com.canny.snowflakemigration.service.dto.SnowDDLCriteria;
 // import com.canny.snowflakemigration.domain.DDLConversionProcessor;
 import com.canny.snowflakemigration.service.SnowDDLQueryService;
+import com.canny.snowflakemigration.service.SnowDDLJobStatusService;
+import com.canny.snowflakemigration.service.SnowDDLProcessStatusService;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -69,9 +71,15 @@ public class SnowDDLResource {
 
     private final SnowDDLQueryService SnowDDLQueryService;
 
-    public SnowDDLResource(SnowDDLService SnowDDLService, SnowDDLQueryService SnowDDLQueryService) {
+    private final SnowDDLProcessStatusService snowDDLProcessStatusService;
+
+    private final SnowDDLJobStatusService snowDDLJobStatusService;
+
+    public SnowDDLResource(SnowDDLService SnowDDLService, SnowDDLQueryService SnowDDLQueryService,SnowDDLProcessStatusService snowDDLProcessStatusService,SnowDDLJobStatusService snowDDLJobStatusService) {
         this.SnowDDLService = SnowDDLService;
         this.SnowDDLQueryService = SnowDDLQueryService;
+        this.snowDDLProcessStatusService = snowDDLProcessStatusService;
+        this.snowDDLJobStatusService = snowDDLJobStatusService;
     }
 
     /**
@@ -173,7 +181,7 @@ public class SnowDDLResource {
     public @ResponseBody String sendDDL(@Valid @RequestBody  SnowDDLDTO snowDDLDTO)throws IOException  {
         //Optional<SnowDDLDTO>  SnowDDLDTO = SnowDDLService.findOne(processid);
         // DDLConversionProcessor processor = new DDLConversionProcessor();
-    	String result = convertToSnowDDL(snowDDLDTO);    
+    	String result = convertToSnowDDL(snowDDLDTO,snowDDLProcessStatusService,snowDDLJobStatusService);    
         return result;
     }
   /*  @PostMapping(value="/snow-ddl/TestConnection")

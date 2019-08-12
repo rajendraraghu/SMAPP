@@ -5,6 +5,7 @@ import com.canny.snowflakemigration.domain.SnowDDLProcessStatus;
 import com.canny.snowflakemigration.repository.SnowDDLProcessStatusRepository;
 import com.canny.snowflakemigration.service.dto.SnowDDLProcessStatusDTO;
 import com.canny.snowflakemigration.service.mapper.SnowDDLProcessStatusMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,13 +26,13 @@ public class SnowDDLProcessStatusServiceImpl implements SnowDDLProcessStatusServ
 
     private final Logger log = LoggerFactory.getLogger(SnowDDLProcessStatusServiceImpl.class);
 
-    private final SnowDDLProcessStatusRepository SnowDDLProcessStatusRepository;
+    private final SnowDDLProcessStatusRepository snowDDLProcessStatusRepository;
 
-    private final SnowDDLProcessStatusMapper SnowDDLProcessStatusMapper;
+    private final SnowDDLProcessStatusMapper snowDDLProcessStatusMapper;
 
-    public SnowDDLProcessStatusServiceImpl(SnowDDLProcessStatusRepository SnowDDLProcessStatusRepository, SnowDDLProcessStatusMapper SnowDDLProcessStatusMapper) {
-        this.SnowDDLProcessStatusRepository = SnowDDLProcessStatusRepository;
-        this.SnowDDLProcessStatusMapper = SnowDDLProcessStatusMapper;
+    public SnowDDLProcessStatusServiceImpl(SnowDDLProcessStatusRepository snowDDLProcessStatusRepository, SnowDDLProcessStatusMapper snowDDLProcessStatusMapper) {
+        this.snowDDLProcessStatusRepository = snowDDLProcessStatusRepository;
+        this.snowDDLProcessStatusMapper = snowDDLProcessStatusMapper;
     }
 
     /**
@@ -41,11 +42,11 @@ public class SnowDDLProcessStatusServiceImpl implements SnowDDLProcessStatusServ
      * @return the persisted entity.
      */
     @Override
-    public SnowDDLProcessStatusDTO save(SnowDDLProcessStatusDTO SnowDDLProcessStatusDTO) {
-        log.debug("Request to save SnowDDLProcessStatus : {}", SnowDDLProcessStatusDTO);
-        SnowDDLProcessStatus SnowDDLProcessStatus = SnowDDLProcessStatusMapper.toEntity(SnowDDLProcessStatusDTO);
-        SnowDDLProcessStatus = SnowDDLProcessStatusRepository.save(SnowDDLProcessStatus);
-        return SnowDDLProcessStatusMapper.toDto(SnowDDLProcessStatus);
+    public SnowDDLProcessStatusDTO save(SnowDDLProcessStatusDTO snowDDLProcessStatusDTO) {
+        log.debug("Request to save SnowDDLProcessStatus : {}", snowDDLProcessStatusDTO);
+        SnowDDLProcessStatus snowDDLProcessStatus = snowDDLProcessStatusMapper.toEntity(snowDDLProcessStatusDTO);
+        snowDDLProcessStatus = snowDDLProcessStatusRepository.save(snowDDLProcessStatus);
+        return snowDDLProcessStatusMapper.toDto(snowDDLProcessStatus);
     }
 
     /**
@@ -58,8 +59,8 @@ public class SnowDDLProcessStatusServiceImpl implements SnowDDLProcessStatusServ
     @Transactional(readOnly = true)
     public Page<SnowDDLProcessStatusDTO> findAll(Pageable pageable) {
         log.debug("Request to get all SnowDDLProcessStatuses");
-        return SnowDDLProcessStatusRepository.findAll(pageable)
-            .map(SnowDDLProcessStatusMapper::toDto);
+        return snowDDLProcessStatusRepository.findAll(pageable)
+            .map(snowDDLProcessStatusMapper::toDto);
     }
 
 
@@ -73,8 +74,8 @@ public class SnowDDLProcessStatusServiceImpl implements SnowDDLProcessStatusServ
     @Transactional(readOnly = true)
     public Optional<SnowDDLProcessStatusDTO> findOne(Long id) {
         log.debug("Request to get SnowDDLProcessStatus : {}", id);
-        return SnowDDLProcessStatusRepository.findById(id)
-            .map(SnowDDLProcessStatusMapper::toDto);
+        return snowDDLProcessStatusRepository.findById(id)
+            .map(snowDDLProcessStatusMapper::toDto);
     }
 
     /**
@@ -85,14 +86,14 @@ public class SnowDDLProcessStatusServiceImpl implements SnowDDLProcessStatusServ
     @Override
     public void delete(Long id) {
         log.debug("Request to delete SnowDDLProcessStatus : {}", id);
-        SnowDDLProcessStatusRepository.deleteById(id);
+        snowDDLProcessStatusRepository.deleteById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<SnowDDLProcessStatus> findAllByProcessId(Long id) {
         log.debug("Request to get SnowDDLProcessStatus : {}", id);
-        return SnowDDLProcessStatusRepository.findAllByProcessId(id);//.map(SnowDDLProcessStatusMapper::toDto);
+        return snowDDLProcessStatusRepository.findAllByProcessId(id);//.map(SnowDDLProcessStatusMapper::toDto);
     }
 }
  

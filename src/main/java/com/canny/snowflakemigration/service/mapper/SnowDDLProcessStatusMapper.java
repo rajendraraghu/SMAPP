@@ -11,16 +11,16 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface SnowDDLProcessStatusMapper extends EntityMapper<SnowDDLProcessStatusDTO, SnowDDLProcessStatus> {
 
-    SnowDDLProcessStatusDTO toDto(SnowDDLProcessStatus SnowDDLProcessStatus);   
+    SnowDDLProcessStatusDTO toDto(SnowDDLProcessStatus snowDDLProcessStatus);   
 
-    SnowDDLProcessStatus toEntity(SnowDDLProcessStatusDTO SnowDDLProcessStatusDTO);
+    SnowDDLProcessStatus toEntity(SnowDDLProcessStatusDTO snowDDLProcessStatusDTO);
 
     default SnowDDLProcessStatus fromId(Long id) {
         if (id == null) {
             return null;
         }
-        SnowDDLProcessStatus SnowDDLProcessStatus = new SnowDDLProcessStatus();
-        SnowDDLProcessStatus.setBatchId(id);
-        return SnowDDLProcessStatus;
+        SnowDDLProcessStatus snowDDLProcessStatus = new SnowDDLProcessStatus();
+        snowDDLProcessStatus.setBatchId(id);
+        return snowDDLProcessStatus;
     }
 }

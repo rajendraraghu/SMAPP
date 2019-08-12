@@ -71,7 +71,6 @@ export class MigrationProcessDetailComponent implements OnInit {
   }
 
   checkUncheckAll() {
-    console.log(this.tables);
     this.selectedTables = [];
     for (let i = 0; i < this.tables.length; i++) {
       this.tables[i].selected = this.masterSelected;
