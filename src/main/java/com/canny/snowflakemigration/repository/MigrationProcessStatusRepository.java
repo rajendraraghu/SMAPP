@@ -14,6 +14,9 @@ import java.util.*;
 @SuppressWarnings("unused")
 @Repository
 public interface MigrationProcessStatusRepository extends JpaRepository<MigrationProcessStatus, Long>, JpaSpecificationExecutor<MigrationProcessStatus> {
-    @Query("SELECT t FROM MigrationProcessStatus t where t.processId = :id") 
+    @Query("SELECT t FROM MigrationProcessStatus t WHERE t.processId = :id") 
     List<MigrationProcessStatus> findAllByProcessId(@Param("id") Long id);
+
+    // @Query("SELECT t.jobStartTime FROM MigrationProcessStatus t WHERE t.jobId = (SELECT MAX(m.jobId) FROM MigrationProcessStatus m) t.processId = :processId")
+    // Date findLastUpdateTime(@Param("processId") Long processId);
 }

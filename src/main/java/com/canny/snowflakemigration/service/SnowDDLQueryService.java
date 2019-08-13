@@ -97,6 +97,9 @@ public class SnowDDLQueryService extends QueryService<SnowDDL> {
             if (criteria.getDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), SnowDDL_.description));
             }
+            if (criteria.getSourceType() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getSourceType(), SnowDDL_.sourceType));
+            }
             if (criteria.getLastStatus() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getLastStatus(), SnowDDL_.lastStatus));
             }

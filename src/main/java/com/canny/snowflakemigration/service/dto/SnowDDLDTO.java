@@ -17,6 +17,8 @@ public class SnowDDLDTO implements Serializable {
     @Size(max = 650)
     private String description;
 
+    private String sourceType;
+
     private String sourcePath;
 
     private String lastStatus;
@@ -87,6 +89,14 @@ public class SnowDDLDTO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 
     public String getSourcePath() {
@@ -307,6 +317,7 @@ public class SnowDDLDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", sourceType='" + getSourceType() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +

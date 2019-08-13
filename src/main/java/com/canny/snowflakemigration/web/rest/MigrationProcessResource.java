@@ -42,7 +42,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import static com.canny.snowflakemigration.service.util.listTables.listTable;
-import static com.canny.snowflakemigration.service.util.sendTableList.sendSelectedTables;
+import static com.canny.snowflakemigration.service.util.SendTableList.sendSelectedTables;
 
 
 import com.google.gson.JsonPrimitive;
@@ -74,9 +74,11 @@ public class MigrationProcessResource {
 
     private final MigrationProcessQueryService migrationProcessQueryService;
 
-    public MigrationProcessResource(MigrationProcessService migrationProcessService, MigrationProcessQueryService migrationProcessQueryService) {
+    public MigrationProcessResource(MigrationProcessService migrationProcessService, MigrationProcessQueryService migrationProcessQueryService, MigrationProcessStatusService migrationProcessStatusService, MigrationProcessJobStatusService migrationProcessJobStatusService) {
         this.migrationProcessService = migrationProcessService;
         this.migrationProcessQueryService = migrationProcessQueryService;
+        this.migrationProcessStatusService = migrationProcessStatusService;
+        this.migrationProcessJobStatusService = migrationProcessJobStatusService;
     }
 
     /**

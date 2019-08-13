@@ -30,6 +30,9 @@ public class SnowDDL extends AbstractAuditingEntity implements Serializable {
     @Column(name = "description", length = 650)
     private String description;
 
+    @Column(name = "source_type")
+    private String sourceType;
+
     @Column(name = "source_path")
     private String sourcePath;
 
@@ -77,6 +80,19 @@ public class SnowDDL extends AbstractAuditingEntity implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public SnowDDL sourceType(String sourceType) {
+        this.sourceType = sourceType;
+        return this;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 
     public String getSourcePath() {
@@ -154,6 +170,7 @@ public class SnowDDL extends AbstractAuditingEntity implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", sourceType='" + getSourceType() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +

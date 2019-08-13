@@ -27,24 +27,24 @@ public class ConvertDDL {
 			String line,tblNm = null;
 			boolean parse = false;
 			BufferedWriter opSql = null;
-			String runBy = snowDDLDTO.getRunBy();
 			String inpPath = snowDDLDTO.getSourcePath();
-			String processName = snowDDLDTO.getName();
+            String sourceType = snowDDLDTO.getSourceType();
 			System.out.println("Send to Process Status DTO:");
 			System.out.println(snowDDLDTO.getId());
 			snowDDLProcessStatusDTO.setProcessId(snowDDLDTO.getId());
-			snowDDLProcessStatusDTO.setName(processName);
-			snowDDLProcessStatusDTO.setRunBy(runBy);
+			snowDDLProcessStatusDTO.setName(snowDDLDTO.getName());
+			snowDDLProcessStatusDTO.setRunBy(snowDDLDTO.getRunBy());
 			snowDDLProcessStatusDTO.setStartTime(Instant.now());
             snowDDLProcessStatusDTO.setStatus("INPROGRESS");
-            // snowDDLProcessStatusDTO.setTotalObjects();
-            // snowDDLProcessStatusDTO.setSuccessObjects();
-            // snowDDLProcessStatusDTO.setErrorObjects();
-			SnowDDLProcessStatusDTO write = snowDDLProcessStatusService.save(snowDDLProcessStatusDTO);
+            snowDDLProcessStatusDTO.setTotalObjects(3L);
+            snowDDLProcessStatusDTO.setSuccessObjects(6L);
+            snowDDLProcessStatusDTO.setErrorObjects(8L);
+			SnowDDLProcessStatusDTO processStatus = snowDDLProcessStatusService.save(snowDDLProcessStatusDTO);
 			System.out.println("Send to Process Status DTO Complete");
-			System.out.println(write);
-			Resource resource1 = new ClassPathResource("/snowddl_lib/conversion.csv");
-			Resource resource2 = new ClassPathResource("/snowddl_lib/ignore.csv");
+            System.out.println(processStatus);
+            sourceType = sourceType.replaceAll("\\s", "").toLowerCase();
+			Resource resource1 = new ClassPathResource("/snowddl_lib/"+sourceType+"_conversion.csv");
+			Resource resource2 = new ClassPathResource("/snowddl_lib/"+sourceType+"_ignore.csv");
 			BufferedReader inpSql = new BufferedReader(new FileReader(inpPath));
 			BufferedReader convFile = new BufferedReader(new InputStreamReader(resource1.getInputStream()));
 			BufferedReader ignoFile = new BufferedReader(new InputStreamReader(resource2.getInputStream()));
@@ -64,11 +64,11 @@ public class ConvertDDL {
 					if(parse) {
                         snowDDLJobStatusDTO.setEndTime(Instant.now());
                         snowDDLJobStatusDTO.setStatus("SUCCESS");
-                        SnowDDLJobStatusDTO job_write = snowDDLJobStatusService.save(snowDDLJobStatusDTO);
+                        SnowDDLJobStatusDTO jobStatus = snowDDLJobStatusService.save(snowDDLJobStatusDTO);
 						opSql.write(");");
 						opSql.close();
                     }
-                    snowDDLJobStatusDTO.setBatchId(write.getBatchId());
+                    snowDDLJobStatusDTO.setBatchId(processStatus.getBatchId());
                     snowDDLJobStatusDTO.setName(tblNm);
                     snowDDLJobStatusDTO.setStartTime(Instant.now());
 					opSql = new BufferedWriter(new FileWriter("F:/POC/snowDDL/"+tblNm+".sql"));
@@ -89,14 +89,14 @@ public class ConvertDDL {
             }
             snowDDLJobStatusDTO.setEndTime(Instant.now());
             snowDDLJobStatusDTO.setStatus("SUCCESS");
-            SnowDDLJobStatusDTO job_write = snowDDLJobStatusService.save(snowDDLJobStatusDTO);
+            SnowDDLJobStatusDTO jobStatus = snowDDLJobStatusService.save(snowDDLJobStatusDTO);
 			opSql.write(");");
 			opSql.close();
             inpSql.close();
             status = "SUCCESS";
-            write.setStatus(status);
-            write.setEndTime(Instant.now());
-            write = snowDDLProcessStatusService.save(write);
+            processStatus.setStatus(status);
+            processStatus.setEndTime(Instant.now());
+            processStatus = snowDDLProcessStatusService.save(processStatus);
 		}
 		catch(Exception e) {
             status = "FAILURE";

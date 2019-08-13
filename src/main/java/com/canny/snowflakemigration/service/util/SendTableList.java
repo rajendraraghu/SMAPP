@@ -13,13 +13,20 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ClassPathResource;
+
+import com.canny.snowflakemigration.service.MigrationProcessJobStatusService;
+import com.canny.snowflakemigration.service.MigrationProcessStatusService;
 import com.canny.snowflakemigration.service.dto.MigrationProcessDTO;
+import com.canny.snowflakemigration.service.dto.MigrationProcessStatusDTO;
+import com.canny.snowflakemigration.service.dto.MigrationProcessJobStatusDTO;
 //import com.canny.snowflakemigration.service.dto.SnowflakeConnectionDTO;
 import com.opencsv.CSVWriter;
 
 
-public class sendTableList  {
-	public static String sendSelectedTables(MigrationProcessDTO processDTO) throws SQLException,ClassNotFoundException
+public class SendTableList  {
+	public static String sendSelectedTables(MigrationProcessDTO processDTO, MigrationProcessStatusService migrationProcessStatusService,MigrationProcessJobStatusService migrationProcessJobStatusService) throws SQLException,ClassNotFoundException
 	{
 		String status = new String();
 		try{
@@ -252,7 +259,8 @@ public class sendTableList  {
     	ResultSet rs1=stmt1.executeQuery(query);
     	//String srcCols = getColNames(rs1);
     	String srcCols = getColNames2(con1,tableName,system,dbname);
-    	//using local file now. Should be replaced with S3 or other filespace
+		//using local file now. Should be replaced with S3 or other filespace
+		//Resource csvFilename = new ClassPathResource("/sah_lib/CSV/"+tableName+".csv");
     	String csvFilename = "F:/POC/CSV/"+tableName+".csv";
     	toCSV(rs1,csvFilename);   	
     	System.out.println("Stage file writing complete");    	

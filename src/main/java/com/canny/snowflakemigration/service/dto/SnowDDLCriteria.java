@@ -31,6 +31,8 @@ public class SnowDDLCriteria implements Serializable, Criteria {
 
     private StringFilter description;
 
+    private StringFilter sourceType;
+
     private StringFilter lastStatus;
 
     private StringFilter createdBy;
@@ -52,6 +54,7 @@ public class SnowDDLCriteria implements Serializable, Criteria {
         this.id = other.id == null ? null : other.id.copy();
         this.name = other.name == null ? null : other.name.copy();
         this.description = other.description == null ? null : other.description.copy();
+        this.sourceType = other.sourceType == null ? null : other.sourceType.copy();
         this.lastStatus = other.lastStatus == null ? null : other.lastStatus.copy();
         this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
         this.createdDate = other.createdDate == null ? null : other.createdDate.copy();
@@ -88,6 +91,14 @@ public class SnowDDLCriteria implements Serializable, Criteria {
 
     public void setDescription(StringFilter description) {
         this.description = description;
+    }
+
+    public StringFilter getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(StringFilter sourceType) {
+        this.sourceType = sourceType;
     }
 
     public StringFilter getLastStatus() {
@@ -160,6 +171,7 @@ public class SnowDDLCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(name, that.name) &&
             Objects.equals(description, that.description) &&
+            Objects.equals(sourceType, that.sourceType) &&
             Objects.equals(lastStatus, that.lastStatus) &&
             Objects.equals(createdBy, that.createdBy) &&
             Objects.equals(createdDate, that.createdDate) &&
@@ -175,6 +187,7 @@ public class SnowDDLCriteria implements Serializable, Criteria {
         id,
         name,
         description,
+        sourceType,
         lastStatus,
         createdBy,
         createdDate,
@@ -191,6 +204,7 @@ public class SnowDDLCriteria implements Serializable, Criteria {
                 (id != null ? "id=" + id + ", " : "") +
                 (name != null ? "name=" + name + ", " : "") +
                 (description != null ? "description=" + description + ", " : "") +
+                (sourceType != null ? "sourceType=" + sourceType + ", " : "") +
                 (lastStatus != null ? "lastStatus=" + lastStatus + ", " : "") +
                 (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
                 (createdDate != null ? "createdDate=" + createdDate + ", " : "") +

@@ -4,7 +4,7 @@ export interface ISnowDDL {
   id?: number;
   name?: string;
   description?: string;
-  // sourceSystem?: string;
+  sourceType?: string;
   sourcePath?: string;
   createdBy?: string;
   createdDate?: Moment;
@@ -22,7 +22,7 @@ export class SnowDDL implements ISnowDDL {
     public id?: number,
     public name?: string,
     public description?: string,
-    // public sourceSystem?: string,
+    public sourceType?: string,
     public sourcePath?: string,
     public createdBy?: string,
     public createdDate?: Moment,
