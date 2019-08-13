@@ -31,7 +31,7 @@ public class SourceConnectionCriteria implements Serializable, Criteria {
 
     private StringFilter description;
 
-    private StringFilter system;
+    private StringFilter sourceType;
 
     private StringFilter url;
 
@@ -60,7 +60,7 @@ public class SourceConnectionCriteria implements Serializable, Criteria {
         this.id = other.id == null ? null : other.id.copy();
         this.name = other.name == null ? null : other.name.copy();
         this.description = other.description == null ? null : other.description.copy();
-        this.system = other.system == null ? null : other.system.copy();
+        this.sourceType = other.sourceType == null ? null : other.sourceType.copy();
         this.url = other.url == null ? null : other.url.copy();
         this.username = other.username == null ? null : other.username.copy();
         this.password = other.password == null ? null : other.password.copy();
@@ -102,12 +102,12 @@ public class SourceConnectionCriteria implements Serializable, Criteria {
         this.description = description;
     }
 
-    public StringFilter getSystem() {
-        return system;
+    public StringFilter getSourceType() {
+        return sourceType;
     }
 
-    public void setSystem(StringFilter system) {
-        this.system = system;
+    public void setSourceType(StringFilter sourceType) {
+        this.sourceType = sourceType;
     }
 
     public StringFilter getUrl() {
@@ -204,7 +204,7 @@ public class SourceConnectionCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(name, that.name) &&
             Objects.equals(description, that.description) &&
-            Objects.equals(system, that.system) &&
+            Objects.equals(sourceType, that.sourceType) &&
             Objects.equals(url, that.url) &&
             Objects.equals(username, that.username) &&
             Objects.equals(password, that.password) &&
@@ -223,7 +223,7 @@ public class SourceConnectionCriteria implements Serializable, Criteria {
         id,
         name,
         description,
-        system,
+        sourceType,
         url,
         username,
         password,
@@ -243,7 +243,7 @@ public class SourceConnectionCriteria implements Serializable, Criteria {
                 (id != null ? "id=" + id + ", " : "") +
                 (name != null ? "name=" + name + ", " : "") +
                 (description != null ? "description=" + description + ", " : "") +
-                (system != null ? "system=" + system + ", " : "") +
+                (sourceType != null ? "sourceType=" + sourceType + ", " : "") +
                 (url != null ? "url=" + url + ", " : "") +
                 (username != null ? "username=" + username + ", " : "") +
                 (password != null ? "password=" + password + ", " : "") +

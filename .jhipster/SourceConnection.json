@@ -19,7 +19,7 @@
             "fieldValidateRulesMaxlength": "650"
         },
         {
-            "fieldName": "system",
+            "fieldName": "sourceType",
             "fieldType": "String",
             "fieldValidateRules": [
                 "required"

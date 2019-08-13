@@ -31,8 +31,8 @@ public class SourceConnection extends AbstractAuditingEntity implements Serializ
     private String description;
 
     @NotNull
-    @Column(name = "system", nullable = false)
-    private String system;
+    @Column(name = "source_type", nullable = false)
+    private String sourceType;
 
     @NotNull
     @Size(max = 1200)
@@ -104,17 +104,17 @@ public class SourceConnection extends AbstractAuditingEntity implements Serializ
         this.description = description;
     }
 
-    public String getSystem() {
-        return system;
+    public String getSourceType() {
+        return sourceType;
     }
 
-    public SourceConnection system(String system) {
-        this.system = system;
+    public SourceConnection sourceType(String sourceType) {
+        this.sourceType = sourceType;
         return this;
     }
 
-    public void setSystem(String system) {
-        this.system = system;
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 
     public String getUrl() {
@@ -270,7 +270,7 @@ public class SourceConnection extends AbstractAuditingEntity implements Serializ
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", system='" + getSystem() + "'" +
+            ", sourceType='" + getSourceType() + "'" +
             ", url='" + getUrl() + "'" +
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +

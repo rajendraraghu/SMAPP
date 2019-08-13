@@ -18,7 +18,7 @@ public class SourceConnectionDTO implements Serializable {
     private String description;
 
     @NotNull
-    private String system;
+    private String sourceType;
 
     @NotNull
     @Size(max = 1200)
@@ -70,12 +70,12 @@ public class SourceConnectionDTO implements Serializable {
         this.description = description;
     }
 
-    public String getSystem() {
-        return system;
+    public String getSourceType() {
+        return sourceType;
     }
 
-    public void setSystem(String system) {
-        this.system = system;
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 
     public String getUrl() {
@@ -185,7 +185,7 @@ public class SourceConnectionDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", system='" + getSystem() + "'" +
+            ", sourceType='" + getSourceType() + "'" +
             ", url='" + getUrl() + "'" +
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +

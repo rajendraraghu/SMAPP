@@ -46,8 +46,8 @@ public class SourceConnectionResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final String DEFAULT_SYSTEM = "AAAAAAAAAA";
-    private static final String UPDATED_SYSTEM = "BBBBBBBBBB";
+    private static final String DEFAULT_SOURCE_TYPE = "AAAAAAAAAA";
+    private static final String UPDATED_SOURCE_TYPE = "BBBBBBBBBB";
 
     private static final String DEFAULT_URL = "AAAAAAAAAA";
     private static final String UPDATED_URL = "BBBBBBBBBB";
@@ -132,7 +132,7 @@ public class SourceConnectionResourceIT {
         SourceConnection sourceConnection = new SourceConnection()
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
-            .system(DEFAULT_SYSTEM)
+            .sourceType(DEFAULT_SOURCE_TYPE)
             .url(DEFAULT_URL)
             .username(DEFAULT_USERNAME)
             .password(DEFAULT_PASSWORD)
@@ -155,7 +155,7 @@ public class SourceConnectionResourceIT {
         SourceConnection sourceConnection = new SourceConnection()
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .system(UPDATED_SYSTEM)
+            .sourceType(UPDATED_SOURCE_TYPE)
             .url(UPDATED_URL)
             .username(UPDATED_USERNAME)
             .password(UPDATED_PASSWORD)
@@ -192,7 +192,7 @@ public class SourceConnectionResourceIT {
         SourceConnection testSourceConnection = sourceConnectionList.get(sourceConnectionList.size() - 1);
         assertThat(testSourceConnection.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testSourceConnection.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testSourceConnection.getSystem()).isEqualTo(DEFAULT_SYSTEM);
+        assertThat(testSourceConnection.getSourceType()).isEqualTo(DEFAULT_SOURCE_TYPE);
         assertThat(testSourceConnection.getUrl()).isEqualTo(DEFAULT_URL);
         assertThat(testSourceConnection.getUsername()).isEqualTo(DEFAULT_USERNAME);
         assertThat(testSourceConnection.getPassword()).isEqualTo(DEFAULT_PASSWORD);
@@ -247,10 +247,10 @@ public class SourceConnectionResourceIT {
 
     @Test
     @Transactional
-    public void checkSystemIsRequired() throws Exception {
+    public void checkSourceTypeIsRequired() throws Exception {
         int databaseSizeBeforeTest = sourceConnectionRepository.findAll().size();
         // set the field null
-        sourceConnection.setSystem(null);
+        sourceConnection.setSourceType(null);
 
         // Create the SourceConnection, which fails.
         SourceConnectionDTO sourceConnectionDTO = sourceConnectionMapper.toDto(sourceConnection);
@@ -353,7 +353,7 @@ public class SourceConnectionResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(sourceConnection.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
-            .andExpect(jsonPath("$.[*].system").value(hasItem(DEFAULT_SYSTEM.toString())))
+            .andExpect(jsonPath("$.[*].sourceType").value(hasItem(DEFAULT_SOURCE_TYPE.toString())))
             .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL.toString())))
             .andExpect(jsonPath("$.[*].username").value(hasItem(DEFAULT_USERNAME.toString())))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD.toString())))
@@ -379,7 +379,7 @@ public class SourceConnectionResourceIT {
             .andExpect(jsonPath("$.id").value(sourceConnection.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
-            .andExpect(jsonPath("$.system").value(DEFAULT_SYSTEM.toString()))
+            .andExpect(jsonPath("$.sourceType").value(DEFAULT_SOURCE_TYPE.toString()))
             .andExpect(jsonPath("$.url").value(DEFAULT_URL.toString()))
             .andExpect(jsonPath("$.username").value(DEFAULT_USERNAME.toString()))
             .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD.toString()))
@@ -472,41 +472,41 @@ public class SourceConnectionResourceIT {
 
     @Test
     @Transactional
-    public void getAllSourceConnectionsBySystemIsEqualToSomething() throws Exception {
+    public void getAllSourceConnectionsBySourceTypeIsEqualToSomething() throws Exception {
         // Initialize the database
         sourceConnectionRepository.saveAndFlush(sourceConnection);
 
         // Get all the sourceConnectionList where system equals to DEFAULT_SYSTEM
-        defaultSourceConnectionShouldBeFound("system.equals=" + DEFAULT_SYSTEM);
+        defaultSourceConnectionShouldBeFound("sourceType.equals=" + DEFAULT_SOURCE_TYPE);
 
         // Get all the sourceConnectionList where system equals to UPDATED_SYSTEM
-        defaultSourceConnectionShouldNotBeFound("system.equals=" + UPDATED_SYSTEM);
+        defaultSourceConnectionShouldNotBeFound("sourceType.equals=" + UPDATED_SOURCE_TYPE);
     }
 
     @Test
     @Transactional
-    public void getAllSourceConnectionsBySystemIsInShouldWork() throws Exception {
+    public void getAllSourceConnectionsBySourceTypeIsInShouldWork() throws Exception {
         // Initialize the database
         sourceConnectionRepository.saveAndFlush(sourceConnection);
 
         // Get all the sourceConnectionList where system in DEFAULT_SYSTEM or UPDATED_SYSTEM
-        defaultSourceConnectionShouldBeFound("system.in=" + DEFAULT_SYSTEM + "," + UPDATED_SYSTEM);
+        defaultSourceConnectionShouldBeFound("sourceType.in=" + DEFAULT_SOURCE_TYPE + "," + UPDATED_SOURCE_TYPE);
 
         // Get all the sourceConnectionList where system equals to UPDATED_SYSTEM
-        defaultSourceConnectionShouldNotBeFound("system.in=" + UPDATED_SYSTEM);
+        defaultSourceConnectionShouldNotBeFound("sourceType.in=" + UPDATED_SOURCE_TYPE);
     }
 
     @Test
     @Transactional
-    public void getAllSourceConnectionsBySystemIsNullOrNotNull() throws Exception {
+    public void getAllSourceConnectionsBySourceTypeIsNullOrNotNull() throws Exception {
         // Initialize the database
         sourceConnectionRepository.saveAndFlush(sourceConnection);
 
         // Get all the sourceConnectionList where system is not null
-        defaultSourceConnectionShouldBeFound("system.specified=true");
+        defaultSourceConnectionShouldBeFound("sourceType.specified=true");
 
         // Get all the sourceConnectionList where system is null
-        defaultSourceConnectionShouldNotBeFound("system.specified=false");
+        defaultSourceConnectionShouldNotBeFound("sourceType.specified=false");
     }
 
     @Test
@@ -908,7 +908,7 @@ public class SourceConnectionResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(sourceConnection.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].system").value(hasItem(DEFAULT_SYSTEM)))
+            .andExpect(jsonPath("$.[*].sourceType").value(hasItem(DEFAULT_SOURCE_TYPE)))
             .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL)))
             .andExpect(jsonPath("$.[*].username").value(hasItem(DEFAULT_USERNAME)))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD)))
@@ -968,7 +968,7 @@ public class SourceConnectionResourceIT {
         updatedSourceConnection
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .system(UPDATED_SYSTEM)
+            .sourceType(UPDATED_SOURCE_TYPE)
             .url(UPDATED_URL)
             .username(UPDATED_USERNAME)
             .password(UPDATED_PASSWORD)
@@ -992,7 +992,7 @@ public class SourceConnectionResourceIT {
         SourceConnection testSourceConnection = sourceConnectionList.get(sourceConnectionList.size() - 1);
         assertThat(testSourceConnection.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testSourceConnection.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testSourceConnection.getSystem()).isEqualTo(UPDATED_SYSTEM);
+        assertThat(testSourceConnection.getSourceType()).isEqualTo(UPDATED_SOURCE_TYPE);
         assertThat(testSourceConnection.getUrl()).isEqualTo(UPDATED_URL);
         assertThat(testSourceConnection.getUsername()).isEqualTo(UPDATED_USERNAME);
         assertThat(testSourceConnection.getPassword()).isEqualTo(UPDATED_PASSWORD);
