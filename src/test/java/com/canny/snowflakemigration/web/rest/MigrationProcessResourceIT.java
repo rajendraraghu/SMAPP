@@ -6,10 +6,12 @@ import com.canny.snowflakemigration.domain.SourceConnection;
 import com.canny.snowflakemigration.domain.SnowflakeConnection;
 import com.canny.snowflakemigration.repository.MigrationProcessRepository;
 import com.canny.snowflakemigration.service.MigrationProcessService;
+import com.canny.snowflakemigration.service.MigrationProcessStatusService;
 import com.canny.snowflakemigration.service.dto.MigrationProcessDTO;
 import com.canny.snowflakemigration.service.mapper.MigrationProcessMapper;
 import com.canny.snowflakemigration.web.rest.errors.ExceptionTranslator;
 import com.canny.snowflakemigration.service.dto.MigrationProcessCriteria;
+import com.canny.snowflakemigration.service.MigrationProcessJobStatusService;
 import com.canny.snowflakemigration.service.MigrationProcessQueryService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -79,6 +81,12 @@ public class MigrationProcessResourceIT {
     private MigrationProcessService migrationProcessService;
 
     @Autowired
+    private MigrationProcessStatusService migrationProcessStatusService;
+
+    @Autowired
+    private MigrationProcessJobStatusService migrationProcessJobStatusService;
+
+    @Autowired
     private MigrationProcessQueryService migrationProcessQueryService;
 
     @Autowired
@@ -103,7 +111,7 @@ public class MigrationProcessResourceIT {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final MigrationProcessResource migrationProcessResource = new MigrationProcessResource(migrationProcessService, migrationProcessQueryService);
+        final MigrationProcessResource migrationProcessResource = new MigrationProcessResource(migrationProcessService, migrationProcessQueryService, migrationProcessStatusService, migrationProcessJobStatusService);
         this.restMigrationProcessMockMvc = MockMvcBuilders.standaloneSetup(migrationProcessResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

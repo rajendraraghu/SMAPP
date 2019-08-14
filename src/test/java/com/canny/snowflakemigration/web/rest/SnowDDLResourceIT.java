@@ -10,6 +10,8 @@ import com.canny.snowflakemigration.service.dto.SnowDDLDTO;
 import com.canny.snowflakemigration.service.mapper.SnowDDLMapper;
 import com.canny.snowflakemigration.web.rest.errors.ExceptionTranslator;
 import com.canny.snowflakemigration.service.dto.SnowDDLCriteria;
+import com.canny.snowflakemigration.service.SnowDDLJobStatusService;
+import com.canny.snowflakemigration.service.SnowDDLProcessStatusService;
 import com.canny.snowflakemigration.service.SnowDDLQueryService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -79,6 +81,12 @@ public class SnowDDLResourceIT {
     private SnowDDLQueryService SnowDDLQueryService;
 
     @Autowired
+    private SnowDDLProcessStatusService snowDDLProcessStatusService;
+
+    @Autowired
+    private SnowDDLJobStatusService snowDDLJobStatusService;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -100,7 +108,7 @@ public class SnowDDLResourceIT {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final SnowDDLResource SnowDDLResource = new SnowDDLResource(SnowDDLService, SnowDDLQueryService);
+        final SnowDDLResource SnowDDLResource = new SnowDDLResource(SnowDDLService, SnowDDLQueryService, snowDDLProcessStatusService, snowDDLJobStatusService);
         this.restSnowDDLMockMvc = MockMvcBuilders.standaloneSetup(SnowDDLResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
