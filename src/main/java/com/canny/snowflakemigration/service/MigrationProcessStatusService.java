@@ -42,6 +42,14 @@ public interface MigrationProcessStatusService {
     List<MigrationProcessStatus> findAllByProcessId(Long id);
 
     /**
+     * Get the "Last Update Time" MigrationProcessStatus.
+     *
+     * @param processId the Process ID of the entity.
+     * @return the entity.
+     */
+    String findLastUpdateTime(Long processId);
+
+    /**
      * Delete the "id"MigrationProcessStatus.
      *
      * @param id the id of the entity.
