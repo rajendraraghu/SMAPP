@@ -17,6 +17,6 @@ public interface MigrationProcessStatusRepository extends JpaRepository<Migratio
     @Query("SELECT t FROM MigrationProcessStatus t WHERE t.processId = :id") 
     List<MigrationProcessStatus> findAllByProcessId(@Param("id") Long id);
 
-    // @Query("SELECT t.jobStartTime FROM MigrationProcessStatus t WHERE t.jobId = (SELECT MAX(m.jobId) FROM MigrationProcessStatus m) t.processId = :processId")
-    // Date findLastUpdateTime(@Param("processId") Long processId);
+    @Query("SELECT CAST(t.jobStartTime as text) FROM MigrationProcessStatus t WHERE t.jobId = (SELECT MAX(m.jobId) FROM MigrationProcessStatus m) AND t.processId = :processId")
+    String findLastUpdateTime(@Param("processId") Long processId);
 }

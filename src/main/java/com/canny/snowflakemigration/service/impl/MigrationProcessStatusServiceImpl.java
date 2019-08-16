@@ -94,5 +94,12 @@ public class MigrationProcessStatusServiceImpl implements MigrationProcessStatus
         log.debug("Request to get MigrationProcessStatus : {}", id);
         return MigrationProcessStatusRepository.findAllByProcessId(id);//.map(MigrationProcessStatusMapper::toDto);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String findLastUpdateTime(Long processId) {
+        log.debug("Request to get MigrationProcessStatus : {}", processId);
+        return MigrationProcessStatusRepository.findLastUpdateTime(processId);
+    }
 }
  
