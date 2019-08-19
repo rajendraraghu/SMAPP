@@ -9,7 +9,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://snowpole-postgresql:5432/snowpole
       - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
     ports:
-      - 8080:8080
+      - 6060:6060
   snowpole-postgresql:
     extends:
       file: postgresql.yml
