@@ -17,6 +17,10 @@ import { RouterModule } from '@angular/router';
         loadChildren: './migration-process/migration-process.module#SnowpoleMigrationProcessModule'
       },
       {
+        path: 'delta-process',
+        loadChildren: './delta-process/delta-process.module#SnowpoleDeltaProcessModule'
+      },
+      {
         path: 'snow-ddl',
         loadChildren: './snow-ddl/snow-ddl.module#SnowpoleSnowDDLModule'
       }

@@ -51,6 +51,9 @@ public class CacheConfiguration {
             createCache(cm, com.canny.snowflakemigration.domain.SnowDDLJobStatus.class.getName());
             createCache(cm, com.canny.snowflakemigration.domain.MigrationProcessStatus.class.getName());
             createCache(cm, com.canny.snowflakemigration.domain.MigrationProcessJobStatus.class.getName());
+            createCache(cm, com.canny.snowflakemigration.domain.DeltaProcess.class.getName());
+            createCache(cm, com.canny.snowflakemigration.domain.DeltaProcessStatus.class.getName());
+            createCache(cm, com.canny.snowflakemigration.domain.DeltaProcessJobStatus.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

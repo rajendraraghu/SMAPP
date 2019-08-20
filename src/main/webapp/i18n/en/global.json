@@ -11,7 +11,7 @@
         "snowflakeConnection": "Snowflake Connection",
         "migrationProcess": "Snow Acquisition Hub",
         "SnowHistory": "Snow History",
-        "sourceDelta": "Source Delta",
+        "deltaProcess": "Snow Delta",
         "snowParse": "Snow Parse",
         "snowDDL": "Snow DDL",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"

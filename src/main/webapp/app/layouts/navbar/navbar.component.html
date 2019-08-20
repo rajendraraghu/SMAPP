@@ -61,9 +61,10 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item disabled" routerLink="migration-process" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
-                            <span jhiTranslate="global.menu.entities.sourceDelta">Source Delta</span>
+                        <a class="dropdown-item" routerLink="delta-process" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <!-- <fa-icon icon="asterisk" fixedWidth="true"></fa-icon> -->
+                            <i class="fa fa-database" aria-hidden="true"></i>
+                            <span jhiTranslate="global.menu.entities.deltaProcess">Snow Delta</span>
                         </a>
                     </li>
                     <li>
@@ -71,7 +72,7 @@
                             <i class="fa fa-cloud" aria-hidden="true"></i>
                             <span jhiTranslate="global.menu.entities.snowParse">Snow Parse</span>
                         </a>
-                    </li>    
+                    </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
                 </ul>
             </li>

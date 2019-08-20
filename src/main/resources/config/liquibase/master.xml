@@ -25,5 +25,8 @@
     <include file="config/liquibase/changelog/20190806113954_added_entity_SnowDDLJobStatus.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190808124154_added_entity_MigrationProcessStatus.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190809105436_added_entity_MigrationProcessJobStatus.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190819143654_added_entity_DeltaProcess.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190819143654_added_entity_DeltaProcessJobStatus.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190819143654_added_entity_DeltaProcessStatus.xml" relativeToChangelogFile="false"/>    
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

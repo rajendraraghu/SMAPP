@@ -1,0 +1,104 @@
+<div>
+    <h2 id="page-heading">
+        <span>Snow Delta</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-delta-process" [routerLink]="['/delta-process/new']"
+            joyrideStep="twelthStep" title="New Delta Process" text="Create new Delta process with source and Snowflake connection">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="snowpoleApp.deltaProcess.home.createLabel">
+            Create new Delta Process
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="alert alert-warning" *ngIf="deltaProcesses?.length === 0">
+        <span jhiTranslate="snowpoleApp.deltaProcess.home.notFound">No Delta Processes found</span>
+    </div>
+    <div class="table-responsive" *ngIf="deltaProcesses?.length > 0">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <!-- <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="name"><span jhiTranslate="snowpoleApp.deltaProcess.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <!-- <th jhiSortBy="type"><span jhiTranslate="snowpoleApp.deltaProcess.type">Type</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <!-- <th jhiSortBy="tablesToMigrate"><span jhiTranslate="snowpoleApp.deltaProcess.tablesToMigrate">Tables To Migrate</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="sourceConnectionName"><span jhiTranslate="snowpoleApp.deltaProcess.sourceConnection">Source Connection</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="snowflakeConnectionName"><span jhiTranslate="snowpoleApp.deltaProcess.snowflakeConnection">Snowflake Connection</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <!-- <th jhiSortBy="lastStatus"><span jhiTranslate="snowpoleApp.deltaProcess.lastStatus">Last Status</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.deltaProcess.createdBy">Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="createdDate"><span jhiTranslate="snowpoleApp.deltaProcess.createdDate">Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.deltaProcess.lastModifiedBy">Last Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="lastModifiedDate"><span jhiTranslate="snowpoleApp.deltaProcess.lastModifiedDate">Last Modified Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let deltaProcess of deltaProcesses ;trackBy: trackId">
+                <!-- <td><a [routerLink]="['/delta-process', deltaProcess.id, 'view' ]">{{deltaProcess.id}}</a></td> -->
+                <td>{{deltaProcess.name}}</td>
+                <!-- <td>{{deltaProcess.type}}</td> -->
+                <!-- <td>{{deltaProcess.tablesToMigrate}}</td> -->
+                <td>
+                    <div *ngIf="deltaProcess.sourceConnectionId">
+                        <a [routerLink]="['../source-connection', deltaProcess.sourceConnectionId , 'view' ]" >{{deltaProcess.sourceConnectionName}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="deltaProcess.snowflakeConnectionId">
+                        <a [routerLink]="['../snowflake-connection', deltaProcess.snowflakeConnectionId , 'view' ]" >{{deltaProcess.snowflakeConnectionName}}</a>
+                    </div>
+                </td>
+                <!-- <td>{{deltaProcess.lastStatus}}</td> -->
+                 <td>{{deltaProcess.createdBy}}</td>
+                <td>{{deltaProcess.createdDate | date:'medium'}}</td>
+               <td>{{deltaProcess.lastModifiedBy}}</td>
+                <td>{{deltaProcess.lastModifiedDate | date:'medium'}}</td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <!-- <button type="submit"
+                                [routerLink]="['/delta-process', deltaProcess.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button> -->
+                        <button type="submit"
+                                (click)="sendTableList(deltaProcess)"
+                                class="btn btn-info btn-sm">
+                                <i class="fa fa-play" aria-hidden="true"></i>
+                            <span class="d-none d-md-inline">Run</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/delta-process', deltaProcess.id, 'view']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                (click)="viewProcessStatus(deltaProcess.id)"
+                                class="btn btn-info btn-sm">
+                            <fa-icon icon="book" fixedWidth="true"></fa-icon>
+                            <span class="d-none d-md-inline">Report</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'delta-process', { outlets: { popup: deltaProcess.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div [hidden]="deltaProcesses?.length === 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>
