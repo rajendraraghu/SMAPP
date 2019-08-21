@@ -72,7 +72,7 @@
     </div>
     <div class="col-4">
         <fieldset>
-            <h4>Select the tables to be migrated</h4>
+            <h4>Select the tables for Delta Process</h4>
             <hr>
             <div class="form-group has-search">
                 <fa-icon class="form-control-feedback" [icon]="'search'"></fa-icon>
@@ -85,27 +85,27 @@
 
             <div class="form-group" style="height: 40vh; overflow-y: auto;">
                 <div class="row m-0">
-                    <div class="col-4 pl-0">
-                        <h6> Tables Name </h6>
+                    <div class="col-6 pl-0">
+                        <h6> Table Name </h6>
                     </div>
-                    <div class="col-3 pl-0">
+                    <div class="col-6 pl-0">
                         <h6> Primary Key </h6>
                     </div>
               <!--      <div class="col-2 pl-0">
                         <h6> CDC </h6>
                     </div> -->
-                    <div class="col-3 pl-0">
-                        <h6> <span style="color: #f0ad4e;">*</span> CDC Columns </h6>
-                    </div>
+                    <!-- <div class="col-3 pl-0">
+                        <h6> CDC Columns </h6>
+                    </div> -->
                 </div>
                 <div class="row m-0" *ngFor="let item of tables; let i=index">
-                    <div class="col-4 pl-0">
+                    <div class="col-6 pl-0">
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" [id]="i"  name="list_name" [(ngModel)]="item.selected" value="{{item.name}}"  (change)= "onSelectionChange(item)">
                             <label class="custom-control-label" [for]="i">{{item.name}}</label>
                         </div>
                     </div>
-                    <div class="col-3 pl-0">
+                    <div class="col-6 pl-0">
                         <label  [for]="i">{{item.primaryKey}}</label>
                     </div>
                <!--     <div class="col-2 pl-0 ">
@@ -124,7 +124,7 @@
             </div>
         </fieldset>
         <button type="button" class="btn btn-primary" (click)="testAndMigrate()" style="width: 100%;">
-            <fa-icon [icon]="'tasks'"></fa-icon>&nbsp;<span>Save tables to be migrated</span>
+            <fa-icon [icon]="'tasks'"></fa-icon>&nbsp;<span>Save tables for Delta Process</span>
         </button>
     </div>
 </div>

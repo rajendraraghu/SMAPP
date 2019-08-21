@@ -23,11 +23,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="type" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
-            <column name="tables_to_migrate" type="varchar(3200)">
+            <column name="tables_list" type="varchar(3200)">
                 <constraints nullable="true" />
             </column>
 
@@ -95,8 +91,7 @@
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
             <column name="description" type="string"/>
-            <column name="type" type="string"/>
-            <column name="tables_to_migrate" type="string"/>
+            <column name="tables_list" type="string"/>
             <column name="pk" type="string"/>
             <column name="last_status" type="string"/>
             <column name="created_by" type="string"/>

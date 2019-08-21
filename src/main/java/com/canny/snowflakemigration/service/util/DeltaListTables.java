@@ -47,7 +47,8 @@ public class DeltaListTables {
     		  //JsonArray row = new JsonArray();
     		  cols.add(new JsonPrimitive(rs2.getString("COLUMN_NAME")));
             }
-        	row.add("columnList",cols);
+            row.add("columnList",cols);
+            data.add(row);
         }
         jsonResponse.add("tableinfo",data);
         return jsonResponse.toString();

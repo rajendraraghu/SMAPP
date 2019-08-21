@@ -17,11 +17,9 @@ public class DeltaProcessDTO implements Serializable {
     @Size(max = 650)
     private String description;
 
-    private String type;
+    private String tablesList;
 
-    private String tablesToMigrate;
-
-    private String Pk;
+    private String pk;
 
     private String lastStatus;
 
@@ -93,28 +91,20 @@ public class DeltaProcessDTO implements Serializable {
         this.description = description;
     }
 
-    public String getType() {
-        return type;
+    public String getTablesList() {
+        return tablesList;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getTablesToMigrate() {
-        return tablesToMigrate;
-    }
-
-    public void setTablesToMigrate(String tablesToMigrate) {
-        this.tablesToMigrate = tablesToMigrate;
+    public void setTablesList(String tablesList) {
+        this.tablesList = tablesList;
     }
 
     public String getPk() {
-        return Pk;
+        return pk;
     }
 
-    public void setPk(String Pk) {
-        this.Pk = Pk;
+    public void setPk(String pk) {
+        this.pk = pk;
     }
 
     public String getLastStatus() {
@@ -327,16 +317,15 @@ public class DeltaProcessDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", type='" + getType() + "'" +
-            ", tablesToMigrate='" + getTablesToMigrate() + "'" +
-            ", Pk='" + getPk() + "'" +
+            ", tablesList='" + getTablesList() + "'" +
+            ", pk='" + getPk() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", runBy='" + getRunBy() + "'" +
-            ", sourceConnection=" + getSourceConnectionId() +
+            ", sourceConnection=" + getSourceConnectionId() + 
             ", sourceConnection='" + getSourceConnectionName() + "'" +
             ", snowflakeConnection=" + getSnowflakeConnectionId() +
             ", snowflakeConnection='" + getSnowflakeConnectionName() + "'" +

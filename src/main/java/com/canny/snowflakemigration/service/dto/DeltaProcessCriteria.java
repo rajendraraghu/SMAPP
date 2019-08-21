@@ -31,9 +31,9 @@ public class DeltaProcessCriteria implements Serializable, Criteria {
 
     private StringFilter description;
 
-    private StringFilter type;
+    private StringFilter tablesList;
 
-    private StringFilter tablesToMigrate;
+    private StringFilter pk;
 
     private StringFilter lastStatus;
 
@@ -56,8 +56,8 @@ public class DeltaProcessCriteria implements Serializable, Criteria {
         this.id = other.id == null ? null : other.id.copy();
         this.name = other.name == null ? null : other.name.copy();
         this.description = other.description == null ? null : other.description.copy();
-        this.type = other.type == null ? null : other.type.copy();
-        this.tablesToMigrate = other.tablesToMigrate == null ? null : other.tablesToMigrate.copy();
+        this.tablesList = other.tablesList == null ? null : other.tablesList.copy();
+        this.pk = other.pk == null ? null : other.pk.copy();
         this.lastStatus = other.lastStatus == null ? null : other.lastStatus.copy();
         this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
         this.createdDate = other.createdDate == null ? null : other.createdDate.copy();
@@ -96,20 +96,20 @@ public class DeltaProcessCriteria implements Serializable, Criteria {
         this.description = description;
     }
 
-    public StringFilter getType() {
-        return type;
+    public StringFilter getTablesList() {
+        return tablesList;
     }
 
-    public void setType(StringFilter type) {
-        this.type = type;
+    public void setTablesList(StringFilter tablesList) {
+        this.tablesList = tablesList;
     }
 
-    public StringFilter getTablesToMigrate() {
-        return tablesToMigrate;
+    public StringFilter getPk() {
+        return pk;
     }
 
-    public void setTablesToMigrate(StringFilter tablesToMigrate) {
-        this.tablesToMigrate = tablesToMigrate;
+    public void setpk(StringFilter pk) {
+        this.pk = pk;
     }
 
     public StringFilter getLastStatus() {
@@ -182,8 +182,8 @@ public class DeltaProcessCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(name, that.name) &&
             Objects.equals(description, that.description) &&
-            Objects.equals(type, that.type) &&
-            Objects.equals(tablesToMigrate, that.tablesToMigrate) &&
+            Objects.equals(tablesList, that.tablesList) &&
+            Objects.equals(pk, that.pk) &&
             Objects.equals(lastStatus, that.lastStatus) &&
             Objects.equals(createdBy, that.createdBy) &&
             Objects.equals(createdDate, that.createdDate) &&
@@ -199,8 +199,8 @@ public class DeltaProcessCriteria implements Serializable, Criteria {
         id,
         name,
         description,
-        type,
-        tablesToMigrate,
+        tablesList,
+        pk,
         lastStatus,
         createdBy,
         createdDate,
@@ -217,8 +217,8 @@ public class DeltaProcessCriteria implements Serializable, Criteria {
                 (id != null ? "id=" + id + ", " : "") +
                 (name != null ? "name=" + name + ", " : "") +
                 (description != null ? "description=" + description + ", " : "") +
-                (type != null ? "type=" + type + ", " : "") +
-                (tablesToMigrate != null ? "tablesToMigrate=" + tablesToMigrate + ", " : "") +
+                (tablesList != null ? "tablesList=" + tablesList + ", " : "") +
+                (pk != null ? "pk=" + pk + ", " : "") +
                 (lastStatus != null ? "lastStatus=" + lastStatus + ", " : "") +
                 (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
                 (createdDate != null ? "createdDate=" + createdDate + ", " : "") +

@@ -36,13 +36,9 @@
                 "maxlength"
             ],
             "fieldValidateRulesMaxlength": "650"
-        },
+        }
         {
-            "fieldName": "type",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "tablesToMigrate",
+            "fieldName": "tablesList",
             "fieldType": "String"
         },
         {

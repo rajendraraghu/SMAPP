@@ -97,11 +97,11 @@ public class DeltaProcessQueryService extends QueryService<DeltaProcess> {
             if (criteria.getDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), DeltaProcess_.description));
             }
-            if (criteria.getType() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getType(), DeltaProcess_.type));
+            if (criteria.getTablesList() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getTablesList(), DeltaProcess_.tablesList));
             }
-            if (criteria.getTablesToMigrate() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getTablesToMigrate(), DeltaProcess_.tablesToMigrate));
+            if (criteria.getPk() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getPk(), DeltaProcess_.pk));
             }
             if (criteria.getLastStatus() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getLastStatus(), DeltaProcess_.lastStatus));

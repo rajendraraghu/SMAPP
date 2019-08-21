@@ -32,16 +32,13 @@ public class DeltaProcess extends AbstractAuditingEntity implements Serializable
     @Column(name = "description", length = 650)
     private String description;
 
-    @Column(name = "type")
-    private String type;
-
     @Size(max = 3200)
-    @Column(name = "tables_to_migrate", length = 3200)
-    private String tablesToMigrate;
+    @Column(name = "tables_list", length = 3200)
+    private String tablesList;
 
     @Size(max = 3200)
     @Column(name = "pk", length = 3200)
-    private String Pk;
+    private String pk;
 
     @Column(name = "last_status")
     private String lastStatus;
@@ -104,43 +101,30 @@ public class DeltaProcess extends AbstractAuditingEntity implements Serializable
         this.description = description;
     }
 
-    public String getType() {
-        return type;
+    public String getTablesList() {
+        return tablesList;
     }
 
-    public DeltaProcess type(String type) {
-        this.type = type;
+    public DeltaProcess tablesList(String tablesList) {
+        this.tablesList = tablesList;
         return this;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getTablesToMigrate() {
-        return tablesToMigrate;
-    }
-
-    public DeltaProcess tablesToMigrate(String tablesToMigrate) {
-        this.tablesToMigrate = tablesToMigrate;
-        return this;
-    }
-
-    public void setTablesToMigrate(String tablesToMigrate) {
-        this.tablesToMigrate = tablesToMigrate;
+    public void setTablesList(String tablesList) {
+        this.tablesList = tablesList;
     }
 
     public String getPk() {
-        return Pk;
+        return pk;
     }
 
-    public DeltaProcess Pk(String Pk) {
-        this.Pk = Pk;
+    public DeltaProcess pk(String pk) {
+        this.pk = pk;
         return this;
     }
 
-    public void setPk(String Pk) {
-        this.Pk = Pk;
+    public void setPk(String pk) {
+        this.pk = pk;
     }
 
     public String getLastStatus() {
@@ -270,9 +254,8 @@ public class DeltaProcess extends AbstractAuditingEntity implements Serializable
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", type='" + getType() + "'" +
-            ", tablesToMigrate='" + getTablesToMigrate() + "'" +
-            ", Pk='" + getPk() + "'" +
+            ", tablesList='" + getTablesList() + "'" +
+            ", pk='" + getPk() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
             ", selectedAll='" + getSelectedAll() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

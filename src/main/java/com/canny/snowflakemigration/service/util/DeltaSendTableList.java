@@ -50,7 +50,7 @@ public class DeltaSendTableList  {
 		    // System.out.println("tables created");
 
     		String pk1 = processDTO.getPk();
-    		String tablestoMigrate = processDTO.getTablesToMigrate();
+    		String tablestoMigrate = processDTO.getTablesList();
 		    String[] pk2 = pk1.split(",");
 		    String[] tablesToMigrate = tablestoMigrate.split(",");
 
