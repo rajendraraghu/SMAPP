@@ -21,7 +21,7 @@ public class ConvertDDL {
 	public static String convertToSnowDDL(SnowDDLDTO snowDDLDTO, SnowDDLProcessStatusService snowDDLProcessStatusService,SnowDDLJobStatusService snowDDLJobStatusService) throws IOException
 	{
 		String status = null;
-
+		SnowDDLProcessStatusDTO processStatus = new SnowDDLProcessStatusDTO();
 		try{
 			System.out.println("Start of try block");
 			String line,tblNm = null;
@@ -39,7 +39,7 @@ public class ConvertDDL {
             snowDDLProcessStatusDTO.setTotalObjects(3L);
             snowDDLProcessStatusDTO.setSuccessObjects(6L);
             snowDDLProcessStatusDTO.setErrorObjects(8L);
-			SnowDDLProcessStatusDTO processStatus = snowDDLProcessStatusService.save(snowDDLProcessStatusDTO);
+			processStatus = snowDDLProcessStatusService.save(snowDDLProcessStatusDTO);
 			System.out.println("Send to Process Status DTO Complete");
             System.out.println(processStatus);
             sourceType = sourceType.replaceAll("\\s", "").toLowerCase();
@@ -100,7 +100,7 @@ public class ConvertDDL {
 		}
 		catch(Exception e) {
             status = "FAILURE";
-            //snowDDLProcessStatusDTO.setEndTime(Instant.now());
+			processStatus.setStatus(status);
 			System.out.println(e);
 		}
 	return status;
