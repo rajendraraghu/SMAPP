@@ -80,7 +80,7 @@
                     (input)="searchForTables($event.target.value)">
             </div>
             <div>
-            <input type="checkbox" [(ngModel)]="masterSelected" name="list_name" value="m1" (change)="checkUncheckAll()"/> <strong style="color:darkorange;font-weight:bold">Select/ Unselect All</strong>
+            <input type="checkbox" [(ngModel)]="masterSelected" name="list_name" value="m1" (change)="checkUncheckAll($event)"/> <strong style="color:darkorange;font-weight:bold">Select/ Unselect All</strong>
             </div>
 
             <div class="form-group" style="height: 40vh; overflow-y: auto;">
@@ -106,7 +106,11 @@
                         </div>
                     </div>
                     <div class="col-3 pl-0">
-                        <label  [for]="i">{{item.primaryKey}}</label>
+                        <button type="button" [routerLink]="['/migration-process',{ outlets: { popup: item.name+'/selectPK'} }]" class="btn btn-primary">
+                        <!-- <button type="button"  class="btn btn-primary" (click) = "selectPk(migrationProcess.id,item.name)"> -->
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> {{item.primaryKey}} </span>
+                        </button>
+                        <!-- <label [for]="i">{{item.primaryKey}}</label> -->
                     </div>
                     <div class="col-2 pl-0 ">
                         <div class="custom-control custom-switch">

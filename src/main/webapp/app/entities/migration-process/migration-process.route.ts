@@ -14,6 +14,7 @@ import { MigrationProcessDeletePopupComponent } from './migration-process-delete
 import { IMigrationProcess } from 'app/shared/model/migration-process.model';
 import { MigrationProcessStatusComponent } from './migration-process-status.component';
 import { MigrationProcessJobStatusComponent } from './migration-process-job-status.component';
+import { MigrationProcessPrimaryKeyPopupComponent } from './migration-process-primary-key.component';
 
 @Injectable({ providedIn: 'root' })
 export class MigrationProcessResolve implements Resolve<IMigrationProcess> {
@@ -48,6 +49,20 @@ export const migrationProcessRoute: Routes = [
   {
     path: ':id/view',
     component: MigrationProcessDetailComponent,
+    // children: [
+    //   {
+    //     path: ':name/selectPk',
+    //     component: MigrationProcessPrimaryKeyPopupComponent,
+    //     resolve: {
+    //       migrationProcess: MigrationProcessResolve
+    //     },
+    //     data: {
+    //       authorities: ['ROLE_USER'],
+    //       pageTitle: 'snowpoleApp.migrationProcess.home.title'
+    //     },
+    //     canActivate: [UserRouteAccessService],
+    //     outlet: 'popup'
+    //   }],
     resolve: {
       migrationProcess: MigrationProcessResolve
     },
@@ -111,6 +126,19 @@ export const migrationProcessPopupRoute: Routes = [
   {
     path: ':id/delete',
     component: MigrationProcessDeletePopupComponent,
+    resolve: {
+      migrationProcess: MigrationProcessResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'snowpoleApp.migrationProcess.home.title'
+    },
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  },
+  {
+    path: ':name/selectPK',
+    component: MigrationProcessPrimaryKeyPopupComponent,
     resolve: {
       migrationProcess: MigrationProcessResolve
     },

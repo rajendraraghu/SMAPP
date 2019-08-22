@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { IMigrationProcess } from 'app/shared/model/migration-process.model';
 import { MigrationProcessService } from 'app/entities/migration-process/migration-process.service';
@@ -27,7 +27,8 @@ export class MigrationProcessDetailComponent implements OnInit {
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
-    protected migrationProcessService: MigrationProcessService
+    protected migrationProcessService: MigrationProcessService,
+    protected router: Router
   ) {}
 
   ngOnInit() {
@@ -62,7 +63,7 @@ export class MigrationProcessDetailComponent implements OnInit {
         selected: this.isChecked(element.tableName),
         cdc: this.isCDC(element.tableName),
         cdcColumnList: element.cdcColumnList,
-        selectedCdcCol: element.selectedCdcCol
+        selectedCdcCol: element.cdcColumnList[0]
       };
       this.tables.push(table);
     });
@@ -70,11 +71,18 @@ export class MigrationProcessDetailComponent implements OnInit {
     this.isAllSelected();
   }
 
-  checkUncheckAll() {
-    this.selectedTables = [];
-    for (let i = 0; i < this.tables.length; i++) {
-      this.tables[i].selected = this.masterSelected;
-      this.pushTables(this.tables[i]);
+  checkUncheckAll(event) {
+    if (event.target.checked) {
+      this.selectedTables = [];
+      for (let i = 0; i < this.tables.length; i++) {
+        this.tables[i].selected = this.masterSelected;
+        this.pushTables(this.tables[i]);
+      }
+    } else {
+      this.selectedTables = [];
+      for (let i = 0; i < this.tables.length; i++) {
+        this.tables[i].selected = this.masterSelected;
+      }
     }
   }
 
@@ -87,6 +95,10 @@ export class MigrationProcessDetailComponent implements OnInit {
   onSelectionChange(item) {
     this.isAllSelected();
     this.pushTables(item);
+  }
+
+  selectPk(id, name) {
+    this.router.navigate(['/migration-process', id, 'view', name, 'selectPK']);
   }
 
   pushTables(item) {
