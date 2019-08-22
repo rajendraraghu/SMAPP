@@ -18,7 +18,7 @@ type JobArrayResponseType = HttpResponse<ISnowHistoryJobStatus[]>;
 
 @Injectable({ providedIn: 'root' })
 export class SnowHistoryService {
-  public resourceUrl = SERVER_API_URL + 'api/snow-historys';
+  public resourceUrl = SERVER_API_URL + 'api/snow-histories';
 
   constructor(protected http: HttpClient) {}
 
