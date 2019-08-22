@@ -1,0 +1,130 @@
+<div class="row justify-content-center">
+    <div class="col-4">
+        <div *ngIf="snowHistory">
+            <h2><span jhiTranslate="snowpoleApp.snowHistory.detail.title">Snow History </span></h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="snowpoleApp.snowHistory.name">Name</span></dt>
+                <dd>
+                    <span>{{snowHistory.name}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowHistory.description">Description</span></dt>
+                <dd>
+                    <span>{{snowHistory.description}}</span>
+                </dd>
+
+                <dt><span jhiTranslate="snowpoleApp.snowHistory.sourceConnection">Source Connection</span></dt>
+                <dd>
+                    <div *ngIf="snowHistory.sourceConnectionId">
+                        <a
+                            [routerLink]="['/source-connection', snowHistory.sourceConnectionId, 'view']">{{snowHistory.sourceConnectionName}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowHistory.snowflakeConnection">Snowflake Connection</span>
+                </dt>
+                <dd>
+                    <div *ngIf="snowHistory.snowflakeConnectionId">
+                        <a
+                            [routerLink]="['/snowflake-connection', snowHistory.snowflakeConnectionId, 'view']">{{snowHistory.snowflakeConnectionName}}</a>
+                    </div>
+                </dd>
+
+                <!-- <dt><span jhiTranslate="snowpoleApp.snowHistory.type">Type</span></dt>
+                <dd>
+                    <span>{{snowHistory.type}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowHistory.tablesToMigrate">Tables To Migrate</span></dt>
+                <dd>
+                    <span>{{snowHistory.tablesToMigrate}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowHistory.lastStatus">Last Status</span></dt>
+                <dd>
+                    <span>{{snowHistory.lastStatus}}</span>
+                </dd> -->
+                <dt><span jhiTranslate="snowpoleApp.snowHistory.createdBy">Created By</span></dt>
+                <dd>
+                    <span>{{snowHistory.createdBy}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowHistory.createdDate">Created Date</span></dt>
+                <dd>
+                    <span>{{snowHistory.createdDate | date:'medium'}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowHistory.lastModifiedBy">Last Modified By</span></dt>
+                <dd>
+                    <span>{{snowHistory.lastModifiedBy}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.snowHistory.lastModifiedDate">Last Modified Date</span></dt>
+                <dd>
+                    <span>{{snowHistory.lastModifiedDate | date:'medium'}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit" (click)="previousState()" class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button" [routerLink]="['/snow-history', snowHistory.id, 'edit']"
+                class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+    <div class="col-4">
+        <fieldset>
+            <h4>Select the History tables to be migrated</h4>
+            <hr>
+            <div class="form-group has-search">
+                <fa-icon class="form-control-feedback" [icon]="'search'"></fa-icon>
+                <input type="text" class="form-control" placeholder="Search for tables"
+                    (input)="searchForTables($event.target.value)">
+            </div>
+            <div>
+            <input type="checkbox" [(ngModel)]="masterSelected" name="list_name" value="m1" (change)="checkUncheckAll()"/> <strong style="color:darkorange;font-weight:bold">Select/ Unselect All</strong>
+            </div>
+
+            <div class="form-group" style="height: 40vh; overflow-y: auto;">
+                <div class="row m-0">
+                    <div class="col-4 pl-0">
+                        <h6> Tables Name </h6>
+                    </div>
+                    <!-- <div class="col-3 pl-0">
+                        <h6> Primary Key </h6>
+                    </div>
+                    <div class="col-2 pl-0">
+                        <h6> CDC </h6>
+                    </div>
+                    <div class="col-3 pl-0">
+                        <h6> <span style="color: #f0ad4e;">*</span> CDC Columns </h6>
+                    </div>
+                </div> -->
+                <div class="row m-0" *ngFor="let item of tables; let i=index">
+                    <div class="col-4 pl-0">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" [id]="i"  name="list_name" [(ngModel)]="item.selected" value="{{item.name}}"  (change)= "onSelectionChange(item)">
+                            <label class="custom-control-label" [for]="i">{{item.name}}</label>
+                        </div>
+                    </div>
+                    <!-- <div class="col-3 pl-0">
+                        <label  [for]="i">{{item.primaryKey}}</label>
+                    </div>
+                    <div class="col-2 pl-0 ">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" [id]="customSwitchId(i)"
+                                [disabled]="!item.selected" [checked]="item.cdc" (change)="onProcessSelection(item);">
+                            <label class="custom-control-label" [for]="customSwitchId(i)"> </label>
+                        </div>
+                    </div>
+                    <div class="col-3 pl-0">
+                        <select class="form-control" id="field_system" name="system"  [disabled]="!item.cdc" [(ngModel)]="item.selectedCdcCol">
+                            <option *ngFor="let cdcColumn of item.cdcColumnList; let i=index " [value]="cdcColumn">{{cdcColumn}}</option>
+                        </select>
+                    </div>
+                </div> -->
+            </div>
+        </fieldset>
+        <button type="button" class="btn btn-primary" (click)="testAndMigrate()" style="width: 100%;">
+            <fa-icon [icon]="'tasks'"></fa-icon>&nbsp;<span>Save tables to be migrated</span>
+        </button>
+    </div>
+</div>

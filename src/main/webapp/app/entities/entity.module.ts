@@ -23,6 +23,10 @@ import { RouterModule } from '@angular/router';
       {
         path: 'snow-ddl',
         loadChildren: './snow-ddl/snow-ddl.module#SnowpoleSnowDDLModule'
+      },
+      {
+        path: 'snow-history',
+        loadChildren: './snow-history/snow-history.module#SnowpoleSnowHistoryModule'
       }
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ])

@@ -19,14 +19,19 @@
     <include file="config/liquibase/changelog/20190707173954_added_entity_MigrationProcess.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20190707173954_added_entity_constraints_MigrationProcess.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190808124154_added_entity_MigrationProcessStatus.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190809105436_added_entity_MigrationProcessJobStatus.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190730124554_added_entity_SnowDDL.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190730124554_added_entity_constraints_SnowDDL.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190806113654_added_entity_SnowDDLProcessStatus.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190806113954_added_entity_SnowDDLJobStatus.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190808124154_added_entity_MigrationProcessStatus.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190809105436_added_entity_MigrationProcessJobStatus.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190819143654_added_entity_DeltaProcess.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190819143654_added_entity_DeltaProcessJobStatus.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190819143654_added_entity_DeltaProcessStatus.xml" relativeToChangelogFile="false"/>    
+    <include file="config/liquibase/changelog/20190819143654_added_entity_constraints_DeltaProcess.xml" relativeToChangelogFile="false"/> 
+    <include file="config/liquibase/changelog/20190819143954_added_entity_DeltaProcessJobStatus.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190819144254_added_entity_DeltaProcessStatus.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190819050345_added_entity_SnowHistory.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190819050345_added_entity_constraints_SnowHistory.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190821121336_added_entity_SnowHistoryProcessStatus.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190821121803_added_entity_SnowHistoryJobStatus.xml" relativeToChangelogFile="false"/>    
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>
