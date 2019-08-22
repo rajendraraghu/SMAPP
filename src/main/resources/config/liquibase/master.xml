@@ -32,6 +32,10 @@
     <include file="config/liquibase/changelog/20190819050345_added_entity_SnowHistory.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190819050345_added_entity_constraints_SnowHistory.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190821121336_added_entity_SnowHistoryProcessStatus.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20190821121803_added_entity_SnowHistoryJobStatus.xml" relativeToChangelogFile="false"/>    
+    <include file="config/liquibase/changelog/20190821121803_added_entity_SnowHistoryJobStatus.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190821093120_added_entity_SnowParse.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190821093120_added_entity_constraints_SnowParse.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190821093230_added_entity_SnowParseProcessStatus.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190821093225_added_entity_SnowParseJobStatus.xml" relativeToChangelogFile="false"/>    
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

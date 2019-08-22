@@ -57,6 +57,9 @@ public class CacheConfiguration {
             createCache(cm, com.canny.snowflakemigration.domain.SnowHistory.class.getName());
             createCache(cm, com.canny.snowflakemigration.domain.SnowHistoryProcessStatus.class.getName());
             createCache(cm, com.canny.snowflakemigration.domain.SnowHistoryJobStatus.class.getName());
+            createCache(cm, com.canny.snowflakemigration.domain.SnowParse.class.getName());
+            createCache(cm, com.canny.snowflakemigration.domain.SnowParseProcessStatus.class.getName());
+            createCache(cm, com.canny.snowflakemigration.domain.SnowParseJobStatus.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }
