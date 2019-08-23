@@ -13,7 +13,7 @@ import java.time.Instant;
  * A SnowHistory.
  */
 @Entity
-@Table(name = "migration_process")
+@Table(name = "snow_history")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SnowHistory extends AbstractAuditingEntity implements Serializable {
 
