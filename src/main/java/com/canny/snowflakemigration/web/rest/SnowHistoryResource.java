@@ -5,6 +5,7 @@ import com.canny.snowflakemigration.service.SnowHistoryProcessStatusService;
 import com.canny.snowflakemigration.web.rest.errors.BadRequestAlertException;
 import com.canny.snowflakemigration.service.dto.SnowHistoryDTO;
 import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
+import com.canny.snowflakemigration.service.util.HistoryListTables;
 import com.canny.snowflakemigration.service.dto.SnowflakeConnectionDTO;
 import com.canny.snowflakemigration.service.dto.SnowHistoryCriteria;
 import com.canny.snowflakemigration.service.SnowHistoryJobStatusService;
@@ -41,8 +42,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static com.canny.snowflakemigration.service.util.listTables.listTable;
-import static com.canny.snowflakemigration.service.util.SendTableList.sendSelectedTables;
+import static com.canny.snowflakemigration.service.util.HistoryListTables.historyListTable;
+import static com.canny.snowflakemigration.service.util.HistorySendTableList.sendSelectedTables;
 
 
 import com.google.gson.JsonPrimitive;
@@ -176,18 +177,18 @@ public class SnowHistoryResource {
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 
-    //@PostMapping(value = "/snow-histories/retrieveTableList")
-    //public @ResponseBody String listTables(@Valid @RequestBody SnowHistoryDTO snowHistoryDTO) throws SQLException,ClassNotFoundException {
-       // String tableName = listTable(snowHistoryDTO);
-        //return tableName;
-   // }
+     @PostMapping(value = "/snow-histories/retrieveTableList")
+    public @ResponseBody String historyListTables(@Valid @RequestBody SnowHistoryDTO snowHistoryDTO) throws SQLException,ClassNotFoundException {
+        String tableName = historyListTable(snowHistoryDTO);
+        return tableName;
+    }
     
-   // @PostMapping(value = "/snow-histories/sendTableListforHistProcess")
-    //public @ResponseBody String sendTableList(@Valid @RequestBody  SnowHistoryDTO snowHistoryDTO)throws SQLException,ClassNotFoundException  {
+    @PostMapping(value = "/snow-histories/HistorySendTableListforHistProcess")
+    public @ResponseBody String historySendTableList(@Valid @RequestBody  SnowHistoryDTO snowHistoryDTO)throws SQLException,ClassNotFoundException  {
     	//Optional<SnowHistoryDTO>  snowHistoryDTO = snowHistoryService.findOne(processid);
-    	//String result = sendSelectedTables(snowHistoryDTO,snowHistoryProcessStatusService,snowHistoryJobStatusService);    
-       // return result;
-   // }
+    	String result = sendSelectedTables(snowHistoryDTO,snowHistoryProcessStatusService,snowHistoryJobStatusService);    
+        return result;
+    }
     @PostMapping(value="/snow-histories/TestConnectionSource")
     public @ResponseBody boolean TestingConnection(@RequestBody SourceConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
         boolean result = false;
@@ -218,7 +219,7 @@ public class SnowHistoryResource {
     
      @PostMapping(value = "/snow-histories/Reports")
     public @ResponseBody String Reports(@Valid @RequestBody SnowHistoryDTO snowHistoryDTO)throws SQLException,ClassNotFoundException  {
-        /*Properties properties = new Properties();
+        Properties properties = new Properties();
 		properties.put("user", snowHistoryDTO.getSnowflakeConnectionUsername());
 		properties.put("password", snowHistoryDTO.getSnowflakeConnectionPassword());
 		properties.put("account", snowHistoryDTO.getSnowflakeConnectionAcct());
@@ -226,7 +227,7 @@ public class SnowHistoryResource {
 		properties.put("db",snowHistoryDTO.getSnowflakeConnectionDatabase());
 	    properties.put("schema",snowHistoryDTO.getSnowflakeConnectionSchema());
 		Connection con2=DriverManager.getConnection(snowHistoryDTO.getSnowflakeConnectionUrl(),properties);
-        Statement stmt0=con2.createStatement(); */
+        Statement stmt0=con2.createStatement(); 
         Connection con3 = DriverManager.getConnection("jdbc:postgresql://localhost:5432/smapp","postgres","password");
 	    Statement st0 = con3.createStatement();
         ResultSet rs0 = st0.executeQuery("SELECT * FROM sah_tableLoadStatus WHERE processid ="+snowHistoryDTO.getId() +" order by tableloadstarttime desc");

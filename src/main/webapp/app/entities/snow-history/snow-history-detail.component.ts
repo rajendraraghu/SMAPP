@@ -70,11 +70,18 @@ export class SnowHistoryDetailComponent implements OnInit {
     this.isAllSelected();
   }
 
-  checkUncheckAll() {
-    this.selectedTables = [];
-    for (let i = 0; i < this.tables.length; i++) {
-      this.tables[i].selected = this.masterSelected;
-      this.pushTables(this.tables[i]);
+  checkUncheckAll(event) {
+    if (event.target.checked) {
+      this.selectedTables = [];
+      for (let i = 0; i < this.tables.length; i++) {
+        this.tables[i].selected = this.masterSelected;
+        this.pushTables(this.tables[i]);
+      }
+    } else {
+      this.selectedTables = [];
+      for (let i = 0; i < this.tables.length; i++) {
+        this.tables[i].selected = this.masterSelected;
+      }
     }
   }
 
