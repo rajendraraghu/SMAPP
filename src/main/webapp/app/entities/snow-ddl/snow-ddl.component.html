@@ -1,8 +1,8 @@
 <div>
     <h2 id="page-heading">
         <span>SnowDDL</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-snow-ddl" [routerLink]="['/snow-ddl/new']"
-            joyrideStep="twelthStep" title="SnowDDL" text="Create new DDL conversion">
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-snow-ddl button" [routerLink]="['/snow-ddl/new']"
+            joyrideStep="Step 28" title="SnowDDL" text="Create new DDL conversion">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span  jhiTranslate="snowpoleApp.snowDDL.home.createLabel">
             Create new DDL Conversion
@@ -43,22 +43,22 @@
                 <td>{{snowDDL.lastModifiedBy}}</td>
                 <td>{{snowDDL.lastModifiedDate | date:'medium'}}</td>
                 <td class="text-right">
-                    <div class="btn-group">
+                    <!-- <div class="btn-group"> -->
                         <button type="submit"
                                 (click)="convertDDL(snowDDL)"
-                                class="btn btn-info btn-sm">
+                                class="btn btn-info btn-sm button">
                                 <i class="fa fa-play" aria-hidden="true"></i>
                             <span class="d-none d-md-inline">Generate</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/snow-ddl', snowDDL.id, 'edit']"
-                                class="btn btn-primary btn-sm">
+                                class="btn btn-primary btn-sm button">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
                         <button type="submit"
                                 (click)="viewProcessStatus(snowDDL.id)"
-                                class="btn btn-info btn-sm">
+                                class="btn btn-info btn-sm button">
                             <fa-icon icon="book" fixedWidth="true"></fa-icon>
                             <span class="d-none d-md-inline">Report</span>
                         </button>
@@ -66,11 +66,11 @@
                                 [routerLink]="['/', 'snow-ddl', { outlets: { popup: snowDDL.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
-                                class="btn btn-danger btn-sm">
+                                class="btn btn-danger btn-sm button">
                             <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
                         </button>
-                    </div>
+                    <!-- </div> -->
                 </td>
             </tr>
             </tbody>

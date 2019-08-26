@@ -12,7 +12,7 @@
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="snowpoleApp.snowDDL.name" for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
-                           formControlName="name"/>
+                           formControlName="name" joyrideStep="Step 29" title="Name" text="Create name for snow DDL"/>
                     <div *ngIf="editForm.get('name').invalid && (editForm.get('name').dirty || editForm.get('name').touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('name').errors.required" jhiTranslate="entity.validation.required">
@@ -31,23 +31,25 @@
                         </small>
                     </div>
                 </div>
-                <div class="form-group" *ngIf="sourceTypes && sourceTypes.length > 0"
-				                    joyrideStep="fourthStep" title="Source System" text="select the source connection source system type">
+                <div class="form-group" *ngIf="sourceTypes && sourceTypes.length > 0">
 				    <label jhiTranslate="snowpoleApp.snowDDL.system">Source System</label>
-				    <select class="form-control" id="field_sourceType" name="sourceType" formControlName="sourceType">
+                    <select class="form-control" id="field_sourceType" name="sourceType" formControlName="sourceType"
+                    joyrideStep="Step 30" title="Source System" text="Select source type for snow DDL">
 				        <option *ngFor="let sourceType of sourceTypes" [value]="sourceType">{{sourceType}}</option>
 				    </select>
                 </div>
                 
                 <div class="custom-control custom-switch">
                     <!-- <input type="checkbox" class="custom-control-input" id="customSwitchId" unchecked="item.sfc" > -->
-                    <input type="checkbox" class="custom-control-input" id="sourceSwitch" (change)="onSourceSelection($event);">
+                    <input type="checkbox" class="custom-control-input" id="sourceSwitch" (change)="onSourceSelection($event);"
+                    joyrideStep="Step 31" title="Extract from source" text="If you want to give source connection on this switch">
 				    <label class="custom-control-label" for="sourceSwitch">Extract From Source</label>
 				</div>
                 <div>
                     <div class="form-group" *ngIf="isSourceSelected">
                         <label class="form-control-label" jhiTranslate="snowpoleApp.snowDDL.sourceConnection" for="field_sourceConnection">Source Connection</label>
-                        <select class="form-control" id="field_sourceConnection" name="sourceConnection" formControlName="sourceConnectionId">
+                        <select class="form-control" id="field_sourceConnection" name="sourceConnection" formControlName="sourceConnectionId"
+                        joyrideStep="Step 32" title="Source Connection" text="Select Source Connection">
                             <option *ngIf="!editForm.get('sourceConnectionId').value" [ngValue]="null" selected></option>
                             <option [ngValue]="sourceConnectionOption.id" *ngFor="let sourceConnectionOption of sourceconnections; trackBy: trackSourceConnectionById">{{sourceConnectionOption.name}}</option>
                         </select>
@@ -60,7 +62,8 @@
                     </div> -->
                     <div class="form-group" *ngIf="!isSourceSelected">
                         <label class="form-control-label" jhiTranslate="snowpoleApp.snowDDL.sourcePath" for="field_sourcePath">Source Path</label>
-                        <input type="text" class="form-control" name="sourcePath" id="field_sourcePath" formControlName="sourcePath"/>
+                        <input type="text" class="form-control" name="sourcePath" id="field_sourcePath" formControlName="sourcePath"
+                        joyrideStep="Step 33" title="Source Path" text="Give Local Source Path"/>
                             <!-- <div *ngIf="editForm.get('sourcePath').invalid && (editForm.get('sourcePath').dirty || editForm.get('sourcePath').touched)">
                                 <small class="form-text text-danger" *ngIf="editForm.get('sourcePath').errors.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 650 }">
                                             This field cannot be longer than 650 characters.
@@ -70,14 +73,16 @@
                 </div>
 
                 <div class="custom-control custom-switch">
-				    <input type="checkbox" class="custom-control-input" id="customSwitchId" (change)="onTargetSelection($event);">
+                    <input type="checkbox" class="custom-control-input" id="customSwitchId" (change)="onTargetSelection($event);"
+                    joyrideStep="Step 34" title="Create in snowflake" text="To move output in snowflake">
 				    <label class="custom-control-label" for="customSwitchId">Create in Snowflake</label>
 				</div>
 
                 <div>
                     <div class="form-group" *ngIf="isTargetSelected">
                         <label class="form-control-label" jhiTranslate="snowpoleApp.snowDDL.snowflakeConnection" for="field_snowflakeConnection">Snowflake Connection</label>
-                        <select class="form-control" id="field_snowflakeConnection" name="snowflakeConnection" formControlName="snowflakeConnectionId">
+                        <select class="form-control" id="field_snowflakeConnection" name="snowflakeConnection" formControlName="snowflakeConnectionId"
+                        joyrideStep="Step 35" title="Create in snowflake" text="Select snowflake connection">
                             <option *ngIf="!editForm.get('snowflakeConnectionId').value" [ngValue]="null" selected></option>
                             <option [ngValue]="snowflakeConnectionOption.id" *ngFor="let snowflakeConnectionOption of snowflakeconnections; trackBy: trackSnowflakeConnectionById">{{snowflakeConnectionOption.name}}</option>
                         </select>
@@ -100,11 +105,11 @@
                 </div>
             </div>
             <div>
-                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                <button type="button" id="cancel-save" class="btn btn-secondary button"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary"
-                    joyrideStep="thirteenthStep" stepPosition="top" title="Snowflake Connection" text="Create new Snowflake DDL Conversion">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary button"
+                    joyrideStep="Step 36" stepPosition="top" title="Save" text="Save Snow DDL">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
                 </button>
             </div>

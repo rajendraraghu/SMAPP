@@ -1,9 +1,9 @@
 <div>
     <h2 id="page-heading">
         <span jhiTranslate="snowpoleApp.sourceConnection.home.title">Source Connections</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-source-connection" 
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-source-connection button" 
             [routerLink]="['/source-connection/new']"
-            joyrideStep="secondStep" title="Source Connection" text="Create new Source Connection">
+            joyrideStep="Step 2" title="Source Connection" text="Create new Source Connection">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span  jhiTranslate="snowpoleApp.sourceConnection.home.createLabel">
             Create new Source Connection
@@ -20,14 +20,14 @@
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
             <!-- <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
-            <th jhiSortBy="name"><span jhiTranslate="snowpoleApp.sourceConnection.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="sourceType"><span jhiTranslate="snowpoleApp.sourceConnection.sourceType">Source Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="name" ><span jhiTranslate="snowpoleApp.sourceConnection.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="sourceType" ><span jhiTranslate="snowpoleApp.sourceConnection.sourceType">Source Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <!-- <th jhiSortBy="url"><span jhiTranslate="snowpoleApp.sourceConnection.url">Url</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
-            <th jhiSortBy="username"><span jhiTranslate="snowpoleApp.sourceConnection.username">Username</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="username" ><span jhiTranslate="snowpoleApp.sourceConnection.username">Username</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <!-- <th jhiSortBy="password"><span jhiTranslate="snowpoleApp.sourceConnection.password">Password</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
-            <th jhiSortBy="database"><span jhiTranslate="snowpoleApp.sourceConnection.database">Database</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="schema"><span jhiTranslate="snowpoleApp.sourceConnection.schema">Schema</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="valid"><span jhiTranslate="snowpoleApp.sourceConnection.valid">Valid</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="database" ><span jhiTranslate="snowpoleApp.sourceConnection.database">Database</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="schema" ><span jhiTranslate="snowpoleApp.sourceConnection.schema">Schema</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="valid" ><span jhiTranslate="snowpoleApp.sourceConnection.valid">Valid</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.sourceConnection.createdBy">Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th> 
             <th jhiSortBy="createdDate"><span jhiTranslate="snowpoleApp.sourceConnection.createdDate">Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.sourceConnection.lastModifiedBy">Last Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th> 
@@ -54,16 +54,16 @@
                 <td>{{sourceConnection.lastModifiedBy}}</td> 
                 <td>{{sourceConnection.lastModifiedDate | date:'medium'}}</td>
                 <td class="text-right">
-                    <div class="btn-group">
+                    <!-- <div class="btn-group"> -->
                         <button type="submit"
                                 [routerLink]="['/source-connection', sourceConnection.id, 'view' ]"
-                                class="btn btn-info btn-sm">
+                                class="btn btn-info btn-sm button">
                             <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/source-connection', sourceConnection.id, 'edit']"
-                                class="btn btn-primary btn-sm">
+                                class="btn btn-primary btn-sm button">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
@@ -71,11 +71,11 @@
                                 [routerLink]="['/', 'source-connection', { outlets: { popup: sourceConnection.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
-                                class="btn btn-danger btn-sm">
+                                class="btn btn-danger btn-sm button">
                             <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
                         </button>
-                    </div>
+                    <!-- </div> -->
                 </td>
             </tr>
             </tbody>

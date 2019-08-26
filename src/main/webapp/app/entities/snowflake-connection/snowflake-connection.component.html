@@ -1,8 +1,8 @@
 <div>
     <h2 id="page-heading">
         <span jhiTranslate="snowpoleApp.snowflakeConnection.home.title">Snowflake Connections</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-snowflake-connection" [routerLink]="['/snowflake-connection/new']"
-            joyrideStep="tengthStep" title="Snowflake Connection" text="Create new Snowflake Connection">
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-snowflake-connection button" [routerLink]="['/snowflake-connection/new']"
+            joyrideStep="Step 12" title="Snowflake Connection" text="Create new Snowflake Connection">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span  jhiTranslate="snowpoleApp.snowflakeConnection.home.createLabel">
             Create new Snowflake Connection
@@ -53,16 +53,16 @@
                 <td>{{snowflakeConnection.lastModifiedBy}}</td> 
                 <td>{{snowflakeConnection.lastModifiedDate | date:'medium'}}</td>
                 <td class="text-right">
-                    <div class="btn-group">
+                    <!-- <div class="btn-group"> -->
                         <button type="submit"
                                 [routerLink]="['/snowflake-connection', snowflakeConnection.id, 'view' ]"
-                                class="btn btn-info btn-sm">
+                                class="btn btn-info btn-sm button">
                             <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/snowflake-connection', snowflakeConnection.id, 'edit']"
-                                class="btn btn-primary btn-sm">
+                                class="btn btn-primary btn-sm button">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
@@ -70,11 +70,11 @@
                                 [routerLink]="['/', 'snowflake-connection', { outlets: { popup: snowflakeConnection.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
-                                class="btn btn-danger btn-sm">
+                                class="btn btn-danger btn-sm button">
                             <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
                         </button>
-                    </div>
+                    <!-- </div> -->
                 </td>
             </tr>
             </tbody>

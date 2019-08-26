@@ -1,6 +1,6 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm" class="form-horizontal">
             <h2 id="jhi-migration-process-heading" jhiTranslate="snowpoleApp.migrationProcess.home.createOrEditLabel">Create or edit a Migration Process</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
@@ -12,8 +12,8 @@
                 <div class="form-group">
                     <span style="color: #f0ad4e;">*</span>
                     <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.name" for="field_name">Name</label>
-                    <input type="text" class="form-control" name="name" id="field_name"
-                           formControlName="name"/>
+                        <input type="text" class="form-control" name="name" id="field_name"
+                           formControlName="name" joyrideStep="Step 24"  title="Migration Process" text="Create New Migration Process"/>
                     <div *ngIf="editForm.get('name').invalid && (editForm.get('name').dirty || editForm.get('name').touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('name').errors.required" jhiTranslate="entity.validation.required">
@@ -35,7 +35,8 @@
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.sourceConnection" for="field_sourceConnection">Source Connection</label>
-                    <select class="form-control" id="field_sourceConnection" name="sourceConnection" formControlName="sourceConnectionId">
+                    <select class="form-control" id="field_sourceConnection" name="sourceConnection" formControlName="sourceConnectionId"
+                    joyrideStep="Step 25"  title="Select Source" text="Select Source for migration Process">
                         <option *ngIf="!editForm.get('sourceConnectionId').value" [ngValue]="null" selected></option>
                         <option [ngValue]="sourceConnectionOption.id" *ngFor="let sourceConnectionOption of sourceconnections; trackBy: trackSourceConnectionById">{{sourceConnectionOption.name}}</option>
                     </select>
@@ -48,7 +49,8 @@
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.snowflakeConnection" for="field_snowflakeConnection">Snowflake Connection</label>
-                    <select class="form-control" id="field_snowflakeConnection" name="snowflakeConnection" formControlName="snowflakeConnectionId">
+                    <select class="form-control" id="field_snowflakeConnection" name="snowflakeConnection" formControlName="snowflakeConnectionId"
+                    joyrideStep="Step 26"  title="Select target" text="Select target for migration Process"></select>>
                         <option *ngIf="!editForm.get('snowflakeConnectionId').value" [ngValue]="null" selected></option>
                         <option [ngValue]="snowflakeConnectionOption.id" *ngFor="let snowflakeConnectionOption of snowflakeconnections; trackBy: trackSnowflakeConnectionById">{{snowflakeConnectionOption.name}}</option>
                     </select>
@@ -101,11 +103,11 @@
                 
             </div>
             <div>
-                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                <button type="button" id="cancel-save" class="btn btn-secondary button" (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary"
-                    joyrideStep="thirteenthStep" stepPosition="top" title="Snowflake Connection" text="Create new DAH process with source and Snowflake connection">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary button"
+                    joyrideStep="Step 27" stepPosition="top" title="Save" text="Save migration Process">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
                 </button>
             </div>

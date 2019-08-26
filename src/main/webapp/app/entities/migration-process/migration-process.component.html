@@ -1,8 +1,8 @@
 <div>
     <h2 id="page-heading">
         <span>Data Acquisition Hub</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-migration-process" [routerLink]="['/migration-process/new']"
-            joyrideStep="twelthStep" title="Snowflake Connection" text="Create new DAH process with source and Snowflake connection">
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-migration-process button" [routerLink]="['/migration-process/new']"
+            joyrideStep="Step 23" title="Snow Acquisition Hub" text="Create new DAH process with source and Snowflake connection">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span  jhiTranslate="snowpoleApp.migrationProcess.home.createLabel">
             Create new Migration Process
@@ -54,7 +54,7 @@
                <td>{{migrationProcess.lastModifiedBy}}</td> 
                 <td>{{migrationProcess.lastModifiedDate | date:'medium'}}</td>
                 <td class="text-right">
-                    <div class="btn-group">
+                    <div class = "btn-link">
                         <!-- <button type="submit"
                                 [routerLink]="['/migration-process', migrationProcess.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -63,19 +63,19 @@
                         </button> -->
                         <button type="submit"
                                 (click)="sendTableList(migrationProcess)"
-                                class="btn btn-info btn-sm">
+                                class="btn btn-info btn-sm button">
                                 <i class="fa fa-play" aria-hidden="true"></i>
                             <span class="d-none d-md-inline">Run</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/migration-process', migrationProcess.id, 'view']"
-                                class="btn btn-primary btn-sm">
+                                class="btn btn-primary btn-sm button">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
                         <button type="submit"
                                 (click)="viewProcessStatus(migrationProcess.id)"
-                                class="btn btn-info btn-sm">
+                                class="btn btn-info btn-sm button">
                             <fa-icon icon="book" fixedWidth="true"></fa-icon>
                             <span class="d-none d-md-inline">Report</span>
                         </button>
@@ -83,7 +83,7 @@
                                 [routerLink]="['/', 'migration-process', { outlets: { popup: migrationProcess.id + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
-                                class="btn btn-danger btn-sm">
+                                class="btn btn-danger btn-sm button">
                             <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
                         </button>

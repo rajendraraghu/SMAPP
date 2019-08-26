@@ -12,7 +12,7 @@
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.name" for="field_name">Name<span class="required">*</span></label>
                     <input type="text" class="form-control" name="name" id="field_name" 
-                           formControlName="name" aria-describedby="required-description"/> 
+                           formControlName="name" aria-describedby="required-description" joyrideStep="Step 13" title="Name" text="Name the snowflake connection"/> 
                     <div *ngIf="editForm.get('name').invalid && (editForm.get('name').dirty || editForm.get('name').touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('name').errors.required" jhiTranslate="entity.validation.required">
@@ -28,7 +28,7 @@
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.url" for="field_url">Url</label>
                     <input type="text" class="form-control" name="url" id="field_url"
-                           formControlName="url"/>
+                           formControlName="url" joyrideStep="Step 14" title="URL" text="Give the snowflake Url"/>
                     <div *ngIf="editForm.get('url').invalid && (editForm.get('url').dirty || editForm.get('url').touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('url').errors.required" jhiTranslate="entity.validation.required">
@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.username" for="field_username">Username</label>
                     <input type="text" class="form-control" name="username" id="field_username"
-                           formControlName="username"/>
+                           formControlName="username" joyrideStep="Step 15" title="Username" text="Give the snowflake username"/>
                     <div *ngIf="editForm.get('username').invalid && (editForm.get('username').dirty || editForm.get('username').touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('username').errors.required" jhiTranslate="entity.validation.required">
@@ -53,7 +53,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.password" for="field_password">Password</label>
-                    <input type="password" class="form-control" name="password" id="field_password"
+                    <input type="password" class="form-control" name="password" id="field_password"  joyrideStep="Step 16" title="Password" text="Give the snowflake login password"
                            formControlName="password"/>
                     <div *ngIf="editForm.get('password').invalid && (editForm.get('password').dirty || editForm.get('password').touched)">
                         <small class="form-text text-danger"
@@ -64,17 +64,17 @@
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.acct" for="field_acct">Acct</label>
-                    <input type="text" class="form-control" name="acct" id="field_acct"
+                    <input type="text" class="form-control" name="acct" id="field_acct" joyrideStep="Step 17" title="Account" text="Give the snowflake account number"
                            formControlName="acct"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.warehouse" for="field_warehouse">Warehouse</label>
-                    <input type="text" class="form-control" name="warehouse" id="field_warehouse"
+                    <input type="text" class="form-control" name="warehouse" id="field_warehouse" joyrideStep="Step 18" title="Warehouse" text="Give the snowflake warehouse name"
                            formControlName="warehouse"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.database" for="field_database">Database</label>
-                    <input type="text" class="form-control" name="database" id="field_database"
+                    <input type="text" class="form-control" name="database" id="field_database" joyrideStep="Step 19" title="Database" text="Give the snowflake database name"
                            formControlName="database"/>
                     <div *ngIf="editForm.get('database').invalid && (editForm.get('database').dirty || editForm.get('database').touched)">
                         <small class="form-text text-danger"
@@ -85,7 +85,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.schema" for="field_schema">Schema</label>
-                    <input type="text" class="form-control" name="schema" id="field_schema"
+                    <input type="text" class="form-control" name="schema" id="field_schema" joyrideStep="Step 20" title="Schema" text="Give the snowflake schema name"
                            formControlName="schema"/>
                 </div>
                 <!-- <div class="form-group">
@@ -118,17 +118,17 @@
 
             </div>
             <div>
-                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                <button type="button" id="cancel-save" class="btn btn-secondary button"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
                 </button>
                 <button type="submit" (click)="testConnection()" [disabled]="editForm.invalid || isSaving"
-                    class="btn btn-info">
+                    class="btn btn-info button" joyrideStep="Step 21" title="Test & Save" text="Validate and save snowflake Connection">
                     <fa-icon [icon]="'save'"></fa-icon>
                     <span class="d-none d-md-inline">Test & Save Connection</span>
                 </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary"
-                    joyrideStep="elevengthStep" stepPosition="top" title="Snowflake Connection" 
-                    text="Create new Snowflake Connection with Name, target Url, Snowflake username, password, account, warehouse, database and schema">
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary button"
+                joyrideStep="Step 22" title="Save" text="Save Snowflake Connection"
+                   >
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
                 </button>
             </div>
