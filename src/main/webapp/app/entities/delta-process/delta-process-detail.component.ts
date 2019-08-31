@@ -31,7 +31,7 @@ export class DeltaProcessDetailComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.data.subscribe(({ deltaProcess }) => {
       this.deltaProcess = deltaProcess;
-      this.selectedTables = this.deltaProcess.tablesToMigrate ? JSON.parse(this.deltaProcess.tablesToMigrate) : [];
+      this.selectedTables = this.deltaProcess.tablesList ? JSON.parse(this.deltaProcess.tablesList) : [];
       this.getTableList();
       this.masterSelected = false;
     });
@@ -129,7 +129,7 @@ export class DeltaProcessDetailComponent implements OnInit {
         PrimaryKey.push(element.primaryKey);
       }
     });
-    this.deltaProcess.tablesToMigrate = JSON.stringify(this.selectedTables);
+    this.deltaProcess.tablesList = JSON.stringify(this.selectedTables);
     this.deltaProcess.Pk = PrimaryKey ? JSON.stringify(PrimaryKey) : null;
     console.log(this.deltaProcess);
     this.subscribeToSaveResponse(this.deltaProcessService.update(this.deltaProcess));

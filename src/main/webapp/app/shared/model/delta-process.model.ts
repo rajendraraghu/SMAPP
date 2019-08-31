@@ -5,7 +5,7 @@ export interface IDeltaProcess {
   name?: string;
   description?: string;
   type?: string;
-  tablesToMigrate?: string;
+  tablesList?: string;
   Pk?: string;
   lastStatus?: string;
   createdBy?: string;
@@ -25,7 +25,7 @@ export class DeltaProcess implements IDeltaProcess {
     public name?: string,
     public description?: string,
     public type?: string,
-    public tablesToMigrate?: string,
+    public tablesList?: string,
     public Pk?: string,
     public lastStatus?: string,
     public createdBy?: string,
