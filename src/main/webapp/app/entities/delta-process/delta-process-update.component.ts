@@ -76,7 +76,7 @@ export class DeltaProcessUpdateComponent implements OnInit {
       name: deltaProcess.name,
       description: deltaProcess.description,
       type: deltaProcess.type,
-      tablesToMigrate: deltaProcess.tablesToMigrate,
+      tablesToMigrate: deltaProcess.tablesList,
       lastStatus: deltaProcess.lastStatus,
       // createdBy: deltaProcess.createdBy,
       // createdDate: deltaProcess.createdDate != null ? deltaProcess.createdDate.format(DATE_TIME_FORMAT) : null,
@@ -108,7 +108,7 @@ export class DeltaProcessUpdateComponent implements OnInit {
       name: this.editForm.get(['name']).value,
       description: this.editForm.get(['description']).value,
       type: this.editForm.get(['type']).value,
-      tablesToMigrate: this.editForm.get(['tablesToMigrate']).value,
+      tablesList: this.editForm.get(['tablesList']).value,
       lastStatus: this.editForm.get(['lastStatus']).value,
       // createdBy: this.editForm.get(['createdBy']).value,
       // createdDate:

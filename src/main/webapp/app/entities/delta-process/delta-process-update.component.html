@@ -10,8 +10,8 @@
                         readonly />
                 </div> -->
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.deltaProcess.name" for="field_name">Name</label>
-                    <input type="text" class="form-control" name="name" id="field_name"
+                    <label class="form-control-label col-sm-3" jhiTranslate="snowpoleApp.deltaProcess.name" for="field_name">Name</label>
+                    <input type="text" class="col-sm-4 form-control-input"  name="name" id="field_name"
                            formControlName="name"/>
                     <div *ngIf="editForm.get('name').invalid && (editForm.get('name').dirty || editForm.get('name').touched)">
                         <small class="form-text text-danger"
@@ -21,8 +21,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.deltaProcess.description" for="field_description">Description</label>
-                    <input type="text" class="form-control" name="description" id="field_description"
+                    <label class="form-control-label col-sm-3" jhiTranslate="snowpoleApp.deltaProcess.description" for="field_description">Description</label>
+                    <input type="text" class="col-sm-4 form-control-input"  name="description" id="field_description"
                            formControlName="description"/>
                     <div *ngIf="editForm.get('description').invalid && (editForm.get('description').dirty || editForm.get('description').touched)">
                         <small class="form-text text-danger"
@@ -33,8 +33,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.deltaProcess.sourceConnection" for="field_sourceConnection">Source Connection</label>
-                    <select class="form-control" id="field_sourceConnection" name="sourceConnection" formControlName="sourceConnectionId">
+                    <label class="form-control-label col-sm-3" jhiTranslate="snowpoleApp.deltaProcess.sourceConnection" for="field_sourceConnection">Source Connection</label>
+                    <select class="col-sm-4 form-control-input"  id="field_sourceConnection" name="sourceConnection" formControlName="sourceConnectionId">
                         <option *ngIf="!editForm.get('sourceConnectionId').value" [ngValue]="null" selected></option>
                         <option [ngValue]="sourceConnectionOption.id" *ngFor="let sourceConnectionOption of sourceconnections; trackBy: trackSourceConnectionById">{{sourceConnectionOption.name}}</option>
                     </select>
@@ -46,8 +46,8 @@
                     </small>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.deltaProcess.snowflakeConnection" for="field_snowflakeConnection">Snowflake Connection</label>
-                    <select class="form-control" id="field_snowflakeConnection" name="snowflakeConnection" formControlName="snowflakeConnectionId">
+                    <label class="form-control-label col-sm-3" jhiTranslate="snowpoleApp.deltaProcess.snowflakeConnection" for="field_snowflakeConnection">Snowflake Connection</label>
+                    <select class="col-sm-4 form-control-input"  id="field_snowflakeConnection" name="snowflakeConnection" formControlName="snowflakeConnectionId">
                         <option *ngIf="!editForm.get('snowflakeConnectionId').value" [ngValue]="null" selected></option>
                         <option [ngValue]="snowflakeConnectionOption.id" *ngFor="let snowflakeConnectionOption of snowflakeconnections; trackBy: trackSnowflakeConnectionById">{{snowflakeConnectionOption.name}}</option>
                     </select>

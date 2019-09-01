@@ -121,6 +121,10 @@ export class DeltaProcessDetailComponent implements OnInit {
     }
   }
 
+  reset() {
+    this.ngOnInit();
+  }
+
   testAndMigrate() {
     const PrimaryKey = [];
     this.tables.forEach(element => {
@@ -131,7 +135,6 @@ export class DeltaProcessDetailComponent implements OnInit {
     });
     this.deltaProcess.tablesList = JSON.stringify(this.selectedTables);
     this.deltaProcess.Pk = PrimaryKey ? JSON.stringify(PrimaryKey) : null;
-    console.log(this.deltaProcess);
     this.subscribeToSaveResponse(this.deltaProcessService.update(this.deltaProcess));
   }
 
