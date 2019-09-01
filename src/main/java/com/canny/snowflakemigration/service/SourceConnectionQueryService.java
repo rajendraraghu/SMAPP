@@ -112,6 +112,12 @@ public class SourceConnectionQueryService extends QueryService<SourceConnection>
             if (criteria.getDatabase() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDatabase(), SourceConnection_.database));
             }
+            if (criteria.getHost() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getHost(), SourceConnection_.host));
+            }
+            if (criteria.getPortnumber() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getPortnumber(), SourceConnection_.portnumber));
+            }
             if (criteria.getSchema() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getSchema(), SourceConnection_.schema));
             }

@@ -43,6 +43,14 @@
                 <constraints nullable="false" />
             </column>
 
+             <column name="host" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+             <column name="portnumber" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
             <column name="schema" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -100,6 +108,8 @@
             <column name="username" type="string"/>
             <column name="password" type="string"/>
             <column name="database" type="string"/>
+            <column name="host" type="string"/>
+            <column name="portnumber" type="string"/>
             <column name="schema" type="string"/>
             <column name="valid" type="boolean"/>
             <column name="created_by" type="string"/>

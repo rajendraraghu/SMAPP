@@ -14,18 +14,28 @@ import { JhiAlertService } from 'ng-jhipster';
   templateUrl: './source-connection-update.component.html'
 })
 export class SourceConnectionUpdateComponent implements OnInit {
+  sourceConnection: ISourceConnection;
   isSaving: boolean;
   sourceTypes: any[];
+  sourcetype: string;
+  host: string;
+  portnumber: string;
+  dbname: string;
+  url: string;
+  sliced: string[];
+  regExp: RegExp = /:\/\/(.*):(.*)\//;
 
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
     description: [null, [Validators.maxLength(650)]],
     sourceType: [null, [Validators.required]],
-    url: [null, [Validators.required, Validators.maxLength(1200)]],
+    // url: [null, [Validators.required, Validators.maxLength(1200)]],
     username: [null, [Validators.required]],
     password: [null, [Validators.required]],
     database: [null, [Validators.required]],
+    host: [null, [Validators.required]],
+    portnumber: [null, [Validators.required, Validators.maxLength(4)]],
     schema: [],
     valid: [],
     createdBy: [],
@@ -46,19 +56,30 @@ export class SourceConnectionUpdateComponent implements OnInit {
     this.sourceTypes = ['MySQL', 'Netezza', 'Teradata', 'Oracle'];
     this.activatedRoute.data.subscribe(({ sourceConnection }) => {
       this.updateForm(sourceConnection);
+      this.sourceConnection = sourceConnection;
     });
   }
 
+  concatUrl() {
+    this.sourcetype = this.editForm.get(['sourceType']).value;
+    this.sourcetype = this.sourcetype.toLowerCase();
+    this.host = this.editForm.get(['host']).value;
+    this.portnumber = this.editForm.get(['portnumber']).value;
+    this.url = 'jdbc:' + this.sourcetype + '://' + this.host + ':' + this.portnumber + '/' + this.sourceConnection.database;
+  }
+
   updateForm(sourceConnection: ISourceConnection) {
+    // this.splitUrl(sourceConnection.url);
     this.editForm.patchValue({
       id: sourceConnection.id,
       name: sourceConnection.name,
       description: sourceConnection.description,
       sourceType: sourceConnection.sourceType,
-      url: sourceConnection.url,
       username: sourceConnection.username,
       password: sourceConnection.password,
       database: sourceConnection.database,
+      host: sourceConnection.host,
+      portnumber: sourceConnection.portnumber,
       schema: sourceConnection.schema,
       valid: sourceConnection.valid
       // ,
@@ -84,16 +105,20 @@ export class SourceConnectionUpdateComponent implements OnInit {
   }
 
   private createFromForm(): ISourceConnection {
+    this.concatUrl();
     return {
       ...new SourceConnection(),
       id: this.editForm.get(['id']).value,
       name: this.editForm.get(['name']).value,
       description: this.editForm.get(['description']).value,
       sourceType: this.editForm.get(['sourceType']).value,
-      url: this.editForm.get(['url']).value,
+      url: this.url,
+      // url: this.editForm.get(['url']).value,
       username: this.editForm.get(['username']).value,
       password: this.editForm.get(['password']).value,
       database: this.editForm.get(['database']).value,
+      host: this.editForm.get(['host']).value,
+      portnumber: this.editForm.get(['portnumber']).value,
       schema: this.editForm.get(['schema']).value,
       valid: this.editForm.get(['valid']).value
       // ,

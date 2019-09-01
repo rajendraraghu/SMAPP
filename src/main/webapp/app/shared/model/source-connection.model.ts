@@ -9,6 +9,8 @@ export interface ISourceConnection {
   username?: string;
   password?: string;
   database?: string;
+  host?: string;
+  portnumber?: string;
   schema?: string;
   valid?: boolean;
   createdBy?: string;
@@ -27,6 +29,8 @@ export class SourceConnection implements ISourceConnection {
     public username?: string,
     public password?: string,
     public database?: string,
+    public host?: string,
+    public portnumber?: string,
     public schema?: string,
     public valid?: boolean,
     public createdBy?: string,

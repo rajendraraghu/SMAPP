@@ -11,8 +11,8 @@
                         readonly />
                 </div> -->
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.name" for="field_name">Name</label>
-                    <input type="text" class="form-control" name="name" id="field_name"
+                    <label  class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.sourceConnection.name" for="field_name">Name</label>
+                    <input type="text" class="col-sm-4 form-control-input" name="name" id="field_name"
                            formControlName="name"
                            joyrideStep="thirdStep" title="Name" text="Name the source connection"/>
                     <div *ngIf="editForm.get('name').invalid && (editForm.get('name').dirty || editForm.get('name').touched)">
@@ -23,8 +23,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.description" for="field_description">Description</label>
-                    <input type="text" class="form-control" name="description" id="field_description"
+                    <label  class="form-control-label col-sm-3" jhiTranslate="snowpoleApp.sourceConnection.description" for="field_description">Description</label>
+                    <input type="text" class="col-sm-4 form-control-input" name="description" id="field_description"
                            formControlName="description"/>
                     <div *ngIf="editForm.get('description').invalid && (editForm.get('description').dirty || editForm.get('description').touched)">
                         <small class="form-text text-danger"
@@ -46,14 +46,14 @@
                 </div> -->
                 <div class="form-group" *ngIf="sourceTypes && sourceTypes.length > 0" 
                     joyrideStep="fourthStep" title="Datasource" text="select the source connection type">
-                    <label jhiTranslate="snowpoleApp.sourceConnection.sourceType">sourceType</label>
-                    <select class="form-control" id="field_sourceType" name="sourceType" formControlName="sourceType">
+                    <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.sourceConnection.sourceType">sourceType</label>
+                    <select class="col-sm-4 form-control-input" id="field_sourceType" name="sourceType" formControlName="sourceType">
                         <option *ngFor="let sourceType of sourceTypes" [value]="sourceType">{{sourceType}}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.url" for="field_url">Url</label>
-                    <input type="text" class="form-control" name="url" id="field_url" formControlName="url"
+                    <label  class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.sourceConnection.url" for="field_url">Url</label>
+                    <input type="text" class="col-sm-4 form-control-input" name="url" id="field_url" formControlName="url"
                            joyrideStep="fifthStep" title="Datasource" text="Give the jdbc or odbc Url"/>
                     <div *ngIf="editForm.get('url').invalid && (editForm.get('url').dirty || editForm.get('url').touched)">
                         <small class="form-text text-danger"
@@ -67,8 +67,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.username" for="field_username">Username</label>
-                    <input type="text" class="form-control" name="username" id="field_username" formControlName="username"
+                    <label  class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.sourceConnection.username" for="field_username">Username</label>
+                    <input type="text" class="col-sm-4 form-control-input" name="username" id="field_username" formControlName="username"
                         joyrideStep="sixthStep" title="Username" text="Give the datasource username"/>
                     <div *ngIf="editForm.get('username').invalid && (editForm.get('username').dirty || editForm.get('username').touched)">
                         <small class="form-text text-danger"
@@ -78,8 +78,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.password" for="field_password">Password</label>
-                    <input type="password" class="form-control" name="password" id="field_password" formControlName="password"
+                    <label  class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.sourceConnection.password" for="field_password">Password</label>
+                    <input type="password" class="col-sm-4 form-control-input" name="password" id="field_password" formControlName="password"
                         joyrideStep="seventhStep" title="Password" text="Give the datasource password"/>
                     <div *ngIf="editForm.get('password').invalid && (editForm.get('password').dirty || editForm.get('password').touched)">
                         <small class="form-text text-danger"
@@ -89,8 +89,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.database" for="field_database">Database</label>
-                    <input type="text" class="form-control" name="database" id="field_database" formControlName="database"
+                    <label  class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.sourceConnection.database" for="field_database">Database</label>
+                    <input type="text" class="col-sm-4 form-control-input" name="database" id="field_database" formControlName="database"
                         joyrideStep="eigthStep" stepPosition="top" title="Database" text="Give the datasource database name"/>
                     <div *ngIf="editForm.get('database').invalid && (editForm.get('database').dirty || editForm.get('database').touched)">
                         <small class="form-text text-danger"
@@ -100,8 +100,30 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.schema" for="field_schema">Schema</label>
-                    <input type="text" class="form-control" name="schema" id="field_schema"
+                    <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.host" for="field_name">Host</label>
+                    <input type="text" class="form-control" name="host" id="field_host"
+                           formControlName="host"/>
+                    <div *ngIf="editForm.get('host').invalid && (editForm.get('host').dirty || editForm.get('host').touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('host').errors.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.portnumber" for="field_name">Port Number</label>
+                    <input type="text" class="form-control" name="portnumber" id="field_portnumber"
+                           formControlName="portnumber"/>
+                    <div *ngIf="editForm.get('portnumber').invalid && (editForm.get('portnumber').dirty || editForm.get('portnumber').touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('portnumber').errors.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.sourceConnection.schema" for="field_schema">Schema</label>
+                    <input type="text" class="col-sm-4 form-control-input" name="schema" id="field_schema"
                            formControlName="schema"/>
                 </div>
                 <!-- <div class ="form-group">
@@ -137,9 +159,9 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
                 </button>
-                <button type="submit" (click)="testConnection()" [disabled]="editForm.invalid || isSaving" class="btn btn-info">
+                <button type="button" (click)="testConnection()" [disabled]="editForm.invalid || isSaving" class="btn btn-info">
                     <fa-icon [icon]="'save'"></fa-icon>
-                    <span class="d-none d-md-inline">Test & Save Connection</span>
+                    <span class="d-none d-md-inline">Test Connection</span>
                 </button>
                 <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary"
                     joyrideStep="ninethStep" stepPosition="top" title="Source Connection" text="Create new Source Connection ">

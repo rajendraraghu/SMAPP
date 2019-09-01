@@ -41,6 +41,10 @@ public class SourceConnectionCriteria implements Serializable, Criteria {
 
     private StringFilter database;
 
+    private StringFilter host;
+
+    private StringFilter portnumber;
+
     private StringFilter schema;
 
     private BooleanFilter valid;
@@ -65,6 +69,8 @@ public class SourceConnectionCriteria implements Serializable, Criteria {
         this.username = other.username == null ? null : other.username.copy();
         this.password = other.password == null ? null : other.password.copy();
         this.database = other.database == null ? null : other.database.copy();
+        this.host = other.host == null ? null : other.host.copy();
+        this.portnumber = other.portnumber == null ? null : other.portnumber.copy();
         this.schema = other.schema == null ? null : other.schema.copy();
         this.valid = other.valid == null ? null : other.valid.copy();
         this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
@@ -142,6 +148,22 @@ public class SourceConnectionCriteria implements Serializable, Criteria {
         this.database = database;
     }
 
+    public StringFilter getHost() {
+        return host;
+    }
+
+    public void setHost(StringFilter host) {
+        this.host = host;
+    }
+
+    public StringFilter getPortnumber() {
+        return portnumber;
+    }
+
+    public void setPortnumber(StringFilter portnumber) {
+        this.portnumber = portnumber;
+    }
+
     public StringFilter getSchema() {
         return schema;
     }
@@ -209,6 +231,8 @@ public class SourceConnectionCriteria implements Serializable, Criteria {
             Objects.equals(username, that.username) &&
             Objects.equals(password, that.password) &&
             Objects.equals(database, that.database) &&
+            Objects.equals(host, that.host) &&
+            Objects.equals(portnumber, that.portnumber) &&
             Objects.equals(schema, that.schema) &&
             Objects.equals(valid, that.valid) &&
             Objects.equals(createdBy, that.createdBy) &&
@@ -228,6 +252,8 @@ public class SourceConnectionCriteria implements Serializable, Criteria {
         username,
         password,
         database,
+        host,
+        portnumber,
         schema,
         valid,
         createdBy,
@@ -248,6 +274,8 @@ public class SourceConnectionCriteria implements Serializable, Criteria {
                 (username != null ? "username=" + username + ", " : "") +
                 (password != null ? "password=" + password + ", " : "") +
                 (database != null ? "database=" + database + ", " : "") +
+                (host != null ? "host=" + host + ", " : "") +
+                (portnumber != null ? "portnumber=" + portnumber + ", " : "") +
                 (schema != null ? "schema=" + schema + ", " : "") +
                 (valid != null ? "valid=" + valid + ", " : "") +
                 (createdBy != null ? "createdBy=" + createdBy + ", " : "") +

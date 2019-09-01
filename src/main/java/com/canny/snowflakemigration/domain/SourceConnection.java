@@ -51,6 +51,14 @@ public class SourceConnection extends AbstractAuditingEntity implements Serializ
     @Column(name = "database", nullable = false)
     private String database;
 
+    @NotNull
+    @Column(name = "host", nullable = false)
+    private String host;
+
+    @NotNull
+    @Column(name = "portnumber", nullable = false)
+    private String portnumber;
+
     @Column(name = "schema")
     private String schema;
 
@@ -169,6 +177,32 @@ public class SourceConnection extends AbstractAuditingEntity implements Serializ
         this.database = database;
     }
 
+    public String getHost() {
+        return host;
+    }
+
+    public SourceConnection host(String host) {
+        this.host = host;
+        return this;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getPortnumber() {
+        return portnumber;
+    }
+
+    public SourceConnection portnumber(String portnumber) {
+        this.portnumber = portnumber;
+        return this;
+    }
+
+    public void setPortnumber(String portnumber) {
+        this.portnumber = portnumber;
+    }
+
     public String getSchema() {
         return schema;
     }
@@ -275,6 +309,8 @@ public class SourceConnection extends AbstractAuditingEntity implements Serializ
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +
             ", database='" + getDatabase() + "'" +
+            ", host='" + getHost() + "'" +
+            ", portnumber='" + getPortnumber() + "'" +
             ", schema='" + getSchema() + "'" +
             ", valid='" + isValid() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

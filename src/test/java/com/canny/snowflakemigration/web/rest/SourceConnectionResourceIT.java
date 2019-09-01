@@ -61,6 +61,12 @@ public class SourceConnectionResourceIT {
     private static final String DEFAULT_DATABASE = "AAAAAAAAAA";
     private static final String UPDATED_DATABASE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_HOST = "AAAAAAAAAA";
+    private static final String UPDATED_HOST = "BBBBBBBBBB";
+
+    private static final String DEFAULT_PORTNUMBER = "AAAAAAAAAA";
+    private static final String UPDATED_PORTNUMBER = "BBBBBBBBBB";
+
     private static final String DEFAULT_SCHEMA = "AAAAAAAAAA";
     private static final String UPDATED_SCHEMA = "BBBBBBBBBB";
 
@@ -137,6 +143,8 @@ public class SourceConnectionResourceIT {
             .username(DEFAULT_USERNAME)
             .password(DEFAULT_PASSWORD)
             .database(DEFAULT_DATABASE)
+            .host(DEFAULT_HOST)
+            .portnumber(DEFAULT_PORTNUMBER)
             .schema(DEFAULT_SCHEMA)
             .valid(DEFAULT_VALID);
             // .createdBy(DEFAULT_CREATED_BY)
@@ -160,6 +168,8 @@ public class SourceConnectionResourceIT {
             .username(UPDATED_USERNAME)
             .password(UPDATED_PASSWORD)
             .database(UPDATED_DATABASE)
+            .host(DEFAULT_HOST)
+            .portnumber(DEFAULT_PORTNUMBER)
             .schema(UPDATED_SCHEMA)
             .valid(UPDATED_VALID);
             // .createdBy(UPDATED_CREATED_BY)
@@ -197,6 +207,8 @@ public class SourceConnectionResourceIT {
         assertThat(testSourceConnection.getUsername()).isEqualTo(DEFAULT_USERNAME);
         assertThat(testSourceConnection.getPassword()).isEqualTo(DEFAULT_PASSWORD);
         assertThat(testSourceConnection.getDatabase()).isEqualTo(DEFAULT_DATABASE);
+        assertThat(testSourceConnection.getHost()).isEqualTo(DEFAULT_HOST);
+        assertThat(testSourceConnection.getPortnumber()).isEqualTo(DEFAULT_PORTNUMBER);
         assertThat(testSourceConnection.getSchema()).isEqualTo(DEFAULT_SCHEMA);
         assertThat(testSourceConnection.isValid()).isEqualTo(DEFAULT_VALID);
         // assertThat(testSourceConnection.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
@@ -342,6 +354,44 @@ public class SourceConnectionResourceIT {
 
     @Test
     @Transactional
+    public void checkHostIsRequired() throws Exception {
+        int databaseSizeBeforeTest = sourceConnectionRepository.findAll().size();
+        // set the field null
+        sourceConnection.setHost(null);
+
+        // Create the SourceConnection, which fails.
+        SourceConnectionDTO sourceConnectionDTO = sourceConnectionMapper.toDto(sourceConnection);
+
+        restSourceConnectionMockMvc.perform(post("/api/source-connections")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(sourceConnectionDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<SourceConnection> sourceConnectionList = sourceConnectionRepository.findAll();
+        assertThat(sourceConnectionList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkPortnumberIsRequired() throws Exception {
+        int databaseSizeBeforeTest = sourceConnectionRepository.findAll().size();
+        // set the field null
+        sourceConnection.setPortnumber(null);
+
+        // Create the SourceConnection, which fails.
+        SourceConnectionDTO sourceConnectionDTO = sourceConnectionMapper.toDto(sourceConnection);
+
+        restSourceConnectionMockMvc.perform(post("/api/source-connections")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(sourceConnectionDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<SourceConnection> sourceConnectionList = sourceConnectionRepository.findAll();
+        assertThat(sourceConnectionList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllSourceConnections() throws Exception {
         // Initialize the database
         sourceConnectionRepository.saveAndFlush(sourceConnection);
@@ -358,6 +408,8 @@ public class SourceConnectionResourceIT {
             .andExpect(jsonPath("$.[*].username").value(hasItem(DEFAULT_USERNAME.toString())))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD.toString())))
             .andExpect(jsonPath("$.[*].database").value(hasItem(DEFAULT_DATABASE.toString())))
+            .andExpect(jsonPath("$.[*].host").value(hasItem(DEFAULT_HOST.toString())))
+            .andExpect(jsonPath("$.[*].portnumber").value(hasItem(DEFAULT_PORTNUMBER.toString())))
             .andExpect(jsonPath("$.[*].schema").value(hasItem(DEFAULT_SCHEMA.toString())))
             .andExpect(jsonPath("$.[*].valid").value(hasItem(DEFAULT_VALID.booleanValue())));
             // .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())))
@@ -384,6 +436,8 @@ public class SourceConnectionResourceIT {
             .andExpect(jsonPath("$.username").value(DEFAULT_USERNAME.toString()))
             .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD.toString()))
             .andExpect(jsonPath("$.database").value(DEFAULT_DATABASE.toString()))
+            .andExpect(jsonPath("$.host").value(DEFAULT_HOST.toString()))
+            .andExpect(jsonPath("$.portnumber").value(DEFAULT_PORTNUMBER.toString()))
             .andExpect(jsonPath("$.schema").value(DEFAULT_SCHEMA.toString()))
             .andExpect(jsonPath("$.valid").value(DEFAULT_VALID.booleanValue()));
             // .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY.toString()))
@@ -667,6 +721,84 @@ public class SourceConnectionResourceIT {
 
     @Test
     @Transactional
+    public void getAllSourceConnectionsByHostIsEqualToSomething() throws Exception {
+        // Initialize the database
+        sourceConnectionRepository.saveAndFlush(sourceConnection);
+
+        // Get all the sourceConnectionList where database equals to DEFAULT_DATABASE
+        defaultSourceConnectionShouldBeFound("host.equals=" + DEFAULT_HOST);
+
+        // Get all the sourceConnectionList where database equals to UPDATED_DATABASE
+        defaultSourceConnectionShouldNotBeFound("host.equals=" + UPDATED_HOST);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSourceConnectionsByHostIsInShouldWork() throws Exception {
+        // Initialize the database
+        sourceConnectionRepository.saveAndFlush(sourceConnection);
+
+        // Get all the sourceConnectionList where database in DEFAULT_DATABASE or UPDATED_DATABASE
+        defaultSourceConnectionShouldBeFound("host.in=" + DEFAULT_HOST + "," + UPDATED_HOST);
+
+        // Get all the sourceConnectionList where database equals to UPDATED_DATABASE
+        defaultSourceConnectionShouldNotBeFound("host.in=" + UPDATED_HOST);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSourceConnectionsByHostIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        sourceConnectionRepository.saveAndFlush(sourceConnection);
+
+        // Get all the sourceConnectionList where database is not null
+        defaultSourceConnectionShouldBeFound("host.specified=true");
+
+        // Get all the sourceConnectionList where database is null
+        defaultSourceConnectionShouldNotBeFound("host.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllSourceConnectionsByPortnumberIsEqualToSomething() throws Exception {
+        // Initialize the database
+        sourceConnectionRepository.saveAndFlush(sourceConnection);
+
+        // Get all the sourceConnectionList where database equals to DEFAULT_DATABASE
+        defaultSourceConnectionShouldBeFound("portnumber.equals=" + DEFAULT_DATABASE);
+
+        // Get all the sourceConnectionList where database equals to UPDATED_DATABASE
+        defaultSourceConnectionShouldNotBeFound("portnumber.equals=" + UPDATED_DATABASE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSourceConnectionsByPortnumberIsInShouldWork() throws Exception {
+        // Initialize the database
+        sourceConnectionRepository.saveAndFlush(sourceConnection);
+
+        // Get all the sourceConnectionList where database in DEFAULT_DATABASE or UPDATED_DATABASE
+        defaultSourceConnectionShouldBeFound("portnumber.in=" + DEFAULT_DATABASE + "," + UPDATED_DATABASE);
+
+        // Get all the sourceConnectionList where database equals to UPDATED_DATABASE
+        defaultSourceConnectionShouldNotBeFound("portnumber.in=" + UPDATED_DATABASE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllSourceConnectionsByPortnumberIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        sourceConnectionRepository.saveAndFlush(sourceConnection);
+
+        // Get all the sourceConnectionList where database is not null
+        defaultSourceConnectionShouldBeFound("portnumber.specified=true");
+
+        // Get all the sourceConnectionList where database is null
+        defaultSourceConnectionShouldNotBeFound("portnumber.specified=false");
+    }
+
+    @Test
+    @Transactional
     public void getAllSourceConnectionsBySchemaIsEqualToSomething() throws Exception {
         // Initialize the database
         sourceConnectionRepository.saveAndFlush(sourceConnection);
@@ -913,6 +1045,8 @@ public class SourceConnectionResourceIT {
             .andExpect(jsonPath("$.[*].username").value(hasItem(DEFAULT_USERNAME)))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD)))
             .andExpect(jsonPath("$.[*].database").value(hasItem(DEFAULT_DATABASE)))
+            .andExpect(jsonPath("$.[*].host").value(hasItem(DEFAULT_HOST)))
+            .andExpect(jsonPath("$.[*].portnumber").value(hasItem(DEFAULT_PORTNUMBER)))
             .andExpect(jsonPath("$.[*].schema").value(hasItem(DEFAULT_SCHEMA)))
             .andExpect(jsonPath("$.[*].valid").value(hasItem(DEFAULT_VALID.booleanValue())));
             // .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
@@ -973,6 +1107,8 @@ public class SourceConnectionResourceIT {
             .username(UPDATED_USERNAME)
             .password(UPDATED_PASSWORD)
             .database(UPDATED_DATABASE)
+            .host(UPDATED_HOST)
+            .portnumber(UPDATED_PORTNUMBER)
             .schema(UPDATED_SCHEMA)
             .valid(UPDATED_VALID);
             // .createdBy(UPDATED_CREATED_BY)
@@ -997,6 +1133,8 @@ public class SourceConnectionResourceIT {
         assertThat(testSourceConnection.getUsername()).isEqualTo(UPDATED_USERNAME);
         assertThat(testSourceConnection.getPassword()).isEqualTo(UPDATED_PASSWORD);
         assertThat(testSourceConnection.getDatabase()).isEqualTo(UPDATED_DATABASE);
+        assertThat(testSourceConnection.getHost()).isEqualTo(UPDATED_HOST);
+        assertThat(testSourceConnection.getPortnumber()).isEqualTo(UPDATED_PORTNUMBER);
         assertThat(testSourceConnection.getSchema()).isEqualTo(UPDATED_SCHEMA);
         assertThat(testSourceConnection.isValid()).isEqualTo(UPDATED_VALID);
         // assertThat(testSourceConnection.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
