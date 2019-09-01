@@ -1,0 +1,6 @@
+﻿MySQL Data Type,Snowflake Data Type
+int1,byteint
+int2,smallint
+int4,int
+int8,bigint
+bool,boolean
