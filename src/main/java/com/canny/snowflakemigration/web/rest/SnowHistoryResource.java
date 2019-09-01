@@ -179,7 +179,7 @@ public class SnowHistoryResource {
 
      @PostMapping(value = "/snow-histories/retrieveTableList")
     public @ResponseBody String historyListTables(@Valid @RequestBody SnowHistoryDTO snowHistoryDTO) throws SQLException,ClassNotFoundException {
-        String tableName = HistoryListTable(snowHistoryDTO);
+        String tableName = historyListTable(snowHistoryDTO);
         return tableName;
     }
     
