@@ -15,22 +15,41 @@ import java.util.Arrays;
 import java.util.Properties;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ClassPathResource;
-
+import java.util.logging.Logger;
+import java.util.logging.FileHandler;
+import java.util.logging.SimpleFormatter;
 import com.canny.snowflakemigration.service.SnowHistoryJobStatusService;
 import com.canny.snowflakemigration.service.SnowHistoryProcessStatusService;
 import com.canny.snowflakemigration.service.dto.SnowHistoryDTO;
 import com.canny.snowflakemigration.service.dto.SnowHistoryProcessStatusDTO;
 import com.canny.snowflakemigration.service.dto.SnowHistoryJobStatusDTO;
-//import com.canny.snowflakemigration.service.dto.SnowflakeConnectionDTO;
+
+import java.time.Instant;
 import com.opencsv.CSVWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class HistorySendTableList  {
+	public static SnowHistoryProcessStatusDTO snowHistoryProcessStatusDTO = new SnowHistoryProcessStatusDTO();
+	public static SnowHistoryJobStatusDTO snowHistoryJobStatusDTO =  new SnowHistoryJobStatusDTO();
+	public static Logger logger;
+	
 	public static String sendSelectedTables(SnowHistoryDTO processDTO, SnowHistoryProcessStatusService snowHistoryProcessStatusService,SnowHistoryJobStatusService snowHistoryJobStatusService) throws SQLException,ClassNotFoundException
 	{
 		String status = new String();
+		String timeStamp = new SimpleDateFormat().format( new Date() );
+		SnowHistoryProcessStatusDTO write = new SnowHistoryProcessStatusDTO();
+		logger = Logger.getLogger("MySnowHistoryLog"); 
+		FileHandler fh;
 		try{
-			
+			fh = new FileHandler("F:/POC/CSV/MySnowhistoryLogFile.log");  
+		    logger.addHandler(fh);
+		    SimpleFormatter formatter = new SimpleFormatter();  
+		    fh.setFormatter(formatter);		        
+		    logger.info("My first log");
+			logger.info("initiating the connection");
+
 			status = "FAILURE";
 			Properties properties0 = new Properties();
 			properties0.put("user", processDTO.getSourceConnectionUsername());
@@ -49,30 +68,77 @@ public class HistorySendTableList  {
 	        properties.put("schema",processDTO.getSnowflakeConnectionSchema());
 		    Connection con2=DriverManager.getConnection(processDTO.getSnowflakeConnectionUrl(),properties);
 		    
-		   
-		    
-    		String tablestoMigrate = processDTO.getTablesToMigrate();
+
+		    String tablestoMigrate = processDTO.getTablesToMigrate();
 		    String[] tablesToMigrate = tablestoMigrate.split(",");		
 		    int tablecount = tablesToMigrate.length;
-		    int i = 0;			                    
-            String system = processDTO.getSourceConnectionName();
+		    logger.info("connection created and audit starts");  
+		   // snowHistoryProcessStatusDTO.setBatchId(jobid);
+		    snowHistoryProcessStatusDTO.setStartTime(Instant.now());
+		    snowHistoryProcessStatusDTO.setProcessId(processDTO.getId());
+		    snowHistoryProcessStatusDTO.setName(processDTO.getName());
+		    snowHistoryProcessStatusDTO.setRunBy("admin");
+		     //migrationProcessStatusDTO.setRunby(processDTO.getRunBy());
+		    snowHistoryProcessStatusDTO.setTotalTables((long)tablecount);
+		    snowHistoryProcessStatusDTO.setStatus("In Progress");
+		    snowHistoryProcessStatusDTO.setSuccessTables((long)0);
+		    snowHistoryProcessStatusDTO.setErrorTables((long)0);		    
+		    write = snowHistoryProcessStatusService.save(snowHistoryProcessStatusDTO);		     
+		    logger.info("audit saved");
+    		
+		    int i = 0;	
+		    String system = processDTO.getSourceConnectionName();
+
 		       	 while(i<tablecount)
 		         {
 			        String tn = tablesToMigrate[i].replace("[\"", "");
 					String tableName = tn.replaceAll("\"]|\"", "");
-					System.out.println("starting bulk history load for the table: "+tableName);
+
+					logger.info("starting bulk history load for the table: "+tableName);
+										
+					   //snowHistoryJobStatusDTO.setJobId((long)500);
+					   snowHistoryJobStatusDTO.setSourceCount((long)2);
+				       snowHistoryJobStatusDTO.setInsertCount((long)3);				       
+				       snowHistoryJobStatusDTO.setDeleteCount((long)4);
+		               snowHistoryJobStatusDTO.setBatchId(write.getBatchId());
+		               snowHistoryJobStatusDTO.setName(tableName);
+		               snowHistoryJobStatusDTO.setStartTime(Instant.now());		              
+				       snowHistoryJobStatusDTO.setStatus("IN PROGRESS");
+				       SnowHistoryJobStatusDTO write1 = snowHistoryJobStatusService.save(snowHistoryJobStatusDTO);
 					bulkprocess(tableName,con1,con2,processDTO.getId(),system,processDTO.getSourceConnectionDatabase());
-				    i= i +1;
+					status = "SUCCESS";
+					   write1.setEndTime(Instant.now());
+					   write1.setStatus("SUCCESS");
+					   write1.setSourceCount((long)5);
+					   write1.setInsertCount((long)6);
+					   write1.setDeleteCount((long)7);
+					   write1 = snowHistoryJobStatusService.save(write1);
+					   logger.info("bulk process completed for table:"+tableName);
+				    i= i+1;
 				  }
-		con1.close();
-		con2.close();
+		       	logger.info("bulk process completed for all the tables");
+		       	write.setStatus("SUCCESS");
+		        write.setEndTime(Instant.now()); 
+		        write = snowHistoryProcessStatusService.save(write);
+     	 		con1.close();
+		        con2.close();
 		}
 			catch(Exception e)
 		{
-			System.out.println("catch exception:"+e);		
+
+			logger.info("catch exception:"+e);	
+			status = "FAILURE";
+			/*write.setStatus("FAILURE --"+e.toString());
+		    write.setEndTime(Instant.now());
+		    write = snowHistoryProcessStatusService.save(write);*/
 		}  
 	    return status;
 	}
+
+
+			
+
+
 	public static void toCSV(ResultSet rs, String csvFilename)
 
 	        throws SQLException, IOException {
@@ -108,7 +174,8 @@ public class HistorySendTableList  {
     }
     public static String getColNames2(Connection con, String tablename, String dname,String dbname) throws SQLException
     {
-    	System.out.println("getcolnames entry");
+
+    	logger.info("getcolnames entry");
     	String s = new String();
     	Statement stmt0  = con.createStatement();
     	ResultSet rs9 ;
@@ -121,7 +188,9 @@ public class HistorySendTableList  {
     	 s = s.concat(rs9.getString(1));
     	 s = s.concat(",");
     	}
-    	System.out.println("getcolnames exit");
+
+    	logger.info("getcolnames exit");
+
     	return s.substring(0,s.length()-1);
     }
     public static void stageLoad(String query, Connection con1,Connection con2,String tableName,String system,String dbname) throws SQLException, IOException
@@ -131,9 +200,10 @@ public class HistorySendTableList  {
     	String srcCols = getColNames2(con1,tableName,system,dbname);
 	   	String csvFilename = "F:/POC/CSV/"+tableName+".csv";
     	toCSV(rs1,csvFilename);   	
-    	System.out.println("Stage file writing complete");    	
+
+    	logger.info("Stage file writing complete");    	
     	Statement stmt2=con2.createStatement();
-    	System.out.println("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
+    	logger.info("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
     	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");    	
     	stmt2.executeQuery("PUT 'file://F:/POC/CSV/"+tableName+".csv' @"+tableName+"_stage;");
     	int m = 1;
@@ -146,23 +216,25 @@ public class HistorySendTableList  {
     	stageCols =stageCols.substring(0,stageCols.length() - 1);
     	String hashCol = gethashColNames(stageCols);
     	createAlterDDL(con1,con2,tableName);
-    	System.out.println("stagecols:"+stageCols);
+    	logger.info("stagecols:"+stageCols);
 		stmt2.executeQuery("TRUNCATE TABLE "+tableName);
-		System.out.println("Truncating "+tableName);
+		logger.info("Truncating "+tableName);
     	stmt2.executeQuery("INSERT INTO "+tableName+" SELECT "+stageCols+",0 as sah_isdeleted,MD5("+hashCol+") as sah_md5hash,sah_MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as sah_md5hashpk FROM @"+tableName+"_stage t;"); 	
-		System.out.println("table creation  and loading (stg) complete");
+		logger.info("table creation  and loading (stg) complete");
+
     }
     public static void histLoad(Connection con2,String tableName) throws SQLException
     {
     	
     	Statement stmt3=con2.createStatement();  
-		stmt3.executeQuery("TRUNCATE TABLE "+tableName+ "hist");
-		stmt3.executeQuery("INSERT INTO "+tableName+ "hist SELECT * FROM "+tableName+";");    	
+		stmt3.executeQuery("TRUNCATE TABLE "+tableName+ "history");
+		stmt3.executeQuery("INSERT INTO "+tableName+ "history SELECT *,1 as sah_currentind,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) as sah_createdTime,null as sah_updatedtime FROM "+tableName+" src;");    	
+
     }   
     public static void createAlterDDL(Connection con1,Connection con2,String tableName)  throws SQLException
     {
     	Statement stmt1=con1.createStatement();
-    	ResultSet rs1=stmt1.executeQuery("SHOW CREATE TABLE "+tableName);//exec sp_columns YourTableName//sp_help 'tablename' online//DESC
+    	ResultSet rs1=stmt1.executeQuery("SHOW CREATE TABLE "+tableName);
     	rs1.next();
 		String ddl = rs1.getString("Create Table");
 		int ind1 = ddl.indexOf("ENGINE");
@@ -171,15 +243,15 @@ public class HistorySendTableList  {
 		String ddl4 = ddl3.substring(ddl3.indexOf("("));
 		String ddl5 = ddl4.replaceAll("`","");
 		String ddl6 = ddl5.substring(0, ddl5.length()-2);
-		String stagecreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT);");
-		
-		String histcreate = ddl6.concat(",sah_isdeleted INT,sah_currentind boolean,sah_updatedtime timestamp,sah_MD5HASH TEXT,sah_createdTime timestamp,sah_MD5HASHPK TEXT);");
+		String stagecreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT);");		
+		String histcreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT,sah_currentind boolean,sah_createdTime timestamp,sah_updatedtime timestamp);");
 		
 		Statement stmt2 = con2.createStatement();
-		System.out.println("CREATE TABLE IF NOT EXISTS "+tableName+ stagecreate);
-		System.out.println("CREATE TABLE IF NOT EXISTS "+tableName+"hist "+histcreate);
+		logger.info("CREATE TABLE IF NOT EXISTS "+tableName+ stagecreate);
+		logger.info("CREATE TABLE IF NOT EXISTS "+tableName+"history "+histcreate);
 		ResultSet rs2 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+ stagecreate);
-		ResultSet rs3 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+"hist "+histcreate);    	
+		ResultSet rs3 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+"history "+histcreate);    	
+
     }
   
     }

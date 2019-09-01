@@ -26,7 +26,7 @@ public class SnowHistoryJobStatusDTO implements Serializable {
     private Long insertCount;
 
     private Long deleteCount;
-
+    
     private String status;
 
     public Long getJobId() {
@@ -100,7 +100,7 @@ public class SnowHistoryJobStatusDTO implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
-
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) {

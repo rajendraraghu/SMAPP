@@ -37,7 +37,7 @@ public class DeltaProcessDTO implements Serializable {
 
     private String sourceConnectionName;
 
-    private String sourceSystem;
+    private String sourceType;
 
     private String sourceConnectionUrl;
 
@@ -163,12 +163,12 @@ public class DeltaProcessDTO implements Serializable {
         this.sourceConnectionId = sourceConnectionId;
     }
 
-    public String getSourceSystem() {
-        return sourceSystem;
+    public String getSourceType() {
+        return sourceType;
     }
 
-    public void setsourceSystem(String sourceSystem) {
-        this.sourceSystem = sourceSystem;
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
     public String getSourceConnectionName() {
         return sourceConnectionName;

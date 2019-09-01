@@ -191,12 +191,29 @@ public class MigrationProcessResource {
     @PostMapping(value="/migration-processes/TestConnectionSource")
     public @ResponseBody boolean TestingConnection(@RequestBody SourceConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
         boolean result = false;
+        String source = connectionDTO.getSourceType();
+        System.out.println("Inside source test connection:"+source);
 		try {
-    	Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());
-        result = con1.isValid(10);
+			if(source.equals("Snowflake"))	   {   Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");}
+		 	else if (source.equals("MySQL"))   {   Class.forName("com.mysql.cj.jdbc.Driver");}
+		 	else if (source.equals("SQLServer")) 
+		 	{ 
+		 		System.out.println("sql loop");
+		 	    Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+		 	}
+		 	else if (source.equals("Oracle"))   {  Class.forName("oracle.jdbc.driver.OracleDriver");}
+		 	else if (source.equals("Teradata")) {  Class.forName("com.teradata.jdbc.TeraDriver");}
+		    
+			System.out.println("osql loop");
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");			
+			Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());			
+    	    result = con1.isValid(10);
+    	    System.out.println("Inside try before connection");
+    	
         }
         catch(Exception e) 
         {
+        	System.out.println(e.toString());
         	result = false;
         }
         finally { return result;}
@@ -206,8 +223,8 @@ public class MigrationProcessResource {
     public @ResponseBody boolean TestingConnection(@RequestBody SnowflakeConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
         boolean result  = false;
 		try {
-    	Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());
-        result = con1.isValid(10);
+    	Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());    	
+    	result = con1.isValid(10);
         }
         catch(Exception e) 
         {
@@ -227,7 +244,7 @@ public class MigrationProcessResource {
 	    properties.put("schema",migrationProcessDTO.getSnowflakeConnectionSchema());
 		Connection con2=DriverManager.getConnection(migrationProcessDTO.getSnowflakeConnectionUrl(),properties);
         Statement stmt0=con2.createStatement(); */
-        Connection con3 = DriverManager.getConnection("jdbc:postgresql://localhost:5432/smapp","postgres","password");
+        Connection con3 = DriverManager.getConnection("jdbc:postgresql://localhost:5432/smapp","postgres","super");
 	    Statement st0 = con3.createStatement();
         ResultSet rs0 = st0.executeQuery("SELECT * FROM sah_tableLoadStatus WHERE processid ="+migrationProcessDTO.getId() +" order by tableloadstarttime desc");
         

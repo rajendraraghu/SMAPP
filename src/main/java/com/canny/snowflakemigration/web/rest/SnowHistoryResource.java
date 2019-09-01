@@ -179,12 +179,12 @@ public class SnowHistoryResource {
 
      @PostMapping(value = "/snow-histories/retrieveTableList")
     public @ResponseBody String historyListTables(@Valid @RequestBody SnowHistoryDTO snowHistoryDTO) throws SQLException,ClassNotFoundException {
-        String tableName = historyListTable(snowHistoryDTO);
+        String tableName = HistoryListTable(snowHistoryDTO);
         return tableName;
     }
     
     @PostMapping(value = "/snow-histories/HistorySendTableListforHistProcess")
-    public @ResponseBody String historySendTableList(@Valid @RequestBody  SnowHistoryDTO snowHistoryDTO)throws SQLException,ClassNotFoundException  {
+    public @ResponseBody String HistorySendTableList(@Valid @RequestBody  SnowHistoryDTO snowHistoryDTO)throws SQLException,ClassNotFoundException,InterruptedException  {
     	//Optional<SnowHistoryDTO>  snowHistoryDTO = snowHistoryService.findOne(processid);
     	String result = sendSelectedTables(snowHistoryDTO,snowHistoryProcessStatusService,snowHistoryJobStatusService);    
         return result;
@@ -228,9 +228,10 @@ public class SnowHistoryResource {
 	    properties.put("schema",snowHistoryDTO.getSnowflakeConnectionSchema());
 		Connection con2=DriverManager.getConnection(snowHistoryDTO.getSnowflakeConnectionUrl(),properties);
         Statement stmt0=con2.createStatement(); 
-        Connection con3 = DriverManager.getConnection("jdbc:postgresql://localhost:5432/smapp","postgres","password");
+
+        Connection con3 = DriverManager.getConnection("jdbc:postgresql://localhost:5432/smapp","postgres","super");
 	    Statement st0 = con3.createStatement();
-        ResultSet rs0 = st0.executeQuery("SELECT * FROM sah_tableLoadStatus WHERE processid ="+snowHistoryDTO.getId() +" order by tableloadstarttime desc");
+        ResultSet rs0 = st0.executeQuery("SELECT * FROM snow_history_job_status");// WHERE processid ="+snowHistoryDTO.getId() +" order by tableloadstarttime desc");
         
         JsonObject jsonResponse = new JsonObject();	
 		JsonArray data = new JsonArray();
