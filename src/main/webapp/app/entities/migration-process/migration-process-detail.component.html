@@ -76,7 +76,7 @@
             <hr>
             <div class="form-group has-search">
                 <fa-icon class="form-control-feedback" [icon]="'search'"></fa-icon>
-                <input type="text" class="form-control" placeholder="Search for tables"
+                <input type="text" class="form-control rounded-search-bar" placeholder="Search for tables"
                     (input)="searchForTables($event.target.value)">
             </div>
             <div>
@@ -95,7 +95,7 @@
                         <h6> CDC </h6>
                     </div>
                     <div class="col-3 pl-0">
-                        <h6> <span style="color: #f0ad4e;">*</span> CDC Columns </h6>
+                        <h6> CDC Columns </h6>
                     </div>
                 </div>
                 <div class="row m-0" *ngFor="let item of tables; let i=index">
@@ -106,29 +106,61 @@
                         </div>
                     </div>
                     <div class="col-3 pl-0">
-                        <button type="button" [routerLink]="['/migration-process',{ outlets: { popup: item.name+'/selectPK'} }]" class="btn btn-primary">
-                        <!-- <button type="button"  class="btn btn-primary" (click) = "selectPk(migrationProcess.id,item.name)"> -->
+                        <!-- <button type="button" [routerLink]="['/migration-process',{ outlets: { popup: item.name+'/selectPK'} }]" class="btn btn-primary"> -->
+                        <button type="button" class="btn btn-primary" [disabled]="!item.selected" (click) = "selectPK(item,templatePK)">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> {{item.primaryKey}} </span>
                         </button>
+                        <ng-template #templatePK let-modal>
+                                <div class="modal-header">
+                                  <h4 class="modal-title" id="modal-basic-title">Select Primary Key</h4>
+                                  <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button> -->
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row m-0" *ngFor="let column of columns; let j=index">
+                                        <div class="col-12 pl-0">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" [id]="'columnName'+j" class="custom-control-input" name="column_name_list" [(ngModel)]="column.selected" value="{{column.columnName}}" (change)="onPKSelection(item.name,column)">
+                                                <label class="custom-control-label" [for]="'columnName'+j">{{column.columnName}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-primary" (click)="modal.close()">Close</button>
+                                </div>
+                              </ng-template>
                         <!-- <label [for]="i">{{item.primaryKey}}</label> -->
                     </div>
                     <div class="col-2 pl-0 ">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input" [id]="customSwitchId(i)"
-                                [disabled]="!item.selected" [checked]="item.cdc" (change)="onProcessSelection(item);">
+                                [disabled]="!item.selected" [checked]="item.cdc && item.selected" (change)="onProcessSelection(item);">
                             <label class="custom-control-label" [for]="customSwitchId(i)"> </label>
                         </div>
                     </div>
                     <div class="col-3 pl-0">
-                        <select class="form-control" id="field_system" name="system"  [disabled]="!item.cdc" [(ngModel)]="item.selectedCdcCol">
+                        <select class="form-control" id="field_system" name="system"  [disabled]="!item.cdc||!item.selected" [(ngModel)]="item.selectedCdcCol">
                             <option *ngFor="let cdcColumn of item.cdcColumnList; let i=index " [value]="cdcColumn">{{cdcColumn}}</option>
                         </select>
                     </div>
                 </div>
             </div>
         </fieldset>
-        <button type="button" class="btn btn-primary" (click)="testAndMigrate()" style="width: 100%;">
-            <fa-icon [icon]="'tasks'"></fa-icon>&nbsp;<span>Save tables to be migrated</span>
-        </button>
+        <div class="row m-0">
+            <div class="col-6 pl-0">
+                <button type="button" class="btn btn-primary" (click)="testAndMigrate()" style="width: 100%;">
+                    <i class="fa fa-save   fa-fw"></i>
+                    &nbsp;<span>Save tables to be migrated</span>
+                </button>
+            </div>
+            <div class="col-6 pl-0">
+                <button type="reset" class="btn btn-danger" (click)="reset()" style="width: 100%;">
+                    <i class="fa fa-refresh  fa-fw"></i>
+                    &nbsp;<span>Undo</span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>

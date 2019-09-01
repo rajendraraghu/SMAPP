@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { IMigrationProcess } from 'app/shared/model/migration-process.model';
@@ -6,6 +6,7 @@ import { MigrationProcessService } from 'app/entities/migration-process/migratio
 import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { JhiAlertService } from 'ng-jhipster';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { callbackify } from 'util';
 import { sample } from 'rxjs/operators';
 import { Validators } from '@angular/forms';
@@ -18,8 +19,12 @@ import { Validators } from '@angular/forms';
 export class MigrationProcessDetailComponent implements OnInit {
   migrationProcess: IMigrationProcess;
   tables: any;
+  columns: any;
+  closeResult: string;
   tablesCopy: any;
   selectedTables = [];
+  selectedColumns: any[];
+  selectedColumnsBuffer: any[];
   cdcTables = [];
   bulkTables = [];
   isSaving: boolean;
@@ -28,7 +33,8 @@ export class MigrationProcessDetailComponent implements OnInit {
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
     protected migrationProcessService: MigrationProcessService,
-    protected router: Router
+    protected router: Router,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit() {
@@ -37,6 +43,7 @@ export class MigrationProcessDetailComponent implements OnInit {
       this.bulkTables = this.migrationProcess.bulk ? JSON.parse(this.migrationProcess.bulk) : [];
       this.cdcTables = this.migrationProcess.cdc ? JSON.parse(this.migrationProcess.cdc) : [];
       this.selectedTables = this.migrationProcess.tablesToMigrate ? JSON.parse(this.migrationProcess.tablesToMigrate) : [];
+      this.selectedColumns = this.migrationProcess.selectedColumns ? JSON.parse(this.migrationProcess.selectedColumns) : [];
       this.getTableList();
       this.masterSelected = false;
     });
@@ -57,18 +64,41 @@ export class MigrationProcessDetailComponent implements OnInit {
   prepareData(response) {
     this.tables = [];
     response.tableinfo.forEach(element => {
+      // const column = {
+      //   column: this.prepareColumn(element.columnList),
+      //   selectedColumn: this.isCheckedPK(column)
+      // };
       const table = {
         name: element.tableName,
         primaryKey: element.PrimaryKey,
         selected: this.isChecked(element.tableName),
         cdc: this.isCDC(element.tableName),
         cdcColumnList: element.cdcColumnList,
-        selectedCdcCol: element.cdcColumnList[0]
+        selectedCdcCol: element.cdcColumnList[0],
+        columnList: element.columnList
+        // column: this.prepareColumn(element.tableName, element.columnList)
       };
+      // const column = {
+      //   tableName: element.tableName,
+      //   columnList: element.columnList,
+      //   selectedPK: []
+      // };
+      this.setPK(table.name, table.primaryKey);
       this.tables.push(table);
     });
     this.tablesCopy = this.tables;
     this.isAllSelected();
+  }
+
+  prepareColumn(tableName, columnList) {
+    this.columns = [];
+    columnList.forEach(columnItem => {
+      const column = {
+        columnName: columnItem,
+        selected: this.isCheckedPK(tableName, columnItem)
+      };
+      this.columns.push(column);
+    });
   }
 
   checkUncheckAll(event) {
@@ -97,8 +127,37 @@ export class MigrationProcessDetailComponent implements OnInit {
     this.pushTables(item);
   }
 
-  selectPk(id, name) {
-    this.router.navigate(['/migration-process', id, 'view', name, 'selectPK']);
+  onPKSelection(tableName, column) {
+    // column.selected = !column.selected;
+    let columnName = column.columnName.split('-');
+    columnName = columnName + '-' + tableName;
+    const index = this.selectedColumns.indexOf(columnName);
+    if (index === -1) {
+      // val not found, pushing onto array
+      this.selectedColumns.push(columnName);
+    } else {
+      // val is found, removing from array
+      this.selectedColumns.splice(index, 1);
+    }
+  }
+
+  selectPK(item, content) {
+    this.prepareColumn(item.name, item.columnList);
+    this.modalService.open(content);
+  }
+
+  setPK(tableName, PK) {
+    if (PK != null) {
+      PK = PK.split('-');
+      for (const pkCol of PK) {
+        const columnName = pkCol + '-' + tableName;
+        const index = this.selectedColumns.indexOf(columnName);
+        if (index === -1) {
+          // val not found, pushing onto array
+          this.selectedColumns.push(columnName);
+        }
+      }
+    }
   }
 
   pushTables(item) {
@@ -112,12 +171,26 @@ export class MigrationProcessDetailComponent implements OnInit {
     }
   }
 
+  reset() {
+    this.ngOnInit();
+  }
+
   onProcessSelection(item) {
     item.cdc = item.cdc ? false : true;
   }
 
   isChecked(item) {
     const index = this.selectedTables.indexOf(item);
+    if (index === -1) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  isCheckedPK(tableName, column) {
+    column = column + '-' + tableName;
+    const index = this.selectedColumns.indexOf(column);
     if (index === -1) {
       return false;
     } else {
@@ -161,20 +234,43 @@ export class MigrationProcessDetailComponent implements OnInit {
         if (element.cdc) {
           cdc.push(element.name);
           cdcColumns.push(element.selectedCdcCol);
-          cdcPrimaryKey.push(element.primaryKey);
+          let firstFlag = true;
+          let pkList = '';
+          this.selectedColumns.forEach(column => {
+            const columnSplit = column.split('-');
+            if (element.name === columnSplit[1] && firstFlag) {
+              pkList = pkList + columnSplit[0];
+              firstFlag = false;
+            } else if (element.name === columnSplit[1] && !firstFlag) {
+              pkList = pkList + '-' + columnSplit[0];
+            }
+          });
+          cdcPrimaryKey.push(pkList);
         } else {
           bulk.push(element.name);
-          bulkPrimaryKey.push(element.primaryKey);
+          let firstFlag = true;
+          let pkList = '';
+          this.selectedColumns.forEach(column => {
+            const columnSplit = column.split('-');
+            if (element.name === columnSplit[1] && firstFlag) {
+              pkList = pkList + columnSplit[0];
+              firstFlag = false;
+            } else if (element.name === columnSplit[1] && !firstFlag) {
+              pkList = pkList + '-' + columnSplit[0];
+            }
+          });
+          bulkPrimaryKey.push(pkList);
+          // bulkPrimaryKey.push(element.primaryKey);
         }
       }
     });
+    this.migrationProcess.selectedColumns = JSON.stringify(this.selectedColumns);
     this.migrationProcess.tablesToMigrate = JSON.stringify(this.selectedTables);
     this.migrationProcess.cdc = cdc ? JSON.stringify(cdc) : null;
     this.migrationProcess.bulk = bulk ? JSON.stringify(bulk) : null;
     this.migrationProcess.cdcPk = cdcPrimaryKey ? JSON.stringify(cdcPrimaryKey) : null;
     this.migrationProcess.bulkPk = bulkPrimaryKey ? JSON.stringify(bulkPrimaryKey) : null;
     this.migrationProcess.cdcCols = cdcColumns ? JSON.stringify(cdcColumns) : null;
-    console.log(this.migrationProcess.cdcCols);
     this.subscribeToSaveResponse(this.migrationProcessService.update(this.migrationProcess));
   }
 

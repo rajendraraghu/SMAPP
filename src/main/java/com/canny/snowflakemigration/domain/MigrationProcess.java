@@ -39,6 +39,10 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
     @Column(name = "tables_to_migrate", length = 3200)
     private String tablesToMigrate;
 
+    @Size(max = 6400)
+    @Column(name = "selected_columns", length = 6400)
+    private String selectedColumns;
+
     @Size(max = 3200)
     @Column(name = "cdc", length = 3200)
     private String cdc;
@@ -144,6 +148,19 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
 
     public void setTablesToMigrate(String tablesToMigrate) {
         this.tablesToMigrate = tablesToMigrate;
+    }
+
+    public String getSelectedColumns() {
+        return selectedColumns;
+    }
+
+    public MigrationProcess selectedColumns(String selectedColumns) {
+        this.selectedColumns = selectedColumns;
+        return this;
+    }
+
+    public void setSelectedColumns(String selectedColumns) {
+        this.selectedColumns = selectedColumns;
     }
 
     public String getCdc() {
@@ -341,6 +358,7 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
             ", description='" + getDescription() + "'" +
             ", type='" + getType() + "'" +
             ", tablesToMigrate='" + getTablesToMigrate() + "'" +
+            ", selectedColumns='" + getSelectedColumns() + "'" +
             ", cdc='" + getCdc() + "'" +
             ", bulk='" + getBulk() + "'" +
             ", cdcPk='" + getCdcPk() + "'" +

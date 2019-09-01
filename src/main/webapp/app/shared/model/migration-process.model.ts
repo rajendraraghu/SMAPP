@@ -6,6 +6,7 @@ export interface IMigrationProcess {
   description?: string;
   type?: string;
   tablesToMigrate?: string;
+  selectedColumns?: string;
   cdc?: string;
   bulk?: string;
   cdcPk?: string;
@@ -31,6 +32,7 @@ export class MigrationProcess implements IMigrationProcess {
     public description?: string,
     public type?: string,
     public tablesToMigrate?: string,
+    public selectedColumns?: string,
     public cdc?: string,
     public bulk?: string,
     public bulkPk?: string,

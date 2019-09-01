@@ -31,6 +31,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="selected_columns" type="varchar(6400)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="cdc" type="varchar(3200)">
                 <constraints nullable="true" />
             </column>
@@ -113,6 +117,7 @@
             <column name="description" type="string"/>
             <column name="type" type="string"/>
             <column name="tables_to_migrate" type="string"/>
+            <column name="selected_columns" type="string"/>
             <column name="last_status" type="string"/>
             <column name="selected_all" type="boolean"/>
             <column name="created_by" type="string"/>

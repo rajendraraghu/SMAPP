@@ -21,6 +21,8 @@ public class MigrationProcessDTO implements Serializable {
 
     private String tablesToMigrate;
 
+    private String selectedColumns;
+
     private String cdc;
 
     private String bulk;
@@ -50,6 +52,10 @@ public class MigrationProcessDTO implements Serializable {
     private String sourceType;
 
     private String sourceConnectionUrl;
+
+    private String sourceConnectionHost;
+
+    private String sourceConnectionPortnumber;
 
     private String sourceConnectionUsername;
 
@@ -115,6 +121,14 @@ public class MigrationProcessDTO implements Serializable {
 
     public void setTablesToMigrate(String tablesToMigrate) {
         this.tablesToMigrate = tablesToMigrate;
+    }
+
+    public String getSelectedColumns() {
+        return selectedColumns;
+    }
+
+    public void setSelectedColumns(String selectedColumns) {
+        this.selectedColumns = selectedColumns;
     }
 
     public String getCdc() {
@@ -233,6 +247,22 @@ public class MigrationProcessDTO implements Serializable {
 
     public void setSourceConnectionUrl(String sourceConnectionUrl) {
         this.sourceConnectionUrl = sourceConnectionUrl;
+    }
+
+    public String getSourceConnectionHost() {
+        return sourceConnectionHost;
+    }
+
+    public void setSourceConnectionHost(String sourceConnectionHost) {
+        this.sourceConnectionHost = sourceConnectionHost;
+    }
+
+    public String getSourceConnectionPortnumber() {
+        return sourceConnectionPortnumber;
+    }
+
+    public void setSourceConnectionPortnumber(String sourceConnectionPortnumber) {
+        this.sourceConnectionPortnumber = sourceConnectionPortnumber;
     }
 
     public String getSourceConnectionUsername() {
@@ -368,6 +398,7 @@ public class MigrationProcessDTO implements Serializable {
             ", description='" + getDescription() + "'" +
             ", type='" + getType() + "'" +
             ", tablesToMigrate='" + getTablesToMigrate() + "'" +
+            ", selectedColumns='" + getSelectedColumns() + "'" +
             ", cdc='" + getCdc() + "'" +
             ", bulk='" + getBulk() + "'" +
             ", cdcPk='" + getCdcPk() + "'" +
@@ -379,9 +410,9 @@ public class MigrationProcessDTO implements Serializable {
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", runBy='" + getRunBy() + "'" +
-            ", sourceConnection=" + getSourceConnectionId() +
+            ", sourceConnectionId=" + getSourceConnectionId() +
             ", sourceConnection='" + getSourceConnectionName() + "'" +
-            ", snowflakeConnection=" + getSnowflakeConnectionId() +
+            ", snowflakeConnectionId=" + getSnowflakeConnectionId() +
             ", snowflakeConnection='" + getSnowflakeConnectionName() + "'" +
             "}";
     }

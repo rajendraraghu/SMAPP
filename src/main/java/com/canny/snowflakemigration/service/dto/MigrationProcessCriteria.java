@@ -35,6 +35,8 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
 
     private StringFilter tablesToMigrate;
 
+    private StringFilter selectedColumns;
+
     private StringFilter lastStatus;
 
     private StringFilter createdBy;
@@ -58,6 +60,7 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
         this.description = other.description == null ? null : other.description.copy();
         this.type = other.type == null ? null : other.type.copy();
         this.tablesToMigrate = other.tablesToMigrate == null ? null : other.tablesToMigrate.copy();
+        this.selectedColumns = other.selectedColumns == null ? null : other.selectedColumns.copy();
         this.lastStatus = other.lastStatus == null ? null : other.lastStatus.copy();
         this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
         this.createdDate = other.createdDate == null ? null : other.createdDate.copy();
@@ -110,6 +113,14 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
 
     public void setTablesToMigrate(StringFilter tablesToMigrate) {
         this.tablesToMigrate = tablesToMigrate;
+    }
+
+    public StringFilter getSelectedColumns() {
+        return selectedColumns;
+    }
+
+    public void setSelectedColumns(StringFilter selectedColumns) {
+        this.selectedColumns = selectedColumns;
     }
 
     public StringFilter getLastStatus() {
@@ -184,6 +195,7 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
             Objects.equals(description, that.description) &&
             Objects.equals(type, that.type) &&
             Objects.equals(tablesToMigrate, that.tablesToMigrate) &&
+            Objects.equals(selectedColumns, that.selectedColumns) &&
             Objects.equals(lastStatus, that.lastStatus) &&
             Objects.equals(createdBy, that.createdBy) &&
             Objects.equals(createdDate, that.createdDate) &&
@@ -201,6 +213,7 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
         description,
         type,
         tablesToMigrate,
+        selectedColumns,
         lastStatus,
         createdBy,
         createdDate,
@@ -219,6 +232,7 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
                 (description != null ? "description=" + description + ", " : "") +
                 (type != null ? "type=" + type + ", " : "") +
                 (tablesToMigrate != null ? "tablesToMigrate=" + tablesToMigrate + ", " : "") +
+                (selectedColumns != null ? "selectedColumns=" + selectedColumns+ ", " : "") +
                 (lastStatus != null ? "lastStatus=" + lastStatus + ", " : "") +
                 (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
                 (createdDate != null ? "createdDate=" + createdDate + ", " : "") +

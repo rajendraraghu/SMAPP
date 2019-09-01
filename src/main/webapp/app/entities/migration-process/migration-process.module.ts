@@ -10,10 +10,8 @@ import {
   MigrationProcessUpdateComponent,
   MigrationProcessDeletePopupComponent,
   MigrationProcessDeleteDialogComponent,
-  MigrationProcessPrimaryKeyComponent,
   migrationProcessRoute,
-  migrationProcessPopupRoute,
-  MigrationProcessPrimaryKeyPopupComponent
+  migrationProcessPopupRoute
 } from './';
 import { JoyrideModule } from 'ngx-joyride';
 import { MigrationProcessStatusComponent } from './migration-process-status.component';
@@ -30,17 +28,13 @@ const ENTITY_STATES = [...migrationProcessRoute, ...migrationProcessPopupRoute];
     MigrationProcessDeleteDialogComponent,
     MigrationProcessDeletePopupComponent,
     MigrationProcessStatusComponent,
-    MigrationProcessJobStatusComponent,
-    MigrationProcessPrimaryKeyComponent,
-    MigrationProcessPrimaryKeyPopupComponent
+    MigrationProcessJobStatusComponent
   ],
   entryComponents: [
     MigrationProcessComponent,
     MigrationProcessUpdateComponent,
     MigrationProcessDeleteDialogComponent,
-    MigrationProcessDeletePopupComponent,
-    MigrationProcessPrimaryKeyPopupComponent,
-    MigrationProcessPrimaryKeyComponent
+    MigrationProcessDeletePopupComponent
   ],
   providers: [{ provide: JhiLanguageService, useClass: JhiLanguageService }],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
