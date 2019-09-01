@@ -91,6 +91,10 @@ export class SnowHistoryDetailComponent implements OnInit {
     });
   }
 
+  reset() {
+    this.ngOnInit();
+  }
+
   onSelectionChange(item) {
     this.isAllSelected();
     this.pushTables(item);
