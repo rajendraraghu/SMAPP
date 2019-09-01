@@ -10,8 +10,8 @@
                         readonly />
                 </div> -->
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowParse.name" for="field_name">Name</label>
-                    <input type="text" class="form-control" name="name" id="field_name"
+                    <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowParse.name" for="field_name">Name</label>
+                    <input type="text" class="col-sm-4 form-control-input" name="name" id="field_name"
                            formControlName="name"/>
                     <div *ngIf="editForm.get('name').invalid && (editForm.get('name').dirty || editForm.get('name').touched)">
                         <small class="form-text text-danger"
@@ -21,8 +21,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowParse.description" for="field_description">Description</label>
-                    <input type="text" class="form-control" name="description" id="field_description"
+                    <label class="form-control-label col-sm-3" jhiTranslate="snowpoleApp.snowParse.description" for="field_description">Description</label>
+                    <input type="text" class="col-sm-4 form-control-input"  name="description" id="field_description"
                            formControlName="description"/>
                     <div *ngIf="editForm.get('description').invalid && (editForm.get('description').dirty || editForm.get('description').touched)">
                         <small class="form-text text-danger"
@@ -33,34 +33,35 @@
                 </div>
                 <div class="form-group" *ngIf="sourceTypes && sourceTypes.length > 0"
 				                    joyrideStep="fourthStep" title="Source System" text="select the source connection source system type">
-				    <label jhiTranslate="snowpoleApp.snowParse.system">Source System</label>
-				    <select class="form-control" id="field_sourceType" name="sourceType" formControlName="sourceType">
+				    <label class="form-control-label col-sm-3" jhiTranslate="snowpoleApp.snowParse.system">Source System</label>
+				    <select class="col-sm-4 form-control-input" id="field_sourceType" name="sourceType" formControlName="sourceType">
 				        <option *ngFor="let sourceType of sourceTypes" [value]="sourceType">{{sourceType}}</option>
 				    </select>
                 </div>
                 <div>
                     <div class="form-group" *ngIf="isSourceSelected">
-                        <label class="form-control-label" jhiTranslate="snowpoleApp.snowParse.sourceConnection" for="field_sourceConnection">Source Connection</label>
-                        <select class="form-control" id="field_sourceConnection" name="sourceConnection" formControlName="sourceConnectionId">
+                        <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowParse.sourceConnection" for="field_sourceConnection">Source Connection</label>
+                        <select class="col-sm-4 form-control-input"  id="field_sourceConnection" name="sourceConnection" formControlName="sourceConnectionId">
                             <option *ngIf="!editForm.get('sourceConnectionId').value" [ngValue]="null" selected></option>
                             <option [ngValue]="sourceConnectionOption.id" *ngFor="let sourceConnectionOption of sourceconnections; trackBy: trackSourceConnectionById">{{sourceConnectionOption.name}}</option>
                         </select>
                     </div>
                     <div class="form-group" *ngIf="!isSourceSelected">
-                        <label class="form-control-label" jhiTranslate="snowpoleApp.snowParse.sourcePath" for="field_sourcePath">Source Path</label>
-                        <input type="text" class="form-control" name="sourcePath" id="field_sourcePath" formControlName="sourcePath"/>
+                        <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowParse.sourcePath" for="field_sourcePath">Source Path</label>
+                        <input type="text" class="col-sm-4 form-control-input"  name="sourcePath" id="field_sourcePath" formControlName="sourcePath"/>
                     </div>
                 </div>
 
                 <div class="custom-control custom-switch">
+                    <span style="margin:5px">&nbsp;</span>
 				    <input type="checkbox" class="custom-control-input" id="customSwitchId" (change)="onTargetSelection($event);">
 				    <label class="custom-control-label" for="customSwitchId">Use Snowpipe</label>
 				</div>
 
                 <div>
                     <div class="form-group" *ngIf="isTargetSelected">
-                        <label class="form-control-label" jhiTranslate="snowpoleApp.snowParse.snowflakeConnection" for="field_snowflakeConnection">Snowflake Connection</label>
-                        <select class="form-control" id="field_snowflakeConnection" name="snowflakeConnection" formControlName="snowflakeConnectionId">
+                        <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowParse.snowflakeConnection" for="field_snowflakeConnection">Snowflake Connection</label>
+                        <select class="col-sm-4 form-control-input"  id="field_snowflakeConnection" name="snowflakeConnection" formControlName="snowflakeConnectionId">
                             <option *ngIf="!editForm.get('snowflakeConnectionId').value" [ngValue]="null" selected></option>
                             <option [ngValue]="snowflakeConnectionOption.id" *ngFor="let snowflakeConnectionOption of snowflakeconnections; trackBy: trackSnowflakeConnectionById">{{snowflakeConnectionOption.name}}</option>
                         </select>
