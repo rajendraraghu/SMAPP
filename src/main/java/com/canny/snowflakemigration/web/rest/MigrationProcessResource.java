@@ -205,7 +205,7 @@ public class MigrationProcessResource {
 		 	else if (source.equals("Teradata")) {  Class.forName("com.teradata.jdbc.TeraDriver");}
 		    
 			System.out.println("osql loop");
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");			
+			// Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");			
 			Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());			
     	    result = con1.isValid(10);
     	    System.out.println("Inside try before connection");

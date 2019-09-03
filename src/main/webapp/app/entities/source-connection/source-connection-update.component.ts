@@ -62,14 +62,14 @@ export class SourceConnectionUpdateComponent implements OnInit {
 
   concatUrl() {
     this.sourcetype = this.editForm.get(['sourceType']).value;
-    this.sourcetype = this.sourcetype.toLowerCase();
     this.host = this.editForm.get(['host']).value;
     this.portnumber = this.editForm.get(['portnumber']).value;
-    this.url = 'jdbc:' + this.sourcetype + '://' + this.host + ':' + this.portnumber + '/' + this.sourceConnection.database;
+    this.dbname = this.editForm.get(['database']).value;
+    this.url = 'jdbc:' + this.sourcetype + '://' + this.host + ':' + this.portnumber + '/' + this.dbname;
   }
 
   updateForm(sourceConnection: ISourceConnection) {
-    // this.splitUrl(sourceConnection.url);
+    // this.concatUrl();
     this.editForm.patchValue({
       id: sourceConnection.id,
       name: sourceConnection.name,

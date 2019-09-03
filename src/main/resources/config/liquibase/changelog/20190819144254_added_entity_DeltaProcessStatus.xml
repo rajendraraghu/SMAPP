@@ -36,15 +36,15 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="tablecount" type="int">
+            <column name="tablecount" type="bigint">
                 <constraints nullable="false" />
             </column>
 
-            <column name="successcount" type="int">
+            <column name="successcount" type="bigint">
                 <constraints nullable="false" />
             </column>
 
-            <column name="failurecount" type="int">
+            <column name="failurecount" type="bigint">
                 <constraints nullable="false" />
             </column>
 

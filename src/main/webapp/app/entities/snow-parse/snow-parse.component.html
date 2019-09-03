@@ -51,13 +51,13 @@
                             <span class="d-none d-md-inline">Run</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/snow-parse', snowparse.id, 'edit']"
+                                [routerLink]="['/snow-parse', snowParse.id, 'edit']"
                                 class="btn btn-primary btn-sm">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
                         <button type="submit"
-                                (click)="viewProcessStatus(snowparse.id)"
+                                (click)="viewProcessStatus(snowParse.id)"
                                 class="btn btn-info btn-sm">
                             <fa-icon icon="book" fixedWidth="true"></fa-icon>
                             <span class="d-none d-md-inline">Report</span>

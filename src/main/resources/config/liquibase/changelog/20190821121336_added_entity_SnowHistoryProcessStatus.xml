@@ -36,15 +36,15 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="total_tables" type="int">
+            <column name="total_tables" type="bigint">
                 <constraints nullable="false" />
             </column>
 
-            <column name="success_tables" type="int">
+            <column name="success_tables" type="bigint">
                 <constraints nullable="false" />
             </column>
 
-            <column name="error_tables" type="int">
+            <column name="error_tables" type="bigint">
                 <constraints nullable="false" />
             </column>
 

@@ -36,15 +36,15 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="total_objects" type="int">
+            <column name="total_objects" type="bigint">
                 <constraints nullable="false" />
             </column>
 
-            <column name="success_objects" type="int">
+            <column name="success_objects" type="bigint">
                 <constraints nullable="false" />
             </column>
 
-            <column name="error_objects" type="int">
+            <column name="error_objects" type="bigint">
                 <constraints nullable="false" />
             </column>
 

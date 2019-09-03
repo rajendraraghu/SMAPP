@@ -24,6 +24,8 @@
       "password": "Password",
       "database": "Database",
       "schema": "Schema",
+      "host": "Host",
+      "portnumber": "Port Number",
       "valid": "Valid",
       "createdBy": "Created By",
       "createdDate": "Created Date",

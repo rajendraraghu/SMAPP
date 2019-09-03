@@ -24,15 +24,15 @@
         },
         {
             "fieldName": "totalObjects",
-            "fieldType": "Instant"
+            "fieldType": "Long"
         },
         {
             "fieldName": "successObjects",
-            "fieldType": "String"
+            "fieldType": "Long"
         },
         {
             "fieldName": "errorObjects",
-            "fieldType": "Instant"
+            "fieldType": "Long"
         },
         {
             "fieldName": "status",

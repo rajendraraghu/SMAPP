@@ -40,11 +40,9 @@ public class SnowDDL extends AbstractAuditingEntity implements Serializable {
     private String lastStatus;
 
     @ManyToOne(optional = false)
-    @NotNull
     private SourceConnection sourceConnection;
 
     @ManyToOne(optional = false)
-    @NotNull
     private SnowflakeConnection snowflakeConnection;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

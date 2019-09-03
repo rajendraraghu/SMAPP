@@ -24,15 +24,15 @@
         },
         {
             "fieldName": "tableCount",
-            "fieldType": "Instant"
+            "fieldType": "Long"
         },
         {
             "fieldName": "successCount",
-            "fieldType": "String"
+            "fieldType": "Long"
         },
         {
             "fieldName": "failureCount",
-            "fieldType": "Instant"
+            "fieldType": "Long"
         },
         {
             "fieldName": "jobStatus",

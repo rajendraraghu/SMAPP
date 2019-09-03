@@ -24,15 +24,15 @@
         },
         {
             "fieldName": "totalTables",
-            "fieldType": "Instant"
+            "fieldType": "Long"
         },
         {
             "fieldName": "successTables",
-            "fieldType": "String"
+            "fieldType": "Long"
         },
         {
             "fieldName": "errorTables",
-            "fieldType": "Instant"
+            "fieldType": "Long"
         },
         {
             "fieldName": "status",
