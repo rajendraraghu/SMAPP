@@ -43,7 +43,7 @@ public class HistorySendTableList  {
 		logger = Logger.getLogger("MySnowHistoryLog"); 
 		FileHandler fh;
 		try{
-			fh = new FileHandler("F:/POC/CSV/MySnowhistoryLogFile.log");  
+			fh = new FileHandler("./logs/MySnowhistoryLogFile.log");  
 		    logger.addHandler(fh);
 		    SimpleFormatter formatter = new SimpleFormatter();  
 		    fh.setFormatter(formatter);		        

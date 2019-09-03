@@ -70,8 +70,9 @@ public class ConvertDDL {
                     }
                     snowDDLJobStatusDTO.setBatchId(processStatus.getBatchId());
                     snowDDLJobStatusDTO.setName(tblNm);
-                    snowDDLJobStatusDTO.setStartTime(Instant.now());
-					opSql = new BufferedWriter(new FileWriter("F:/POC/snowDDL/"+tblNm+".sql"));
+					snowDDLJobStatusDTO.setStartTime(Instant.now());
+					// Resource resource3 = new ClassPathResource("/snowddl_lib/"+tblNm+".sql");
+					opSql = new BufferedWriter(new FileWriter("./snowddl_op/"+tblNm+".sql"));
 					parse = true;
 				}
 				for (String [] record : convRecords) {
