@@ -37,7 +37,7 @@ public class SourceConnectionDTO implements Serializable {
     private String host;
 
     @NotNull
-    private String portnumber;
+    private String portNumber;
 
     private String schema;
 
@@ -124,12 +124,12 @@ public class SourceConnectionDTO implements Serializable {
         this.host = host;
     }
 
-    public String getPortnumber() {
-        return portnumber;
+    public String getPortNumber() {
+        return portNumber;
     }
 
-    public void setPortnumber(String portnumber) {
-        this.portnumber = portnumber;
+    public void setPortNumber(String portNumber) {
+        this.portNumber = portNumber;
     }
 
     public String getSchema() {
@@ -213,7 +213,7 @@ public class SourceConnectionDTO implements Serializable {
             ", password='" + getPassword() + "'" +
             ", database='" + getDatabase() + "'" +
             ", host='" + getHost() + "'" +
-            ", portnumber='" + getPortnumber() + "'" +
+            ", portNumber='" + getPortNumber() + "'" +
             ", schema='" + getSchema() + "'" +
             ", valid='" + isValid() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

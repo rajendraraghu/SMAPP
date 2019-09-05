@@ -112,10 +112,10 @@
                 <div class="form-group">
                     <label class="form-control-label col-sm-3" jhiTranslate="snowpoleApp.sourceConnection.portnumber" for="field_name">Port
                         Number</label>
-                    <input type="text" class="col-sm-4 form-control-input" name="portnumber" id="field_portnumber" formControlName="portnumber" />
+                    <input type="text" class="col-sm-4 form-control-input" name="portnumber" id="field_portnumber" formControlName="portNumber" />
                     <div
-                        *ngIf="editForm.get('portnumber').invalid && (editForm.get('portnumber').dirty || editForm.get('portnumber').touched)">
-                        <small class="form-text text-danger" *ngIf="editForm.get('portnumber').errors.required"
+                        *ngIf="editForm.get('portNumber').invalid && (editForm.get('portNumber').dirty || editForm.get('portNumber').touched)">
+                        <small class="form-text text-danger" *ngIf="editForm.get('portNumber').errors.required"
                             jhiTranslate="entity.validation.required">
                             This field is required.
                         </small>

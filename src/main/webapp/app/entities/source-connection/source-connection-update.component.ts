@@ -19,7 +19,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
   sourceTypes: any[];
   sourcetype: string;
   host: string;
-  portnumber: string;
+  portNumber: string;
   dbname: string;
   url: string;
   sliced: string[];
@@ -35,7 +35,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
     password: [null, [Validators.required]],
     database: [null, [Validators.required]],
     host: [null, [Validators.required]],
-    portnumber: [null, [Validators.required, Validators.maxLength(4)]],
+    portNumber: [null, [Validators.required, Validators.maxLength(4)]],
     schema: [],
     valid: [],
     createdBy: [],
@@ -63,9 +63,9 @@ export class SourceConnectionUpdateComponent implements OnInit {
   concatUrl() {
     this.sourcetype = this.editForm.get(['sourceType']).value;
     this.host = this.editForm.get(['host']).value;
-    this.portnumber = this.editForm.get(['portnumber']).value;
+    this.portNumber = this.editForm.get(['portNumber']).value;
     this.dbname = this.editForm.get(['database']).value;
-    this.url = 'jdbc:' + this.sourcetype + '://' + this.host + ':' + this.portnumber + '/' + this.dbname;
+    this.url = 'jdbc:' + this.sourcetype + '://' + this.host + ':' + this.portNumber + '/' + this.dbname;
   }
 
   updateForm(sourceConnection: ISourceConnection) {
@@ -79,7 +79,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
       password: sourceConnection.password,
       database: sourceConnection.database,
       host: sourceConnection.host,
-      portnumber: sourceConnection.portnumber,
+      portNumber: sourceConnection.portNumber,
       schema: sourceConnection.schema,
       valid: sourceConnection.valid
       // ,
@@ -118,7 +118,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
       password: this.editForm.get(['password']).value,
       database: this.editForm.get(['database']).value,
       host: this.editForm.get(['host']).value,
-      portnumber: this.editForm.get(['portnumber']).value,
+      portNumber: this.editForm.get(['portNumber']).value,
       schema: this.editForm.get(['schema']).value,
       valid: this.editForm.get(['valid']).value
       // ,
