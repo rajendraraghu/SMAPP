@@ -15,6 +15,13 @@
             "fieldType": "String"
         },
         {
+            "fieldName": "regionId",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
             "fieldName": "url",
             "fieldType": "String",
             "fieldValidateRules": [

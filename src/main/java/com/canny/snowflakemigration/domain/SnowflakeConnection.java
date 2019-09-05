@@ -30,6 +30,10 @@ public class SnowflakeConnection extends AbstractAuditingEntity implements Seria
     private String description;
 
     @NotNull
+    @Column(name = "region_id", nullable = false)
+    private String regionId;
+
+    @NotNull
     @Size(max = 1200)
     @Column(name = "url", length = 1200, nullable = false)
     private String url;
@@ -103,6 +107,19 @@ public class SnowflakeConnection extends AbstractAuditingEntity implements Seria
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getRegionId() {
+        return regionId;
+    }
+
+    public SnowflakeConnection regionId(String regionId) {
+        this.regionId = regionId;
+        return this;
+    }
+
+    public void setRegionId(String regionId) {
+        this.regionId = regionId;
     }
 
     public String getUrl() {
@@ -284,6 +301,7 @@ public class SnowflakeConnection extends AbstractAuditingEntity implements Seria
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", regionId='" + getRegionId() + "'" +
             ", url='" + getUrl() + "'" +
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +

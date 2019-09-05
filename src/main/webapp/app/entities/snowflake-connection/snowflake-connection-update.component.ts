@@ -15,15 +15,25 @@ import { JhiAlertService } from 'ng-jhipster';
 })
 export class SnowflakeConnectionUpdateComponent implements OnInit {
   isSaving: boolean;
-
+  isSourceSelected: boolean;
+  regionsId: any[];
+  regionId: string;
+  account: any;
+  url: string;
+  regaws: string;
+  regazure: string;
+  environment: string[];
+  region: string;
+  regExp: RegExp = /:\/\/(.*):(.*)\//;
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
     description: [],
-    url: [null, [Validators.required, Validators.maxLength(1200)]],
+    // url: [null, [Validators.required, Validators.maxLength(1200)]],
     username: [null, [Validators.required]],
     password: [null, [Validators.required]],
     acct: [],
+    regionId: [],
     warehouse: [],
     database: [null, [Validators.required]],
     schema: [],
@@ -43,9 +53,94 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
 
   ngOnInit() {
     this.isSaving = false;
+    this.regionsId = [
+      'AWS-US West (Oregon)',
+      'AWS-US East (N. Virginia)',
+      'AWS-Canada (Central)',
+      'AWS-EU (Ireland)',
+      'AWS-EU (Frankfurt)',
+      'AWS-Asia Pacific (Singapore)',
+      'AWS-Asia Pacific (Sydney)',
+      'AZURE-East US 2',
+      'AZURE-US Gov Virginia',
+      'AZURE-Canada Central',
+      'AZURE-West Europe',
+      'AZURE-Australia East'
+    ];
     this.activatedRoute.data.subscribe(({ snowflakeConnection }) => {
       this.updateForm(snowflakeConnection);
     });
+  }
+
+  concatUrl() {
+    this.account = this.editForm.get(['acct']).value;
+    this.regionId = this.editForm.get(['regionId']).value;
+    this.environment = this.regionId.split('-', 1);
+    console.log(this.environment);
+    this.region = this.environment[1];
+    console.log(this.region);
+    if (this.environment[0] === 'AWS') {
+      switch (this.regionId) {
+        case 'AWS-US East (N. Virginia)':
+          this.regaws = 'us-east-1';
+          this.url = 'jdbc:snowflake://' + this.account + '.' + this.regaws + '.snowflakecomputing.com';
+          break;
+        case 'AWS-Canada (Central)':
+          this.regaws = 'ca-central-1';
+          this.url = 'jdbc:snowflake://' + this.account + '.' + this.regaws + '.snowflakecomputing.com';
+          break;
+        case 'AWS-EU (Ireland)':
+          this.regaws = 'eu-west-1';
+          this.url = 'jdbc:snowflake://' + this.account + '.' + this.regaws + '.snowflakecomputing.com';
+          break;
+        case 'AWS-EU (Frankfurt)':
+          this.regaws = 'eu-central-1';
+          this.url = 'jdbc:snowflake://' + this.account + '.' + this.regaws + '.snowflakecomputing.com';
+          break;
+        case 'AWS-Asia Pacific (Singapore)':
+          this.regaws = 'ap-southeast-1';
+          this.url = 'jdbc:snowflake://' + this.account + '.' + this.regaws + '.snowflakecomputing.com';
+          break;
+        case 'AWS-Asia Pacific (Sydney)':
+          this.regaws = 'ap-southeast-2';
+          this.url = 'jdbc:snowflake://' + this.account + '.' + this.regaws + '.snowflakecomputing.com';
+          break;
+        default:
+          this.url = 'jdbc:snowflake://' + this.account + '.snowflakecomputing.com';
+          break;
+      }
+    } else {
+      switch (this.regionId) {
+        case 'AZURE-East US 2':
+          this.regazure = 'east-us-2';
+          this.url = 'jdbc:snowflake://' + this.account + '.' + this.regazure + '.azure' + '.snowflakecomputing.com';
+          break;
+        case 'AZURE-US Gov Virginia':
+          this.regazure = 'us-gov-virginia';
+          this.url = 'jdbc:snowflake://' + this.account + '.' + this.regazure + '.azure' + '.snowflakecomputing.com';
+          break;
+        case 'AZURE-Canada Central':
+          this.regazure = 'Canada Central';
+          this.url = 'jdbc:snowflake://' + this.account + '.' + this.regazure + '.azure' + '.snowflakecomputing.com';
+          break;
+        case 'AZURE-West Europe':
+          this.regazure = 'west-europe';
+          this.url = 'jdbc:snowflake://' + this.account + '.' + this.regazure + '.azure' + '.snowflakecomputing.com';
+          break;
+        default:
+          this.regazure = 'australia-east';
+          this.url = 'jdbc:snowflake://' + this.account + '.' + this.regazure + '.azure' + '.snowflakecomputing.com';
+          break;
+      }
+    }
+  }
+
+  onSourceSelection(event) {
+    if (event.target.checked) {
+      this.isSourceSelected = true;
+    } else {
+      this.isSourceSelected = false;
+    }
   }
 
   updateForm(snowflakeConnection: ISnowflakeConnection) {
@@ -53,7 +148,8 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
       id: snowflakeConnection.id,
       name: snowflakeConnection.name,
       description: snowflakeConnection.description,
-      url: snowflakeConnection.url,
+      regionId: snowflakeConnection.regionId,
+      // url: snowflakeConnection.url,
       username: snowflakeConnection.username,
       password: snowflakeConnection.password,
       acct: snowflakeConnection.acct,
@@ -83,12 +179,14 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
   }
 
   private createFromForm(): ISnowflakeConnection {
+    this.concatUrl();
     return {
       ...new SnowflakeConnection(),
       id: this.editForm.get(['id']).value,
       name: this.editForm.get(['name']).value,
       description: this.editForm.get(['description']).value,
-      url: this.editForm.get(['url']).value,
+      regionId: this.editForm.get(['regionId']).value,
+      url: this.url,
       username: this.editForm.get(['username']).value,
       password: this.editForm.get(['password']).value,
       acct: this.editForm.get(['acct']).value,

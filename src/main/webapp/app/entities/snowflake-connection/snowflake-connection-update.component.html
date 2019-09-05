@@ -4,11 +4,6 @@
             <h2 id="jhi-snowflake-connection-heading" jhiTranslate="snowpoleApp.snowflakeConnection.home.createOrEditLabel">Create or edit a Snowflake Connection</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <!-- <div class="form-group" [hidden]="!editForm.get('id').value">
-                    <label for="id" jhiTranslate="global.field.id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
-                        readonly />
-                </div> -->
                 <div class="form-group">
                     <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowflakeConnection.name" for="field_name">Name<span class="required">*</span></label>
                     <input type="text" class="col-sm-4 form-control-input" name="name" id="field_name" 
@@ -26,19 +21,11 @@
                            formControlName="description"/>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowflakeConnection.url" for="field_url">Url</label>
-                    <input type="text" class="col-sm-4 form-control-input" name="url" id="field_url"
-                           formControlName="url"/>
-                    <div *ngIf="editForm.get('url').invalid && (editForm.get('url').dirty || editForm.get('url').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('url').errors.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('url').errors.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 1200 }">
-                        This field cannot be longer than 1200 characters.
-                        </small>
-                    </div>
+                    <label class="form-control-label col-sm-3" jhiTranslate="snowpoleApp.snowflakeConnection.regionid"
+                        for="field_RegionId">RegionId </label>
+                    <select class="col-sm-4 form-control-input" id="field_RegionId" name="regionId"  formControlName="regionId">
+                        <option *ngFor="let regionId of regionsId" [value]="regionId">{{regionId}}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowflakeConnection.username" for="field_username">Username</label>
@@ -88,34 +75,6 @@
                     <input type="text" class="col-sm-4 form-control-input" name="schema" id="field_schema"
                            formControlName="schema"/>
                 </div>
-                <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.valid" for="field_valid">Valid</label>
-                    <input type="checkbox" class="form-control" name="valid" id="field_valid"
-                           formControlName="valid"/>
-                </div> -->
-                <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.createdBy" for="field_createdBy">Created By</label>
-                    <input type="text" class="form-control" name="createdBy" id="field_createdBy"
-                           formControlName="createdBy"/>
-                </div> -->
-                <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.createdDate" for="field_createdDate">Created Date</label>
-                    <div class="d-flex">
-                        <input id="field_createdDate" type="datetime-local" class="form-control" name="createdDate" formControlName="createdDate" placeholder="YYYY-MM-DD HH:mm"/>
-                    </div>
-                </div> -->
-                <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedBy" for="field_lastModifiedBy">Last Modified By</label>
-                    <input type="text" class="form-control" name="lastModifiedBy" id="field_lastModifiedBy"
-                           formControlName="lastModifiedBy"/>
-                </div> -->
-                <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedDate" for="field_lastModifiedDate">Last Modified Date</label>
-                    <div class="d-flex">
-                        <input id="field_lastModifiedDate" type="datetime-local" class="form-control" name="lastModifiedDate" formControlName="lastModifiedDate" placeholder="YYYY-MM-DD HH:mm"/>
-                    </div>
-                </div> -->
-
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
@@ -134,4 +93,4 @@
             </div>
         </form>
     </div>
-</div>
+</div> 

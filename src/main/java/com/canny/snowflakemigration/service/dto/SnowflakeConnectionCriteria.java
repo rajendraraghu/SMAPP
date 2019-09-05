@@ -31,6 +31,8 @@ public class SnowflakeConnectionCriteria implements Serializable, Criteria {
 
     private StringFilter description;
 
+    private StringFilter regionId;
+
     private StringFilter url;
 
     private StringFilter username;
@@ -62,6 +64,7 @@ public class SnowflakeConnectionCriteria implements Serializable, Criteria {
         this.id = other.id == null ? null : other.id.copy();
         this.name = other.name == null ? null : other.name.copy();
         this.description = other.description == null ? null : other.description.copy();
+        this.regionId = other.regionId == null ? null : other.regionId.copy();
         this.url = other.url == null ? null : other.url.copy();
         this.username = other.username == null ? null : other.username.copy();
         this.password = other.password == null ? null : other.password.copy();
@@ -103,6 +106,14 @@ public class SnowflakeConnectionCriteria implements Serializable, Criteria {
 
     public void setDescription(StringFilter description) {
         this.description = description;
+    }
+
+    public StringFilter getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(StringFilter regionId) {
+        this.regionId = regionId;
     }
 
     public StringFilter getUrl() {
@@ -215,6 +226,7 @@ public class SnowflakeConnectionCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(name, that.name) &&
             Objects.equals(description, that.description) &&
+            Objects.equals(regionId, that.regionId) &&
             Objects.equals(url, that.url) &&
             Objects.equals(username, that.username) &&
             Objects.equals(password, that.password) &&
@@ -235,6 +247,7 @@ public class SnowflakeConnectionCriteria implements Serializable, Criteria {
         id,
         name,
         description,
+        regionId,
         url,
         username,
         password,
@@ -256,6 +269,7 @@ public class SnowflakeConnectionCriteria implements Serializable, Criteria {
                 (id != null ? "id=" + id + ", " : "") +
                 (name != null ? "name=" + name + ", " : "") +
                 (description != null ? "description=" + description + ", " : "") +
+                (regionId != null ? "regionId=" + regionId + ", " : "") +
                 (url != null ? "url=" + url + ", " : "") +
                 (username != null ? "username=" + username + ", " : "") +
                 (password != null ? "password=" + password + ", " : "") +

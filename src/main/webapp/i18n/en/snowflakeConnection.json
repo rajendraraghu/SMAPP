@@ -21,6 +21,7 @@
       "url": "Url",
       "username": "Username",
       "password": "Password",
+      "regionid": "Region Id",
       "acct": "Account",
       "warehouse": "Warehouse",
       "database": "Database",

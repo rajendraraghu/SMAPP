@@ -17,6 +17,9 @@ public class SnowflakeConnectionDTO implements Serializable {
     private String description;
 
     @NotNull
+    private String regionId;
+
+    @NotNull
     @Size(max = 1200)
     private String url;
 
@@ -68,6 +71,14 @@ public class SnowflakeConnectionDTO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(String regionId) {
+        this.regionId = regionId;
     }
 
     public String getUrl() {
@@ -193,6 +204,7 @@ public class SnowflakeConnectionDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", regionid='" + getRegionId() + "'" +
             ", url='" + getUrl() + "'" +
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +

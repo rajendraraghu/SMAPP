@@ -97,6 +97,9 @@ public class SnowflakeConnectionQueryService extends QueryService<SnowflakeConne
             if (criteria.getDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), SnowflakeConnection_.description));
             }
+            if (criteria.getRegionId() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getRegionId(), SnowflakeConnection_.regionId));
+            }
             if (criteria.getUrl() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getUrl(), SnowflakeConnection_.url));
             }

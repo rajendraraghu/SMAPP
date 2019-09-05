@@ -107,7 +107,7 @@
                     </div>
                     <div class="col-3 pl-0">
                         <!-- <button type="button" [routerLink]="['/migration-process',{ outlets: { popup: item.name+'/selectPK'} }]" class="btn btn-primary"> -->
-                        <button type="button" class="btn btn-primary" [disabled]="!item.selected" (click) = "selectPK(item,templatePK)">
+                        <button type="button" class="btn btn-primary" [disabled]="!item.selected" (click) = "selectPK(item,templatePK)" style = " width: 100px; text-align: LEFT">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> {{item.primaryKey}} </span>
                         </button>
                         <ng-template #templatePK let-modal>

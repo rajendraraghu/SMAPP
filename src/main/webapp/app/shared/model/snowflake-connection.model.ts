@@ -4,6 +4,7 @@ export interface ISnowflakeConnection {
   id?: number;
   name?: string;
   description?: string;
+  regionId?: string;
   url?: string;
   username?: string;
   password?: string;
@@ -23,6 +24,7 @@ export class SnowflakeConnection implements ISnowflakeConnection {
     public id?: number,
     public name?: string,
     public description?: string,
+    public regionId?: string,
     public url?: string,
     public username?: string,
     public password?: string,

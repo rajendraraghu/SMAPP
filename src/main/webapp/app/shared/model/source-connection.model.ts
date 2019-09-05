@@ -10,7 +10,7 @@ export interface ISourceConnection {
   password?: string;
   database?: string;
   host?: string;
-  portnumber?: string;
+  portNumber?: string;
   schema?: string;
   valid?: boolean;
   createdBy?: string;
@@ -30,7 +30,7 @@ export class SourceConnection implements ISourceConnection {
     public password?: string,
     public database?: string,
     public host?: string,
-    public portnumber?: string,
+    public portNumber?: string,
     public schema?: string,
     public valid?: boolean,
     public createdBy?: string,
@@ -39,6 +39,6 @@ export class SourceConnection implements ISourceConnection {
     public lastModifiedDate?: Moment
   ) {
     this.valid = this.valid || false;
-    this.url = 'jdbc:' + this.sourceType + '://' + this.host + ':' + this.portnumber + '/' + this.database;
+    this.url = 'jdbc:' + this.sourceType + '://' + this.host + ':' + this.portNumber + '/' + this.database;
   }
 }
