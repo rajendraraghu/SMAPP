@@ -39,7 +39,7 @@ export const snowParseRoute: Routes = [
       pagingParams: JhiResolvePagingParams
     },
     data: {
-      authorities: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_DEVELOPER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       defaultSort: 'id,asc',
       pageTitle: 'snowpoleApp.snowParse.home.title'
     },
@@ -52,7 +52,7 @@ export const snowParseRoute: Routes = [
       snowParse: SnowParseResolve
     },
     data: {
-      authorities: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_DEVELOPER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowParse.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -64,7 +64,7 @@ export const snowParseRoute: Routes = [
       snowParse: SnowParseResolve
     },
     data: {
-      authorities: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_DEVELOPER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowParse.processStatus.title'
     },
     canActivate: [UserRouteAccessService]
@@ -76,7 +76,7 @@ export const snowParseRoute: Routes = [
       snowDDL: SnowParseResolve
     },
     data: {
-      authorities: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_DEVELOPER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowParse.jobStatus.title'
     },
     canActivate: [UserRouteAccessService]
@@ -88,7 +88,7 @@ export const snowParseRoute: Routes = [
       snowParse: SnowParseResolve
     },
     data: {
-      authorities: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_DEVELOPER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowParse.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -103,7 +103,7 @@ export const snowParsePopupRoute: Routes = [
       snowParse: SnowParseResolve
     },
     data: {
-      authorities: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_DEVELOPER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowParse.home.title'
     },
     canActivate: [UserRouteAccessService],

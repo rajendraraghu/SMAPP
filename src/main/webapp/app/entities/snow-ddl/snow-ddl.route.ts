@@ -39,7 +39,7 @@ export const snowDDLRoute: Routes = [
       pagingParams: JhiResolvePagingParams
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       defaultSort: 'id,asc',
       pageTitle: 'snowpoleApp.snowDDL.home.title'
     },
@@ -52,7 +52,7 @@ export const snowDDLRoute: Routes = [
       snowDDL: SnowDDLResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowDDL.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -64,7 +64,7 @@ export const snowDDLRoute: Routes = [
       snowDDL: SnowDDLResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowDDL.processStatus.title'
     },
     canActivate: [UserRouteAccessService]
@@ -76,7 +76,7 @@ export const snowDDLRoute: Routes = [
       snowDDL: SnowDDLResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowDDL.jobStatus.title'
     },
     canActivate: [UserRouteAccessService]
@@ -88,7 +88,7 @@ export const snowDDLRoute: Routes = [
       snowDDL: SnowDDLResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowDDL.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -103,7 +103,7 @@ export const snowDDLPopupRoute: Routes = [
       snowDDL: SnowDDLResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowDDL.home.title'
     },
     canActivate: [UserRouteAccessService],

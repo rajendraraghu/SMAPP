@@ -39,7 +39,7 @@ export const snowHistoryRoute: Routes = [
       pagingParams: JhiResolvePagingParams
     },
     data: {
-      authorities: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_DEVELOPER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       defaultSort: 'id,asc',
       pageTitle: 'snowpoleApp.snowHistory.home.title'
     },
@@ -52,7 +52,7 @@ export const snowHistoryRoute: Routes = [
       snowHistory: SnowHistoryResolve
     },
     data: {
-      authorities: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_DEVELOPER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowHistory.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -64,7 +64,7 @@ export const snowHistoryRoute: Routes = [
       snowHistory: SnowHistoryResolve
     },
     data: {
-      authorities: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_DEVELOPER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowHistory.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -76,7 +76,7 @@ export const snowHistoryRoute: Routes = [
       snowHistory: SnowHistoryResolve
     },
     data: {
-      authorities: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_DEVELOPER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowHistory.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -88,7 +88,7 @@ export const snowHistoryRoute: Routes = [
       snowDDL: SnowHistoryResolve
     },
     data: {
-      authorities: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_DEVELOPER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowDDL.jobStatus.title'
     },
     canActivate: [UserRouteAccessService]
@@ -100,7 +100,7 @@ export const snowHistoryRoute: Routes = [
       snowHistory: SnowHistoryResolve
     },
     data: {
-      authorities: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_DEVELOPER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowHistory.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -115,7 +115,7 @@ export const snowHistoryPopupRoute: Routes = [
       snowHistory: SnowHistoryResolve
     },
     data: {
-      authorities: ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_DEVELOPER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowHistory.home.title'
     },
     canActivate: [UserRouteAccessService],
