@@ -18,6 +18,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
   isSaving: boolean;
   sourceTypes: any[];
   sourcetype: string;
+  sourcetypelc: string;
   host: string;
   portNumber: string;
   dbname: string;
@@ -55,7 +56,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
   ngOnInit() {
     this.isSaving = false;
     this.valid = false;
-    this.sourceTypes = ['MySQL', 'Netezza', 'Teradata', 'Oracle'];
+    this.sourceTypes = ['MySQL', 'Netezza', 'Teradata', 'Oracle', 'SQLServer'];
     this.activatedRoute.data.subscribe(({ sourceConnection }) => {
       this.updateForm(sourceConnection);
       this.sourceConnection = sourceConnection;
@@ -64,11 +65,28 @@ export class SourceConnectionUpdateComponent implements OnInit {
 
   concatUrl() {
     this.sourcetype = this.editForm.get(['sourceType']).value;
+    this.sourcetypelc = this.sourcetype.toLowerCase();
     this.host = this.editForm.get(['host']).value;
     this.portNumber = this.editForm.get(['portNumber']).value;
     this.dbname = this.editForm.get(['database']).value;
-    // this.url = 'jdbc:' + this.sourcetype + ':thin:@' + this.host + ':' + this.portNumber + '/' + this.dbname;
-    this.url = 'jdbc:' + this.sourcetype + '://' + this.host + ':' + this.portNumber + '/' + this.dbname;
+    switch (this.sourcetypelc) {
+      case 'oracle':
+        this.url = 'jdbc:' + this.sourcetypelc + ':thin:@' + this.host + ':' + this.portNumber + '/' + this.dbname;
+        console.log(this.url);
+        break;
+      case 'sqlserver':
+        this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host + ':' + this.portNumber + ';databaseName=' + this.dbname;
+        console.log(this.url);
+        break;
+      case 'teradata':
+        this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host;
+        console.log(this.url);
+        break;
+      default:
+        this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host + ':' + this.portNumber + '/' + this.dbname;
+        console.log(this.url);
+        break;
+    }
   }
 
   updateForm(sourceConnection: ISourceConnection) {
