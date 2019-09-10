@@ -1,4 +1,3 @@
-/* tslint:disable max-line-length */
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient, HttpResponse } from '@angular/common/http';
@@ -6,15 +5,15 @@ import { of } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
-import { SnowflakeConnectionService } from 'app/entities/snowflake-connection/snowflake-connection.service';
-import { ISnowflakeConnection, SnowflakeConnection } from 'app/shared/model/snowflake-connection.model';
+import { SourceConnectionService } from 'app/entities/source-connection/source-connection.service';
+import { ISourceConnection, SourceConnection } from 'app/shared/model/source-connection.model';
 
 describe('Service Tests', () => {
-  describe('SnowflakeConnection Service', () => {
+  describe('SourceConnection Service', () => {
     let injector: TestBed;
-    let service: SnowflakeConnectionService;
+    let service: SourceConnectionService;
     let httpMock: HttpTestingController;
-    let elemDefault: ISnowflakeConnection;
+    let elemDefault: ISourceConnection;
     let expectedResult;
     let currentDate: moment.Moment;
     beforeEach(() => {
@@ -23,11 +22,11 @@ describe('Service Tests', () => {
       });
       expectedResult = {};
       injector = getTestBed();
-      service = injector.get(SnowflakeConnectionService);
+      service = injector.get(SourceConnectionService);
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new SnowflakeConnection(
+      elemDefault = new SourceConnection(
         0,
         'AAAAAAA',
         'AAAAAAA',
@@ -66,7 +65,7 @@ describe('Service Tests', () => {
         expect(expectedResult).toMatchObject({ body: elemDefault });
       });
 
-      it('should create a SnowflakeConnection', async () => {
+      it('should create a SourceConnection', async () => {
         const returnedFromService = Object.assign(
           {
             id: 0,
@@ -83,7 +82,7 @@ describe('Service Tests', () => {
           returnedFromService
         );
         service
-          .create(new SnowflakeConnection(null))
+          .create(new SourceConnection(null))
           .pipe(take(1))
           .subscribe(resp => (expectedResult = resp));
         const req = httpMock.expectOne({ method: 'POST' });
@@ -91,19 +90,19 @@ describe('Service Tests', () => {
         expect(expectedResult).toMatchObject({ body: expected });
       });
 
-      it('should update a SnowflakeConnection', async () => {
+      it('should update a SourceConnection', async () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
             description: 'BBBBBB',
+            sourceType: 'BBBBBB',
             url: 'BBBBBB',
             username: 'BBBBBB',
             password: 'BBBBBB',
-            acct: 'BBBBBB',
-            warehouse: 'BBBBBB',
             database: 'BBBBBB',
+            host: 'BBBBBB',
+            portnumber: 'BBBBBB',
             schema: 'BBBBBB',
-            regionid: 'BBBBBB',
             valid: true,
             createdBy: 'BBBBBB',
             createdDate: currentDate.format(DATE_TIME_FORMAT),
@@ -129,19 +128,19 @@ describe('Service Tests', () => {
         expect(expectedResult).toMatchObject({ body: expected });
       });
 
-      it('should return a list of SnowflakeConnection', async () => {
+      it('should return a list of SourceConnection', async () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
             description: 'BBBBBB',
+            sourceType: 'BBBBBB',
             url: 'BBBBBB',
             username: 'BBBBBB',
             password: 'BBBBBB',
-            acct: 'BBBBBB',
-            warehouse: 'BBBBBB',
             database: 'BBBBBB',
+            host: 'BBBBBB',
+            portnumber: 'BBBBBB',
             schema: 'BBBBBB',
-            regionid: 'BBBBBB',
             valid: true,
             createdBy: 'BBBBBB',
             createdDate: currentDate.format(DATE_TIME_FORMAT),
@@ -170,7 +169,7 @@ describe('Service Tests', () => {
         expect(expectedResult).toContainEqual(expected);
       });
 
-      it('should delete a SnowflakeConnection', async () => {
+      it('should delete a SourceConnection', async () => {
         const rxPromise = service.delete(123).subscribe(resp => (expectedResult = resp.ok));
 
         const req = httpMock.expectOne({ method: 'DELETE' });

@@ -24,6 +24,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
   url: string;
   sliced: string[];
   regExp: RegExp = /:\/\/(.*):(.*)\//;
+  valid: boolean;
 
   editForm = this.fb.group({
     id: [],
@@ -53,6 +54,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
 
   ngOnInit() {
     this.isSaving = false;
+    this.valid = false;
     this.sourceTypes = ['MySQL', 'Netezza', 'Teradata', 'Oracle'];
     this.activatedRoute.data.subscribe(({ sourceConnection }) => {
       this.updateForm(sourceConnection);
@@ -65,6 +67,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
     this.host = this.editForm.get(['host']).value;
     this.portNumber = this.editForm.get(['portNumber']).value;
     this.dbname = this.editForm.get(['database']).value;
+    // this.url = 'jdbc:' + this.sourcetype + ':thin:@' + this.host + ':' + this.portNumber + '/' + this.dbname;
     this.url = 'jdbc:' + this.sourcetype + '://' + this.host + ':' + this.portNumber + '/' + this.dbname;
   }
 
@@ -97,6 +100,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
   save() {
     this.isSaving = true;
     const sourceConnection = this.createFromForm();
+    sourceConnection.valid = this.valid;
     if (sourceConnection.id !== undefined) {
       this.subscribeToSaveResponse(this.sourceConnectionService.update(sourceConnection));
     } else {
@@ -149,14 +153,20 @@ export class SourceConnectionUpdateComponent implements OnInit {
   testConnection() {
     const connection = this.createFromForm();
     this.sourceConnectionService.testConnection(connection).subscribe(response => {
-      if (!response.body) {
-        const errorMessage = 'snowpoleApp.snowflakeConnection.invalid';
-        this.jhiAlertService.error(errorMessage, null, null);
+      if (response.body) {
+        const smsg = 'snowpoleApp.sourceConnection.testConnectionSuccess';
+        this.valid = true;
+        this.jhiAlertService.success(smsg);
+      } else {
+        const smsg = 'snowpoleApp.sourceConnection.testConnectionInvalid';
+        this.valid = false;
+        this.jhiAlertService.error(smsg);
       }
-      if (connection.valid !== response.body) {
-        connection.valid = !!response.body;
-        this.sourceConnectionService.update(connection).subscribe(res => {});
-      }
+      // if (connection.valid !== response.body) {
+      //   connection.valid = !!response.body;
+      //   const smsg = 'snowpoleApp.sourceConnection.testConnectionSuccess';
+      //   this.jhiAlertService.success(smsg);
+      // }
     });
   }
 }
