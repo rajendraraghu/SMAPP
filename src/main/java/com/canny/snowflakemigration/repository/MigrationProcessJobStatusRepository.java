@@ -14,6 +14,6 @@ import java.util.*;
 @SuppressWarnings("unused")
 @Repository
 public interface MigrationProcessJobStatusRepository extends JpaRepository<MigrationProcessJobStatus, Long>, JpaSpecificationExecutor<MigrationProcessJobStatus> {
-    @Query("SELECT t FROM MigrationProcessJobStatus t where t.jobId = :id") 
+    @Query("SELECT t FROM MigrationProcessJobStatus t where t.jobId = :id  ORDER BY t.tableLoadStartTime DESC " ) 
     List<MigrationProcessJobStatus> findAllByJobId(@Param("id") Long id);
 }

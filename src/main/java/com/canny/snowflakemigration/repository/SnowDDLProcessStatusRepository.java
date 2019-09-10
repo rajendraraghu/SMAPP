@@ -14,6 +14,6 @@ import java.util.*;
 @SuppressWarnings("unused")
 @Repository
 public interface SnowDDLProcessStatusRepository extends JpaRepository<SnowDDLProcessStatus, Long>, JpaSpecificationExecutor<SnowDDLProcessStatus> {
-    @Query("SELECT t FROM SnowDDLProcessStatus t where t.processId = :id") 
+    @Query("SELECT t FROM SnowDDLProcessStatus t where t.processId = :id ORDER BY t.startTime DESC") 
     List<SnowDDLProcessStatus> findAllByProcessId(@Param("id") Long id);
 }

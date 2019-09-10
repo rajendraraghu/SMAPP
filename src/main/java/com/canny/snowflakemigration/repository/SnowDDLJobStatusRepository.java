@@ -14,6 +14,6 @@ import java.util.*;
 @SuppressWarnings("unused")
 @Repository
 public interface SnowDDLJobStatusRepository extends JpaRepository<SnowDDLJobStatus, Long>, JpaSpecificationExecutor<SnowDDLJobStatus> {
-    @Query("SELECT t FROM SnowDDLJobStatus t where t.batchId = :id") 
+    @Query("SELECT t FROM SnowDDLJobStatus t where t.batchId = :id ORDER BY t.startTime DESC") 
     List<SnowDDLJobStatus> findAllByBatchId(@Param("id") Long id);
 }
