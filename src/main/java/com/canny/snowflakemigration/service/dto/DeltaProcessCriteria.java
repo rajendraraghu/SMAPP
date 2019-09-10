@@ -33,6 +33,8 @@ public class DeltaProcessCriteria implements Serializable, Criteria {
 
     private StringFilter tablesList;
 
+    private StringFilter selectedColumns;
+
     private StringFilter pk;
 
     private StringFilter lastStatus;
@@ -57,6 +59,7 @@ public class DeltaProcessCriteria implements Serializable, Criteria {
         this.name = other.name == null ? null : other.name.copy();
         this.description = other.description == null ? null : other.description.copy();
         this.tablesList = other.tablesList == null ? null : other.tablesList.copy();
+        this.selectedColumns = other.selectedColumns == null ? null : other.selectedColumns.copy();
         this.pk = other.pk == null ? null : other.pk.copy();
         this.lastStatus = other.lastStatus == null ? null : other.lastStatus.copy();
         this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
@@ -102,6 +105,14 @@ public class DeltaProcessCriteria implements Serializable, Criteria {
 
     public void setTablesList(StringFilter tablesList) {
         this.tablesList = tablesList;
+    }
+
+    public StringFilter getSelectedColumns() {
+        return selectedColumns;
+    }
+
+    public void setSelectedColumns(StringFilter selectedColumns) {
+        this.selectedColumns = selectedColumns;
     }
 
     public StringFilter getPk() {
@@ -183,6 +194,7 @@ public class DeltaProcessCriteria implements Serializable, Criteria {
             Objects.equals(name, that.name) &&
             Objects.equals(description, that.description) &&
             Objects.equals(tablesList, that.tablesList) &&
+            Objects.equals(selectedColumns, that.selectedColumns) &&
             Objects.equals(pk, that.pk) &&
             Objects.equals(lastStatus, that.lastStatus) &&
             Objects.equals(createdBy, that.createdBy) &&
@@ -200,6 +212,7 @@ public class DeltaProcessCriteria implements Serializable, Criteria {
         name,
         description,
         tablesList,
+        selectedColumns,
         pk,
         lastStatus,
         createdBy,
@@ -218,6 +231,7 @@ public class DeltaProcessCriteria implements Serializable, Criteria {
                 (name != null ? "name=" + name + ", " : "") +
                 (description != null ? "description=" + description + ", " : "") +
                 (tablesList != null ? "tablesList=" + tablesList + ", " : "") +
+                (selectedColumns != null ? "selectedColumns=" + selectedColumns+ ", " : "") +
                 (pk != null ? "pk=" + pk + ", " : "") +
                 (lastStatus != null ? "lastStatus=" + lastStatus + ", " : "") +
                 (createdBy != null ? "createdBy=" + createdBy + ", " : "") +

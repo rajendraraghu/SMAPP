@@ -27,6 +27,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="selected_columns" type="varchar(6400)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="pk" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -92,6 +96,7 @@
             <column name="name" type="string"/>
             <column name="description" type="string"/>
             <column name="tables_list" type="string"/>
+            <column name="selected_columns" type="string"/>
             <column name="pk" type="string"/>
             <column name="last_status" type="string"/>
             <column name="created_by" type="string"/>

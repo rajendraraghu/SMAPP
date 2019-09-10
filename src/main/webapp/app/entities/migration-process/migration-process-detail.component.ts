@@ -29,6 +29,10 @@ export class MigrationProcessDetailComponent implements OnInit {
   bulkTables = [];
   isSaving: boolean;
   masterSelected: boolean;
+  check: any[];
+  str: string;
+  tb = [];
+  add: any;
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
@@ -46,6 +50,7 @@ export class MigrationProcessDetailComponent implements OnInit {
       this.selectedColumns = this.migrationProcess.selectedColumns ? JSON.parse(this.migrationProcess.selectedColumns) : [];
       this.getTableList();
       this.masterSelected = false;
+      // this.flag = false;
     });
     this.isSaving = false;
   }
@@ -146,14 +151,27 @@ export class MigrationProcessDetailComponent implements OnInit {
     this.modalService.open(content);
   }
 
+  searchStringInArray(a, b) {
+    for (let j = 0; j < b.length; j++) {
+      if (b[j].match(a)) {
+        return j;
+      }
+    }
+    return -1;
+    console.log('return' + -1);
+  }
+
   setPK(tableName, PK) {
-    if (PK != null) {
+    this.selectedColumns.forEach(element => {
+      this.tb.push(element.split('-')[1]);
+    });
+    this.add = this.searchStringInArray(tableName, this.tb);
+    if (PK !== null) {
       PK = PK.split('-');
       for (const pkCol of PK) {
         const columnName = pkCol + '-' + tableName;
         const index = this.selectedColumns.indexOf(columnName);
-        if (index === -1) {
-          // val not found, pushing onto array
+        if (this.add === -1 && index === -1) {
           this.selectedColumns.push(columnName);
         }
       }

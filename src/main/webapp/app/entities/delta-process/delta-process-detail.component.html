@@ -80,7 +80,7 @@
                     (input)="searchForTables($event.target.value)">
             </div>
             <div>
-            <input type="checkbox" [(ngModel)]="masterSelected" name="list_name" value="m1" (change)="checkUncheckAll()"/> <strong style="color:darkorange;font-weight:bold">Select/ Unselect All</strong>
+            <input type="checkbox" [(ngModel)]="masterSelected" name="list_name" value="m1" (change)="checkUncheckAll($event)"/> <strong style="color:darkorange;font-weight:bold">Select/ Unselect All</strong>
             </div>
 
             <div class="form-group" style="height: 40vh; overflow-y: auto;">
@@ -105,21 +105,32 @@
                             <label class="custom-control-label" [for]="i">{{item.name}}</label>
                         </div>
                     </div>
-                    <div class="col-6 pl-0">
-                        <label  [for]="i">{{item.primaryKey}}</label>
-                    </div>
-               <!--     <div class="col-2 pl-0 ">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" [id]="customSwitchId(i)"
-                                [disabled]="!item.selected" [checked]="item.cdc" (change)="onProcessSelection(item);">
-                            <label class="custom-control-label" [for]="customSwitchId(i)"> </label>
-                        </div>
-                    </div>
                     <div class="col-3 pl-0">
-                        <select class="form-control" id="field_system" name="system"  [disabled]="!item.cdc" [(ngModel)]="item.selectedCdcCol">
-                            <option *ngFor="let cdcColumn of item.cdcColumnList; let i=index " [value]="cdcColumn">{{cdcColumn}}</option>
-                        </select>
-                    </div> -->
+                        <!-- <button type="button" [routerLink]="['/migration-process',{ outlets: { popup: item.name+'/selectPK'} }]" class="btn btn-primary"> -->
+                        <button type="button" class="btn btn-primary" [disabled]="!item.selected" (click) = "selectPK(item,templatePK)">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> {{item.primaryKey}} </span>
+                        </button>
+                        <ng-template #templatePK let-modal>
+                                <div class="modal-header">
+                                  <h4 class="modal-title" id="modal-basic-title">Select Primary Key</h4>
+                                  <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button> -->
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row m-0" *ngFor="let column of columns; let j=index">
+                                        <div class="col-12 pl-0">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" [id]="'columnName'+j" class="custom-control-input" name="column_name_list" [(ngModel)]="column.selected" value="{{column.columnName}}" (change)="onPKSelection(item.name,column)">
+                                                <label class="custom-control-label" [for]="'columnName'+j">{{column.columnName}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-primary" (click)="modal.close()">Close</button>
+                                </div>
+                              </ng-template>
                 </div>
             </div>
         </fieldset>

@@ -36,6 +36,10 @@ public class DeltaProcess extends AbstractAuditingEntity implements Serializable
     @Column(name = "tables_list", length = 3200)
     private String tablesList;
 
+    @Size(max = 6400)
+    @Column(name = "selected_columns", length = 6400)
+    private String selectedColumns;
+
     @Size(max = 3200)
     @Column(name = "pk", length = 3200)
     private String pk;
@@ -112,6 +116,19 @@ public class DeltaProcess extends AbstractAuditingEntity implements Serializable
 
     public void setTablesList(String tablesList) {
         this.tablesList = tablesList;
+    }
+
+    public String getSelectedColumns() {
+        return selectedColumns;
+    }
+
+    public DeltaProcess selectedColumns(String selectedColumns) {
+        this.selectedColumns = selectedColumns;
+        return this;
+    }
+
+    public void setSelectedColumns(String selectedColumns) {
+        this.selectedColumns = selectedColumns;
     }
 
     public String getPk() {
@@ -255,6 +272,7 @@ public class DeltaProcess extends AbstractAuditingEntity implements Serializable
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
             ", tablesList='" + getTablesList() + "'" +
+            ", selectedColumns='" + getSelectedColumns() + "'" +
             ", pk='" + getPk() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
             ", selectedAll='" + getSelectedAll() + "'" +
