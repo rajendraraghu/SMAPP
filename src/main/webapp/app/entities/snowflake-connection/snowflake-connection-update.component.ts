@@ -15,6 +15,7 @@ import { JhiAlertService } from 'ng-jhipster';
 })
 export class SnowflakeConnectionUpdateComponent implements OnInit {
   isSaving: boolean;
+  valid: boolean;
 
   editForm = this.fb.group({
     id: [],
@@ -43,6 +44,7 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
 
   ngOnInit() {
     this.isSaving = false;
+    this.valid = false;
     this.activatedRoute.data.subscribe(({ snowflakeConnection }) => {
       this.updateForm(snowflakeConnection);
     });
@@ -75,6 +77,7 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
   save() {
     this.isSaving = true;
     const snowflakeConnection = this.createFromForm();
+    snowflakeConnection.valid = this.valid;
     if (snowflakeConnection.id !== undefined) {
       this.subscribeToSaveResponse(this.snowflakeConnectionService.update(snowflakeConnection));
     } else {
@@ -123,14 +126,14 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
   testConnection() {
     const connection = this.createFromForm();
     this.snowflakeConnectionService.testConnection(connection).subscribe(response => {
-      console.log(response.body);
-      if (!response.body) {
-        const errorMessage = 'snowpoleApp.sourceConnection.invalid';
-        this.jhiAlertService.error(errorMessage, null, null);
-      }
-      if (connection.valid !== response.body) {
-        connection.valid = !!response.body;
-        this.snowflakeConnectionService.update(connection).subscribe(res => {});
+      if (response.body) {
+        const smsg = 'snowpoleApp.sourceConnection.testConnectionSuccess';
+        this.jhiAlertService.success(smsg);
+        this.valid = true;
+      } else {
+        const smsg = 'snowpoleApp.sourceConnection.testConnectionInvalid';
+        this.jhiAlertService.error(smsg);
+        this.valid = false;
       }
     });
   }
