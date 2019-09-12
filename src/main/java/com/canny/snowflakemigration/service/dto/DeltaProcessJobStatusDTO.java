@@ -36,10 +36,6 @@ public class DeltaProcessJobStatusDTO implements Serializable {
 
     private String processName;
 
-    private String sourceName;
-
-    private String destName;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getJobId() {
         return jobId;
@@ -137,22 +133,6 @@ public class DeltaProcessJobStatusDTO implements Serializable {
         this.processName = processName;
     }
 
-    public String getSourceName() {
-        return sourceName;
-    }
-
-    public void setSourceName(String sourceName) {
-        this.sourceName = sourceName;
-    }
-
-    public String getDestName() {
-        return destName;
-    }
-
-    public void setDestName(String destName) {
-        this.destName = destName;
-    }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -186,8 +166,6 @@ public class DeltaProcessJobStatusDTO implements Serializable {
             ", runType='" + getRunType() + "'" +
             ", processId='" + getProcessId() + "'" +
             ", processName='" + getProcessName() + "'" +
-            ", sourceName='" + getSourceName() + "'" +
-            ", destName='" + getDestName() + "'" +
             "}";
     }
 }

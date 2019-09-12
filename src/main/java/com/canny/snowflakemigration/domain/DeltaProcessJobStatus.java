@@ -13,7 +13,7 @@ import java.time.Instant;
  * A DeltaProcessJobStatus.
  */
 @Entity
-@Table(name = "sah_tableloadstatus")
+@Table(name = "delta_tableloadstatus")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class DeltaProcessJobStatus implements Serializable {
 
@@ -59,12 +59,6 @@ public class DeltaProcessJobStatus implements Serializable {
 
     @Column(name = "processname")
     private String processName;
-
-    @Column(name = "sourcename")
-    private String sourceName;
-
-    @Column(name = "destname")
-    private String destName;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getJobId() {
@@ -223,32 +217,6 @@ public class DeltaProcessJobStatus implements Serializable {
         this.processName = processName;
     }
 
-    public String getSourceName() {
-        return sourceName;
-    }
-
-    public DeltaProcessJobStatus sourceName(String sourceName) {
-        this.sourceName = sourceName;
-        return this;
-    }
-
-    public void setSourceName(String sourceName) {
-        this.sourceName = sourceName;
-    }
-
-    public String getDestName() {
-        return destName;
-    }
-
-    public DeltaProcessJobStatus destName(String destName) {
-        this.destName = destName;
-        return this;
-    }
-
-    public void setDestName(String destName) {
-        this.destName = destName;
-    }
-
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -282,8 +250,6 @@ public class DeltaProcessJobStatus implements Serializable {
             ", runType='" + getRunType() + "'" +
             ", processId='" + getProcessId() + "'" +
             ", processName='" + getProcessName() + "'" +
-            ", sourceName='" + getSourceName() + "'" +
-            ", destName='" + getDestName() + "'" +
             "}";
     }
 }
