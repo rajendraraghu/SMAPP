@@ -39,11 +39,11 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="cdc_pk" type="varchar(255)">
+            <column name="cdc_pk" type="varchar(3200)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="cdc_cols" type="varchar(255)">
+            <column name="cdc_cols" type="varchar(3200)">
                 <constraints nullable="true" />
             </column>
 
@@ -51,11 +51,11 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="bulk_pk" type="varchar(255)">
+            <column name="bulk_pk" type="varchar(3200)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="last_status" type="varchar(255)">
+            <column name="last_status" type="varchar(3200)">
                 <constraints nullable="true" />
             </column>
 
