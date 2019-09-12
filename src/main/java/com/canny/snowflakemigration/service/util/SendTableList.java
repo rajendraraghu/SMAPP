@@ -44,7 +44,7 @@ public class SendTableList  {
 	    FileHandler fh;
 		try{
 			Long jobid=(long)0;
-			fh = new FileHandler("G:/POC/CSV/MyLogFile.log");  
+			fh = new FileHandler("F:/POC/CSV/MyLogFile.log");  
 		    logger.addHandler(fh);
 		    SimpleFormatter formatter = new SimpleFormatter();  
 		    fh.setFormatter(formatter);		        
@@ -269,13 +269,13 @@ public class SendTableList  {
     	ResultSet rs1=stmt1.executeQuery(query);
        	String srcCols = getColNames2(con1,tableName,system,dbname);
 		// String csvFilename = "./temp/"+tableName+".csv";
-		String csvFilename = "G:/POC/CSV/"+tableName+".csv";
+		String csvFilename = "F:/POC/CSV/"+tableName+".csv";
     	toCSV(rs1,csvFilename);   	
     	logger.info("Stage file writing complete");    	
        	Statement stmt2=con2.createStatement();
     	logger.info("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
     	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");    	
-		stmt2.executeQuery("PUT 'file://G:/POC/CSV/"+tableName+".csv' @"+tableName+"_stage;");
+		stmt2.executeQuery("PUT 'file://F:/POC/CSV/"+tableName+".csv' @"+tableName+"_stage;");
 		// stmt2.executeQuery("PUT 'file://./temp/"+tableName+".csv' @"+tableName+"_stage;");
     	int m = 1;
     	int k = srcCols.replaceAll("[^,]","").length() + 1;
