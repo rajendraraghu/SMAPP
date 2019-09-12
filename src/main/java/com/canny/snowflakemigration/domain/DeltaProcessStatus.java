@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
-@Table(name = "sah_jobrunstatus")
+@Table(name = "delta_jobrunstatus")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class DeltaProcessStatus implements Serializable {
 
