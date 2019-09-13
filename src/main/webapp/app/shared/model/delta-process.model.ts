@@ -7,7 +7,7 @@ export interface IDeltaProcess {
   type?: string;
   tablesList?: string;
   selectedColumns?: string;
-  Pk?: string;
+  pk?: string;
   lastStatus?: string;
   createdBy?: string;
   createdDate?: Moment;
@@ -28,7 +28,7 @@ export class DeltaProcess implements IDeltaProcess {
     public type?: string,
     public tablesList?: string,
     public selectedColumns?: string,
-    public Pk?: string,
+    public pk?: string,
     public lastStatus?: string,
     public createdBy?: string,
     public createdDate?: Moment,

@@ -216,8 +216,8 @@ export class DeltaProcessDetailComponent implements OnInit {
     const PrimaryKey = [];
     this.tables.forEach(element => {
       if (element.selected) {
-        PrimaryKey.push(element.name);
-        PrimaryKey.push(element.primaryKey);
+        // PrimaryKey.push(element.name);
+        // PrimaryKey.push(element.primaryKey);
         let firstFlag = true;
         let pkList = '';
         this.selectedColumns.forEach(column => {
@@ -234,7 +234,7 @@ export class DeltaProcessDetailComponent implements OnInit {
     });
     this.deltaProcess.selectedColumns = JSON.stringify(this.selectedColumns);
     this.deltaProcess.tablesList = JSON.stringify(this.selectedTables);
-    this.deltaProcess.Pk = PrimaryKey ? JSON.stringify(PrimaryKey) : null;
+    this.deltaProcess.pk = PrimaryKey ? JSON.stringify(PrimaryKey) : null;
     this.subscribeToSaveResponse(this.deltaProcessService.update(this.deltaProcess));
   }
 
