@@ -42,6 +42,7 @@ public class SendTableList  {
 		String timeStamp = new SimpleDateFormat().format( new Date() );
 		logger = Logger.getLogger("MyLog");  
 	    FileHandler fh;
+		long failure_count = 0;
 		try{
 			Long jobid=(long)0;
 			fh = new FileHandler("F:/POC/CSV/MyLogFile.log");  
@@ -104,10 +105,11 @@ public class SendTableList  {
 		     migrationProcessStatusDTO.setSuccessCount((long)0);
 		     migrationProcessStatusDTO.setFailureCount((long)0);
 		     write = migrationProcessStatusService.save(migrationProcessStatusDTO);
-		     
+		     long success_count = 0;
 		     
 		       	 while(i<tableNamescdc.length && tableNamescdc.length >0 && !tableNamescdc[i].equals("[]"))
 		         {
+					 try {
 		       		logger.info("length is :"+tableNamescdc.length+"i value is :"+i);
 					String tn = tableNamescdc[i].replace("[\"", "");
 					String tableName = tn.replaceAll("\"]|\"", "");
@@ -133,13 +135,26 @@ public class SendTableList  {
 					logger.info("starting cdc delta process for the table: ");
      	    	    logger.info(tableName);
 					cdcprocess(lastruntime,tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase(),key2,col2,migrationProcessJobStatusService);
+					success_count = success_count + 1;
+					write.setSuccessCount(success_count);
 					   write1.setTableLoadEndTime(Instant.now());
 					   write1.setTableLoadStatus("SUCCESS");
 					   write1 = migrationProcessJobStatusService.save(write1);
 				    i= i +1;	
 		       		}
+					catch (Exception e) {
+					migrationProcessJobStatusDTO.setTableLoadEndTime(Instant.now());
+					migrationProcessJobStatusDTO.setTableLoadStatus("FAILURE");
+					failure_count = failure_count + 1;
+					write.setFailureCount(failure_count);
+					migrationProcessJobStatusDTO = migrationProcessJobStatusService.save(migrationProcessJobStatusDTO);
+					i = i + 1;
+					continue;
+				}
+				 }
 		       	 while(j<tableNamesbulk.length &&  tableNamesbulk.length >0 && !tableNamesbulk[j].equals("[]"))
 		         {
+					 try {
 			        logger.info("length is :"+tableNamesbulk.length+"i value is :"+i);
 		            String tn = tableNamesbulk[j].replace("[\"", "");
 					String tableName = tn.replaceAll("\"]|\"", "");
@@ -161,12 +176,24 @@ public class SendTableList  {
 				       write1 = migrationProcessJobStatusService.save(migrationProcessJobStatusDTO);
      	    	    logger.info("starting bulk process for the table: "+tableName);
 					bulkprocess(tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase(),bkey2,migrationProcessJobStatusService);
+					success_count = success_count + 1;
+					write.setSuccessCount(success_count);
 					   write1.setTableLoadEndTime(Instant.now());
 					   write1.setTableLoadStatus("SUCCESS");
 					   write1 = migrationProcessJobStatusService.save(write1);
 				    j = j+1;
 				    
 				  }	
+				  catch (Exception e) {
+					migrationProcessJobStatusDTO.setTableLoadEndTime(Instant.now());
+					migrationProcessJobStatusDTO.setTableLoadStatus("FAILURE");
+					failure_count = failure_count + 1;
+					write.setFailureCount(failure_count);
+					migrationProcessJobStatusDTO = migrationProcessJobStatusService.save(migrationProcessJobStatusDTO);
+					j = j + 1;
+					continue;
+				}
+				 }
 		       	write.setJobStatus("SUCCESS");
 				write.setRunby("admin");
 		       	status = "SUCCESS";
@@ -389,7 +416,9 @@ public class SendTableList  {
 			System.out.println("ddl5:"+ddl5);
 			ddl6 = ddl5.replaceAll("ENABLE","");			
 			System.out.println("ddl6:"+ddl6);
-		}
+        }
+        
+
 		String stagecreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT);");		
 		String histcreate = ddl6.concat(",sah_isdeleted INT,sah_currentind boolean,sah_updatedtime timestamp,sah_MD5HASH TEXT,sah_createdTime timestamp,sah_MD5HASHPK TEXT);");
 		
@@ -398,6 +427,9 @@ public class SendTableList  {
 		logger.info("CREATE TABLE IF NOT EXISTS "+tableName+"hist "+histcreate);
 		ResultSet rs2 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+ stagecreate);
 		ResultSet rs3 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+"hist "+histcreate);
+		
+		
+    	
     }
     public static String pkgenNew(String primarykey)
     {

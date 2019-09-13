@@ -40,8 +40,10 @@ public class HistorySendTableList {
 		String status = new String();
 		String timeStamp = new SimpleDateFormat().format(new Date());
 		SnowHistoryProcessStatusDTO write = new SnowHistoryProcessStatusDTO();
+		// SnowHistoryJobStatusDTO snowHistoryJobStatusDTO = new SnowHistoryJobStatusDTO();
 		logger = Logger.getLogger("MySnowHistoryLog");
 		FileHandler fh;
+
 
 		long success_count = 0;
         long failure_count = 0;
@@ -52,6 +54,7 @@ public class HistorySendTableList {
 		    fh.setFormatter(formatter);		        
 		    logger.info("My first log");
 		    logger.info("initiating the connection");
+
 
 			status = "FAILURE";
 			Properties properties0 = new Properties();
@@ -141,6 +144,7 @@ public class HistorySendTableList {
 		        write = snowHistoryProcessStatusService.save(write);
      	 		con1.close();
 		        con2.close();
+
 		}
 			catch(Exception e)
 		{
