@@ -7,11 +7,13 @@
         "editLabel": "Update Source Connection",
         "notFound": "No Source Connection found"
       },
-      "created": "A new Source Connection is created with identifier {{ param }}",
-      "updated": "A Source Connection is updated with identifier {{ param }}",
-      "deleted": "A Source Connection is deleted with identifier {{ param }}",
+      "created": "A new Source Connection is created",
+      "updated": "A Source Connection is updated",
+      "deleted": "A Source Connection is deleted",
+      "testConnectionSuccess": "Connection Tested Successfully.",
+      "testConnectionInvalid": "Test Connection Failed.",
       "delete": {
-        "question": "Are you sure you want to delete Source Connection {{ id }}?"
+        "question": "Are you sure you want to delete Source Connection?"
       },
       "detail": {
         "title": "Source Connection"

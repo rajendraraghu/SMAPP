@@ -118,7 +118,7 @@ public class DeltaSendTableList  {
 					   //deltaProcessJobStatusDTO.setSourceName(processDTO.getSourceConnectionName());
 					   //deltaProcessJobStatusDTO.setDestName(processDTO.getSnowflakeConnectionName());
 				       DeltaProcessJobStatusDTO write1 = deltaProcessJobStatusService.save(deltaProcessJobStatusDTO);		    	
-		        createAlterDDL(con1,con2,tableName);
+        		        createAlterDDL(con1,con2,tableName);
 		        if (rs1.next())
 			     {			
 					//using local file now. Should be replaced with S3 or other filespace
@@ -159,6 +159,7 @@ public class DeltaSendTableList  {
 					stmt2.executeUpdate("INSERT INTO "+tableName+"_delta SELECT y.*,t.*,CASE WHEN y.id IS NULL THEN 'INSERT' WHEN t.id IS NULL THEN 'DELETE' WHEN y.id = t.id AND y.delta_MD5HASH <> t.delta_MD5HASH THEN 'UPDATE'  ELSE 'NO CHANGE' END AS CDC FROM "+tableName+"_yesterday y FULL OUTER JOIN "+tableName+"_today t ON y.id = t.id");
 				}
 				i = i+1;
+
 				write1.setTableLoadEndTime(Instant.now());
 			    write1.setTableLoadStatus("SUCCESS");
 				write1.setUpdateCount((long)5);
@@ -194,7 +195,7 @@ public class DeltaSendTableList  {
 		    write.setJobEndTime(Instant.now());
 		    write = deltaProcessStatusService.save(write);
 
-		}
+    	}
 	    return status;
 	}
 	public static void toCSV(ResultSet rs, String csvFilename)
@@ -268,6 +269,7 @@ public class DeltaSendTableList  {
 		ResultSet rs3 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+"_yesterday "+histcreate+");");
 		//ResultSet rs4 = stmt2.executeQuery
 		System.out.println("CREATE TABLE IF NOT EXISTS "+tableName+"_delta src."+stagecreate.replaceAll(",",",src.") +",dest."+ histcreate.replaceAll(",",",dest.")+",cdc varchar(40)");
+
     }
  
     public static String pkgenNew(String primarykey)
@@ -291,10 +293,9 @@ public class DeltaSendTableList  {
 		}
 	 catch(Exception e)
 		{
+
 		 logger.info(e.toString());
 		 return ("Failure");
 		}
      }
     }
-
-

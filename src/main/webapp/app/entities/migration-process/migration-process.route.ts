@@ -39,7 +39,7 @@ export const migrationProcessRoute: Routes = [
       pagingParams: JhiResolvePagingParams
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       defaultSort: 'id,asc',
       pageTitle: 'snowpoleApp.migrationProcess.home.title'
     },
@@ -52,7 +52,7 @@ export const migrationProcessRoute: Routes = [
       migrationProcess: MigrationProcessResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.migrationProcess.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -64,7 +64,7 @@ export const migrationProcessRoute: Routes = [
       migrationProcess: MigrationProcessResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.migrationProcess.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -76,7 +76,7 @@ export const migrationProcessRoute: Routes = [
       migrationProcess: MigrationProcessResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.migrationProcess.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -88,7 +88,7 @@ export const migrationProcessRoute: Routes = [
       snowDDL: MigrationProcessResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowDDL.jobStatus.title'
     },
     canActivate: [UserRouteAccessService]
@@ -100,7 +100,7 @@ export const migrationProcessRoute: Routes = [
       migrationProcess: MigrationProcessResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.migrationProcess.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -115,7 +115,7 @@ export const migrationProcessPopupRoute: Routes = [
       migrationProcess: MigrationProcessResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.migrationProcess.home.title'
     },
     canActivate: [UserRouteAccessService],

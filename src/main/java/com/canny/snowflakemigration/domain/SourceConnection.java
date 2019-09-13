@@ -56,8 +56,8 @@ public class SourceConnection extends AbstractAuditingEntity implements Serializ
     private String host;
 
     @NotNull
-    @Column(name = "portnumber", nullable = false)
-    private String portnumber;
+    @Column(name = "port_number", nullable = false)
+    private String portNumber;
 
     @Column(name = "schema")
     private String schema;
@@ -190,17 +190,17 @@ public class SourceConnection extends AbstractAuditingEntity implements Serializ
         this.host = host;
     }
 
-    public String getPortnumber() {
-        return portnumber;
+    public String getPortNumber() {
+        return portNumber;
     }
 
-    public SourceConnection portnumber(String portnumber) {
-        this.portnumber = portnumber;
+    public SourceConnection portNumber(String portNumber) {
+        this.portNumber = portNumber;
         return this;
     }
 
-    public void setPortnumber(String portnumber) {
-        this.portnumber = portnumber;
+    public void setPortNumber(String portNumber) {
+        this.portNumber = portNumber;
     }
 
     public String getSchema() {
@@ -310,7 +310,7 @@ public class SourceConnection extends AbstractAuditingEntity implements Serializ
             ", password='" + getPassword() + "'" +
             ", database='" + getDatabase() + "'" +
             ", host='" + getHost() + "'" +
-            ", portnumber='" + getPortnumber() + "'" +
+            ", portNumber='" + getPortNumber() + "'" +
             ", schema='" + getSchema() + "'" +
             ", valid='" + isValid() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

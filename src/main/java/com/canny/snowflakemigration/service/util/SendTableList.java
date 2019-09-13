@@ -249,7 +249,9 @@ public class SendTableList  {
     	String s = new String();
     	Statement stmt0  = con.createStatement();
     	ResultSet rs9 = null;
-    	if(dname.equals("Oracle:thin")) { rs9 = stmt0.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '"+tablename+"'");}    		
+
+    	if(dname.equals("Oracle")) { rs9 = stmt0.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '"+tablename+"'");}    		
+
     	else if (dname.equals("MySQL")) {rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"+tablename+"' AND TABLE_SCHEMA = '"+dbname+"';");}
     	else if (dname.equals("sqlserver")) {rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"+dbname+"' AND TABLE_NAME = '"+tablename+"';");}
     	else if (dname.equals("Netezza")) {rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM _V_SYS_COLUMNS WHERE TABLE_SCHEMA = '"+dbname+"' AND TABLE_NAME  = '"+tablename+"';");}
@@ -365,7 +367,8 @@ public class SendTableList  {
     		ddl6 = ddl5.substring(0, ddl5.length()-2);
     	}
         else if(system.equals("Teradata")) {rs1=stmt1.executeQuery("SHOW TABLE "+tableName+";");}
-        else if(system.equals("Oracle:thin")) 
+
+		else if(system.equals("Oracle")) 
         {
 			System.out.println("select dbms_metadata.get_ddl('TABLE', '"+tableName+"') as \"Create Table\" from dual");
         	rs1=stmt1.executeQuery("select dbms_metadata.get_ddl('TABLE', '"+tableName+"') as \"Create Table\" from dual");
@@ -386,9 +389,7 @@ public class SendTableList  {
 			System.out.println("ddl5:"+ddl5);
 			ddl6 = ddl5.replaceAll("ENABLE","");			
 			System.out.println("ddl6:"+ddl6);
-        }
-        
-
+		}
 		String stagecreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT);");		
 		String histcreate = ddl6.concat(",sah_isdeleted INT,sah_currentind boolean,sah_updatedtime timestamp,sah_MD5HASH TEXT,sah_createdTime timestamp,sah_MD5HASHPK TEXT);");
 		
@@ -397,9 +398,6 @@ public class SendTableList  {
 		logger.info("CREATE TABLE IF NOT EXISTS "+tableName+"hist "+histcreate);
 		ResultSet rs2 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+ stagecreate);
 		ResultSet rs3 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+"hist "+histcreate);
-		
-		
-    	
     }
     public static String pkgenNew(String primarykey)
     {

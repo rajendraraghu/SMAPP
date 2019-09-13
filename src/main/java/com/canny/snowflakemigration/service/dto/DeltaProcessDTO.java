@@ -19,6 +19,8 @@ public class DeltaProcessDTO implements Serializable {
 
     private String tablesList;
 
+    private String selectedColumns;
+
     private String pk;
 
     private String lastStatus;
@@ -97,6 +99,14 @@ public class DeltaProcessDTO implements Serializable {
 
     public void setTablesList(String tablesList) {
         this.tablesList = tablesList;
+    }
+
+    public String getSelectedColumns() {
+        return selectedColumns;
+    }
+
+    public void setSelectedColumns(String selectedColumns) {
+        this.selectedColumns = selectedColumns;
     }
 
     public String getPk() {
@@ -318,6 +328,7 @@ public class DeltaProcessDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
             ", tablesList='" + getTablesList() + "'" +
+            ", selectedColumns='" + getSelectedColumns() + "'" +
             ", pk='" + getPk() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

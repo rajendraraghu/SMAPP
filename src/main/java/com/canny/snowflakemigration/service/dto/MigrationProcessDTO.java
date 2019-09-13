@@ -55,7 +55,7 @@ public class MigrationProcessDTO implements Serializable {
 
     private String sourceConnectionHost;
 
-    private String sourceConnectionPortnumber;
+    private String sourceConnectionPortNumber;
 
     private String sourceConnectionUsername;
 
@@ -68,6 +68,8 @@ public class MigrationProcessDTO implements Serializable {
     private Long snowflakeConnectionId;
 
     private String snowflakeConnectionName;
+
+    // private String snowflakeConnectionRegionId;
 
     private String snowflakeConnectionUrl;
 
@@ -257,12 +259,12 @@ public class MigrationProcessDTO implements Serializable {
         this.sourceConnectionHost = sourceConnectionHost;
     }
 
-    public String getSourceConnectionPortnumber() {
-        return sourceConnectionPortnumber;
+    public String getSourceConnectionPortNumber() {
+        return sourceConnectionPortNumber;
     }
 
-    public void setSourceConnectionPortnumber(String sourceConnectionPortnumber) {
-        this.sourceConnectionPortnumber = sourceConnectionPortnumber;
+    public void setSourceConnectionPortNumber(String sourceConnectionPortNumber) {
+        this.sourceConnectionPortNumber = sourceConnectionPortNumber;
     }
 
     public String getSourceConnectionUsername() {
@@ -312,6 +314,14 @@ public class MigrationProcessDTO implements Serializable {
     public void setSnowflakeConnectionName(String snowflakeConnectionName) {
         this.snowflakeConnectionName = snowflakeConnectionName;
     }
+
+    // public String getSnowflakeConnectionRegionId() {
+    //     return snowflakeConnectionRegionId;
+    // }
+
+    // public void setSnowflakeConnectionRegionId(String snowflakeConnectionRegionId) {
+    //     this.snowflakeConnectionRegionId = snowflakeConnectionRegionId;
+    // }
 
     public String getSnowflakeConnectionUrl() {
         return snowflakeConnectionUrl;

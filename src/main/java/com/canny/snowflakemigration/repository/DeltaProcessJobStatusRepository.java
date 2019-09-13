@@ -14,6 +14,6 @@ import java.util.*;
 @SuppressWarnings("unused")
 @Repository
 public interface DeltaProcessJobStatusRepository extends JpaRepository<DeltaProcessJobStatus, Long>, JpaSpecificationExecutor<DeltaProcessJobStatus> {
-    @Query("SELECT t FROM DeltaProcessJobStatus t where t.jobId = :id")
+    @Query("SELECT t FROM DeltaProcessJobStatus t where t.jobId = :id ORDER BY t.tableLoadStartTime DESC")
     List<DeltaProcessJobStatus> findAllByJobId(@Param("id") Long id);
 }

@@ -14,6 +14,6 @@ import java.util.*;
 @SuppressWarnings("unused")
 @Repository
 public interface SnowHistoryProcessStatusRepository extends JpaRepository<SnowHistoryProcessStatus, Long>, JpaSpecificationExecutor<SnowHistoryProcessStatus> {
-    @Query("SELECT t FROM SnowHistoryProcessStatus t where t.processId = :id") 
+    @Query("SELECT t FROM SnowHistoryProcessStatus t where t.processId = :id ORDER BY t.startTime DESC") 
     List<SnowHistoryProcessStatus> findAllByProcessId(@Param("id") Long id);
 }

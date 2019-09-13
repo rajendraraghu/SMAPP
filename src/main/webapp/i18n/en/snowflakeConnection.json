@@ -7,11 +7,11 @@
         "createOrEditLabel": "Create or edit a Snowflake Connection",
         "notFound": "No Snowflake Connection found"
       },
-      "created": "A new Snowflake Connection is created with identifier {{ param }}",
-      "updated": "A Snowflake Connection is updated with identifier {{ param }}",
-      "deleted": "A Snowflake Connection is deleted with identifier {{ param }}",
+      "created": "A new Snowflake Connection is created.",
+      "updated": "A Snowflake Connection is updated.",
+      "deleted": "A Snowflake Connection is deleted.",
       "delete": {
-        "question": "Are you sure you want to delete Snowflake Connection {{ id }}?"
+        "question": "Are you sure you want to delete Snowflake Connection?"
       },
       "detail": {
         "title": "Snowflake Connection"

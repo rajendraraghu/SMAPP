@@ -49,9 +49,9 @@ public class DeltaProcessJobStatusCriteria implements Serializable, Criteria {
 
     private StringFilter processName;
 
-    private StringFilter sourceName;
+    // private StringFilter sourceName;
 
-    private StringFilter destName;
+    // private StringFilter destName;
 
     public DeltaProcessJobStatusCriteria(){
     }
@@ -69,8 +69,8 @@ public class DeltaProcessJobStatusCriteria implements Serializable, Criteria {
         this.runType = other.runType == null ? null : other.runType.copy();
         this.processId = other.processId == null ? null : other.processId.copy();
         this.processName = other.processName == null ? null : other.processName.copy();
-        this.sourceName = other.sourceName == null ? null : other.sourceName.copy();
-        this.destName = other.destName == null ? null : other.destName.copy();
+        // this.sourceName = other.sourceName == null ? null : other.sourceName.copy();
+        // this.destName = other.destName == null ? null : other.destName.copy();
     }
 
     @Override
@@ -174,21 +174,21 @@ public class DeltaProcessJobStatusCriteria implements Serializable, Criteria {
         this.processName = processName;
     }
 
-    public StringFilter getSourceName() {
-        return sourceName;
-    }
+    // public StringFilter getSourceName() {
+    //     return sourceName;
+    // }
 
-    public void setSourceName(StringFilter sourceName) {
-        this.sourceName = sourceName;
-    }
+    // public void setSourceName(StringFilter sourceName) {
+    //     this.sourceName = sourceName;
+    // }
 
-    public StringFilter getDestName() {
-        return destName;
-    }
+    // public StringFilter getDestName() {
+    //     return destName;
+    // }
 
-    public void setDestName(StringFilter destName) {
-        this.destName = destName;
-    }
+    // public void setDestName(StringFilter destName) {
+    //     this.destName = destName;
+    // }
 
 
     @Override
@@ -212,9 +212,9 @@ public class DeltaProcessJobStatusCriteria implements Serializable, Criteria {
             Objects.equals(deleteCount, that.deleteCount) &&
             Objects.equals(runType, that.runType) &&
             Objects.equals(processId, that.processId) &&
-            Objects.equals(processName, that.processName) &&
-            Objects.equals(sourceName, that.sourceName) &&
-            Objects.equals(destName, that.destName);
+            Objects.equals(processName, that.processName);
+            // Objects.equals(sourceName, that.sourceName) &&
+            // Objects.equals(destName, that.destName);
     }
 
     @Override
@@ -231,9 +231,9 @@ public class DeltaProcessJobStatusCriteria implements Serializable, Criteria {
         deleteCount,
         runType,
         processId,
-        processName,
-        sourceName,
-        destName
+        processName
+        // sourceName,
+        // destName
         );
     }
 
@@ -252,8 +252,8 @@ public class DeltaProcessJobStatusCriteria implements Serializable, Criteria {
                 (runType != null ? "runType=" + runType + ", " : "") +
                 (processId != null ? "processId=" + processId + ", " : "") +
                 (processName != null ? "processName=" + processName + ", " : "") +
-                (sourceName != null ? "sourceName=" + sourceName + ", " : "") +
-                (destName != null ? "destName=" + destName + ", " : "") +
+                // (sourceName != null ? "sourceName=" + sourceName + ", " : "") +
+                // (destName != null ? "destName=" + destName + ", " : "") +
             "}";
     }
 

@@ -39,7 +39,7 @@ export const deltaProcessRoute: Routes = [
       pagingParams: JhiResolvePagingParams
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       defaultSort: 'id,asc',
       pageTitle: 'snowpoleApp.deltaProcess.home.title'
     },
@@ -52,7 +52,7 @@ export const deltaProcessRoute: Routes = [
       deltaProcess: DeltaProcessResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.deltaProcess.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -64,7 +64,7 @@ export const deltaProcessRoute: Routes = [
       deltaProcess: DeltaProcessResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.deltaProcess.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -76,7 +76,7 @@ export const deltaProcessRoute: Routes = [
       deltaProcess: DeltaProcessResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.deltaProcess.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -88,7 +88,7 @@ export const deltaProcessRoute: Routes = [
       snowDDL: DeltaProcessResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowDDL.jobStatus.title'
     },
     canActivate: [UserRouteAccessService]
@@ -100,7 +100,7 @@ export const deltaProcessRoute: Routes = [
       deltaProcess: DeltaProcessResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.deltaProcess.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -115,7 +115,7 @@ export const deltaProcessPopupRoute: Routes = [
       deltaProcess: DeltaProcessResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.deltaProcess.home.title'
     },
     canActivate: [UserRouteAccessService],

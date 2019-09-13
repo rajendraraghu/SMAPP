@@ -37,7 +37,7 @@ export const sourceConnectionRoute: Routes = [
       pagingParams: JhiResolvePagingParams
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN'],
       defaultSort: 'id,asc',
       pageTitle: 'snowpoleApp.sourceConnection.home.title'
     },
@@ -50,7 +50,7 @@ export const sourceConnectionRoute: Routes = [
       sourceConnection: SourceConnectionResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.sourceConnection.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -62,7 +62,7 @@ export const sourceConnectionRoute: Routes = [
       sourceConnection: SourceConnectionResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN'],
       pageTitle: 'snowpoleApp.sourceConnection.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -74,7 +74,7 @@ export const sourceConnectionRoute: Routes = [
       sourceConnection: SourceConnectionResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN'],
       pageTitle: 'snowpoleApp.sourceConnection.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -89,7 +89,7 @@ export const sourceConnectionPopupRoute: Routes = [
       sourceConnection: SourceConnectionResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN'],
       pageTitle: 'snowpoleApp.sourceConnection.home.title'
     },
     canActivate: [UserRouteAccessService],

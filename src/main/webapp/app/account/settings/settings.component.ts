@@ -19,25 +19,24 @@ export class SettingsComponent implements OnInit {
     email: [undefined, [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]],
     activated: [false],
     authorities: [[]],
-    langKey: ['en'],
+    // langKey: ['en'],
     login: [],
     imageUrl: []
   });
 
   constructor(
     private accountService: AccountService,
-    private fb: FormBuilder,
-    private languageService: JhiLanguageService,
-    private languageHelper: JhiLanguageHelper
-  ) {}
+    private fb: FormBuilder // private languageService: JhiLanguageService,
+  ) // private languageHelper: JhiLanguageHelper
+  {}
 
   ngOnInit() {
     this.accountService.identity().then(account => {
       this.updateForm(account);
     });
-    this.languageHelper.getAll().then(languages => {
-      this.languages = languages;
-    });
+    // this.languageHelper.getAll().then(languages => {
+    //   this.languages = languages;
+    // });
   }
 
   save() {
@@ -49,11 +48,11 @@ export class SettingsComponent implements OnInit {
         this.accountService.identity(true).then(account => {
           this.updateForm(account);
         });
-        this.languageService.getCurrent().then(current => {
-          if (settingsAccount.langKey !== current) {
-            this.languageService.changeLanguage(settingsAccount.langKey);
-          }
-        });
+        // this.languageService.getCurrent().then(current => {
+        //   if (settingsAccount.langKey !== current) {
+        //     this.languageService.changeLanguage(settingsAccount.langKey);
+        //   }
+        // });
       },
       () => {
         this.success = null;
@@ -71,7 +70,7 @@ export class SettingsComponent implements OnInit {
       email: this.settingsForm.get('email').value,
       activated: this.settingsForm.get('activated').value,
       authorities: this.settingsForm.get('authorities').value,
-      langKey: this.settingsForm.get('langKey').value,
+      // langKey: this.settingsForm.get('langKey').value,
       login: this.settingsForm.get('login').value,
       imageUrl: this.settingsForm.get('imageUrl').value
     };
@@ -84,7 +83,7 @@ export class SettingsComponent implements OnInit {
       email: account.email,
       activated: account.activated,
       authorities: account.authorities,
-      langKey: account.langKey,
+      // langKey: account.langKey,
       login: account.login,
       imageUrl: account.imageUrl
     });

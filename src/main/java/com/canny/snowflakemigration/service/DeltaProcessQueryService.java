@@ -100,6 +100,9 @@ public class DeltaProcessQueryService extends QueryService<DeltaProcess> {
             if (criteria.getTablesList() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getTablesList(), DeltaProcess_.tablesList));
             }
+            if (criteria.getSelectedColumns() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getSelectedColumns(), DeltaProcess_.selectedColumns));
+            }
             if (criteria.getPk() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getPk(), DeltaProcess_.pk));
             }

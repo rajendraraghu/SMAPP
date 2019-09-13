@@ -32,7 +32,7 @@
         "notFound": "No Migration Process found"
       },
       "jobStatus": {
-        "title": "DDL Conversion Job Status",
+        "title": "Migration Process Job Status",
         "notFound": "No Migration Process Job Found"
       }
     }

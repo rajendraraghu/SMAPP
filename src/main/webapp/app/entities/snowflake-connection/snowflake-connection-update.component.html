@@ -1,133 +1,244 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-            <h2 id="jhi-snowflake-connection-heading" jhiTranslate="snowpoleApp.snowflakeConnection.home.createOrEditLabel">Create or edit a Snowflake Connection</h2>
+            <h2 id="jhi-snowflake-connection-heading"
+                jhiTranslate="snowpoleApp.snowflakeConnection.home.createOrEditLabel">Create or edit a Snowflake
+                Connection</h2>
             <div>
-                <jhi-alert-error></jhi-alert-error>
-                <!-- <div class="form-group" [hidden]="!editForm.get('id').value">
-                    <label for="id" jhiTranslate="global.field.id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
-                        readonly />
-                </div> -->
+                <jhi-alert></jhi-alert>
                 <div class="form-group">
-                    <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowflakeConnection.name" for="field_name">Name<span class="required">*</span></label>
-                    <input type="text" class="col-sm-4 form-control-input" name="name" id="field_name" 
-                           formControlName="name" aria-describedby="required-description"/> 
-                    <div *ngIf="editForm.get('name').invalid && (editForm.get('name').dirty || editForm.get('name').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('name').errors.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                        <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.name"
+                                        for="field_name">Name</label>
+                                </div>
+                                <div class="col-sm-4">
+                                        <input type="text" class="col-sm-12 form-control-input" name="name" id="field_name"
+                                        formControlName="name" aria-describedby="required-description" joyrideStep="Step 13"
+                                        title="Name" text="Name the snowflake connection" />
+                                </div>
+                                <div class="col-sm-2"
+                                *ngIf="editForm.get('name').invalid && (editForm.get('name').dirty || editForm.get('name').touched)">
+                                <small class="form-text text-danger" *ngIf="editForm.get('name').errors.required"
+                                    jhiTranslate="entity.validation.required">
+                                    This field is required.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowflakeConnection.description" for="field_description">Description</label>
-                    <input type="text" class="col-sm-4 form-control-input" name="description" id="field_description"
-                           formControlName="description"/>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowflakeConnection.url" for="field_url">Url</label>
-                    <input type="text" class="col-sm-4 form-control-input" name="url" id="field_url"
-                           formControlName="url"/>
-                    <div *ngIf="editForm.get('url').invalid && (editForm.get('url').dirty || editForm.get('url').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('url').errors.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('url').errors.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 1200 }">
-                        This field cannot be longer than 1200 characters.
-                        </small>
+                    <div class="form-group">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.description"
+                                        for="field_description">Description</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" class="col-sm-12 form-control-input" name="description" id="field_description"
+                                        formControlName="description" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowflakeConnection.username" for="field_username">Username</label>
-                    <input type="text" class="col-sm-4 form-control-input" name="username" id="field_username"
-                           formControlName="username"/>
-                    <div *ngIf="editForm.get('username').invalid && (editForm.get('username').dirty || editForm.get('username').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('username').errors.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
+                    <div class="form-group">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.url"
+                                        for="field_url">Url</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" class="col-sm-12 form-control-input" name="url" id="field_url"
+                                        formControlName="url" />
+                                </div>
+                                <div class="col-sm-2"
+                                    *ngIf="editForm.get('url').invalid && (editForm.get('url').dirty || editForm.get('url').touched)">
+                                    <small class="form-text text-danger" *ngIf="editForm.get('url').errors.required"
+                                        jhiTranslate="entity.validation.required">
+                                        This field is required.
+                                    </small>
+                                    <small class="form-text text-danger" *ngIf="editForm.get('url').errors.maxlength"
+                                        jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 1200 }">
+                                        This field cannot be longer than 1200 characters.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowflakeConnection.password" for="field_password">Password</label>
-                    <input type="password" class="col-sm-4 form-control-input" name="password" id="field_password"
-                           formControlName="password"/>
-                    <div *ngIf="editForm.get('password').invalid && (editForm.get('password').dirty || editForm.get('password').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('password').errors.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
+                    <div class="form-group">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.username"
+                                        for="field_username">Username</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" class="col-sm-12 form-control-input" name="username" id="field_username"
+                                        formControlName="username" />
+                                </div>
+                                <div class="col-sm-2"
+                                    *ngIf="editForm.get('username').invalid && (editForm.get('username').dirty || editForm.get('username').touched)">
+                                    <small class="form-text text-danger" *ngIf="editForm.get('username').errors.required"
+                                        jhiTranslate="entity.validation.required">
+                                        This field is required.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowflakeConnection.acct" for="field_acct">Acct</label>
-                    <input type="text" class="col-sm-4 form-control-input" name="acct" id="field_acct"
-                           formControlName="acct"/>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowflakeConnection.warehouse" for="field_warehouse">Warehouse</label>
-                    <input type="text" class="col-sm-4 form-control-input" name="warehouse" id="field_warehouse"
-                           formControlName="warehouse"/>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowflakeConnection.database" for="field_database">Database</label>
-                    <input type="text" class="col-sm-4 form-control-input" name="database" id="field_database"
-                           formControlName="database"/>
-                    <div *ngIf="editForm.get('database').invalid && (editForm.get('database').dirty || editForm.get('database').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('database').errors.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
+                    <div class="form-group">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.password"
+                                        for="field_password">Password</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="password" class="col-sm-12 form-control-input" name="password" id="field_password"
+                                        formControlName="password" />
+                                </div>
+                                <div class="col-sm-2"
+                                    *ngIf="editForm.get('password').invalid && (editForm.get('password').dirty || editForm.get('password').touched)">
+                                    <small class="form-text text-danger" *ngIf="editForm.get('password').errors.required"
+                                        jhiTranslate="entity.validation.required">
+                                        This field is required.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label col-sm-3"  jhiTranslate="snowpoleApp.snowflakeConnection.schema" for="field_schema">Schema</label>
+                    <div class="form-group">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                            <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.acct"
+                                            for="field_acct">Acct</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                            <input type="text" class="col-sm-12 form-control-input" name="acct" id="field_acct"
+                                            formControlName="acct" />
+                                    </div>
+                                    <!-- <div class="col-sm-2"
+                                        *ngIf="editForm.get('acct').invalid && (editForm.get('password').dirty || editForm.get('password').touched)">
+                                        <small class="form-text text-danger" *ngIf="editForm.get('password').errors.required"
+                                            jhiTranslate="entity.validation.required">
+                                            This field is required.
+                                        </small>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                                <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.warehouse"
+                                                for="field_warehouse">Warehouse</label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                                <input type="text" class="col-sm-12 form-control-input" name="warehouse" id="field_warehouse"
+                                                formControlName="warehouse" />
+                                        </div>
+                                        <!-- <div class="col-sm-2"
+                                            *ngIf="editForm.get('password').invalid && (editForm.get('password').dirty || editForm.get('password').touched)">
+                                            <small class="form-text text-danger" *ngIf="editForm.get('password').errors.required"
+                                                jhiTranslate="entity.validation.required">
+                                                This field is required.
+                                            </small>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.database"
+                                                for="field_database">Database</label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="col-sm-12 form-control-input" name="database" id="field_database"
+                                                formControlName="database" />
+                                        </div>
+                                        <div class="col-sm-2"
+                                        *ngIf="editForm.get('database').invalid && (editForm.get('database').dirty || editForm.get('database').touched)">
+                                        <small class="form-text text-danger" *ngIf="editForm.get('database').errors.required"
+                                            jhiTranslate="entity.validation.required">
+                                            This field is required.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.schema"
+                                                    for="field_schema">Schema</label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                    <input type="text" class="col-sm-12 form-control-input" name="schema" id="field_schema"
+                                                    formControlName="schema" />
+                                            </div>
+                                            <!-- <div class="col-sm-2"
+                                            *ngIf="editForm.get('database').invalid && (editForm.get('database').dirty || editForm.get('database').touched)">
+                                            <small class="form-text text-danger" *ngIf="editForm.get('database').errors.required"
+                                                jhiTranslate="entity.validation.required">
+                                                This field is required.
+                                                </small>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                </div>
+                <!-- <div class="form-group">
+                    <label class="form-control-label col-sm-3" jhiTranslate="snowpoleApp.snowflakeConnection.schema"
+                        for="field_schema">Schema</label>
                     <input type="text" class="col-sm-4 form-control-input" name="schema" id="field_schema"
-                           formControlName="schema"/>
-                </div>
-                <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.valid" for="field_valid">Valid</label>
-                    <input type="checkbox" class="form-control" name="valid" id="field_valid"
-                           formControlName="valid"/>
+                        formControlName="schema" />
                 </div> -->
                 <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.createdBy" for="field_createdBy">Created By</label>
-                    <input type="text" class="form-control" name="createdBy" id="field_createdBy"
-                           formControlName="createdBy"/>
-                </div> -->
+                        <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.valid" for="field_valid">Valid</label>
+                        <input type="checkbox" class="form-control" name="valid" id="field_valid"
+                               formControlName="valid"/>
+                    </div> -->
                 <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.createdDate" for="field_createdDate">Created Date</label>
-                    <div class="d-flex">
-                        <input id="field_createdDate" type="datetime-local" class="form-control" name="createdDate" formControlName="createdDate" placeholder="YYYY-MM-DD HH:mm"/>
-                    </div>
-                </div> -->
+                        <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.createdBy" for="field_createdBy">Created By</label>
+                        <input type="text" class="form-control" name="createdBy" id="field_createdBy"
+                               formControlName="createdBy"/>
+                    </div> -->
                 <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedBy" for="field_lastModifiedBy">Last Modified By</label>
-                    <input type="text" class="form-control" name="lastModifiedBy" id="field_lastModifiedBy"
-                           formControlName="lastModifiedBy"/>
-                </div> -->
+                        <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.createdDate" for="field_createdDate">Created Date</label>
+                        <div class="d-flex">
+                            <input id="field_createdDate" type="datetime-local" class="form-control" name="createdDate" formControlName="createdDate" placeholder="YYYY-MM-DD HH:mm"/>
+                        </div>
+                    </div> -->
                 <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedDate" for="field_lastModifiedDate">Last Modified Date</label>
-                    <div class="d-flex">
-                        <input id="field_lastModifiedDate" type="datetime-local" class="form-control" name="lastModifiedDate" formControlName="lastModifiedDate" placeholder="YYYY-MM-DD HH:mm"/>
-                    </div>
-                </div> -->
+                        <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedBy" for="field_lastModifiedBy">Last Modified By</label>
+                        <input type="text" class="form-control" name="lastModifiedBy" id="field_lastModifiedBy"
+                               formControlName="lastModifiedBy"/>
+                    </div> -->
+                <!-- <div class="form-group">
+                        <label class="form-control-label" jhiTranslate="snowpoleApp.snowflakeConnection.lastModifiedDate" for="field_lastModifiedDate">Last Modified Date</label>
+                        <div class="d-flex">
+                            <input id="field_lastModifiedDate" type="datetime-local" class="form-control" name="lastModifiedDate" formControlName="lastModifiedDate" placeholder="YYYY-MM-DD HH:mm"/>
+                        </div>
+                    </div> -->
 
             </div>
             <div>
-                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
                 </button>
-                <button type="submit" (click)="testConnection()" [disabled]="editForm.invalid || isSaving"
+                <button type="button" (click)="testConnection()" [disabled]="editForm.invalid || isSaving"
                     class="btn btn-info">
                     <fa-icon [icon]="'save'"></fa-icon>
-                    <span class="d-none d-md-inline">Test & Save Connection</span>
+                    <span class="d-none d-md-inline">Test Connection</span>
                 </button>
                 <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary"
-                    joyrideStep="elevengthStep" stepPosition="top" title="Snowflake Connection" 
+                    joyrideStep="elevengthStep" stepPosition="top" title="Snowflake Connection"
                     text="Create new Snowflake Connection with Name, target Url, Snowflake username, password, account, warehouse, database and schema">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
                 </button>

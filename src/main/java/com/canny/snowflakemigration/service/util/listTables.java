@@ -22,7 +22,6 @@ public class listTables {
 		properties0.put("password", migrationProcessDTO.getSourceConnectionPassword());
 		properties0.put("db",migrationProcessDTO.getSourceConnectionDatabase());
 	    //properties0.put("schema",migrationProcessDTO.getSourceConnectionSchema());	
-	    //Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/orcl",properties0);
 		//Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=DEMO_DB",properties0);
 		Connection con = DriverManager.getConnection(migrationProcessDTO.getSourceConnectionUrl(),properties0);
         Statement stmt0 = con.createStatement();
@@ -43,7 +42,9 @@ public class listTables {
         else if(system.equals("Teradata")) {rs1 = stmt0.executeQuery("SELECT DISTINCT TABLE_NAME, 'NoPrimaryKey' as PrimaryKey FROM _V_SYS_COLUMNS WHERE TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"';");}
         else if(system.equals("Oracle")) {
 			System.out.println("inside first query loop"+migrationProcessDTO.getSourceConnectionSchema());
-			rs1 = stmt0.executeQuery("SELECT cols.TABLE_NAME, LISTAGG(cols.column_name,'-') as \"PrimaryKey\" FROM all_constraints cons, all_cons_columns cols WHERE cols.OWNER = '"+migrationProcessDTO.getSourceConnectionSchema()+"' AND cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner AND cols.TABLE_NAME LIKE 'DE%' GROUP BY cols.TABLE_NAME");
+
+			rs1 = stmt0.executeQuery("SELECT cols.TABLE_NAME, LISTAGG(cols.column_name,'-') WITHIN GROUP (ORDER BY cols.column_name)as \"PrimaryKey\" FROM all_constraints cons, all_cons_columns cols WHERE cols.OWNER = '"+migrationProcessDTO.getSourceConnectionSchema()+"' AND cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner GROUP BY cols.TABLE_NAME");
+
 			}
         //else {rs1 = stmt1.executeQuery("SELECT 1 as COLUMN_NAME;");}
         
