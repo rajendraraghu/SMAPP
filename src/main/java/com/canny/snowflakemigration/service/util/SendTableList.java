@@ -42,6 +42,7 @@ public class SendTableList  {
 		String timeStamp = new SimpleDateFormat().format( new Date() );
 		logger = Logger.getLogger("MyLog");  
 	    FileHandler fh;
+		long failure_count = 0;
 		try{
 			Long jobid=(long)0;
 			fh = new FileHandler("F:/POC/CSV/MyLogFile.log");  
@@ -104,10 +105,11 @@ public class SendTableList  {
 		     migrationProcessStatusDTO.setSuccessCount((long)0);
 		     migrationProcessStatusDTO.setFailureCount((long)0);
 		     write = migrationProcessStatusService.save(migrationProcessStatusDTO);
-		     
+		     long success_count = 0;
 		     
 		       	 while(i<tableNamescdc.length && tableNamescdc.length >0 && !tableNamescdc[i].equals("[]"))
 		         {
+					 try {
 		       		logger.info("length is :"+tableNamescdc.length+"i value is :"+i);
 					String tn = tableNamescdc[i].replace("[\"", "");
 					String tableName = tn.replaceAll("\"]|\"", "");
@@ -133,13 +135,26 @@ public class SendTableList  {
 					logger.info("starting cdc delta process for the table: ");
      	    	    logger.info(tableName);
 					cdcprocess(lastruntime,tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase(),key2,col2,migrationProcessJobStatusService);
+					success_count = success_count + 1;
+					write.setSuccessCount(success_count);
 					   write1.setTableLoadEndTime(Instant.now());
 					   write1.setTableLoadStatus("SUCCESS");
 					   write1 = migrationProcessJobStatusService.save(write1);
 				    i= i +1;	
 		       		}
+					catch (Exception e) {
+					migrationProcessJobStatusDTO.setTableLoadEndTime(Instant.now());
+					migrationProcessJobStatusDTO.setTableLoadStatus("FAILURE");
+					failure_count = failure_count + 1;
+					write.setFailureCount(failure_count);
+					migrationProcessJobStatusDTO = migrationProcessJobStatusService.save(migrationProcessJobStatusDTO);
+					i = i + 1;
+					continue;
+				}
+				 }
 		       	 while(j<tableNamesbulk.length &&  tableNamesbulk.length >0 && !tableNamesbulk[j].equals("[]"))
 		         {
+					 try {
 			        logger.info("length is :"+tableNamesbulk.length+"i value is :"+i);
 		            String tn = tableNamesbulk[j].replace("[\"", "");
 					String tableName = tn.replaceAll("\"]|\"", "");
@@ -161,12 +176,24 @@ public class SendTableList  {
 				       write1 = migrationProcessJobStatusService.save(migrationProcessJobStatusDTO);
      	    	    logger.info("starting bulk process for the table: "+tableName);
 					bulkprocess(tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase(),bkey2,migrationProcessJobStatusService);
+					success_count = success_count + 1;
+					write.setSuccessCount(success_count);
 					   write1.setTableLoadEndTime(Instant.now());
 					   write1.setTableLoadStatus("SUCCESS");
 					   write1 = migrationProcessJobStatusService.save(write1);
 				    j = j+1;
 				    
 				  }	
+				  catch (Exception e) {
+					migrationProcessJobStatusDTO.setTableLoadEndTime(Instant.now());
+					migrationProcessJobStatusDTO.setTableLoadStatus("FAILURE");
+					failure_count = failure_count + 1;
+					write.setFailureCount(failure_count);
+					migrationProcessJobStatusDTO = migrationProcessJobStatusService.save(migrationProcessJobStatusDTO);
+					j = j + 1;
+					continue;
+				}
+				 }
 		       	write.setJobStatus("SUCCESS");
 				write.setRunby("admin");
 		       	status = "SUCCESS";
@@ -293,7 +320,8 @@ public class SendTableList  {
 		logger.info("Truncating "+tableName);
     	stmt2.executeQuery("INSERT INTO "+tableName+" SELECT "+stageCols+",0 as sah_isdeleted,MD5("+hashCol+") as sah_md5hash,sah_MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as sah_md5hashpk FROM @"+tableName+"_stage t;"); 	
 		logger.info("table creation  and loading (stg) complete");
-    	return srcCols;
+		logger.info("srccols:"+srcCols);
+		return srcCols;
     }
     public static void histLoad(Connection con2,String tableName,String process,String srcCols,long jobid,long tableLoadid,long processid,String primarykey,MigrationProcessJobStatusService migrationProcessJobStatusService) throws SQLException
     {
@@ -305,13 +333,15 @@ public class SendTableList  {
     	int secondmergecount;
     //insert new record for Insert and update  
 	logger.info("HIST LOAD START");  	
-    	int firstmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on "+pk+" and tgt.sah_md5hash = src.sah_MD5HASH and tgt.sah_currentind =1 when not matched then INSERT ("+srcCols +",sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
+    	int firstmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on "+pk+" and tgt.sah_md5hash = src.sah_MD5HASH and tgt.sah_currentind =1 when not matched then INSERT ("+srcCols +",sah_isdeleted,sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",src.sah_isdeleted,1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
     	logger.info("end of first merge" + firstmergecount);
     
     	if (process.equals("BULK"))
     	{
     	  //insert new record for delete
-    			secondmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using(select a.* from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.sah_currentind =1  and a.sah_isdeleted <> 1 and b.sah_md5hashpk is null)src ON tgt.sah_md5hashpk = src.sah_md5hashpk and tgt.sah_isdeleted = 1 when not matched then INSERT ("+srcCols+",sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
+		        String delsrccols  = srcCols.replace(",sah_isdeleted","");
+    			secondmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using(select a.* from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.sah_currentind =1  and a.sah_isdeleted <> 1 and b.sah_md5hashpk is null)src ON tgt.sah_md5hashpk = src.sah_md5hashpk and tgt.sah_isdeleted = 1 when not matched then INSERT ("+delsrccols+",sah_isdeleted,sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+delsrccols.replace(",", ",src.")+",1,1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
+				logger.info("merge into "+tableName+"hist tgt using(select a.* from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.sah_currentind =1  and a.sah_isdeleted <> 1 and b.sah_md5hashpk is null)src ON tgt.sah_md5hashpk = src.sah_md5hashpk and tgt.sah_isdeleted = 1 when not matched then INSERT ("+delsrccols+",sah_isdeleted,sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+delsrccols.replace(",", ",src.")+",1,1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
     			logger.info("end of second merge" + secondmergecount);
          //expire previous record for delete
     			int thirdmergecount = stmt3.executeUpdate("merge into "+tableName+"hist tgt using(select a.* from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.sah_currentind =1  and a.sah_isdeleted <> 1 and b.sah_md5hashpk is null)src  ON tgt.sah_md5hashpk = src.sah_md5hashpk and tgt.sah_isdeleted <>1 and tgt.sah_currentind=1 when matched  then UPDATE SET tgt.sah_currentind = 0 , tgt.sah_updatedtime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)");
@@ -320,7 +350,7 @@ public class SendTableList  {
     	else
     	{
     		//insert new record for delete	
-    			secondmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on tgt.sah_currentind =1  and tgt.sah_isdeleted = 1 when not matched and src.sah_isdeleted = 1 then INSERT("+srcCols+",sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
+    			secondmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on tgt.sah_currentind =1  and tgt.sah_isdeleted = 1 when not matched and src.sah_isdeleted = 1 then INSERT("+srcCols+",sah_isdeleted,sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",src.sah_isdeleted,1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
     			logger.info("end of second merge" + secondmergecount);
             //expire previous record for delete
     			int thirdmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using(select a.sah_md5hashpk from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.sah_currentind =1  and a.sah_isdeleted <> 1 and b.sah_isdeleted = 1)src  ON tgt.sah_md5hashpk = src.sah_md5hashpk and tgt.sah_isdeleted <>1 and tgt.sah_currentind=1 when matched  then UPDATE SET tgt.sah_currentind = 0 , tgt.sah_updatedtime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)");
@@ -362,7 +392,7 @@ public class SendTableList  {
     		ddl6 = ddl5.substring(0, ddl5.length()-2);
     	}
         else if(system.equals("Teradata")) {rs1=stmt1.executeQuery("SHOW TABLE "+tableName+";");}
-		else if(system.equals("Oracle")) 
+        else if(system.equals("Oracle")) 
         {
 			System.out.println("select dbms_metadata.get_ddl('TABLE', '"+tableName+"') as \"Create Table\" from dual");
         	rs1=stmt1.executeQuery("select dbms_metadata.get_ddl('TABLE', '"+tableName+"') as \"Create Table\" from dual");
@@ -383,7 +413,9 @@ public class SendTableList  {
 			System.out.println("ddl5:"+ddl5);
 			ddl6 = ddl5.replaceAll("ENABLE","");			
 			System.out.println("ddl6:"+ddl6);
-		}
+        }
+        
+
 		String stagecreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT);");		
 		String histcreate = ddl6.concat(",sah_isdeleted INT,sah_currentind boolean,sah_updatedtime timestamp,sah_MD5HASH TEXT,sah_createdTime timestamp,sah_MD5HASHPK TEXT);");
 		
@@ -392,6 +424,9 @@ public class SendTableList  {
 		logger.info("CREATE TABLE IF NOT EXISTS "+tableName+"hist "+histcreate);
 		ResultSet rs2 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+ stagecreate);
 		ResultSet rs3 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+"hist "+histcreate);
+		
+		
+    	
     }
     public static String pkgenNew(String primarykey)
     {
