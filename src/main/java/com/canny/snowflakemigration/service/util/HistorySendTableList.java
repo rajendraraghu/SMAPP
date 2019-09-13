@@ -42,8 +42,10 @@ public class HistorySendTableList  {
 		SnowHistoryProcessStatusDTO write = new SnowHistoryProcessStatusDTO();
 		logger = Logger.getLogger("MySnowHistoryLog"); 
 		FileHandler fh;
+		long success_count = 0;
+        long failure_count = 0;
 		try{
-			fh = new FileHandler("./logs/MySnowhistoryLogFile.log");  
+			fh = new FileHandler("F:/POC/CSV/logs/MySnowhistoryLogFile.log");  
 		    logger.addHandler(fh);
 		    SimpleFormatter formatter = new SimpleFormatter();  
 		    fh.setFormatter(formatter);		        
@@ -89,35 +91,51 @@ public class HistorySendTableList  {
 		    int i = 0;	
 		    String system = processDTO.getSourceConnectionName();
 
+						
 		       	 while(i<tablecount)
 		         {
-			        String tn = tablesToMigrate[i].replace("[\"", "");
-					String tableName = tn.replaceAll("\"]|\"", "");
-
-					logger.info("starting bulk history load for the table: "+tableName);
-										
+					 SnowHistoryJobStatusDTO write1 = new SnowHistoryJobStatusDTO();
+			       try {
+			            String tn = tablesToMigrate[i].replace("[\"", "");
+					    String tableName = tn.replaceAll("\"]|\"", "");
+					    logger.info("starting bulk history load for the table: "+tableName);										
 					   //snowHistoryJobStatusDTO.setJobId((long)500);
-					   snowHistoryJobStatusDTO.setSourceCount((long)2);
-				       snowHistoryJobStatusDTO.setInsertCount((long)3);				       
-				       snowHistoryJobStatusDTO.setDeleteCount((long)4);
-		               snowHistoryJobStatusDTO.setBatchId(write.getBatchId());
-		               snowHistoryJobStatusDTO.setName(tableName);
-		               snowHistoryJobStatusDTO.setStartTime(Instant.now());		              
-				       snowHistoryJobStatusDTO.setStatus("IN PROGRESS");
-				       SnowHistoryJobStatusDTO write1 = snowHistoryJobStatusService.save(snowHistoryJobStatusDTO);
-					bulkprocess(tableName,con1,con2,processDTO.getId(),system,processDTO.getSourceConnectionDatabase());
-					status = "SUCCESS";
-					   write1.setEndTime(Instant.now());
-					   write1.setStatus("SUCCESS");
-					   write1.setSourceCount((long)5);
-					   write1.setInsertCount((long)6);
-					   write1.setDeleteCount((long)7);
-					   write1 = snowHistoryJobStatusService.save(write1);
-					   logger.info("bulk process completed for table:"+tableName);
-				    i= i+1;
+					    snowHistoryJobStatusDTO.setSourceCount((long)2);
+				        snowHistoryJobStatusDTO.setInsertCount((long)3);				       
+				        snowHistoryJobStatusDTO.setDeleteCount((long)4);
+		                snowHistoryJobStatusDTO.setBatchId(write.getBatchId());
+		                snowHistoryJobStatusDTO.setName(tableName);
+		                snowHistoryJobStatusDTO.setStartTime(Instant.now());		              
+				        snowHistoryJobStatusDTO.setStatus("IN PROGRESS");
+				        write1 = snowHistoryJobStatusService.save(snowHistoryJobStatusDTO);
+					    bulkprocess(tableName,con1,con2,processDTO.getId(),system,processDTO.getSourceConnectionDatabase());
+					    status = "SUCCESS";
+				        success_count = success_count + 1;
+				        write1.setEndTime(Instant.now());
+					    write1.setStatus("SUCCESS");
+					    write1.setSourceCount((long)5);
+					    write1.setInsertCount((long)6);
+					    write1.setDeleteCount((long)7);
+					    write1 = snowHistoryJobStatusService.save(write1);
+					    logger.info("bulk process completed for table:"+tableName);
+				        i= i + 1;
+				    }
+					catch (Exception e) 
+					{
+			        	write1.setEndTime(Instant.now());
+			        	write1.setStatus("FAILURE");
+				        failure_count = failure_count + 1;
+				        write.setErrorTables (failure_count);
+				        write1 = snowHistoryJobStatusService.save(write1);
+				        i = i + 1;
+					    continue;
+					}					
 				  }
 		       	logger.info("bulk process completed for all the tables");
+				write.setRunBy("admin");
 		       	write.setStatus("SUCCESS");
+				write.setSuccessTables(success_count);
+				write.setErrorTables(failure_count);
 		        write.setEndTime(Instant.now()); 
 		        write = snowHistoryProcessStatusService.save(write);
      	 		con1.close();
@@ -128,9 +146,13 @@ public class HistorySendTableList  {
 
 			logger.info("catch exception:"+e);	
 			status = "FAILURE";
-			/*write.setStatus("FAILURE --"+e.toString());
+			write.setRunBy("admin");
+			failure_count = failure_count + 1;
+			write.setSuccessTables(success_count);
+		    write.setErrorTables(failure_count);
+			write.setStatus("FAILURE --"+e.toString());
 		    write.setEndTime(Instant.now());
-		    write = snowHistoryProcessStatusService.save(write);*/
+		    write = snowHistoryProcessStatusService.save(write);
 		}  
 	    return status;
 	}

@@ -18,6 +18,7 @@ public interface DeltaProcessMapper extends EntityMapper<DeltaProcessDTO, DeltaP
     @Mapping(source = "sourceConnection.password", target = "sourceConnectionPassword")
     @Mapping(source = "sourceConnection.database", target = "sourceConnectionDatabase")
     @Mapping(source = "sourceConnection.schema", target = "sourceConnectionSchema")
+	@Mapping(source = "sourceConnection.sourceType", target = "sourceType")
     @Mapping(source = "snowflakeConnection.id", target = "snowflakeConnectionId")
     @Mapping(source = "snowflakeConnection.name", target = "snowflakeConnectionName")
     @Mapping(source = "snowflakeConnection.url", target = "snowflakeConnectionUrl")

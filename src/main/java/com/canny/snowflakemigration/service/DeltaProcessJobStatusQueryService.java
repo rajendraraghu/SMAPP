@@ -124,12 +124,12 @@ public class DeltaProcessJobStatusQueryService extends QueryService<DeltaProcess
             if (criteria.getProcessName() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getProcessName(), DeltaProcessJobStatus_.processName));
             }
-            if (criteria.getSourceName() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getSourceName(), DeltaProcessJobStatus_.sourceName));
-            }
-            if (criteria.getDestName() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getDestName(), DeltaProcessJobStatus_.destName));
-            }
+            // if (criteria.getSourceName() != null) {
+            //     specification = specification.and(buildStringSpecification(criteria.getSourceName(), DeltaProcessJobStatus_.sourceName));
+            // }
+            // if (criteria.getDestName() != null) {
+            //     specification = specification.and(buildStringSpecification(criteria.getDestName(), DeltaProcessJobStatus_.destName));
+            // }
         }
         return specification;
     }

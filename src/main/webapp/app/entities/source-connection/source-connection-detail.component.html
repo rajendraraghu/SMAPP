@@ -3,7 +3,7 @@
         <div *ngIf="sourceConnection">
             <h2><span jhiTranslate="snowpoleApp.sourceConnection.detail.title">Source Connection</span></h2>
             <hr>
-            <jhi-alert-error></jhi-alert-error>
+            <jhi-alert></jhi-alert>
             <dl class="row-md jh-entity-details">
                 <dt><span jhiTranslate="snowpoleApp.sourceConnection.name">Name</span></dt>
                 <dd>
@@ -66,7 +66,7 @@
                 <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
             </button>
             
-            <button type="submit" (click)="testConnection(sourceConnection)" class="btn btn-info">
+            <button type="submit" (click)="testConnection()" class="btn btn-info">
                 <fa-icon [icon]="'eye'"></fa-icon>
                 <span class="d-none d-md-inline">Test Connection</span>
             </button>  

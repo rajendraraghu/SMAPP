@@ -18,12 +18,14 @@ export class SourceConnectionUpdateComponent implements OnInit {
   isSaving: boolean;
   sourceTypes: any[];
   sourcetype: string;
+  sourcetypelc: string;
   host: string;
-  portnumber: string;
+  portNumber: string;
   dbname: string;
   url: string;
   sliced: string[];
   regExp: RegExp = /:\/\/(.*):(.*)\//;
+  valid: boolean;
 
   editForm = this.fb.group({
     id: [],
@@ -35,7 +37,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
     password: [null, [Validators.required]],
     database: [null, [Validators.required]],
     host: [null, [Validators.required]],
-    portnumber: [null, [Validators.required, Validators.maxLength(4)]],
+    portNumber: [null, [Validators.required, Validators.maxLength(4)]],
     schema: [],
     valid: [],
     createdBy: [],
@@ -53,7 +55,8 @@ export class SourceConnectionUpdateComponent implements OnInit {
 
   ngOnInit() {
     this.isSaving = false;
-    this.sourceTypes = ['MySQL', 'Netezza', 'Teradata', 'Oracle'];
+    this.valid = false;
+    this.sourceTypes = ['MySQL', 'Netezza', 'Teradata', 'Oracle', 'SQLServer'];
     this.activatedRoute.data.subscribe(({ sourceConnection }) => {
       this.updateForm(sourceConnection);
       this.sourceConnection = sourceConnection;
@@ -62,10 +65,28 @@ export class SourceConnectionUpdateComponent implements OnInit {
 
   concatUrl() {
     this.sourcetype = this.editForm.get(['sourceType']).value;
+    this.sourcetypelc = this.sourcetype.toLowerCase();
     this.host = this.editForm.get(['host']).value;
-    this.portnumber = this.editForm.get(['portnumber']).value;
+    this.portNumber = this.editForm.get(['portNumber']).value;
     this.dbname = this.editForm.get(['database']).value;
-    this.url = 'jdbc:' + this.sourcetype + '://' + this.host + ':' + this.portnumber + '/' + this.dbname;
+    switch (this.sourcetypelc) {
+      case 'oracle':
+        this.url = 'jdbc:' + this.sourcetypelc + ':thin:@' + this.host + ':' + this.portNumber + '/' + this.dbname;
+        console.log(this.url);
+        break;
+      case 'sqlserver':
+        this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host + ':' + this.portNumber + ';databaseName=' + this.dbname;
+        console.log(this.url);
+        break;
+      case 'teradata':
+        this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host;
+        console.log(this.url);
+        break;
+      default:
+        this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host + ':' + this.portNumber + '/' + this.dbname;
+        console.log(this.url);
+        break;
+    }
   }
 
   updateForm(sourceConnection: ISourceConnection) {
@@ -79,7 +100,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
       password: sourceConnection.password,
       database: sourceConnection.database,
       host: sourceConnection.host,
-      portnumber: sourceConnection.portnumber,
+      portNumber: sourceConnection.portNumber,
       schema: sourceConnection.schema,
       valid: sourceConnection.valid
       // ,
@@ -97,6 +118,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
   save() {
     this.isSaving = true;
     const sourceConnection = this.createFromForm();
+    sourceConnection.valid = this.valid;
     if (sourceConnection.id !== undefined) {
       this.subscribeToSaveResponse(this.sourceConnectionService.update(sourceConnection));
     } else {
@@ -118,7 +140,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
       password: this.editForm.get(['password']).value,
       database: this.editForm.get(['database']).value,
       host: this.editForm.get(['host']).value,
-      portnumber: this.editForm.get(['portnumber']).value,
+      portNumber: this.editForm.get(['portNumber']).value,
       schema: this.editForm.get(['schema']).value,
       valid: this.editForm.get(['valid']).value
       // ,
@@ -149,14 +171,20 @@ export class SourceConnectionUpdateComponent implements OnInit {
   testConnection() {
     const connection = this.createFromForm();
     this.sourceConnectionService.testConnection(connection).subscribe(response => {
-      if (!response.body) {
-        const errorMessage = 'snowpoleApp.snowflakeConnection.invalid';
-        this.jhiAlertService.error(errorMessage, null, null);
+      if (response.body) {
+        const smsg = 'snowpoleApp.sourceConnection.testConnectionSuccess';
+        this.valid = true;
+        this.jhiAlertService.success(smsg);
+      } else {
+        const smsg = 'snowpoleApp.sourceConnection.testConnectionInvalid';
+        this.valid = false;
+        this.jhiAlertService.error(smsg);
       }
-      if (connection.valid !== response.body) {
-        connection.valid = !!response.body;
-        this.sourceConnectionService.update(connection).subscribe(res => {});
-      }
+      // if (connection.valid !== response.body) {
+      //   connection.valid = !!response.body;
+      //   const smsg = 'snowpoleApp.sourceConnection.testConnectionSuccess';
+      //   this.jhiAlertService.success(smsg);
+      // }
     });
   }
 }

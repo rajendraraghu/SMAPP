@@ -58,7 +58,7 @@ export class SnowHistoryService {
   }
 
   sendTableList(snowHistory: ISnowHistory): Observable<EntityResponseType> {
-    return this.http.post<ISnowHistory>(`${this.resourceUrl}/sendTableListforHistProcess`, snowHistory, { observe: 'response' });
+    return this.http.post<ISnowHistory>(`${this.resourceUrl}/HistorySendTableListforHistProcess`, snowHistory, { observe: 'response' });
   }
 
   getProcessStatus(id: number): Observable<ReportArrayResponseType> {

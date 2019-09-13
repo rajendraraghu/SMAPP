@@ -44,7 +44,7 @@ public class SendTableList  {
 	    FileHandler fh;
 		try{
 			Long jobid=(long)0;
-			fh = new FileHandler("./logs/MyLogFile.log");  
+			fh = new FileHandler("F:/POC/CSV/MyLogFile.log");  
 		    logger.addHandler(fh);
 		    SimpleFormatter formatter = new SimpleFormatter();  
 		    fh.setFormatter(formatter);		        
@@ -148,6 +148,7 @@ public class SendTableList  {
 					   migrationProcessJobStatusDTO.setJobId(write.getJobId());
 		               migrationProcessJobStatusDTO.setTableLoadId(tableLoadid);
 		               migrationProcessJobStatusDTO.setTableName(tableName);
+					   migrationProcessJobStatusDTO.setTableLoadStatus("IN PROGRESS");
 				       migrationProcessJobStatusDTO.setTableLoadStartTime(Instant.now());
 				       migrationProcessJobStatusDTO.setInsertCount((long)0);
 				       migrationProcessJobStatusDTO.setUpdateCount((long)0);
@@ -167,6 +168,7 @@ public class SendTableList  {
 				    
 				  }	
 		       	write.setJobStatus("SUCCESS");
+				write.setRunby("admin");
 		       	status = "SUCCESS";
 		        write.setJobEndTime(Instant.now());	      
 		        write = migrationProcessStatusService.save(write);
@@ -176,10 +178,13 @@ public class SendTableList  {
 			catch(Exception e)
 		{
 				logger.info("catch exception:"+e);
+				write.setRunby("admin");
 				write.setJobStatus("FAILURE --"+e.toString());
 			    write.setJobEndTime(Instant.now());
+				write = migrationProcessStatusService.save(write);
 			    write1.setTableLoadEndTime(Instant.now());
 			    write1.setTableLoadStatus("FAILURE");
+				write1 = migrationProcessJobStatusService.save(write1);
 			    status = "FAILURE";
 			
 		}  
@@ -243,13 +248,13 @@ public class SendTableList  {
     	logger.info("getcolnames entry");
     	String s = new String();
     	Statement stmt0  = con.createStatement();
-    	ResultSet rs9 ;
-    	if(dname.equals("Oracle")) { rs9 = stmt0.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '"+tablename+"'");}    		
+    	ResultSet rs9 = null;
+    	if(dname.equals("Oracle:thin")) { rs9 = stmt0.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '"+tablename+"'");}    		
     	else if (dname.equals("MySQL")) {rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"+tablename+"' AND TABLE_SCHEMA = '"+dbname+"';");}
-    	else if (dname.equals("SQL Server")) {rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"+dbname+"' AND TABLE_NAME = '"+tablename+"';");}
+    	else if (dname.equals("sqlserver")) {rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"+dbname+"' AND TABLE_NAME = '"+tablename+"';");}
     	else if (dname.equals("Netezza")) {rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM _V_SYS_COLUMNS WHERE TABLE_SCHEMA = '"+dbname+"' AND TABLE_NAME  = '"+tablename+"';");}
     	else if (dname.equals("Teradata")) {rs9 = stmt0.executeQuery("SELECT  ColumnName as COLUMN_NAME FROM DBC.ColumnsV WHERE DatabaseName = '"+dbname+"' AND TableName = '"+tablename+"';");}
-    	else {rs9 = stmt0.executeQuery("SELECT 1 AS COLUMN_NAME;");}	 
+    	
     	while(rs9.next())
     	{;
     	 s = s.concat(rs9.getString(1));
@@ -281,13 +286,15 @@ public class SendTableList  {
     		}
     	stageCols =stageCols.substring(0,stageCols.length() - 1);
     	String hashCol = gethashColNames(stageCols);
+		System.out.println(con1+":"+con2+":"+tableName+":"+system+":*:");
     	createAlterDDL(con1,con2,tableName,system);
     	logger.info("stagecols:"+stageCols);
 		stmt2.executeQuery("TRUNCATE TABLE "+tableName);
 		logger.info("Truncating "+tableName);
     	stmt2.executeQuery("INSERT INTO "+tableName+" SELECT "+stageCols+",0 as sah_isdeleted,MD5("+hashCol+") as sah_md5hash,sah_MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as sah_md5hashpk FROM @"+tableName+"_stage t;"); 	
 		logger.info("table creation  and loading (stg) complete");
-    	return srcCols;
+		logger.info("srccols:"+srcCols);
+		return srcCols;
     }
     public static void histLoad(Connection con2,String tableName,String process,String srcCols,long jobid,long tableLoadid,long processid,String primarykey,MigrationProcessJobStatusService migrationProcessJobStatusService) throws SQLException
     {
@@ -299,13 +306,15 @@ public class SendTableList  {
     	int secondmergecount;
     //insert new record for Insert and update  
 	logger.info("HIST LOAD START");  	
-    	int firstmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on "+pk+" and tgt.sah_md5hash = src.sah_MD5HASH and tgt.sah_currentind =1 when not matched then INSERT ("+srcCols +",sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
+    	int firstmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on "+pk+" and tgt.sah_md5hash = src.sah_MD5HASH and tgt.sah_currentind =1 when not matched then INSERT ("+srcCols +",sah_isdeleted,sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",src.sah_isdeleted,1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
     	logger.info("end of first merge" + firstmergecount);
     
     	if (process.equals("BULK"))
     	{
     	  //insert new record for delete
-    			secondmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using(select a.* from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.sah_currentind =1  and a.sah_isdeleted <> 1 and b.sah_md5hashpk is null)src ON tgt.sah_md5hashpk = src.sah_md5hashpk and tgt.sah_isdeleted = 1 when not matched then INSERT ("+srcCols+",sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
+		        String delsrccols  = srcCols.replace(",sah_isdeleted","");
+    			secondmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using(select a.* from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.sah_currentind =1  and a.sah_isdeleted <> 1 and b.sah_md5hashpk is null)src ON tgt.sah_md5hashpk = src.sah_md5hashpk and tgt.sah_isdeleted = 1 when not matched then INSERT ("+delsrccols+",sah_isdeleted,sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+delsrccols.replace(",", ",src.")+",1,1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
+				logger.info("merge into "+tableName+"hist tgt using(select a.* from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.sah_currentind =1  and a.sah_isdeleted <> 1 and b.sah_md5hashpk is null)src ON tgt.sah_md5hashpk = src.sah_md5hashpk and tgt.sah_isdeleted = 1 when not matched then INSERT ("+delsrccols+",sah_isdeleted,sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+delsrccols.replace(",", ",src.")+",1,1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
     			logger.info("end of second merge" + secondmergecount);
          //expire previous record for delete
     			int thirdmergecount = stmt3.executeUpdate("merge into "+tableName+"hist tgt using(select a.* from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.sah_currentind =1  and a.sah_isdeleted <> 1 and b.sah_md5hashpk is null)src  ON tgt.sah_md5hashpk = src.sah_md5hashpk and tgt.sah_isdeleted <>1 and tgt.sah_currentind=1 when matched  then UPDATE SET tgt.sah_currentind = 0 , tgt.sah_updatedtime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)");
@@ -314,7 +323,7 @@ public class SendTableList  {
     	else
     	{
     		//insert new record for delete	
-    			secondmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on tgt.sah_currentind =1  and tgt.sah_isdeleted = 1 when not matched and src.sah_isdeleted = 1 then INSERT("+srcCols+",sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
+    			secondmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on tgt.sah_currentind =1  and tgt.sah_isdeleted = 1 when not matched and src.sah_isdeleted = 1 then INSERT("+srcCols+",sah_isdeleted,sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",src.sah_isdeleted,1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
     			logger.info("end of second merge" + secondmergecount);
             //expire previous record for delete
     			int thirdmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using(select a.sah_md5hashpk from "+tableName+"hist a left join "+tableName+" b ON "+pk2+" where a.sah_currentind =1  and a.sah_isdeleted <> 1 and b.sah_isdeleted = 1)src  ON tgt.sah_md5hashpk = src.sah_md5hashpk and tgt.sah_isdeleted <>1 and tgt.sah_currentind=1 when matched  then UPDATE SET tgt.sah_currentind = 0 , tgt.sah_updatedtime = TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP)");
@@ -341,7 +350,7 @@ public class SendTableList  {
     public static void createAlterDDL(Connection con1,Connection con2,String tableName,String system)  throws SQLException
     {
     	Statement stmt1=con1.createStatement();
-    	ResultSet rs1;
+    	ResultSet rs1 = null;
     	String ddl6 = "";
     	if(system.equals("MySQL")) 
     	{
@@ -356,16 +365,27 @@ public class SendTableList  {
     		ddl6 = ddl5.substring(0, ddl5.length()-2);
     	}
         else if(system.equals("Teradata")) {rs1=stmt1.executeQuery("SHOW TABLE "+tableName+";");}
-        else if(system.equals("Oracle")) 
+        else if(system.equals("Oracle:thin")) 
         {
-        	rs1=stmt1.executeQuery("select dbms_metadata.get_ddl('TABLE', '"+tableName+"') from dual;");
+			System.out.println("select dbms_metadata.get_ddl('TABLE', '"+tableName+"') as \"Create Table\" from dual");
+        	rs1=stmt1.executeQuery("select dbms_metadata.get_ddl('TABLE', '"+tableName+"') as \"Create Table\" from dual");
         	rs1.next();
     		String ddl = rs1.getString("Create Table");
-    		int ind1 = ddl.indexOf("ENGINE");
+			System.out.println("ddl1:"+ddl);
+    		int ind1 = ddl.indexOf("USING");
+			System.out.println("ind1:"+ind1);
     		String ddl2 = ddl.substring(0,ind1);
-    		String ddl3 = ddl2.replaceAll("NUMBER\\([0-9]+\\)","NUMBER");
+			System.out.println("ddl2:"+ddl2);
+    		String ddl3 = ddl2.replaceAll("NUMBER\\(\\*,[0-9]+\\)","NUMBER");
+			System.out.println("ddl3:"+ddl3);
     		String ddl4 = ddl3.substring(ddl3.indexOf("("));
-    		ddl6 = ddl4.substring(0, ddl4.length()-2);
+			System.out.println("ddl4:"+ddl4);
+    		String ddl5 = ddl4.substring(0, ddl4.length()-2);		
+			System.out.println("ddl5:"+ddl5);
+			ddl5 = ddl5.replaceAll("\"","");
+			System.out.println("ddl5:"+ddl5);
+			ddl6 = ddl5.replaceAll("ENABLE","");			
+			System.out.println("ddl6:"+ddl6);
         }
         
 

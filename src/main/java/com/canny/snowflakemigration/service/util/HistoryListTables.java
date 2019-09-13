@@ -28,9 +28,21 @@ public class HistoryListTables {
         JsonObject jsonResponse = new JsonObject(); 
         JsonArray data = new JsonArray();
         
-        
+        ResultSet rs1 = null;
+		String system = snowHistoryDTO.getSourceSystem();
+		System.out.println("system:"+system);
+        if(system.equals("MySQL")) 
+		{rs1 = stmt0.executeQuery("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"+snowHistoryDTO.getSourceConnectionSchema()+"';");}
+        else if(system.equals("sqlserver")) 
+		{rs1 = stmt0.executeQuery("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = '"+snowHistoryDTO.getSourceConnectionSchema() +"';");}
+        else if(system.equals("Netezza")) 
+		{rs1 = stmt0.executeQuery("SELECT DISTINCT TableName as TABLE_NAME FROM DBC.ColumnsV WHERE DatabaseName = '"+snowHistoryDTO.getSourceConnectionSchema()+"';");}
+        else if(system.equals("Teradata")) 
+		{rs1 = stmt0.executeQuery("SELECT DISTINCT TABLE_NAME FROM _V_SYS_COLUMNS WHERE TABLE_SCHEMA = '"+snowHistoryDTO.getSourceConnectionSchema()+"';");}
+        else if(system.equals("Oracle")) 
+		{rs1 = stmt0.executeQuery("SELECT TABLE_NAME FROM all_tables WHERE OWNER = '"+snowHistoryDTO.getSourceConnectionSchema()+"'");}
   
-        ResultSet rs1 = stmt0.executeQuery("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"+snowHistoryDTO.getSourceConnectionSchema()+"';");
+       
         while(rs1.next()) {
         	JsonObject row = new JsonObject();
         	row.addProperty("tableName",rs1.getString("TABLE_NAME"));

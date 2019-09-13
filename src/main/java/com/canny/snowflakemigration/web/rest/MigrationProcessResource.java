@@ -178,6 +178,7 @@ public class MigrationProcessResource {
 
     @PostMapping(value = "/migration-processes/retrieveTableList")
     public @ResponseBody String listTables(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO) throws SQLException,ClassNotFoundException {
+		System.out.println("inside resource list tables");
         String tableName = listTable(migrationProcessDTO);
         return tableName;
     }
@@ -201,7 +202,7 @@ public class MigrationProcessResource {
 		 		System.out.println("sql loop");
 		 	    Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		 	}
-		 	else if (source.equals("Oracle"))   {  Class.forName("oracle.jdbc.driver.OracleDriver");}
+		 	else if (source.equals("Oracle:thin"))   {  Class.forName("oracle.jdbc.driver.OracleDriver");}
 		 	else if (source.equals("Teradata")) {  Class.forName("com.teradata.jdbc.TeraDriver");}
 		    
 			System.out.println("osql loop");

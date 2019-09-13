@@ -7,6 +7,8 @@ import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
 import com.canny.snowflakemigration.service.dto.SnowflakeConnectionDTO;
 import com.canny.snowflakemigration.service.dto.DeltaProcessCriteria;
 import com.canny.snowflakemigration.service.DeltaProcessQueryService;
+import com.canny.snowflakemigration.service.DeltaProcessJobStatusService;
+import com.canny.snowflakemigration.service.DeltaProcessStatusService;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -67,10 +69,16 @@ public class DeltaProcessResource {
     private final DeltaProcessService deltaProcessService;
 
     private final DeltaProcessQueryService deltaProcessQueryService;
+	
+	private final DeltaProcessStatusService deltaProcessStatusService;
 
-    public DeltaProcessResource(DeltaProcessService deltaProcessService, DeltaProcessQueryService deltaProcessQueryService) {
+    private final DeltaProcessJobStatusService deltaProcessJobStatusService;
+
+    public DeltaProcessResource(DeltaProcessService deltaProcessService, DeltaProcessQueryService deltaProcessQueryService,DeltaProcessStatusService deltaProcessStatusService,DeltaProcessJobStatusService deltaProcessJobStatusService) {
         this.deltaProcessService = deltaProcessService;
         this.deltaProcessQueryService = deltaProcessQueryService;
+		this.deltaProcessStatusService = deltaProcessStatusService;
+        this.deltaProcessJobStatusService = deltaProcessJobStatusService;
     }
 
     /**
@@ -177,7 +185,7 @@ public class DeltaProcessResource {
     @PostMapping(value = "/delta-processes/sendTableListforHistProcess")
     public @ResponseBody String sendTableList(@Valid @RequestBody  DeltaProcessDTO deltaProcessDTO)throws SQLException,ClassNotFoundException  {
     	//Optional<DeltaProcessDTO>  deltaProcessDTO = deltaProcessService.findOne(processid);
-    	String result = sendSelectedTables(deltaProcessDTO);
+    	String result = sendSelectedTables(deltaProcessDTO,deltaProcessStatusService,deltaProcessJobStatusService);
         return result;
     } 
     @PostMapping(value="/delta-processes/TestConnectionSource")
