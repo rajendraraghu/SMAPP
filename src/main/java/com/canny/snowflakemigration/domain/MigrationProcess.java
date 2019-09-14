@@ -35,32 +35,32 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
     @Column(name = "type")
     private String type;
 
-    @Size(max = 3200)
-    @Column(name = "tables_to_migrate", length = 3200)
+    @Size(max = 30000)
+    @Column(name = "tables_to_migrate", length = 30000)
     private String tablesToMigrate;
 
-    @Size(max = 6400)
-    @Column(name = "selected_columns", length = 6400)
+    @Size(max = 30000)
+    @Column(name = "selected_columns", length = 30000)
     private String selectedColumns;
 
-    @Size(max = 3200)
-    @Column(name = "cdc", length = 3200)
+    @Size(max = 30000)
+    @Column(name = "cdc", length = 30000)
     private String cdc;
 
-    @Size(max = 3200)
-    @Column(name = "bulk", length = 3200)
+    @Size(max = 30000)
+    @Column(name = "bulk", length = 30000)
     private String bulk;
     
-    @Size(max = 3200)
-    @Column(name = "cdc_pk", length = 3200)
+    @Size(max = 30000)
+    @Column(name = "cdc_pk", length = 30000)
     private String cdcPk;
 
-    @Size(max = 3200)   
-    @Column(name = "bulk_pk", length = 3200)
+    @Size(max = 30000)   
+    @Column(name = "bulk_pk", length = 30000)
     private String bulkPk;
 
-    @Size(max = 3200)
-    @Column(name = "cdc_cols", length = 3200)
+    @Size(max = 30000)
+    @Column(name = "cdc_cols", length = 30000)
     private String cdcCols;
 
     @Column(name = "last_status")

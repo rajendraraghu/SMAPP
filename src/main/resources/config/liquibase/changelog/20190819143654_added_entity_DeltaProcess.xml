@@ -23,15 +23,15 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="tables_list" type="varchar(3200)">
+            <column name="tables_list" type="varchar(30000)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="selected_columns" type="varchar(6400)">
+            <column name="selected_columns" type="varchar(30000)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="pk" type="varchar(255)">
+            <column name="pk" type="varchar(30000)">
                 <constraints nullable="true" />
             </column>
 
