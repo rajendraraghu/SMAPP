@@ -32,16 +32,16 @@ public class DeltaProcess extends AbstractAuditingEntity implements Serializable
     @Column(name = "description", length = 650)
     private String description;
 
-    @Size(max = 3200)
-    @Column(name = "tables_list", length = 3200)
+    @Size(max = 30000)
+    @Column(name = "tables_list", length = 30000)
     private String tablesList;
 
-    @Size(max = 6400)
-    @Column(name = "selected_columns", length = 6400)
+    @Size(max = 30000)
+    @Column(name = "selected_columns", length = 30000)
     private String selectedColumns;
 
-    @Size(max = 3200)
-    @Column(name = "pk", length = 3200)
+    @Size(max = 30000)
+    @Column(name = "pk", length = 30000)
     private String pk;
 
     @Column(name = "last_status")

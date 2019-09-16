@@ -27,35 +27,35 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="tables_to_migrate" type="varchar(3200)">
+            <column name="tables_to_migrate" type="varchar(30000)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="selected_columns" type="varchar(6400)">
+            <column name="selected_columns" type="varchar(30000)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="cdc" type="varchar(3200)">
+            <column name="cdc" type="varchar(30000)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="cdc_pk" type="varchar(3200)">
+            <column name="cdc_pk" type="varchar(30000)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="cdc_cols" type="varchar(3200)">
+            <column name="cdc_cols" type="varchar(30000)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="bulk" type="varchar(3200)">
+            <column name="bulk" type="varchar(30000)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="bulk_pk" type="varchar(3200)">
+            <column name="bulk_pk" type="varchar(30000)">
                 <constraints nullable="true" />
             </column>
 
-            <column name="last_status" type="varchar(3200)">
+            <column name="last_status" type="varchar(30000)">
                 <constraints nullable="true" />
             </column>
 
@@ -63,7 +63,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="created_by" type="varchar(255)">
+            <column name="created_by" type="varchar(30000)">
                 <constraints nullable="true" />
             </column>
 
@@ -71,7 +71,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="last_modified_by" type="varchar(255)">
+            <column name="last_modified_by" type="varchar(30000)">
                 <constraints nullable="true" />
             </column>
 

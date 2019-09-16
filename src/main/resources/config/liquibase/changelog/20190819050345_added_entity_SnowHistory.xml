@@ -27,7 +27,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="tables_to_migrate" type="varchar(3200)">
+            <column name="tables_to_migrate" type="varchar(30000)">
                 <constraints nullable="true" />
             </column>
 

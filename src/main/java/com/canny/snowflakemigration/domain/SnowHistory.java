@@ -35,8 +35,8 @@ public class SnowHistory extends AbstractAuditingEntity implements Serializable 
     @Column(name = "type")
     private String type;
 
-    @Size(max = 3200)
-    @Column(name = "tables_to_migrate", length = 3200)
+    @Size(max = 30000)
+    @Column(name = "tables_to_migrate", length = 30000)
     private String tablesToMigrate;
 
     // @Size(max = 3200)
