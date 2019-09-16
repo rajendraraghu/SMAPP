@@ -43,7 +43,7 @@ public class HistorySendTableList {
 		// SnowHistoryJobStatusDTO snowHistoryJobStatusDTO = new SnowHistoryJobStatusDTO();
 		logger = Logger.getLogger("MySnowHistoryLog");
 		FileHandler fh;
-
+        String system = processDTO.getSourceSystem();
 
 		long success_count = 0;
         long failure_count = 0;
@@ -93,8 +93,7 @@ public class HistorySendTableList {
 		    logger.info("audit saved");
     		
 		    int i = 0;	
-		    String system = processDTO.getSourceConnectionName();
-
+		    
 						
 		       	 while(i<tablecount)
 		         {
@@ -199,22 +198,28 @@ public class HistorySendTableList {
 			throws SQLException {
 
 		logger.info("getcolnames entry");
-		String s = new String();
-		Statement stmt0 = con.createStatement();
-		ResultSet rs9;
-		if (dname.contains("oracle"))
-			rs9 = stmt0.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '" + tablename + "'");
-		else
-			rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"
-					+ tablename + "' AND TABLE_SCHEMA = '" + dbname + "';");
-		while (rs9.next()) {
-			s = s.concat(rs9.getString(1));
-			s = s.concat(",");
-		}
+    	String s = new String();
+    	Statement stmt0  = con.createStatement();
+    	ResultSet rs9 = null;
 
-		logger.info("getcolnames exit");
-
-		return s.substring(0, s.length() - 1);
+    	if(dname.equals("Oracle")) 
+		{ rs9 = stmt0.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '"+tablename+"'");}    		
+    	else if (dname.equals("MySQL"))
+		{rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"+tablename+"' AND TABLE_SCHEMA = '"+dbname+"';");}
+    	else if (dname.equals("SQLServer")) 
+		{rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"+dbname+"' AND TABLE_NAME = '"+tablename+"';");}
+    	else if (dname.equals("Netezza")) 
+		{rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM _V_SYS_COLUMNS WHERE TABLE_SCHEMA = '"+dbname+"' AND TABLE_NAME  = '"+tablename+"';");}
+    	else if (dname.equals("Teradata")) 
+		{rs9 = stmt0.executeQuery("SELECT  ColumnName as COLUMN_NAME FROM DBC.ColumnsV WHERE DatabaseName = '"+dbname+"' AND TableName = '"+tablename+"';");}
+    	
+    	while(rs9.next())
+    	{;
+    	 s = s.concat(rs9.getString(1));
+    	 s = s.concat(",");
+    	}
+    	logger.info("getcolnames exit");
+    	return s.substring(0,s.length()-1);
 	}
 
 	public static void stageLoad(String query, Connection con1, Connection con2, String tableName, String system,
@@ -241,7 +246,7 @@ public class HistorySendTableList {
 		}
 		stageCols = stageCols.substring(0, stageCols.length() - 1);
 		String hashCol = gethashColNames(stageCols);
-		createAlterDDL(con1, con2, tableName);
+		createAlterDDL(con1, con2, tableName,system);
 		logger.info("stagecols:" + stageCols);
 		stmt2.executeQuery("TRUNCATE TABLE " + tableName);
 		logger.info("Truncating " + tableName);
@@ -262,20 +267,52 @@ public class HistorySendTableList {
 
 	}
 
-	public static void createAlterDDL(Connection con1, Connection con2, String tableName) throws SQLException {
+	public static void createAlterDDL(Connection con1, Connection con2, String tableName,String system) throws SQLException {
 		Statement stmt1 = con1.createStatement();
-		ResultSet rs1 = stmt1.executeQuery("SHOW CREATE TABLE " + tableName);
-		rs1.next();
-		String ddl = rs1.getString("Create Table");
-		int ind1 = ddl.indexOf("ENGINE");
-		String ddl2 = ddl.substring(0, ind1);
-		String ddl3 = ddl2.replaceAll("int\\([0-9]+\\)", "int");
-		String ddl4 = ddl3.substring(ddl3.indexOf("("));
-		String ddl5 = ddl4.replaceAll("`", "");
-		String ddl6 = ddl5.substring(0, ddl5.length() - 2);
+		    	ResultSet rs1 = null;
+    	String ddl6 = "";
+    	if(system.equals("MySQL")) 
+    	{
+    		rs1=stmt1.executeQuery("SHOW CREATE TABLE "+tableName);
+        	rs1.next();
+    		String ddl = rs1.getString("Create Table");
+    		int ind1 = ddl.indexOf("ENGINE");
+    		String ddl2 = ddl.substring(0,ind1);
+    		String ddl3 = ddl2.replaceAll("int\\([0-9]+\\)","int");
+    		String ddl4 = ddl3.substring(ddl3.indexOf("("));
+    		String ddl5 = ddl4.replaceAll("`","");
+    		ddl6 = ddl5.substring(0, ddl5.length()-2);
+    	}
+        else if(system.equals("Teradata")) {rs1=stmt1.executeQuery("SHOW TABLE "+tableName+";");}
+
+		else if(system.equals("Oracle")) 
+        {
+			System.out.println("select dbms_metadata.get_ddl('TABLE', '"+tableName+"') as \"Create Table\" from dual");
+        	rs1=stmt1.executeQuery("select dbms_metadata.get_ddl('TABLE', '"+tableName+"') as \"Create Table\" from dual");
+        	rs1.next();
+    		String ddl = rs1.getString("Create Table");
+			System.out.println("ddl1:"+ddl);
+    		int ind1 = ddl.indexOf("USING");
+			System.out.println("ind1:"+ind1);
+    		String ddl2 = ddl.substring(0,ind1);
+			System.out.println("ddl2:"+ddl2);
+    		String ddl3 = ddl2.replaceAll("NUMBER\\(\\*,[0-9]+\\)","NUMBER");
+			System.out.println("ddl3:"+ddl3);
+    		String ddl4 = ddl3.substring(ddl3.indexOf("("));
+			System.out.println("ddl4:"+ddl4);
+    		String ddl5 = ddl4.substring(0, ddl4.length()-2);		
+			System.out.println("ddl5:"+ddl5);
+			ddl5 = ddl5.replaceAll("\"","");
+			System.out.println("ddl5:"+ddl5);
+			ddl6 = ddl5.replaceAll("ENABLE","");			
+			System.out.println("ddl6:"+ddl6);
+        }
+		else if(system.equals("SQLServer")) 
+        {
+			ddl6 = "(COL1 int NULL,COL2 varchar(25)";
+		}
 		String stagecreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT);");
-		String histcreate = ddl6.concat(
-				",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT,sah_currentind boolean,sah_createdTime timestamp,sah_updatedtime timestamp);");
+		String histcreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT,sah_currentind boolean,sah_createdTime timestamp,sah_updatedtime timestamp);");
 
 		Statement stmt2 = con2.createStatement();
 		logger.info("CREATE TABLE IF NOT EXISTS " + tableName + stagecreate);
