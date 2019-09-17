@@ -32,6 +32,7 @@ import java.util.Date;
 public class HistorySendTableList {
 	public static SnowHistoryProcessStatusDTO snowHistoryProcessStatusDTO = new SnowHistoryProcessStatusDTO();
 	public static SnowHistoryJobStatusDTO snowHistoryJobStatusDTO = new SnowHistoryJobStatusDTO();
+	public static SnowHistoryJobStatusDTO write1;
 	public static Logger logger;
 
 	public static String sendSelectedTables(SnowHistoryDTO processDTO,
@@ -128,7 +129,7 @@ public class HistorySendTableList {
 			        	write1.setEndTime(Instant.now());
 			        	write1.setStatus("FAILURE");
 				        failure_count = failure_count + 1;
-				        write.setErrorTables (failure_count);
+				        // write.setErrorTables (failure_count);
 				        write1 = snowHistoryJobStatusService.save(write1);
 				        i = i + 1;
 					    continue;

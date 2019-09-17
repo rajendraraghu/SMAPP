@@ -57,7 +57,9 @@ public class ConvertDDL {
 				line = line.toLowerCase();
 				if(line.contains("create table")) {
 					int x = line.indexOf(" (");
-                    tblNm = line.substring(13,x).replace("`", "");
+					tblNm = line.substring(13,x).replace("`", "");
+					// totalcount = totalcount++;
+					// System.out.println("Total objects count" + totalcount);
                     // snowDDLJobStatusDTO.setBatchId(write.getBatchId());
                     // snowDDLJobStatusDTO.setName(tblNm);
                     // snowDDLJobStatusDTO.setStartTime(Instant.now());
@@ -100,9 +102,15 @@ public class ConvertDDL {
             processStatus = snowDDLProcessStatusService.save(processStatus);
 		}
 		catch(Exception e) {
-            status = "FAILURE";
+			snowDDLJobStatusDTO.setEndTime(Instant.now());
+			snowDDLJobStatusDTO.setStatus("FAILURE");
+			SnowDDLJobStatusDTO jobStatus = snowDDLJobStatusService.save(snowDDLJobStatusDTO);
+			status = "FAILURE";
+			// SnowDDLJobStatusDTO jobStatus = snowDDLJobStatusService.save(snowDDLJobStatusDTO);
 			processStatus.setStatus(status);
+			processStatus.setEndTime(Instant.now());
 			System.out.println(e);
+			processStatus = snowDDLProcessStatusService.save(processStatus);
 		}
 	return status;
 	}

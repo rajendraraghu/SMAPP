@@ -35,6 +35,7 @@ import java.util.Date;
 public class DeltaSendTableList  {
 	public static DeltaProcessStatusDTO deltaProcessStatusDTO = new DeltaProcessStatusDTO();
 	public static DeltaProcessJobStatusDTO deltaProcessJobStatusDTO =  new DeltaProcessJobStatusDTO();
+	public static DeltaProcessJobStatusDTO write1;
 	public static Logger logger;
 	public static String sendSelectedTables(DeltaProcessDTO processDTO, DeltaProcessStatusService deltaProcessStatusService,DeltaProcessJobStatusService deltaProcessJobStatusService) throws SQLException,ClassNotFoundException
 	{
@@ -45,6 +46,8 @@ public class DeltaSendTableList  {
 		logger = Logger.getLogger("MyDeltaLog"); 
 		FileHandler fh;
 		status = "FAILURE";
+		long success_count = 0;
+        long failure_count = 0;
 		try{
 			//int jobid=0;
 
@@ -100,7 +103,8 @@ public class DeltaSendTableList  {
 		    int i = 0;
 		    while(i < tablecount)
 		    {
-				
+				DeltaProcessJobStatusDTO write1 = new DeltaProcessJobStatusDTO();
+				try {	
 				String tn = tablesToMigrate[i].replace("[\"", "");
 				String tableName = tn.replaceAll("\"]|\"", "");
 		        ResultSet rs1 = stmt0.executeQuery("SELECT * FROM "+tableName+";");						
@@ -117,7 +121,7 @@ public class DeltaSendTableList  {
 					   deltaProcessJobStatusDTO.setProcessName(processDTO.getName());
 					   //deltaProcessJobStatusDTO.setSourceName(processDTO.getSourceConnectionName());
 					   //deltaProcessJobStatusDTO.setDestName(processDTO.getSnowflakeConnectionName());
-				       DeltaProcessJobStatusDTO write1 = deltaProcessJobStatusService.save(deltaProcessJobStatusDTO);		    	
+				       write1 = deltaProcessJobStatusService.save(deltaProcessJobStatusDTO);		    	
         		        createAlterDDL(con1,con2,tableName);
 		        if (rs1.next())
 			     {			
@@ -159,7 +163,7 @@ public class DeltaSendTableList  {
 					stmt2.executeUpdate("INSERT INTO "+tableName+"_delta SELECT y.*,t.*,CASE WHEN y.id IS NULL THEN 'INSERT' WHEN t.id IS NULL THEN 'DELETE' WHEN y.id = t.id AND y.delta_MD5HASH <> t.delta_MD5HASH THEN 'UPDATE'  ELSE 'NO CHANGE' END AS CDC FROM "+tableName+"_yesterday y FULL OUTER JOIN "+tableName+"_today t ON y.id = t.id");
 				}
 				i = i+1;
-
+				success_count = success_count + 1;
 				write1.setTableLoadEndTime(Instant.now());
 			    write1.setTableLoadStatus("SUCCESS");
 				write1.setUpdateCount((long)5);
@@ -168,19 +172,27 @@ public class DeltaSendTableList  {
 				write1 = deltaProcessJobStatusService.save(write1);
 				logger.info("delta process completed for table:"+tableName);
 			}
+				catch (Exception e) 
+					{
+			        	write1.setTableLoadEndTime(Instant.now());
+			        	write1.setTableLoadStatus("FAILURE");
+				        failure_count = failure_count + 1;
+				        // write.setErrorTables (failure_count);
+				        write1 = deltaProcessJobStatusService.save(write1);
+				        i = i + 1;
+					    continue;
+					}					
+			}
 			status = "SUCCESS";
 			logger.info("delta process completed for all the tables");
-				write.setRunby(processDTO.getRunBy());
-		       	write.setJobStatus("SUCCESS");
-		        write.setJobEndTime(Instant.now()); 
-		        write = deltaProcessStatusService.save(write);
-			
+			write.setRunby(processDTO.getRunBy());
+			write.setJobStatus("SUCCESS");
+			write.setSuccessCount(success_count);
+			write.setFailureCount(failure_count);
+			write.setJobEndTime(Instant.now());
+			write = deltaProcessStatusService.save(write);	
 			con1.close();
-			con2.close();		
-
-
-
-		    
+			con2.close();				    
 		}
 			catch(Exception e)
 		{
