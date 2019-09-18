@@ -27,8 +27,7 @@ export class SettingsComponent implements OnInit {
   constructor(
     private accountService: AccountService,
     private fb: FormBuilder // private languageService: JhiLanguageService,
-  ) // private languageHelper: JhiLanguageHelper
-  {}
+  ) {}
 
   ngOnInit() {
     this.accountService.identity().then(account => {

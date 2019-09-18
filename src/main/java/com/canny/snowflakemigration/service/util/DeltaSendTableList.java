@@ -49,6 +49,7 @@ public class DeltaSendTableList  {
 		String system = processDTO.getSourceType();
 		long success_count = 0;
         long failure_count = 0;					   
+
 		try{
 			//int jobid=0;
 
@@ -105,6 +106,7 @@ public class DeltaSendTableList  {
 		    {
 				DeltaProcessJobStatusDTO write1 = new DeltaProcessJobStatusDTO();
 				try{
+
 				String tn = tablesToMigrate[i].replace("[\"", "");
 				String tableName = tn.replaceAll("\"]|\"", "");
 		        ResultSet rs1 = stmt0.executeQuery("SELECT * FROM "+tableName+";");						
@@ -122,7 +124,8 @@ public class DeltaSendTableList  {
 					   //deltaProcessJobStatusDTO.setSourceName(processDTO.getSourceConnectionName());
 					   //deltaProcessJobStatusDTO.setDestName(processDTO.getSnowflakeConnectionName());
 				       write1 = deltaProcessJobStatusService.save(deltaProcessJobStatusDTO);		    	
-        		        createAlterDDL(con1,con2,tableName,system);
+        		       createAlterDDL(con1,con2,tableName,system);
+
 		        if (rs1.next())
 			     {			
 					//using local file now. Should be replaced with S3 or other filespace
@@ -167,7 +170,9 @@ public class DeltaSendTableList  {
 					rs3 = stmt2.executeQuery("SELECT COALESCE(INS,0) AS INS,COALESCE(UPD,0) AS UPD,COALESCE(DEL,0) AS DEL,COALESCE(NOCHANGE, 0) AS NOCHANGE FROM (SELECT cdc,COUNT(*) as cnt FROM "+tableName+"_delta GROUP BY cdc ORDER BY cdc)src pivot(MAX(cnt) for cdc in ('INSERT', 'UPDATE', 'DELETE', 'NO CHANGE')) as p (INS,UPD,DEL,NOCHANGE);");
 					
 				}
-				i = i+1;                
+
+				i = i+1;
+				success_count = success_count + 1;
 				write1.setTableLoadEndTime(Instant.now());
 			    write1.setTableLoadStatus("SUCCESS");
 				rs3.next();
@@ -179,6 +184,7 @@ public class DeltaSendTableList  {
 				write1 = deltaProcessJobStatusService.save(write1);
 				logger.info("delta process completed for table:"+tableName);
 			}
+
 			catch (Exception e) 
 					{
 			        	write1.setTableLoadEndTime(Instant.now());
@@ -188,23 +194,20 @@ public class DeltaSendTableList  {
 				        write1 = deltaProcessJobStatusService.save(write1);
 				        i = i + 1;
 					    continue;
-					}	
-            }					
+
+					}					
+			}
 			status = "SUCCESS";
 			logger.info("delta process completed for all the tables");
-				write.setRunby(processDTO.getRunBy());
-		       	write.setJobStatus("SUCCESS");
-				write.setSuccessCount(success_count);
-			    write.setFailureCount(failure_count);								
-		        write.setJobEndTime(Instant.now()); 
-		        write = deltaProcessStatusService.save(write);
-			
+			write.setRunby(processDTO.getRunBy());
+			write.setJobStatus("SUCCESS");
+			write.setSuccessCount(success_count);
+			write.setFailureCount(failure_count);
+			write.setJobEndTime(Instant.now());
+			write = deltaProcessStatusService.save(write);	
+
 			con1.close();
-			con2.close();		
-
-
-
-		    
+			con2.close();				    
 		}
 			catch(Exception e)
 		{

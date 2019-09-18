@@ -185,11 +185,11 @@ public class SendTableList  {
 				    
 				  }	
 				  catch (Exception e) {
-					migrationProcessJobStatusDTO.setTableLoadEndTime(Instant.now());
-					migrationProcessJobStatusDTO.setTableLoadStatus("FAILURE");
+					write1.setTableLoadEndTime(Instant.now());
+					write1.setTableLoadStatus("FAILURE");
 					failure_count = failure_count + 1;
 					write.setFailureCount(failure_count);
-					migrationProcessJobStatusDTO = migrationProcessJobStatusService.save(migrationProcessJobStatusDTO);
+					migrationProcessJobStatusDTO = migrationProcessJobStatusService.save(write1);
 					j = j + 1;
 					continue;
 				}
