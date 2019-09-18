@@ -34,7 +34,7 @@ public class HistoryListTables {
         if(system.equals("MySQL")) 
 		{rs1 = stmt0.executeQuery("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"+snowHistoryDTO.getSourceConnectionSchema()+"';");}
         else if(system.equals("SQLServer")) 
-		{rs1 = stmt0.executeQuery("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = '"+snowHistoryDTO.getSourceConnectionSchema() +"';");}
+		{rs1 = stmt0.executeQuery("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = '"+snowHistoryDTO.getSourceConnectionDatabase() +"';");}
         else if(system.equals("Netezza")) 
 		{rs1 = stmt0.executeQuery("SELECT DISTINCT TableName as TABLE_NAME FROM DBC.ColumnsV WHERE DatabaseName = '"+snowHistoryDTO.getSourceConnectionSchema()+"';");}
         else if(system.equals("Teradata")) 
