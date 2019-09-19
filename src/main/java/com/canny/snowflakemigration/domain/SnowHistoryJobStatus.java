@@ -37,13 +37,13 @@ public class SnowHistoryJobStatus implements Serializable {
     @Column(name = "end_time")
     private Instant endTime;
 
-    @Column(name = "source_count")
+    @Column(name = "source_count", nullable = false)
     private Long sourceCount;
 
-    @Column(name = "insert_count")
+    @Column(name = "insert_count", nullable = false)
     private Long insertCount;
 
-    @Column(name = "delete_count")
+    @Column(name = "delete_count", nullable = false)
     private Long deleteCount;
 
     @Column(name = "status")
@@ -190,7 +190,7 @@ public Long getDeleteCount() {
             ", endTime='" + getEndTime() + "'" +
             ", sourceCount='" + getSourceCount() + "'" +
             ", insertCount='" + getInsertCount() + "'" +
-            ", deletecount='" + getDeleteCount() + "'" +
+            ", deleteCount='" + getDeleteCount() + "'" +
             ", status='" + getStatus() + "'" +
             "}";
     }

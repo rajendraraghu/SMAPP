@@ -12,15 +12,15 @@ import org.mapstruct.*;
 public interface SnowHistoryJobStatusMapper extends EntityMapper<SnowHistoryJobStatusDTO, SnowHistoryJobStatus> {
 
     SnowHistoryJobStatusDTO toDto(SnowHistoryJobStatus SnowHistoryJobStatus);   
-
+    
     SnowHistoryJobStatus toEntity(SnowHistoryJobStatusDTO SnowHistoryJobStatusDTO);
 
-    default SnowHistoryJobStatus fromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        SnowHistoryJobStatus SnowHistoryJobStatus = new SnowHistoryJobStatus();
-        SnowHistoryJobStatus.setBatchId(id);
-        return SnowHistoryJobStatus;
-    }
+    // default SnowHistoryJobStatus fromId(Long id) {
+    //     if (id == null) {
+    //         return null;
+    //     }
+    //     SnowHistoryJobStatus SnowHistoryJobStatus = new SnowHistoryJobStatus();
+    //     SnowHistoryJobStatus.setBatchId(id);
+    //     return SnowHistoryJobStatus;
+    // }
 }
