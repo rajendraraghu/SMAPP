@@ -130,5 +130,8 @@
   "jestSonar": {
     "reportPath": "target/test-results/jest",
     "reportFile": "TESTS-results-sonar.xml"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }

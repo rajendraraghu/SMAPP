@@ -65,26 +65,22 @@ export class SourceConnectionUpdateComponent implements OnInit {
 
   concatUrl() {
     this.sourcetype = this.editForm.get(['sourceType']).value;
-    this.sourcetypelc = this.sourcetype.toLowerCase();
+    // this.sourcetypelc = this.sourcetype.toLowerCase();
     this.host = this.editForm.get(['host']).value;
     this.portNumber = this.editForm.get(['portNumber']).value;
     this.dbname = this.editForm.get(['database']).value;
     switch (this.sourcetypelc) {
       case 'oracle':
-        this.url = 'jdbc:' + this.sourcetypelc + ':thin:@' + this.host + ':' + this.portNumber + '/' + this.dbname;
-        console.log(this.url);
+        this.url = 'jdbc:' + this.sourcetype + ':thin:@' + this.host + ':' + this.portNumber + '/' + this.dbname;
         break;
       case 'sqlserver':
-        this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host + ':' + this.portNumber + ';databaseName=' + this.dbname;
-        console.log(this.url);
+        this.url = 'jdbc:' + this.sourcetype + '://' + this.host + ':' + this.portNumber + ';databaseName=' + this.dbname;
         break;
       case 'teradata':
-        this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host;
-        console.log(this.url);
+        this.url = 'jdbc:' + this.sourcetype + '://' + this.host;
         break;
       default:
-        this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host + ':' + this.portNumber + '/' + this.dbname;
-        console.log(this.url);
+        this.url = 'jdbc:' + this.sourcetype + '://' + this.host + ':' + this.portNumber + '/' + this.dbname;
         break;
     }
   }
@@ -118,6 +114,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
   save() {
     this.isSaving = true;
     const sourceConnection = this.createFromForm();
+    this.testConnection();
     sourceConnection.valid = this.valid;
     if (sourceConnection.id !== undefined) {
       this.subscribeToSaveResponse(this.sourceConnectionService.update(sourceConnection));

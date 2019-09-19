@@ -55,6 +55,8 @@ describe('Component Tests', () => {
 
         expect(service.save).toHaveBeenCalledWith({
           email: '',
+          firstName: '',
+          lastName: '',
           password: 'password',
           login: '',
           langKey: 'en'
