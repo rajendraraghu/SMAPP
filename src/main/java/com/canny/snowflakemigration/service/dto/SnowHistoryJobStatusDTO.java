@@ -69,7 +69,7 @@ public class SnowHistoryJobStatusDTO implements Serializable {
         this.endTime = endTime;
     }
 
-    public Long getSourcecount() {
+    public Long getSourceCount() {
         return sourceCount;
     }
 
@@ -77,7 +77,7 @@ public class SnowHistoryJobStatusDTO implements Serializable {
         this.sourceCount = sourceCount;
     }
 
-    public Long getInsertcount() {
+    public Long getInsertCount() {
         return insertCount;
     }
 
@@ -85,7 +85,7 @@ public class SnowHistoryJobStatusDTO implements Serializable {
         this.insertCount = insertCount;
     }
 
-    public Long getDeletecount() {
+    public Long getDeleteCount() {
         return deleteCount;
     }
 
@@ -130,9 +130,9 @@ public class SnowHistoryJobStatusDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", startTime='" + getStartTime() + "'" +
             ", endTime='" + getEndTime() + "'" +
-            ", sourceCount='" + getSourcecount() + "'" +
-            ", insertCount='" + getInsertcount() + "'" +
-            ", deleteCount='" + getDeletecount() + "'" +
+            ", sourceCount='" + getSourceCount() + "'" +
+            ", insertCount='" + getInsertCount() + "'" +
+            ", deleteCount='" + getDeleteCount() + "'" +
             ", status='" + getStatus() + "'" +
             "}";
     }
