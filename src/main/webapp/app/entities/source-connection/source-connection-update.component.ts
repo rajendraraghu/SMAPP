@@ -56,7 +56,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
   ngOnInit() {
     this.isSaving = false;
     this.valid = false;
-    this.sourceTypes = ['MySQL', 'Netezza', 'Teradata', 'Oracle', 'SQLServer'];
+    this.sourceTypes = ['mysql', 'netezza', 'teradata', 'oracle', 'sqlserver'];
     this.activatedRoute.data.subscribe(({ sourceConnection }) => {
       this.updateForm(sourceConnection);
       this.sourceConnection = sourceConnection;
@@ -69,7 +69,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
     this.host = this.editForm.get(['host']).value;
     this.portNumber = this.editForm.get(['portNumber']).value;
     this.dbname = this.editForm.get(['database']).value;
-    switch (this.sourcetypelc) {
+    switch (this.sourcetype) {
       case 'oracle':
         this.url = 'jdbc:' + this.sourcetype + ':thin:@' + this.host + ':' + this.portNumber + '/' + this.dbname;
         break;
