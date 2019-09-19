@@ -106,7 +106,7 @@ public class DeltaSendTableList  {
 		    {
 				DeltaProcessJobStatusDTO write1 = new DeltaProcessJobStatusDTO();
 				try{
-
+                logger.info(tablesToMigrate[i]);
 				String tn = tablesToMigrate[i].replace("[\"", "");
 				String tableName = tn.replaceAll("\"]|\"", "");
 		        ResultSet rs1 = stmt0.executeQuery("SELECT * FROM "+tableName+";");						

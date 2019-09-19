@@ -34,6 +34,9 @@ public class HistorySendTableList {
 	public static SnowHistoryJobStatusDTO snowHistoryJobStatusDTO = new SnowHistoryJobStatusDTO();
 	public static SnowHistoryJobStatusDTO write1;
 	public static Logger logger;
+	public static int inscnt =0;
+    public static int delcnt =0;
+	public static int srccnt =0;
 
 	public static String sendSelectedTables(SnowHistoryDTO processDTO,
 			SnowHistoryProcessStatusService snowHistoryProcessStatusService,
@@ -41,9 +44,7 @@ public class HistorySendTableList {
 		String status = new String();
 		String timeStamp = new SimpleDateFormat().format(new Date());
 		SnowHistoryProcessStatusDTO write = new SnowHistoryProcessStatusDTO();
-		int inscnt =0;
-		int delcnt =0;
-		int srccnt =0;
+		
 		// SnowHistoryJobStatusDTO snowHistoryJobStatusDTO = new SnowHistoryJobStatusDTO();
 		logger = Logger.getLogger("MySnowHistoryLog");
 		FileHandler fh;
@@ -108,9 +109,9 @@ public class HistorySendTableList {
 					    logger.info("starting bulk history load for the table: "+tableName);										
 					   //snowHistoryJobStatusDTO.setJobId((long)500);
 					    Statement stmt5 = con1.createStatement();
-					    ResultSet rs5 = stmt5.executeQuery("SELECT COUNT(*) as cnt FROM "+tableName);
-		                rs5.next();
-						srccnt = rs5.getInt("cnt");
+					    ResultSet rs4 = stmt5.executeQuery("SELECT COUNT(*) as cnt FROM "+tableName);
+		                rs4.next();
+						srccnt = rs4.getInt("cnt");
 					    snowHistoryJobStatusDTO.setSourceCount((long)srccnt);
 				        snowHistoryJobStatusDTO.setInsertCount((long)0);				       
 				        snowHistoryJobStatusDTO.setDeleteCount((long)0);
@@ -134,7 +135,7 @@ public class HistorySendTableList {
 					catch (Exception e) 
 					{
 			        	write1.setEndTime(Instant.now());
-			        	write1.setStatus("FAILURE");
+			        	write1.setStatus("FAILURE"+e.toString());
 				        failure_count = failure_count + 1;
 				        // write.setErrorTables (failure_count);
 				        write1 = snowHistoryJobStatusService.save(write1);
@@ -269,16 +270,24 @@ public class HistorySendTableList {
 	public static void histLoad(Connection con2, String tableName) throws SQLException {
 
 		Statement stmt3 = con2.createStatement();
-		ResultSet rs5 = stmt3.executeQuery("SELECT COUNT(*) as cnt FROM "+tableName+"history");
-		rs5.next();
-		delcnt = rs5.getInt("cnt");
+		ResultSet rs5 = null;
+		logger.info("in hist load");
+		System.out.println("SELECT COUNT(*) as cnt FROM "+tableName+"history;");
+		rs5 = stmt3.executeQuery("SELECT COUNT(*) as cnt FROM "+tableName+"history;");
+		if(rs5.next()){
+			System.out.println("inside if");
+			delcnt = rs5.getInt(1);
+		logger.info("delcnt:"+rs5.getInt(1));}
 		stmt3.executeQuery("TRUNCATE TABLE " + tableName + "history");
+		logger.info("truncate over");
 		stmt3.executeQuery("INSERT INTO " + tableName
 				+ "history SELECT *,1 as sah_currentind,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) as sah_createdTime,null as sah_updatedtime FROM "
 				+ tableName + " src;");
-        ResultSet rs5 = stmt3.executeQuery("SELECT COUNT(*) as cnt FROM "+tableName+"history");
+        logger.info("insert over");
+		rs5 = stmt3.executeQuery("SELECT COUNT(*) as cnt FROM "+tableName+"history");
 		rs5.next();
-		inscnt = rs5.getInt("cnt");
+		inscnt = rs5.getInt(1);
+		logger.info("inscnt:"+inscnt);
 	}
 
 	public static void createAlterDDL(Connection con1, Connection con2, String tableName,String system) throws SQLException {
