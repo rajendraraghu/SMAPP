@@ -41,6 +41,9 @@ public class HistorySendTableList {
 		String status = new String();
 		String timeStamp = new SimpleDateFormat().format(new Date());
 		SnowHistoryProcessStatusDTO write = new SnowHistoryProcessStatusDTO();
+		int inscnt =0;
+		int delcnt =0;
+		int srccnt =0;
 		// SnowHistoryJobStatusDTO snowHistoryJobStatusDTO = new SnowHistoryJobStatusDTO();
 		logger = Logger.getLogger("MySnowHistoryLog");
 		FileHandler fh;
@@ -104,9 +107,13 @@ public class HistorySendTableList {
 					    String tableName = tn.replaceAll("\"]|\"", "");
 					    logger.info("starting bulk history load for the table: "+tableName);										
 					   //snowHistoryJobStatusDTO.setJobId((long)500);
-					    snowHistoryJobStatusDTO.setSourceCount((long)2);
-				        snowHistoryJobStatusDTO.setInsertCount((long)3);				       
-				        snowHistoryJobStatusDTO.setDeleteCount((long)4);
+					    Statement stmt5 = con1.createStatement();
+					    ResultSet rs5 = stmt5.executeQuery("SELECT COUNT(*) as cnt FROM "+tableName);
+		                rs5.next();
+						srccnt = rs5.getInt("cnt");
+					    snowHistoryJobStatusDTO.setSourceCount((long)srccnt);
+				        snowHistoryJobStatusDTO.setInsertCount((long)0);				       
+				        snowHistoryJobStatusDTO.setDeleteCount((long)0);
 		                snowHistoryJobStatusDTO.setBatchId(write.getBatchId());
 		                snowHistoryJobStatusDTO.setName(tableName);
 		                snowHistoryJobStatusDTO.setStartTime(Instant.now());		              
@@ -117,9 +124,9 @@ public class HistorySendTableList {
 				        success_count = success_count + 1;
 				        write1.setEndTime(Instant.now());
 					    write1.setStatus("SUCCESS");
-					    write1.setSourceCount((long)5);
-					    write1.setInsertCount((long)6);
-					    write1.setDeleteCount((long)7);
+					    write1.setSourceCount((long)srccnt);
+					    write1.setInsertCount((long)inscnt);
+					    write1.setDeleteCount((long)delcnt);
 					    write1 = snowHistoryJobStatusService.save(write1);
 					    logger.info("bulk process completed for table:"+tableName);
 				        i= i + 1;
@@ -248,12 +255,13 @@ public class HistorySendTableList {
 		stageCols = stageCols.substring(0, stageCols.length() - 1);
 		String hashCol = gethashColNames(stageCols);
 		createAlterDDL(con1, con2, tableName,system);
-		logger.info("stagecols:" + stageCols);
+		logger.info("stagecols:" + stageCols);		
 		stmt2.executeQuery("TRUNCATE TABLE " + tableName);
 		logger.info("Truncating " + tableName);
 		stmt2.executeQuery("INSERT INTO " + tableName + " SELECT " + stageCols + ",0 as sah_isdeleted,MD5(" + hashCol
 				+ ") as sah_md5hash,sah_MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as sah_md5hashpk FROM @"
 				+ tableName + "_stage t;");
+				
 		logger.info("table creation  and loading (stg) complete");
 
 	}
@@ -261,11 +269,16 @@ public class HistorySendTableList {
 	public static void histLoad(Connection con2, String tableName) throws SQLException {
 
 		Statement stmt3 = con2.createStatement();
+		ResultSet rs5 = stmt3.executeQuery("SELECT COUNT(*) as cnt FROM "+tableName+"history");
+		rs5.next();
+		delcnt = rs5.getInt("cnt");
 		stmt3.executeQuery("TRUNCATE TABLE " + tableName + "history");
 		stmt3.executeQuery("INSERT INTO " + tableName
 				+ "history SELECT *,1 as sah_currentind,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) as sah_createdTime,null as sah_updatedtime FROM "
 				+ tableName + " src;");
-
+        ResultSet rs5 = stmt3.executeQuery("SELECT COUNT(*) as cnt FROM "+tableName+"history");
+		rs5.next();
+		inscnt = rs5.getInt("cnt");
 	}
 
 	public static void createAlterDDL(Connection con1, Connection con2, String tableName,String system) throws SQLException {
