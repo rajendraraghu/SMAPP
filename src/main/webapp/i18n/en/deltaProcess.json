@@ -32,7 +32,7 @@
         "notFound": "No Delta Process found"
       },
       "jobStatus": {
-        "title": "DDL Conversion Job Status",
+        "title": "Delta Conversion Job Status",
         "notFound": "No Delta Process Job Found"
       }
     }
