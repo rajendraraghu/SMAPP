@@ -36,6 +36,6 @@ export class SnowflakeConnection implements ISnowflakeConnection {
     public lastModifiedBy?: string,
     public lastModifiedDate?: Moment
   ) {
-    this.valid = this.valid || false;
+    // this.valid = this.valid || false;
   }
 }
