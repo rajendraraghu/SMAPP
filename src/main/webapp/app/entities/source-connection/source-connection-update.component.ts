@@ -17,7 +17,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
   sourceConnection: ISourceConnection;
   isSaving: boolean;
   sourceTypes: any[];
-  sourcetype: string;
+  sourceType: string;
   sourcetypelc: string;
   host: string;
   portNumber: string;
@@ -64,8 +64,8 @@ export class SourceConnectionUpdateComponent implements OnInit {
   }
 
   concatUrl() {
-    this.sourcetype = this.editForm.get(['sourceType']).value;
-    this.sourcetypelc = this.sourcetype.toLowerCase();
+    this.sourceType = this.editForm.get(['sourceType']).value;
+    this.sourcetypelc = this.sourceType ? this.sourceType.toLowerCase() : this.sourceType;
     this.host = this.editForm.get(['host']).value;
     this.portNumber = this.editForm.get(['portNumber']).value;
     this.dbname = this.editForm.get(['database']).value;
