@@ -17,7 +17,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
   sourceConnection: ISourceConnection;
   isSaving: boolean;
   sourceTypes: any[];
-  sourcetype: string;
+  sourceType: string;
   sourcetypelc: string;
   host: string;
   portNumber: string;
@@ -56,7 +56,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
   ngOnInit() {
     this.isSaving = false;
     this.valid = false;
-    this.sourceTypes = ['mysql', 'netezza', 'teradata', 'oracle', 'sqlserver'];
+    this.sourceTypes = ['MySQL', 'Netezza', 'Teradata', 'Oracle', 'SQLServer'];
     this.activatedRoute.data.subscribe(({ sourceConnection }) => {
       this.updateForm(sourceConnection);
       this.sourceConnection = sourceConnection;
@@ -64,23 +64,23 @@ export class SourceConnectionUpdateComponent implements OnInit {
   }
 
   concatUrl() {
-    this.sourcetype = this.editForm.get(['sourceType']).value;
-    // this.sourcetypelc = this.sourcetype.toLowerCase();
+    this.sourceType = this.editForm.get(['sourceType']).value;
+    this.sourcetypelc = this.sourceType ? this.sourceType.toLowerCase() : this.sourceType;
     this.host = this.editForm.get(['host']).value;
     this.portNumber = this.editForm.get(['portNumber']).value;
     this.dbname = this.editForm.get(['database']).value;
-    switch (this.sourcetype) {
+    switch (this.sourcetypelc) {
       case 'oracle':
-        this.url = 'jdbc:' + this.sourcetype + ':thin:@' + this.host + ':' + this.portNumber + '/' + this.dbname;
+        this.url = 'jdbc:' + this.sourcetypelc + ':thin:@' + this.host + ':' + this.portNumber + '/' + this.dbname;
         break;
       case 'sqlserver':
-        this.url = 'jdbc:' + this.sourcetype + '://' + this.host + ':' + this.portNumber + ';databaseName=' + this.dbname;
+        this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host + ':' + this.portNumber + ';databaseName=' + this.dbname;
         break;
       case 'teradata':
-        this.url = 'jdbc:' + this.sourcetype + '://' + this.host;
+        this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host;
         break;
       default:
-        this.url = 'jdbc:' + this.sourcetype + '://' + this.host + ':' + this.portNumber + '/' + this.dbname;
+        this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host + ':' + this.portNumber + '/' + this.dbname;
         break;
     }
   }
