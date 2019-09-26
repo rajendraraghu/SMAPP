@@ -188,6 +188,7 @@ public class SendTableList  {
 				  catch (Exception e) {
 					write1.setTableLoadEndTime(Instant.now());
 					write1.setTableLoadStatus("FAILURE");
+					logger.info("Inner Loop exception:"+e.toString());
 					failure_count = failure_count + 1;
 					write.setFailureCount(failure_count);
 					migrationProcessJobStatusDTO = migrationProcessJobStatusService.save(write1);
@@ -386,16 +387,15 @@ public class SendTableList  {
     	{
     		rs1=stmt1.executeQuery("SHOW CREATE TABLE "+tableName);
         	rs1.next();
-			String[] inpsql = new String[10];
-			inpsql[0] = rs1.getString("Create Table");
-			ddl6 = convertToSnowDDL(system,inpsql);
-    		/*String ddl = rs1.getString("Create Table");
+			String ddl = rs1.getString("Create Table");
+			//String[] inpsql = ddl.split("\n");
+			//ddl6 = convertToSnowDDL(system,inpsql);
     		int ind1 = ddl.indexOf("ENGINE");
     		String ddl2 = ddl.substring(0,ind1);
     		String ddl3 = ddl2.replaceAll("int\\([0-9]+\\)","int");
     		String ddl4 = ddl3.substring(ddl3.indexOf("("));
     		String ddl5 = ddl4.replaceAll("`","");
-    		ddl6 = ddl5.substring(0, ddl5.length()-2);*/
+    		ddl6 = ddl5.substring(0, ddl5.length()-2);
     	}
         else if(system.equals("Teradata")) {rs1=stmt1.executeQuery("SHOW TABLE "+tableName+";");}
 
@@ -435,7 +435,7 @@ public class SendTableList  {
 		ResultSet rs2 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+ stagecreate);
 		ResultSet rs3 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+"hist "+histcreate);
 		
-		
+		logger.info("STAGE and HIST TABLE CREATED");
     	
     }
     public static String pkgenNew(String primarykey)
