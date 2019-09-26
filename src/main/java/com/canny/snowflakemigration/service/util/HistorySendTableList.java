@@ -49,6 +49,7 @@ public class HistorySendTableList {
 		logger = Logger.getLogger("MySnowHistoryLog");
 		FileHandler fh;
         String system = processDTO.getSourceSystem();
+		String schema = processDTO.getSourceConnectionSchema();
 
 		long success_count = 0;
         long failure_count = 0;
@@ -120,7 +121,7 @@ public class HistorySendTableList {
 		                snowHistoryJobStatusDTO.setStartTime(Instant.now());		              
 				        snowHistoryJobStatusDTO.setStatus("IN PROGRESS");
 				        write1 = snowHistoryJobStatusService.save(snowHistoryJobStatusDTO);
-					    bulkprocess(tableName,con1,con2,processDTO.getId(),system,processDTO.getSourceConnectionDatabase());
+					    bulkprocess(tableName,con1,con2,processDTO.getId(),system,processDTO.getSourceConnectionDatabase(),schema);
 					    status = "SUCCESS";
 				        success_count = success_count + 1;
 				        write1.setEndTime(Instant.now());
@@ -190,11 +191,11 @@ public class HistorySendTableList {
 	}
 
 	public static void bulkprocess(String tableName, Connection con1, Connection con2, long processid, String system,
-			String dbname) throws SQLException, IOException {
+			String dbname,String schema) throws SQLException, IOException {
 
 		String query = new String();
 		query = "select * from " + tableName;
-		stageLoad(query, con1, con2, tableName, system, dbname);
+		stageLoad(query, con1, con2, tableName, system, dbname, schema);
 		histLoad(con2, tableName);
 	}
 
@@ -203,7 +204,7 @@ public class HistorySendTableList {
 		return hashColName;
 	}
 
-	public static String getColNames2(Connection con, String tablename, String dname, String dbname)
+	public static String getColNames2(Connection con, String tablename, String dname, String dbname,String schema)
 			throws SQLException {
 
 		logger.info("getcolnames entry");
@@ -212,7 +213,7 @@ public class HistorySendTableList {
     	ResultSet rs9 = null;
 
     	if(dname.equals("Oracle")) 
-		{ rs9 = stmt0.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '"+tablename+"'");}    		
+		{ rs9 = stmt0.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '"+tablename+"' AND OWNER ='"+schema+"'");}    		
     	else if (dname.equals("MySQL"))
 		{rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"+tablename+"' AND TABLE_SCHEMA = '"+dbname+"';");}
     	else if (dname.equals("SQLServer")) 
@@ -232,10 +233,10 @@ public class HistorySendTableList {
 	}
 
 	public static void stageLoad(String query, Connection con1, Connection con2, String tableName, String system,
-			String dbname) throws SQLException, IOException {
+			String dbname, String schema) throws SQLException, IOException {
 		Statement stmt1 = con1.createStatement();
 		ResultSet rs1 = stmt1.executeQuery(query);
-		String srcCols = getColNames2(con1, tableName, system, dbname);
+		String srcCols = getColNames2(con1, tableName, system, dbname, schema);
 		String csvFilename = "F:/POC/CSV/" + tableName + ".csv";
 		toCSV(rs1, csvFilename);
 

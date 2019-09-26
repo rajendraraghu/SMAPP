@@ -23,6 +23,7 @@ import com.canny.snowflakemigration.service.dto.MigrationProcessJobStatusDTO;
 import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
 import com.canny.snowflakemigration.service.MigrationProcessJobStatusService;
 import com.canny.snowflakemigration.service.MigrationProcessStatusService;
+import static com.canny.snowflakemigration.service.util.CreateTableDDL.convertToSnowDDL;
 import com.opencsv.CSVWriter;
 import java.util.List;
 import java.text.SimpleDateFormat;
@@ -93,7 +94,7 @@ public class SendTableList  {
      		String lastruntime = new String();	
      		lastruntime = migrationProcessStatusService.findLastUpdateTime(processDTO.getId());
 		    String system = processDTO.getSourceType();
-		    
+		    String schema = processDTO.getSourceConnectionSchema();
 		     migrationProcessStatusDTO.setJobId(jobid);
 		     migrationProcessStatusDTO.setJobStartTime(Instant.now());
 		     migrationProcessStatusDTO.setProcessId(processDTO.getId());
@@ -134,7 +135,7 @@ public class SendTableList  {
 				       write1 = migrationProcessJobStatusService.save(migrationProcessJobStatusDTO);
 					logger.info("starting cdc delta process for the table: ");
      	    	    logger.info(tableName);
-					cdcprocess(lastruntime,tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase(),key2,col2,migrationProcessJobStatusService);
+					cdcprocess(lastruntime,tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase(),key2,col2,migrationProcessJobStatusService,schema);
 					success_count = success_count + 1;
 					write.setSuccessCount(success_count);
 					   write1.setTableLoadEndTime(Instant.now());
@@ -175,7 +176,7 @@ public class SendTableList  {
 				       migrationProcessJobStatusDTO.setDestName(processDTO.getSnowflakeConnectionName());
 				       write1 = migrationProcessJobStatusService.save(migrationProcessJobStatusDTO);
      	    	    logger.info("starting bulk process for the table: "+tableName);
-					bulkprocess(tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase(),bkey2,migrationProcessJobStatusService);
+					bulkprocess(tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase(),bkey2,migrationProcessJobStatusService,schema);
 					success_count = success_count + 1;
 					write.setSuccessCount(success_count);
 					   write1.setTableLoadEndTime(Instant.now());
@@ -239,16 +240,16 @@ public class SendTableList  {
 
 	    csvWriter.close();
 	}
-	public static void bulkprocess(String tableName,Connection con1, Connection con2, long jobid, long tableLoadid,long processid,String system,String dbname, String primarykey,MigrationProcessJobStatusService migrationProcessJobStatusService)
+	public static void bulkprocess(String tableName,Connection con1, Connection con2, long jobid, long tableLoadid,long processid,String system,String dbname, String primarykey,MigrationProcessJobStatusService migrationProcessJobStatusService,String schema)
 	throws SQLException, IOException{
 	
 	String query = new String();	
 	query = "select * from " +tableName;
 	logger.info("query is :"+query);
-	String srcCols = stageLoad(query,con1,con2,tableName,system,dbname);
+	String srcCols = stageLoad(query,con1,con2,tableName,system,dbname,schema);
 	histLoad(con2,tableName,"BULK", srcCols,jobid,tableLoadid,processid,primarykey,migrationProcessJobStatusService);	
 	}
-	public static void cdcprocess(String lastruntime,String tableName,Connection con1, Connection con2,long jobid, long tableLoadid,long processid, String system,String dbname,String primarykey,String columncdc,MigrationProcessJobStatusService migrationProcessJobStatusService) 
+	public static void cdcprocess(String lastruntime,String tableName,Connection con1, Connection con2,long jobid, long tableLoadid,long processid, String system,String dbname,String primarykey,String columncdc,MigrationProcessJobStatusService migrationProcessJobStatusService,String schema) 
       throws SQLException, IOException
 	{
 		String query = new String();	
@@ -262,7 +263,7 @@ public class SendTableList  {
 		}
 		else {
 		query = "select * from " +tableName+ " where "+c2+" >'" + lastruntime+"';";		
-		String srcCols =stageLoad(query,con1,con2,tableName,system,dbname);
+		String srcCols =stageLoad(query,con1,con2,tableName,system,dbname,schema);
 		histLoad(con2,tableName,"CDC", srcCols,jobid,tableLoadid,processid,primarykey,migrationProcessJobStatusService);		
 		}
 	}
@@ -270,14 +271,14 @@ public class SendTableList  {
     	String hashColName = ColName.replace(",","||'~'||");
     	return hashColName;
     }
-    public static String getColNames2(Connection con, String tablename, String dname,String dbname) throws SQLException
+    public static String getColNames2(Connection con, String tablename, String dname,String dbname,String schema) throws SQLException
     {
     	logger.info("getcolnames entry");
     	String s = new String();
     	Statement stmt0  = con.createStatement();
     	ResultSet rs9 = null;
 
-    	if(dname.equals("Oracle")) { rs9 = stmt0.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '"+tablename+"'");}    		
+    	if(dname.equals("Oracle")) { rs9 = stmt0.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '"+tablename+"' AND OWNER ='"+schema+"'");}    		
 
     	else if (dname.equals("MySQL")) {rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"+tablename+"' AND TABLE_SCHEMA = '"+dbname+"';");}
     	else if (dname.equals("SQLServer")) {rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"+dbname+"' AND TABLE_NAME = '"+tablename+"';");}
@@ -292,11 +293,11 @@ public class SendTableList  {
     	logger.info("getcolnames exit");
     	return s.substring(0,s.length()-1);
     }
-    public static String stageLoad(String query, Connection con1,Connection con2,String tableName,String system,String dbname) throws SQLException, IOException
+    public static String stageLoad(String query, Connection con1,Connection con2,String tableName,String system,String dbname,String schema) throws SQLException, IOException
     {
     	Statement stmt1=con1.createStatement(); 
     	ResultSet rs1=stmt1.executeQuery(query);
-       	String srcCols = getColNames2(con1,tableName,system,dbname);
+       	String srcCols = getColNames2(con1,tableName,system,dbname,schema);
 		// String csvFilename = "./temp/"+tableName+".csv";
 		String csvFilename = "F:/POC/CSV/"+tableName+".csv";
     	toCSV(rs1,csvFilename);   	
@@ -376,7 +377,7 @@ public class SendTableList  {
     	write1.setDeleteCount((long)targetDeleteCount);
     	write1 = migrationProcessJobStatusService.save(write1);
     }
-    public static void createAlterDDL(Connection con1,Connection con2,String tableName,String system)  throws SQLException
+    public static void createAlterDDL(Connection con1,Connection con2,String tableName,String system)  throws SQLException,IOException
     {
     	Statement stmt1=con1.createStatement();
     	ResultSet rs1 = null;
@@ -385,13 +386,16 @@ public class SendTableList  {
     	{
     		rs1=stmt1.executeQuery("SHOW CREATE TABLE "+tableName);
         	rs1.next();
-    		String ddl = rs1.getString("Create Table");
+			String[] inpsql = new String[10];
+			inpsql[0] = rs1.getString("Create Table");
+			ddl6 = convertToSnowDDL(system,inpsql);
+    		/*String ddl = rs1.getString("Create Table");
     		int ind1 = ddl.indexOf("ENGINE");
     		String ddl2 = ddl.substring(0,ind1);
     		String ddl3 = ddl2.replaceAll("int\\([0-9]+\\)","int");
     		String ddl4 = ddl3.substring(ddl3.indexOf("("));
     		String ddl5 = ddl4.replaceAll("`","");
-    		ddl6 = ddl5.substring(0, ddl5.length()-2);
+    		ddl6 = ddl5.substring(0, ddl5.length()-2);*/
     	}
         else if(system.equals("Teradata")) {rs1=stmt1.executeQuery("SHOW TABLE "+tableName+";");}
 
@@ -417,6 +421,11 @@ public class SendTableList  {
 			ddl6 = ddl5.replaceAll("ENABLE","");			
 			System.out.println("ddl6:"+ddl6);
         }
+		else if(system.equals("SQLServer")) 
+        {
+			ddl6 = "(empid int ,empname varchar(50)";
+		}
+		logger.info("ddl6:"+ddl6);
         String stagecreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT);");		
 		String histcreate = ddl6.concat(",sah_isdeleted INT,sah_currentind boolean,sah_updatedtime timestamp,sah_MD5HASH TEXT,sah_createdTime timestamp,sah_MD5HASHPK TEXT);");
 		

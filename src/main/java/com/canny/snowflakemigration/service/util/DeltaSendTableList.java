@@ -47,6 +47,7 @@ public class DeltaSendTableList  {
 		FileHandler fh;
 		status = "FAILURE";
 		String system = processDTO.getSourceType();
+		String schema = processDTO.getSourceConnectionSchema();
 		long success_count = 0;
         long failure_count = 0;					   
 
@@ -109,7 +110,7 @@ public class DeltaSendTableList  {
                 logger.info(tablesToMigrate[i]);
 				String tn = tablesToMigrate[i].replace("[\"", "");
 				String tableName = tn.replaceAll("\"]|\"", "");
-		        ResultSet rs1 = stmt0.executeQuery("SELECT * FROM "+tableName+";");						
+		        ResultSet rs1 = stmt0.executeQuery("SELECT * FROM "+tableName);						
 				logger.info("starting delta creation for the table: "+tableName);	   
 					   deltaProcessJobStatusDTO.setUpdateCount((long)2);
 				       deltaProcessJobStatusDTO.setInsertCount((long)3);				       
@@ -130,7 +131,7 @@ public class DeltaSendTableList  {
 			     {			
 					//using local file now. Should be replaced with S3 or other filespace
 					String csvFilename = "F:/POC/CSV/"+tableName+".csv";
-					String srcCols = getColNames2(con1,tableName,system,processDTO.getSourceConnectionDatabase());
+					String srcCols = getColNames2(con1,tableName,system,processDTO.getSourceConnectionDatabase(),schema);
 					toCSV(rs1,csvFilename);	
 					Statement stmt2=con2.createStatement();
 					stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
@@ -181,7 +182,7 @@ public class DeltaSendTableList  {
 				write1.setDeleteCount((long)rs3.getInt("DEL"));				
 				write1.setInsertCount((long)rs3.getInt("INS"));
 				write1.setUpdateCount((long)rs3.getInt("UPD"));
-				success_count = success_count + 1;
+				//success_count = success_count + 1;
 				write1 = deltaProcessJobStatusService.save(write1);
 				logger.info("delta process completed for table:"+tableName);
 			}
@@ -253,14 +254,14 @@ public class DeltaSendTableList  {
     	String hashColName = ColName.replace(",","||'~'||");
     	return hashColName;
     }
-    public static String getColNames2(Connection con, String tablename, String dname,String dbname) throws SQLException
+    public static String getColNames2(Connection con, String tablename, String dname,String dbname,String schema) throws SQLException
     {
     	logger.info("getcolnames entry");
     	String s = new String();
     	Statement stmt0  = con.createStatement();
     	ResultSet rs9 = null;
 
-    	if(dname.equals("Oracle")) { rs9 = stmt0.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '"+tablename+"'");}    		
+    	if(dname.equals("Oracle")) { rs9 = stmt0.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '"+tablename+"' AND OWNER ='"+schema+"'");}    		
 
     	else if (dname.equals("MySQL")) {rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"+tablename+"' AND TABLE_SCHEMA = '"+dbname+"';");}
     	else if (dname.equals("SQLServer")) {rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"+dbname+"' AND TABLE_NAME = '"+tablename+"';");}
