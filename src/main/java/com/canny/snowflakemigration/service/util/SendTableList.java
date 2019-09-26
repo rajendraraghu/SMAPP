@@ -54,7 +54,6 @@ public class SendTableList  {
 		    SimpleFormatter formatter = new SimpleFormatter();  
 		    fh.setFormatter(formatter);		        
 		    logger.info("My first log");
-		    
 			Properties properties0 = new Properties();
 			properties0.put("user", processDTO.getSourceConnectionUsername());
 			properties0.put("password", processDTO.getSourceConnectionPassword());
@@ -65,21 +64,23 @@ public class SendTableList  {
 			
 			String lastruntime = new String();	
      		//lastruntime = migrationProcessStatusService.findLastUpdateTime(processDTO.getId());
-		    lastruntime = processDTO.getLastRunTime().toString();
+		    lastruntime = processDTO.getLastRunTime();
 			
 			
 		     if (system.equals("Oracle")) {
 				Statement stmt = con1.createStatement();
-				ResultSet rs = stmt.executeQuery("SELECT CURRENT_TIMESTAMP FROM DUAL;");
+				ResultSet rs = stmt.executeQuery("SELECT CURRENT_TIMESTAMP FROM DUAL");
 				rs.next();
-				Date lastruntimestart = rs.getTimestamp(1);
-				processDTO.setLastRunTime(lastruntimestart);
+				String lastruntimestart = rs.getTimestamp(1).toString();
+				String lts = lastruntimestart.substring(0,19);
+				System.out.print(lts);
+				processDTO.setLastRunTime(lts);
 				System.out.print(lastruntimestart);
 			} else {
 				Statement stmt = con1.createStatement();
 				ResultSet rs = stmt.executeQuery("SELECT CURRENT_TIMESTAMP;");
 				rs.next();
-				Date lastruntimestart = rs.getTimestamp(1);
+				String lastruntimestart = rs.getTimestamp(1).toString();
 				processDTO.setLastRunTime(lastruntimestart);
 				System.out.print(lastruntimestart);
 			}
@@ -285,14 +286,24 @@ public class SendTableList  {
 		{
 			logger.info("No job history available in sah_jobrunstatus.Cannot run CDC load.");
 		}
-		else {
-		query = "select * from " +tableName+ " where "+c2+" >'" + lastruntime+"';";		
+		else if (system.equals("Oracle")) {
+		query = "select * from " +tableName+ " where "+c2+ " >" + "to_date('"+ lastruntime+ "','YYYY-MM-DD HH24:MI:SS')";
+		logger.info("altered query:"+query);	
 		String srcCols =stageLoad(query,con1,con2,tableName,system,dbname,schema);
 		histLoad(con2,tableName,"CDC", srcCols,jobid,tableLoadid,processid,primarykey,migrationProcessJobStatusService);		
 		}
+		else {
+			query = "select * from " +tableName+ " where "+c2+" >'" + lastruntime+"';";			
+			String srcCols =stageLoad(query,con1,con2,tableName,system,dbname,schema);
+			histLoad(con2,tableName,"CDC", srcCols,jobid,tableLoadid,processid,primarykey,migrationProcessJobStatusService);	
+		}
 	}
     public static String gethashColNames(String ColName) {
-    	String hashColName = ColName.replace(",","||'~'||");
+    	String hashColName = "coalesce(";
+		hashColName = hashColName.concat(ColName);
+		hashColName = hashColName.replace(",",",'')||'~'||coalesce(");
+		hashColName = hashColName.concat(",'')");
+		logger.info("hashcolname :"+hashColName);
     	return hashColName;
     }
     public static String getColNames2(Connection con, String tablename, String dname,String dbname,String schema) throws SQLException
@@ -451,7 +462,7 @@ public class SendTableList  {
 			rs1.next();
 			ddl6 = ddl6.concat(rs1.getString("ddl"));
 			ddl6 = ddl6.replace("int()","int");
-			
+			ddl6 = ddl6.replace("datetime()","datetime");
 		}
 		logger.info("ddl6:"+ddl6);
         String stagecreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT);");		

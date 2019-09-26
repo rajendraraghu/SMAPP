@@ -89,13 +89,13 @@ public class MigrationProcessDTO implements Serializable {
 
     private String snowflakeConnectionSchema;
 
-    private Date lastRunTime;
+    private String lastRunTime = "1970-01-01 00:00:00";
 
-    public Date getLastRunTime() {
+    public String getLastRunTime() {
         return lastRunTime;
     }
     
-    public void setLastRunTime(Date lastRunTime) {
+    public void setLastRunTime(String lastRunTime) {
         this.lastRunTime = lastRunTime;
     }
 
