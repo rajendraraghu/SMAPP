@@ -318,7 +318,7 @@ public class SendTableList  {
     	stageCols =stageCols.substring(0,stageCols.length() - 1);
     	String hashCol = gethashColNames(stageCols);
 		System.out.println(con1+":"+con2+":"+tableName+":"+system+":*:");
-    	createAlterDDL(con1,con2,tableName,system);
+    	createAlterDDL(con1,con2,tableName,system,dbname);
     	logger.info("stagecols:"+stageCols);
 		stmt2.executeQuery("TRUNCATE TABLE "+tableName);
 		logger.info("Truncating "+tableName);
@@ -378,7 +378,7 @@ public class SendTableList  {
     	write1.setDeleteCount((long)targetDeleteCount);
     	write1 = migrationProcessJobStatusService.save(write1);
     }
-    public static void createAlterDDL(Connection con1,Connection con2,String tableName,String system)  throws SQLException,IOException
+    public static void createAlterDDL(Connection con1,Connection con2,String tableName,String system,String dbname)  throws SQLException,IOException
     {
     	Statement stmt1=con1.createStatement();
     	ResultSet rs1 = null;
@@ -388,14 +388,14 @@ public class SendTableList  {
     		rs1=stmt1.executeQuery("SHOW CREATE TABLE "+tableName);
         	rs1.next();
 			String ddl = rs1.getString("Create Table");
-			//String[] inpsql = ddl.split("\n");
-			//ddl6 = convertToSnowDDL(system,inpsql);
-    		int ind1 = ddl.indexOf("ENGINE");
+			String[] inpsql = ddl.split("\n");
+			ddl6 = convertToSnowDDL(system,inpsql);
+    		/*int ind1 = ddl.indexOf("ENGINE");
     		String ddl2 = ddl.substring(0,ind1);
     		String ddl3 = ddl2.replaceAll("int\\([0-9]+\\)","int");
     		String ddl4 = ddl3.substring(ddl3.indexOf("("));
     		String ddl5 = ddl4.replaceAll("`","");
-    		ddl6 = ddl5.substring(0, ddl5.length()-2);
+    		ddl6 = ddl5.substring(0, ddl5.length()-2);*/
     	}
         else if(system.equals("Teradata")) {rs1=stmt1.executeQuery("SHOW TABLE "+tableName+";");}
 
@@ -423,7 +423,12 @@ public class SendTableList  {
         }
 		else if(system.equals("SQLServer")) 
         {
-			ddl6 = "(empid int ,empname varchar(50)";
+			ddl6 = "(";
+			rs1 = stmt1.executeQuery("SELECT TABLE_NAME,string_agg(ddl,',') as ddl FROM (SELECT TABLE_NAME,COLUMN_NAME +' '+ DATA_TYPE +'('+ ISNULL(CAST(CHARACTER_MAXIMUM_LENGTH AS VARCHAR),'')+')' as DDL FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"+dbname+"'AND TABLE_NAME = '"+tableName+"')a GROUP BY a.TABLE_NAME;");
+			rs1.next();
+			ddl6 = ddl6.concat(rs1.getString("ddl"));
+			ddl6 = ddl6.replace("int()","int");
+			
 		}
 		logger.info("ddl6:"+ddl6);
         String stagecreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT);");		

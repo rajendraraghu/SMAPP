@@ -84,7 +84,7 @@ public class DeltaSendTableList  {
 		    String[] pk2 = pk1.split(",");
 		    String[] tablesToMigrate = tablestoMigrate.split(",");
 		    logger.info("variable initialization completed");		    
-		    Statement stmt0 = con1.createStatement();
+		    Statement stmt0 = con1.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
 		    int tablecount = tablesToMigrate.length;
 		    logger.info("system:"+system);
 			
@@ -231,15 +231,16 @@ public class DeltaSendTableList  {
 
 	        throws SQLException, IOException {
 	    CSVWriter csvWriter = new CSVWriter(new FileWriter(csvFilename));
-
+        
 	    ResultSetMetaData metadata = rs.getMetaData();
 	    int columnCount = metadata.getColumnCount();
+		logger.info("Column count:"+columnCount);
 	    String[] column = new String[columnCount];
 	    for (int i = 1; i <= columnCount; i++) {
 	        column[i-1] = metadata.getColumnName(i);
 	    }
 	    csvWriter.writeNext(column, false);
-
+        rs.beforeFirst();
 	    while (rs.next()) {
 	        for (int i = 1; i <= columnCount; i++) {
 	            column[i-1] = rs.getString(i);
@@ -258,15 +259,15 @@ public class DeltaSendTableList  {
     {
     	logger.info("getcolnames entry");
     	String s = new String();
-    	Statement stmt0  = con.createStatement();
+    	Statement stmt8  = con.createStatement();
     	ResultSet rs9 = null;
 
-    	if(dname.equals("Oracle")) { rs9 = stmt0.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '"+tablename+"' AND OWNER ='"+schema+"'");}    		
+    	if(dname.equals("Oracle")) { rs9 = stmt8.executeQuery("SELECT Column_Name FROM  All_Tab_Columns WHERE Table_Name = '"+tablename+"' AND OWNER ='"+schema+"'");}    		
 
-    	else if (dname.equals("MySQL")) {rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"+tablename+"' AND TABLE_SCHEMA = '"+dbname+"';");}
-    	else if (dname.equals("SQLServer")) {rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"+dbname+"' AND TABLE_NAME = '"+tablename+"';");}
-    	else if (dname.equals("Netezza")) {rs9 = stmt0.executeQuery("SELECT COLUMN_NAME FROM _V_SYS_COLUMNS WHERE TABLE_SCHEMA = '"+dbname+"' AND TABLE_NAME  = '"+tablename+"';");}
-    	else if (dname.equals("Teradata")) {rs9 = stmt0.executeQuery("SELECT  ColumnName as COLUMN_NAME FROM DBC.ColumnsV WHERE DatabaseName = '"+dbname+"' AND TableName = '"+tablename+"';");}
+    	else if (dname.equals("MySQL")) {rs9 = stmt8.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '"+tablename+"' AND TABLE_SCHEMA = '"+dbname+"';");}
+    	else if (dname.equals("SQLServer")) {rs9 = stmt8.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"+dbname+"' AND TABLE_NAME = '"+tablename+"';");}
+    	else if (dname.equals("Netezza")) {rs9 = stmt8.executeQuery("SELECT COLUMN_NAME FROM _V_SYS_COLUMNS WHERE TABLE_SCHEMA = '"+dbname+"' AND TABLE_NAME  = '"+tablename+"';");}
+    	else if (dname.equals("Teradata")) {rs9 = stmt8.executeQuery("SELECT  ColumnName as COLUMN_NAME FROM DBC.ColumnsV WHERE DatabaseName = '"+dbname+"' AND TableName = '"+tablename+"';");}
     	
 		while(rs9.next())
     	{
