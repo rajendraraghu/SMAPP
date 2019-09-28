@@ -1,6 +1,7 @@
 package com.canny.snowflakemigration.service.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.BooleanFilter;
@@ -8,18 +9,24 @@ import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
+import io.github.jhipster.service.filter.ZonedDateTimeFilter;
+import liquibase.datatype.core.DateTimeType;
+import net.snowflake.client.jdbc.internal.joda.time.DateTime;
 import io.github.jhipster.service.filter.InstantFilter;
 
 /**
- * Criteria class for the {@link com.canny.snowflakemigration.domain.MigrationProcess} entity. This class is used
- * in {@link com.canny.snowflakemigration.web.rest.MigrationProcessResource} to receive all the possible filtering options from
- * the Http GET request parameters.
- * For example the following could be a valid request:
+ * Criteria class for the
+ * {@link com.canny.snowflakemigration.domain.MigrationProcess} entity. This
+ * class is used in
+ * {@link com.canny.snowflakemigration.web.rest.MigrationProcessResource} to
+ * receive all the possible filtering options from the Http GET request
+ * parameters. For example the following could be a valid request:
  * {@code /migration-processes?id.greaterThan=5&attr1.contains=something&attr2.specified=false}
- * As Spring is unable to properly convert the types, unless specific {@link Filter} class are used, we need to use
- * fix type specific filters.
+ * As Spring is unable to properly convert the types, unless specific
+ * {@link Filter} class are used, we need to use fix type specific filters.
  */
 public class MigrationProcessCriteria implements Serializable, Criteria {
 
@@ -51,6 +58,8 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
 
     private LongFilter snowflakeConnectionId;
 
+    private ZonedDateTimeFilter lastRunTime;
+
     public MigrationProcessCriteria(){
     }
 
@@ -68,6 +77,8 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
         this.lastModifiedDate = other.lastModifiedDate == null ? null : other.lastModifiedDate.copy();
         this.sourceConnectionId = other.sourceConnectionId == null ? null : other.sourceConnectionId.copy();
         this.snowflakeConnectionId = other.snowflakeConnectionId == null ? null : other.snowflakeConnectionId.copy();
+        this.lastRunTime = other.lastRunTime == null ? null : other.lastRunTime.copy();
+        
     }
 
     @Override
@@ -179,6 +190,14 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
         this.snowflakeConnectionId = snowflakeConnectionId;
     }
 
+    public ZonedDateTimeFilter getLastRunTime() {
+        return lastRunTime;
+    }
+
+    public void setLastRunTime(ZonedDateTimeFilter lastRunTime) {
+        this.lastRunTime = lastRunTime;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -202,7 +221,9 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
             Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
             Objects.equals(lastModifiedDate, that.lastModifiedDate) &&
             Objects.equals(sourceConnectionId, that.sourceConnectionId) &&
-            Objects.equals(snowflakeConnectionId, that.snowflakeConnectionId);
+            Objects.equals(snowflakeConnectionId, that.snowflakeConnectionId) &&
+            Objects.equals(lastRunTime, that.lastRunTime);
+
     }
 
     @Override
@@ -220,7 +241,8 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
         lastModifiedBy,
         lastModifiedDate,
         sourceConnectionId,
-        snowflakeConnectionId
+        snowflakeConnectionId,
+        lastRunTime
         );
     }
 
@@ -240,6 +262,7 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
                 (lastModifiedDate != null ? "lastModifiedDate=" + lastModifiedDate + ", " : "") +
                 (sourceConnectionId != null ? "sourceConnectionId=" + sourceConnectionId + ", " : "") +
                 (snowflakeConnectionId != null ? "snowflakeConnectionId=" + snowflakeConnectionId + ", " : "") +
+                (lastRunTime != null ? "lastRunTime=" + lastRunTime + ", " : "") +
             "}";
     }
 

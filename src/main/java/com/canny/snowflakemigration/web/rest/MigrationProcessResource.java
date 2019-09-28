@@ -186,7 +186,7 @@ public class MigrationProcessResource {
     @PostMapping(value = "/migration-processes/sendTableListforHistProcess")
     public @ResponseBody String sendTableList(@Valid @RequestBody  MigrationProcessDTO migrationProcessDTO)throws SQLException,ClassNotFoundException  {
     	//Optional<MigrationProcessDTO>  migrationProcessDTO = migrationProcessService.findOne(processid);
-    	String result = sendSelectedTables(migrationProcessDTO,migrationProcessStatusService,migrationProcessJobStatusService);    
+    	String result = sendSelectedTables(migrationProcessDTO,migrationProcessService,migrationProcessStatusService,migrationProcessJobStatusService);    
         return result;
     }
     @PostMapping(value="/migration-processes/TestConnectionSource")

@@ -1,11 +1,15 @@
 package com.canny.snowflakemigration.service.dto;
+
 import java.time.Instant;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 /**
- * A DTO for the {@link com.canny.snowflakemigration.domain.MigrationProcess} entity.
+ * A DTO for the {@link com.canny.snowflakemigration.domain.MigrationProcess}
+ * entity.
  */
 public class MigrationProcessDTO implements Serializable {
 
@@ -26,11 +30,11 @@ public class MigrationProcessDTO implements Serializable {
     private String cdc;
 
     private String bulk;
-    
+
     private String cdcPk;
-    
+
     private String bulkPk;
-    
+
     private String cdcCols;
 
     private String lastStatus;
@@ -48,7 +52,7 @@ public class MigrationProcessDTO implements Serializable {
     private Long sourceConnectionId;
 
     private String sourceConnectionName;
-    
+
     private String sourceType;
 
     private String sourceConnectionUrl;
@@ -84,6 +88,16 @@ public class MigrationProcessDTO implements Serializable {
     private String snowflakeConnectionDatabase;
 
     private String snowflakeConnectionSchema;
+
+    private Date lastRunTime;
+
+    public Date getLastRunTime() {
+        return lastRunTime;
+    }
+    
+    public void setLastRunTime(Date lastRunTime) {
+        this.lastRunTime = lastRunTime;
+    }
 
     public Long getId() {
         return id;
@@ -424,6 +438,7 @@ public class MigrationProcessDTO implements Serializable {
             ", sourceConnection='" + getSourceConnectionName() + "'" +
             ", snowflakeConnectionId=" + getSnowflakeConnectionId() +
             ", snowflakeConnection='" + getSnowflakeConnectionName() + "'" +
+            ", lastRunTime='" + getLastRunTime() + "'" +
             "}";
     }
 }

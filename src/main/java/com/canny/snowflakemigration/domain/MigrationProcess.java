@@ -1,4 +1,5 @@
 package com.canny.snowflakemigration.domain;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -8,6 +9,7 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Date;
 
 /**
  * A MigrationProcess.
@@ -88,6 +90,9 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
     @ManyToOne(optional = false)
     @NotNull
     private SnowflakeConnection snowflakeConnection;
+
+    @Column(name = "last_run_time")
+    private Date lastRunTime;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -332,6 +337,20 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
     public void setSnowflakeConnection(SnowflakeConnection snowflakeConnection) {
         this.snowflakeConnection = snowflakeConnection;
     }
+
+    public Date getLastRunTime() {
+            return lastRunTime;
+        }
+    
+        public MigrationProcess lastRunTime(Date lastRunTime) {
+            this.lastRunTime = lastRunTime;
+            return this;
+        }
+    
+        public void setlastRunTime(Date lastRunTime) {
+            this.lastRunTime = lastRunTime;
+        }
+    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -370,6 +389,7 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
+            ", lastRunTime='" + getLastRunTime() + "'" +
             "}";
     }
 }

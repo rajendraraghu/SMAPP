@@ -22,9 +22,11 @@ import com.canny.snowflakemigration.service.dto.MigrationProcessStatusDTO;
 import com.canny.snowflakemigration.service.dto.MigrationProcessJobStatusDTO;
 import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
 import com.canny.snowflakemigration.service.MigrationProcessJobStatusService;
+import com.canny.snowflakemigration.service.MigrationProcessService;
 import com.canny.snowflakemigration.service.MigrationProcessStatusService;
 import static com.canny.snowflakemigration.service.util.CreateTableDDL.convertToSnowDDL;
 import com.opencsv.CSVWriter;
+import liquibase.datatype.core.DateTimeType;										
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,7 +39,7 @@ public class SendTableList  {
 	public static MigrationProcessJobStatusDTO write1;
 	public static SourceConnectionDTO sourceConnDTO = new SourceConnectionDTO();	
 	public static Logger logger;
-	public static String sendSelectedTables(MigrationProcessDTO processDTO,MigrationProcessStatusService migrationProcessStatusService,MigrationProcessJobStatusService migrationProcessJobStatusService) throws SQLException,ClassNotFoundException
+	public static String sendSelectedTables(MigrationProcessDTO processDTO, MigrationProcessService migrationProcessService,MigrationProcessStatusService migrationProcessStatusService,MigrationProcessJobStatusService migrationProcessJobStatusService) throws SQLException,ClassNotFoundException
 	{
 		String status = new String();
 		String timeStamp = new SimpleDateFormat().format( new Date() );
@@ -46,6 +48,7 @@ public class SendTableList  {
 		long failure_count = 0;
 		try{
 			Long jobid=(long)0;
+			String system = processDTO.getSourceType();											
 			fh = new FileHandler("F:/POC/CSV/MyLogFile.log");  
 		    logger.addHandler(fh);
 		    SimpleFormatter formatter = new SimpleFormatter();  
@@ -59,6 +62,28 @@ public class SendTableList  {
 		    properties0.put("schema",processDTO.getSourceConnectionSchema());				 
 	        Connection con1 = DriverManager.getConnection(processDTO.getSourceConnectionUrl(), properties0);
 	        logger.info("source connection connected");
+			
+			String lastruntime = new String();	
+     		//lastruntime = migrationProcessStatusService.findLastUpdateTime(processDTO.getId());
+		    lastruntime = processDTO.getLastRunTime().toString();
+			
+			
+		     if (system.equals("Oracle")) {
+				Statement stmt = con1.createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT CURRENT_TIMESTAMP FROM DUAL;");
+				rs.next();
+				Date lastruntimestart = rs.getTimestamp(1);
+				processDTO.setLastRunTime(lastruntimestart);
+				System.out.print(lastruntimestart);
+			} else {
+				Statement stmt = con1.createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT CURRENT_TIMESTAMP;");
+				rs.next();
+				Date lastruntimestart = rs.getTimestamp(1);
+				processDTO.setLastRunTime(lastruntimestart);
+				System.out.print(lastruntimestart);
+			}
+			migrationProcessService.save(processDTO);													   
 	        
 	        Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");  
 		    Properties properties = new Properties();
@@ -91,9 +116,7 @@ public class SendTableList  {
 		    int i = 0;
 		    int j = 0;
 		    long tableLoadid = (long)0;
-     		String lastruntime = new String();	
-     		lastruntime = migrationProcessStatusService.findLastUpdateTime(processDTO.getId());
-		    String system = processDTO.getSourceType();
+     		
 		    String schema = processDTO.getSourceConnectionSchema();
 		     migrationProcessStatusDTO.setJobId(jobid);
 		     migrationProcessStatusDTO.setJobStartTime(Instant.now());

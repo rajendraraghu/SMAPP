@@ -87,11 +87,16 @@
                 <constraints nullable="false" />
             </column>
 
+            <column name="last_run_time" type="datetime">
+                <constraints nullable="true" />
+            </column>
+
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
 
         <dropDefaultValue tableName="migration_process" columnName="created_date" columnDataType="datetime"/>
         <dropDefaultValue tableName="migration_process" columnName="last_modified_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="migration_process" columnName="last_run_time" columnDataType="datetime"/>
     </changeSet>
 
     <changeSet id="20190707173954-1-relations" author="jhipster">
@@ -126,6 +131,7 @@
             <column name="last_modified_date" type="datetime"/>
             <column name="source_connection_id" type="numeric"/>
             <column name="snowflake_connection_id" type="numeric"/>
+            <column name="last_run_time" type="datetime"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>
     </changeSet>
