@@ -104,6 +104,15 @@
                     </li>
 
                     <li>
+                            <a class="dropdown-item" routerLink="admin/user-management" routerLinkActive="active"
+                                (click)="collapseNavbar()">
+                                <fa-icon icon="user" fixedWidth="true"></fa-icon>
+                                <!-- <i class="fa fa-user" aria-hidden="true"></i> -->
+                                <span jhiTranslate="global.menu.admin.roleManagement">Role Management</span>
+                            </a>
+                        </li>
+
+                    <li>
                         <a class="dropdown-item" routerLink="source-connection" routerLinkActive="active"
                             [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <i class="fa fa-database" aria-hidden="true" style="padding-left: 3px;"></i>
