@@ -125,8 +125,8 @@ public class DeltaSendTableList  {
 					   //deltaProcessJobStatusDTO.setSourceName(processDTO.getSourceConnectionName());
 					   //deltaProcessJobStatusDTO.setDestName(processDTO.getSnowflakeConnectionName());
 				       write1 = deltaProcessJobStatusService.save(deltaProcessJobStatusDTO);		    	
-        		       createAlterDDL(con1,con2,tableName,system);
-					   logger.info("DDL CREATION COMPLETED");				  
+					   createAlterDDL(con1,con2,tableName,system);
+					   logger.info("DDL CREATION COMPLETED");
 
 		        if (rs1.next())
 			     {			
@@ -171,19 +171,25 @@ public class DeltaSendTableList  {
 					stmt2.executeUpdate("TRUNCATE TABLE "+tableName+"_delta");
 					stmt2.executeUpdate("INSERT INTO "+tableName+"_delta SELECT y.*,t.*,CASE WHEN "+pk4+" THEN 'INSERT' WHEN "+pk5+" THEN 'DELETE' WHEN "+pk3+" AND y.delta_MD5HASH <> t.delta_MD5HASH THEN 'UPDATE'  ELSE 'NO CHANGE' END AS CDC FROM "+tableName+"_yesterday y FULL OUTER JOIN "+tableName+"_today t ON "+pk3);
 					rs3 = stmt2.executeQuery("SELECT COALESCE(INS,0) AS INS,COALESCE(UPD,0) AS UPD,COALESCE(DEL,0) AS DEL,COALESCE(NOCHANGE, 0) AS NOCHANGE FROM (SELECT cdc,COUNT(*) as cnt FROM "+tableName+"_delta GROUP BY cdc ORDER BY cdc)src pivot(MAX(cnt) for cdc in ('INSERT', 'UPDATE', 'DELETE', 'NO CHANGE')) as p (INS,UPD,DEL,NOCHANGE);");
-				if(rs3.next())
+					if(rs3.next())
 				    {
 				      System.out.println("DEL:"+rs3.getInt("DEL"));
 				      write1.setDeleteCount((long)rs3.getInt("DEL"));				
 				       write1.setInsertCount((long)rs3.getInt("INS"));
 				       write1.setUpdateCount((long)rs3.getInt("UPD"));
-				    }													  
-				}
+				    }
+			    }
 
 				i = i+1;
 				success_count = success_count + 1;
 				write1.setTableLoadEndTime(Instant.now());
 			    write1.setTableLoadStatus("SUCCESS");
+				//rs3.next();
+				//System.out.println("DEL:"+rs3.getInt("DEL"));
+				//write1.setDeleteCount((long)rs3.getInt("DEL"));				
+				//write1.setInsertCount((long)rs3.getInt("INS"));
+				//write1.setUpdateCount((long)rs3.getInt("UPD"));
+				//success_count = success_count + 1;
 				write1 = deltaProcessJobStatusService.save(write1);
 				logger.info("delta process completed for table:"+tableName);
 			}
@@ -232,10 +238,10 @@ public class DeltaSendTableList  {
 
 	        throws SQLException, IOException {
 	    CSVWriter csvWriter = new CSVWriter(new FileWriter(csvFilename));
-        
+
 	    ResultSetMetaData metadata = rs.getMetaData();
 	    int columnCount = metadata.getColumnCount();
-		String[] column = new String[columnCount];
+	    String[] column = new String[columnCount];
 	    for (int i = 1; i <= columnCount; i++) {
 	        column[i-1] = metadata.getColumnName(i);
 	    }
@@ -324,7 +330,7 @@ public class DeltaSendTableList  {
         }
 		else if(system.equals("SQLServer")) 
         {
-			ddl6 = "(empid int ,empname varchar(50)";
+			ddl6 = "(student_id int ,last_name varchar(50)";
 		}
 		String stagecreate = ddl6.concat(",delta_MD5HASH TEXT,delta_createdTime timestamp");
 		String histcreate = ddl6.concat(",delta_MD5HASH TEXT,delta_createdTime timestamp");
@@ -354,7 +360,7 @@ public class DeltaSendTableList  {
 					pk = pk.concat("=y.");
 					pk = pk.concat(prikey[i]);
 					pk = pk.replace("[\"", "");
-		            pk = pk.replace("\"]", "");
+		            pk = pk.replaceAll("\"]|\"", "");
 				    logger.info(pk);
 			}
 		logger.info("pk:"+pk.substring(5));
@@ -378,14 +384,13 @@ public class DeltaSendTableList  {
 		
 
 			for(i = 0;i< prikey.length;i++)
-			{
-					
-					pk = pk.concat(" and y.");
-					pk = pk.concat(prikey[i]);
-					pk = pk.concat(" IS NULL");
-			        pk = pk.replace("[\"", "");
-		            pk = pk.replace("\"]", "");
-					logger.info(pk);
+			{		
+				pk = pk.concat(" and y.");
+				pk = pk.concat(prikey[i]);
+				pk = pk.concat(" IS NULL");
+				pk = pk.replace("[\"", "");
+				pk = pk.replaceAll("\"]|\"", "");
+				logger.info(pk);
 			}
 		
 		
