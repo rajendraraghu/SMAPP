@@ -91,7 +91,7 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item" routerLink="admin/user-management" routerLinkActive="active"
+                        <a class="dropdown-item" routerLink="admin/role-management" routerLinkActive="active"
                             (click)="collapseNavbar()">
                             <fa-icon icon="user" fixedWidth="true"></fa-icon>
                             <!-- <i class="fa fa-user" aria-hidden="true"></i> -->
@@ -116,12 +116,35 @@
                         </a>
                     </li>
                 </ul>
+        </ul>
+    </div>
+    <div id="navbarResponsive" [ngSwitch]="isAuthenticated()">
+        <div *ngSwitchCase="true">
+            <span id="logged name " *ngIf="account" class="login">
+                Hello, {{account.login}}.
+            </span>
+        </div>
+        <ul class="navbar-nav mr-auto">
             <li ngbDropdown class="nav-item dropdown pointer" placement="bottom-right" routerLinkActive="active"
                 [routerLinkActiveOptions]="{exact: true}">
-                <a class="nav-link dropdown-toggle" *ngSwitchCase="true" ngbDropdownToggle href="javascript:void(0);" id="account-menu">
+            <li *ngSwitchCase="false">
+                <a class="dropdown-item" (click)="login()" id="login">
+                    <fa-icon icon="sign-in-alt" fixedWidth="true"></fa-icon>
+                    <span jhiTranslate="global.menu.account.login">Sign In</span>
+                </a>
+            </li>
+        </ul>
+        </li>
+    </div>
+    <div id="navbarResponsive" [ngSwitch]="isAuthenticated()">
+        <ul class="navbar-nav mr-auto">
+            <li ngbDropdown class="nav-item dropdown pointer" placement="bottom-right" routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link dropdown-toggle" *ngSwitchCase="true" ngbDropdownToggle href="javascript:void(0);"
+                    id="account-menu">
                     <span *ngIf="!getImageUrl()">
                         <fa-icon icon="user"></fa-icon>
-                        <span  jhiTranslate="global.menu.account.main">
+                        <span jhiTranslate="global.menu.account.main">
                             Account
                         </span>
                     </span>
@@ -144,31 +167,13 @@
                             <span jhiTranslate="global.menu.account.password">Password</span>
                         </a>
                     </li>
+                    <li *ngSwitchCase="true">
+                        <a class="dropdown-item" (click)="logout()" id="logout">
+                            <fa-icon icon="sign-out-alt" fixedWidth="true"></fa-icon>
+                            <span jhiTranslate="global.menu.account.logout">Sign Out</span>
+                        </a>
+                    </li>
                 </ul>
-            </li>
-        </ul>
-    </div>
-    <div id="navbarResponsive" [ngSwitch]="isAuthenticated()">
-        <div *ngSwitchCase="true">
-            <span id="logged name " *ngIf="account" class="login">
-                Hello, {{account.login}}.
-            </span>
-        </div>
-        <ul class="navbar-nav mr-auto">
-            <li ngbDropdown class="nav-item dropdown pointer" placement="bottom-right" routerLinkActive="active"
-                [routerLinkActiveOptions]="{exact: true}">
-                <!-- <span *ngSwitchCase="false" class = "login"> Hello, sign in  </span> -->
-            <li *ngSwitchCase="true">
-                <a class="dropdown-item" (click)="logout()" id="logout">
-                    <fa-icon icon="sign-out-alt" fixedWidth="true"></fa-icon>
-                    <span jhiTranslate="global.menu.account.logout">Sign Out</span>
-                </a>
-            </li>
-            <li *ngSwitchCase="false">
-                <a class="dropdown-item" (click)="login()" id="login">
-                    <fa-icon icon="sign-in-alt" fixedWidth="true"></fa-icon>
-                    <span jhiTranslate="global.menu.account.login">Sign In</span>
-                </a>
             </li>
         </ul>
         </li>
