@@ -80,10 +80,8 @@ public class listTables {
             else if(system.equals("SQLServer")) {rs3 = stmt2.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"+migrationProcessDTO.getSourceConnectionDatabase()+"' AND TABLE_NAME = '"+rs1.getString("TABLE_NAME")+"' AND DATA_TYPE IN ('timestamp','datetime');");}
             else if(system.equals("Netezza")) {rs3 = stmt2.executeQuery("SELECT COLUMN_NAME FROM _V_SYS_COLUMNS WHERE TABLE_SCHEMA = '"+migrationProcessDTO.getSourceConnectionSchema()+"' AND TABLE_NAME  = '"+rs1.getString("TABLE_NAME")+"' AND TYPE_NAME IN ('TIMESTAMP','DATE');");}
             else if(system.equals("Teradata")) {rs3 = stmt2.executeQuery("SELECT  ColumnName as COLUMN_NAME FROM DBC.ColumnsV WHERE DatabaseName = '"+migrationProcessDTO.getSourceConnectionSchema()+"' AND TableName = '"+rs1.getString("TABLE_NAME")+"' AND COLUMNTYPE IN ('DA','TS','SZ');");}
-            else if(system.equals("Oracle")) {System.out.println("inside oracle loop if loop3");
-				rs3 = stmt2.executeQuery("SELECT Column_Name as COLUMN_NAME FROM  All_Tab_Columns WHERE  OWNER = '"+migrationProcessDTO.getSourceConnectionSchema()+"' AND  Table_Name = '"+rs1.getString("TABLE_NAME")+"' AND DATA_TYPE IN ('TIMESTAMP','DATE')");}
-            
-        	
+            else if(system.equals("Oracle")) {rs3 = stmt2.executeQuery("SELECT Column_Name as COLUMN_NAME FROM  All_Tab_Columns WHERE  OWNER = '"+migrationProcessDTO.getSourceConnectionSchema()+"' AND  Table_Name = '"+rs1.getString("TABLE_NAME")+"' AND DATA_TYPE IN ('TIMESTAMP','DATE')");}
+    
         	JsonArray cdccols = new JsonArray();
         	while(rs3.next() ) 
     		{

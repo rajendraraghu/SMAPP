@@ -28,6 +28,7 @@
       "admin": {
         "main": "Administration",
         "userManagement": "User Management",
+        "roleManagement": "Role Management",
         "tracker": "User tracker",
         "metrics": "Metrics",
         "health": "Health",
@@ -105,7 +106,8 @@
       "edit": "Edit",
       "open": "Open",
       "save": "Save",
-      "view": "View"
+      "view": "View",
+      "editpreviliges": "Edit Previliges"
     },
     "detail": {
       "field": "Field",

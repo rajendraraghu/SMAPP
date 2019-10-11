@@ -54,7 +54,6 @@ public class SendTableList  {
 		    SimpleFormatter formatter = new SimpleFormatter();  
 		    fh.setFormatter(formatter);		        
 		    logger.info("My first log");
-		    
 			Properties properties0 = new Properties();
 			properties0.put("user", processDTO.getSourceConnectionUsername());
 			properties0.put("password", processDTO.getSourceConnectionPassword());
@@ -480,10 +479,12 @@ public class SendTableList  {
 			rs1.next();
 			ddl6 = ddl6.concat(rs1.getString("ddl"));
 			ddl6 = ddl6.replace("int()","int");
+			ddl6 = ddl6.replace("datetime()","datetime");
 			ddl6 = ddl6.concat("\n");
 			String[] inpsql = ddl6.split("\n");
 			ddl6 = convertToSnowDDL(system,inpsql);
 			
+
 		}
 		logger.info("ddl6:"+ddl6);
         String stagecreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT);");		

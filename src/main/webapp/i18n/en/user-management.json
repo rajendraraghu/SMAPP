@@ -21,6 +21,8 @@
     "activated": "Activated",
     "deactivated": "Deactivated",
     "profiles": "Profiles",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
     "langKey": "Language",
     "createdBy": "Created by",
     "createdDate": "Created date",

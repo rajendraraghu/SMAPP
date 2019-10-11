@@ -92,7 +92,7 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
     private SnowflakeConnection snowflakeConnection;
 
     @Column(name = "last_run_time")
-    private Date lastRunTime;
+    private String lastRunTime;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -338,16 +338,16 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
         this.snowflakeConnection = snowflakeConnection;
     }
 
-    public Date getLastRunTime() {
+    public String getLastRunTime() {
             return lastRunTime;
         }
     
-        public MigrationProcess lastRunTime(Date lastRunTime) {
+        public MigrationProcess lastRunTime(String lastRunTime) {
             this.lastRunTime = lastRunTime;
             return this;
         }
     
-        public void setlastRunTime(Date lastRunTime) {
+        public void setlastRunTime(String lastRunTime) {
             this.lastRunTime = lastRunTime;
         }
     
