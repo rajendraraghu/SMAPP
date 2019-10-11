@@ -1,3 +1,7 @@
 ﻿Lines to be Removed
 organize
 distribute
+row security
+on update
+on delete
+set

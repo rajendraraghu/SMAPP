@@ -1,0 +1,17 @@
+﻿SQLServer Data Type,Snowflake Data Type
+money,"decimal(38,2)"
+tinyint,number
+int,number
+unsigned,
+`,
+smallint,number
+rowguidcol,
+filestream,
+(max),
+generated always as row start hidden,
+generated always as row end hidden,
+column_set for all_sparse_columns,
+sparse,
+persisted,
+clustered,
+nonclustered,

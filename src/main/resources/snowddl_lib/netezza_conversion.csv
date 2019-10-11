@@ -4,3 +4,10 @@ int2,smallint
 int4,int
 int8,bigint
 bool,boolean
+Nchar,varchar
+Nvarchar,varchar
+not deferrable,
+initially deferred,
+initially immediate,
+deferrable,
+match full,

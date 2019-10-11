@@ -1,2 +1,9 @@
 ﻿Incompatible Datatypes
 enum
+collate
+generated always as
+check
+uniqueidentifier
+.
+named 
+title

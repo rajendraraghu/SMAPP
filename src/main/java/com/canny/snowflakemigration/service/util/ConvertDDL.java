@@ -57,7 +57,19 @@ public class ConvertDDL {
 				line = line.toLowerCase();
 				if(line.contains("create table")) {
 					int x = line.indexOf(" (");
-					tblNm = line.substring(13,x).replace("`", "");
+					int y = line.indexOf(".");
+					int count =0;
+					int z = 0;
+                    while(y >= 0) {
+					   count = count+1;	
+					   z = y+1;
+                       System.out.println("y:"+y);
+                       y = line.indexOf('.', y+1);
+					 }
+					System.out.println("y:"+y);
+					if(count ==0){tblNm = line.substring(13,x).replace("`", "");}
+					else if(count >0){tblNm = line.substring(z,x).replace("`", "");}
+					System.out.println("tablename:"+tblNm);
 					// totalcount = totalcount++;
 					// System.out.println("Total objects count" + totalcount);
                     // snowDDLJobStatusDTO.setBatchId(write.getBatchId());

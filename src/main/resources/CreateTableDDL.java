@@ -12,7 +12,11 @@ public class CreateTableDDL {
 
     public static String convertToSnowDDL(String sourceType, String[] inpSql) throws IOException {
         Boolean status;
-        String opSql = "(";
+		//if(sourceType = "MySQL") {String opSql = "(";}
+		//else {
+        String opSql = "";
+		//}
+		System.out.println("output sql");
         String errorMsg = "";
         try {
             System.out.println("Start of try block");
@@ -50,10 +54,10 @@ public class CreateTableDDL {
                 if(inpSql[i].contains("number")){
                     inpSql[i] = inpSql[i].replaceAll("'","");
                 }
-                opSql = opSql + inpSql[i];
+				opSql = opSql + inpSql[i];
             }
             status = true;
-
+            System.out.println("output sql"+opsql);
             // outer : while ((line = inpSql) != null) {
             // line = line.toLowerCase();
             // if(line.contains("create table")) {

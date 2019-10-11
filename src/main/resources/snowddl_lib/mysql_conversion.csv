@@ -8,3 +8,5 @@ auto_increment,autoincrement
 smallint,number
 on update current_timestamp,
 unique key,unique
+blob,binary
+int,number

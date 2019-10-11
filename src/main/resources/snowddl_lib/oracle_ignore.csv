@@ -1,0 +1,9 @@
+﻿Lines to be Removed
+tablespace
+;
+storage
+pctfree
+pctincrease
+segment
+buffer_pool
+nocompress logging

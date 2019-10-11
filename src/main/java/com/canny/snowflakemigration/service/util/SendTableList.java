@@ -65,21 +65,23 @@ public class SendTableList  {
 			
 			String lastruntime = new String();	
      		//lastruntime = migrationProcessStatusService.findLastUpdateTime(processDTO.getId());
-		    lastruntime = processDTO.getLastRunTime().toString();
+		    lastruntime = processDTO.getLastRunTime();
 			
 			
 		     if (system.equals("Oracle")) {
 				Statement stmt = con1.createStatement();
-				ResultSet rs = stmt.executeQuery("SELECT CURRENT_TIMESTAMP FROM DUAL;");
+				ResultSet rs = stmt.executeQuery("SELECT CURRENT_TIMESTAMP FROM DUAL");
 				rs.next();
-				Date lastruntimestart = rs.getTimestamp(1);
-				processDTO.setLastRunTime(lastruntimestart);
+				String lastruntimestart = rs.getTimestamp(1).toString();
+				String lts = lastruntimestart.substring(0,19);
+				System.out.print(lts);
+				processDTO.setLastRunTime(lts);
 				System.out.print(lastruntimestart);
 			} else {
 				Statement stmt = con1.createStatement();
 				ResultSet rs = stmt.executeQuery("SELECT CURRENT_TIMESTAMP;");
 				rs.next();
-				Date lastruntimestart = rs.getTimestamp(1);
+				String lastruntimestart = rs.getTimestamp(1).toString();
 				processDTO.setLastRunTime(lastruntimestart);
 				System.out.print(lastruntimestart);
 			}
@@ -285,14 +287,24 @@ public class SendTableList  {
 		{
 			logger.info("No job history available in sah_jobrunstatus.Cannot run CDC load.");
 		}
-		else {
-		query = "select * from " +tableName+ " where "+c2+" >'" + lastruntime+"';";		
+		else if (system.equals("Oracle")) {
+		query = "select * from " +tableName+ " where "+c2+ " >" + "to_date('"+ lastruntime+ "','YYYY-MM-DD HH24:MI:SS')";
+		logger.info("altered query:"+query);	
 		String srcCols =stageLoad(query,con1,con2,tableName,system,dbname,schema);
 		histLoad(con2,tableName,"CDC", srcCols,jobid,tableLoadid,processid,primarykey,migrationProcessJobStatusService);		
 		}
+		else {
+			query = "select * from " +tableName+ " where "+c2+" >'" + lastruntime+"';";			
+			String srcCols =stageLoad(query,con1,con2,tableName,system,dbname,schema);
+			histLoad(con2,tableName,"CDC", srcCols,jobid,tableLoadid,processid,primarykey,migrationProcessJobStatusService);	
+		}
 	}
     public static String gethashColNames(String ColName) {
-    	String hashColName = ColName.replace(",","||'~'||");
+    	String hashColName = "coalesce(";
+		hashColName = hashColName.concat(ColName);
+		hashColName = hashColName.replace(",",",'')||'~'||coalesce(");
+		hashColName = hashColName.concat(",'')");
+		logger.info("hashcolname :"+hashColName);
     	return hashColName;
     }
     public static String getColNames2(Connection con, String tablename, String dname,String dbname,String schema) throws SQLException
@@ -315,7 +327,7 @@ public class SendTableList  {
     	 s = s.concat(",");
     	}
     	logger.info("getcolnames exit");
-    	return s.substring(0,s.length()-1);
+    	return s.substring(0,s.length()-1).toLowerCase();
     }
     public static String stageLoad(String query, Connection con1,Connection con2,String tableName,String system,String dbname,String schema) throws SQLException, IOException
     {
@@ -341,7 +353,7 @@ public class SendTableList  {
     	stageCols =stageCols.substring(0,stageCols.length() - 1);
     	String hashCol = gethashColNames(stageCols);
 		System.out.println(con1+":"+con2+":"+tableName+":"+system+":*:");
-    	createAlterDDL(con1,con2,tableName,system,dbname);
+    	createAlterDDL(con1,con2,tableName,system,dbname,schema);
     	logger.info("stagecols:"+stageCols);
 		stmt2.executeQuery("TRUNCATE TABLE "+tableName);
 		logger.info("Truncating "+tableName);
@@ -360,6 +372,7 @@ public class SendTableList  {
     	int secondmergecount;
     //insert new record for Insert and update  
 	logger.info("HIST LOAD START");  	
+	logger.info("merge into "+tableName+"hist tgt using "+tableName+" src on "+pk+" and tgt.sah_md5hash = src.sah_MD5HASH and tgt.sah_currentind =1 when not matched then INSERT ("+srcCols +",sah_isdeleted,sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",src.sah_isdeleted,1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
     	int firstmergecount =  stmt3.executeUpdate("merge into "+tableName+"hist tgt using "+tableName+" src on "+pk+" and tgt.sah_md5hash = src.sah_MD5HASH and tgt.sah_currentind =1 when not matched then INSERT ("+srcCols +",sah_isdeleted,sah_currentind ,sah_createdTime,sah_updatedtime,sah_md5hash,sah_md5hashpk) VALUES (src."+srcCols.replace(",", ",src.")+",src.sah_isdeleted,1,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP),NULL,src.sah_md5hash,src.sah_md5hashpk)");
     	logger.info("end of first merge" + firstmergecount);
     
@@ -401,7 +414,7 @@ public class SendTableList  {
     	write1.setDeleteCount((long)targetDeleteCount);
     	write1 = migrationProcessJobStatusService.save(write1);
     }
-    public static void createAlterDDL(Connection con1,Connection con2,String tableName,String system,String dbname)  throws SQLException,IOException
+    public static void createAlterDDL(Connection con1,Connection con2,String tableName,String system,String dbname,String schema)  throws SQLException,IOException
     {
     	Statement stmt1=con1.createStatement();
     	ResultSet rs1 = null;
@@ -412,6 +425,11 @@ public class SendTableList  {
         	rs1.next();
 			String ddl = rs1.getString("Create Table");
 			String[] inpsql = ddl.split("\n");
+			for(int w=1;w<inpsql.length;w++)
+			{
+				logger.info(inpsql[w]);
+				
+			}
 			ddl6 = convertToSnowDDL(system,inpsql);
     		/*int ind1 = ddl.indexOf("ENGINE");
     		String ddl2 = ddl.substring(0,ind1);
@@ -425,10 +443,21 @@ public class SendTableList  {
 		else if(system.equals("Oracle")) 
         {
 			System.out.println("select dbms_metadata.get_ddl('TABLE', '"+tableName+"') as \"Create Table\" from dual");
-        	rs1=stmt1.executeQuery("select dbms_metadata.get_ddl('TABLE', '"+tableName+"') as \"Create Table\" from dual");
+   rs1=stmt1.executeQuery("select LTRIM(REPLACE(a.CT,'"+schema+".',''),CHR(10)) as \"Create Table\" FROM (SELECT dbms_metadata.get_ddl('TABLE','"+tableName+"') as \"CT\" from dual)a");
         	rs1.next();
     		String ddl = rs1.getString("Create Table");
-			System.out.println("ddl1:"+ddl);
+			String[] inpsql = ddl.split("\n");
+			logger.info("input sql");
+			for(int w=1;w<inpsql.length;w++)
+			{
+				logger.info(inpsql[w]);
+				
+			}
+			
+			ddl6 = convertToSnowDDL(system,inpsql);
+			ddl6 = ddl6.replace("GENERATED ALWAYS AS","AS");
+			ddl6 = ddl6.replace("\"","");
+			/*System.out.println("ddl1:"+ddl);
     		int ind1 = ddl.indexOf("USING");
 			System.out.println("ind1:"+ind1);
     		String ddl2 = ddl.substring(0,ind1);
@@ -441,7 +470,7 @@ public class SendTableList  {
 			System.out.println("ddl5:"+ddl5);
 			ddl5 = ddl5.replaceAll("\"","");
 			System.out.println("ddl5:"+ddl5);
-			ddl6 = ddl5.replaceAll("ENABLE","");			
+			ddl6 = ddl5.replaceAll("ENABLE","");*/			
 			System.out.println("ddl6:"+ddl6);
         }
 		else if(system.equals("SQLServer")) 
@@ -451,6 +480,9 @@ public class SendTableList  {
 			rs1.next();
 			ddl6 = ddl6.concat(rs1.getString("ddl"));
 			ddl6 = ddl6.replace("int()","int");
+			ddl6 = ddl6.concat("\n");
+			String[] inpsql = ddl6.split("\n");
+			ddl6 = convertToSnowDDL(system,inpsql);
 			
 		}
 		logger.info("ddl6:"+ddl6);

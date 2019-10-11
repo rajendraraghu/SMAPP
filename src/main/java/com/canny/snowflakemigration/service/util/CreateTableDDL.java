@@ -12,7 +12,9 @@ public class CreateTableDDL {
 
     public static String convertToSnowDDL(String sourceType, String[] inpSql) throws IOException {
         Boolean status;
-        String opSql = "(";
+		String opSql;
+        if(sourceType.equals("MySQL")) {opSql = "(";}
+		else {opSql = "";}
         String errorMsg = "";
         try {
             System.out.println("Start of try block");
