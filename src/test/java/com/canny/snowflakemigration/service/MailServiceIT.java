@@ -145,7 +145,7 @@ public class MailServiceIT {
         User user = new User();
         user.setLogin("john");
         user.setEmail("john.doe@example.com");
-        user.setLangKey("en");
+        // user.setLangKey("en");
         mailService.sendEmailFromTemplate(user, "mail/testEmail", "email.test.title");
         verify(javaMailSender).send(messageCaptor.capture());
         MimeMessage message = messageCaptor.getValue();
@@ -159,7 +159,7 @@ public class MailServiceIT {
     @Test
     public void testSendActivationEmail() throws Exception {
         User user = new User();
-        user.setLangKey(Constants.DEFAULT_LANGUAGE);
+        // user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setLogin("john");
         user.setEmail("john.doe@example.com");
         mailService.sendActivationEmail(user);
@@ -174,7 +174,7 @@ public class MailServiceIT {
     @Test
     public void testCreationEmail() throws Exception {
         User user = new User();
-        user.setLangKey(Constants.DEFAULT_LANGUAGE);
+        // user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setLogin("john");
         user.setEmail("john.doe@example.com");
         mailService.sendCreationEmail(user);
@@ -189,7 +189,7 @@ public class MailServiceIT {
     @Test
     public void testSendPasswordResetMail() throws Exception {
         User user = new User();
-        user.setLangKey(Constants.DEFAULT_LANGUAGE);
+        // user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setLogin("john");
         user.setEmail("john.doe@example.com");
         mailService.sendPasswordResetMail(user);
@@ -213,12 +213,12 @@ public class MailServiceIT {
         user.setLogin("john");
         user.setEmail("john.doe@example.com");
         for (String langKey : languages) {
-            user.setLangKey(langKey);
+            // user.setLangKey(langKey);
             mailService.sendEmailFromTemplate(user, "mail/testEmail", "email.test.title");
             verify(javaMailSender, atLeastOnce()).send(messageCaptor.capture());
             MimeMessage message = messageCaptor.getValue();
 
-            String propertyFilePath = "i18n/messages_" + getJavaLocale(langKey) + ".properties";
+            String propertyFilePath = "i18n/messages_" + getJavaLocale("en") + ".properties";
             URL resource = this.getClass().getClassLoader().getResource(propertyFilePath);
             File file = new File(new URI(resource.getFile()).getPath());
             Properties properties = new Properties();
