@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { JhiLanguageHelper, User, UserService } from 'app/core';
+import { JhiAlertService } from 'ng-jhipster';
 
 @Component({
   selector: 'jhi-user-mgmt-update',
@@ -13,25 +14,41 @@ export class UserMgmtUpdateComponent implements OnInit {
   // languages: any[];
   authorities: any[];
   isSaving: boolean;
+  confirmPassword: String;
+  password: String;
+  doNotMatch: string;
+  error: string;
+  success: string;
 
   editForm = this.fb.group({
-    firstName: ['', [Validators.maxLength(50)]],
-    lastName: ['', [Validators.maxLength(50)]],
+    firstName: ['', [Validators.required, Validators.maxLength(50)]],
+    lastName: ['', [Validators.required, Validators.maxLength(50)]],
     id: [null],
     login: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50), Validators.pattern('^[_.@A-Za-z0-9-]*')]],
-    email: ['', [Validators.minLength(5), Validators.maxLength(254), Validators.email]],
+    email: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]],
     // activated: [true],
     // langKey: [],
-    authorities: [],
-    password: ['']
+    authorities: ['', [Validators.required]],
+    password: [
+      '',
+      [
+        Validators.required,
+        Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-zd$@$!%*?&].{8,}'),
+        Validators.minLength(8),
+        Validators.maxLength(12)
+      ]
+    ],
+    confirmPassword: ['', [Validators.required]]
   });
+  passwordService: any;
 
   constructor(
     private languageHelper: JhiLanguageHelper,
     private userService: UserService,
     private route: ActivatedRoute,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private jhiAlertService: JhiAlertService
   ) {}
 
   ngOnInit() {
@@ -60,6 +77,20 @@ export class UserMgmtUpdateComponent implements OnInit {
 
   previousState() {
     window.history.back();
+  }
+
+  changePassword() {
+    const password = this.editForm.get(['password']).value;
+    if (password !== this.editForm.get(['confirmPassword']).value) {
+      const smsg = 'global.messages.error.notmatching';
+      this.jhiAlertService.error(smsg);
+      this.doNotMatch = 'ERROR';
+    } else {
+      this.doNotMatch = null;
+      // const smsg = 'global.messages.error.matching';
+      // this.jhiAlertService.success(smsg);
+      this.save();
+    }
   }
 
   save() {
