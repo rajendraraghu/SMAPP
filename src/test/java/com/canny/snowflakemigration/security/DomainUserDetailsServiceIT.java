@@ -48,31 +48,31 @@ public class DomainUserDetailsServiceIT {
         userOne = new User();
         userOne.setLogin(USER_ONE_LOGIN);
         userOne.setPassword(RandomStringUtils.random(60));
-        userOne.setActivated(true);
+        // userOne.setActivated(true);
         userOne.setEmail(USER_ONE_EMAIL);
         userOne.setFirstName("userOne");
         userOne.setLastName("doe");
-        userOne.setLangKey("en");
+        // userOne.setLangKey("en");
         userRepository.save(userOne);
 
         userTwo = new User();
         userTwo.setLogin(USER_TWO_LOGIN);
         userTwo.setPassword(RandomStringUtils.random(60));
-        userTwo.setActivated(true);
+        // userTwo.setActivated(true);
         userTwo.setEmail(USER_TWO_EMAIL);
         userTwo.setFirstName("userTwo");
         userTwo.setLastName("doe");
-        userTwo.setLangKey("en");
+        // userTwo.setLangKey("en");
         userRepository.save(userTwo);
 
         userThree = new User();
         userThree.setLogin(USER_THREE_LOGIN);
         userThree.setPassword(RandomStringUtils.random(60));
-        userThree.setActivated(false);
+        // userThree.setActivated(false);
         userThree.setEmail(USER_THREE_EMAIL);
         userThree.setFirstName("userThree");
         userThree.setLastName("doe");
-        userThree.setLangKey("en");
+        // userThree.setLangKey("en");
         userRepository.save(userThree);
     }
 
@@ -115,11 +115,11 @@ public class DomainUserDetailsServiceIT {
         assertThat(userDetails.getUsername()).isEqualTo(USER_ONE_LOGIN);
     }
 
-    @Test
-    @Transactional
-    public void assertThatUserNotActivatedExceptionIsThrownForNotActivatedUsers() {
-        assertThatExceptionOfType(UserNotActivatedException.class).isThrownBy(
-            () -> domainUserDetailsService.loadUserByUsername(USER_THREE_LOGIN));
-    }
+    // @Test
+    // @Transactional
+    // public void assertThatUserNotActivatedExceptionIsThrownForNotActivatedUsers() {
+    //     assertThatExceptionOfType(UserNotActivatedException.class).isThrownBy(
+    //         () -> domainUserDetailsService.loadUserByUsername(USER_THREE_LOGIN));
+    // }
 
 }

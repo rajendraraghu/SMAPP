@@ -50,18 +50,18 @@ public class UserService {
         this.cacheManager = cacheManager;
     }
 
-    public Optional<User> activateRegistration(String key) {
-        log.debug("Activating user for activation key {}", key);
-        return userRepository.findOneByActivationKey(key)
-            .map(user -> {
-                // activate given user for the registration key.
-                user.setActivated(true);
-                user.setActivationKey(null);
-                this.clearUserCaches(user);
-                log.debug("Activated user: {}", user);
-                return user;
-            });
-    }
+    // public Optional<User> activateRegistration(String key) {
+    //     log.debug("Activating user for activation key {}", key);
+    //     return userRepository.findOneByActivationKey(key)
+    //         .map(user -> {
+    //             // activate given user for the registration key.
+    //             // user.setActivated(true);
+    //             user.setActivationKey(null);
+    //             this.clearUserCaches(user);
+    //             log.debug("Activated user: {}", user);
+    //             return user;
+    //         });
+    // }
 
     public Optional<User> completePasswordReset(String newPassword, String key) {
         log.debug("Reset user password for reset key {}", key);
@@ -78,7 +78,7 @@ public class UserService {
 
     public Optional<User> requestPasswordReset(String mail) {
         return userRepository.findOneByEmailIgnoreCase(mail)
-            .filter(User::getActivated)
+            // .filter(User::getActivated)
             .map(user -> {
                 user.setResetKey(RandomUtil.generateResetKey());
                 user.setResetDate(Instant.now());
@@ -111,7 +111,7 @@ public class UserService {
         newUser.setImageUrl(userDTO.getImageUrl());
         // newUser.setLangKey(userDTO.getLangKey());
         // new user is not active
-        newUser.setActivated(false);
+        // newUser.setActivated(false);
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();
@@ -124,9 +124,9 @@ public class UserService {
     }
 
     private boolean removeNonActivatedUser(User existingUser){
-        if (existingUser.getActivated()) {
-             return false;
-        }
+        // if (existingUser.getActivated()) {
+        //      return false;
+        // }
         userRepository.delete(existingUser);
         userRepository.flush();
         this.clearUserCaches(existingUser);
@@ -149,7 +149,7 @@ public class UserService {
         user.setPassword(encryptedPassword);
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
-        user.setActivated(true);
+        // user.setActivated(true);
         if (userDTO.getAuthorities() != null) {
             Set<Authority> authorities = userDTO.getAuthorities().stream()
                 .map(authorityRepository::findById)
@@ -205,7 +205,7 @@ public class UserService {
                 user.setLastName(userDTO.getLastName());
                 user.setEmail(userDTO.getEmail().toLowerCase());
                 user.setImageUrl(userDTO.getImageUrl());
-                user.setActivated(userDTO.isActivated());
+                // user.setActivated(userDTO.isActivated());
                 // user.setLangKey(userDTO.getLangKey());
                 Set<Authority> managedAuthorities = user.getAuthorities();
                 managedAuthorities.clear();
@@ -269,16 +269,16 @@ public class UserService {
      * <p>
      * This is scheduled to get fired everyday, at 01:00 (am).
      */
-    @Scheduled(cron = "0 0 1 * * ?")
-    public void removeNotActivatedUsers() {
-        userRepository
-            .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
-            .forEach(user -> {
-                log.debug("Deleting not activated user {}", user.getLogin());
-                userRepository.delete(user);
-                this.clearUserCaches(user);
-            });
-    }
+    // @Scheduled(cron = "0 0 1 * * ?")
+    // public void removeNotActivatedUsers() {
+    //     userRepository
+    //         .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
+    //         .forEach(user -> {
+    //             log.debug("Deleting not activated user {}", user.getLogin());
+    //             userRepository.delete(user);
+    //             this.clearUserCaches(user);
+    //         });
+    // }
 
     /**
      * Gets a list of all the authorities.

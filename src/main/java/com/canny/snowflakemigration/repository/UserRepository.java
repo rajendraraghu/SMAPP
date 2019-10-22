@@ -24,10 +24,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     String USERS_BY_EMAIL_CACHE = "usersByEmail";
 
-    Optional<User> findOneByActivationKey(String activationKey);
+    // Optional<User> findOneByActivationKey(String activationKey);
 
 
-    List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant dateTime);
+    // List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant dateTime);
 
 
     Optional<User> findOneByResetKey(String resetKey);

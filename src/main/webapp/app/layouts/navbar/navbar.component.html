@@ -32,10 +32,11 @@
                 </a>
                 <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entity-menu">
                     <li>
-                        <a class="dropdown-item" routerLink="snow-ddl" routerLinkActive="active"
+                        <a class="dropdown-item" routerLink="migration-process" routerLinkActive="active"
                             [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <i class="fa fa-cog" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.snowDDL">Snow DDL</span>
+                            <!-- <fa-icon icon="asterisk" fixedWidth="true"></fa-icon> -->
+                            <i class="fa fa-database" aria-hidden="true"></i>
+                            <span jhiTranslate="global.menu.entities.migrationProcess">Snow Acquisition Hub</span>
                         </a>
                     </li>
                     <li>
@@ -47,19 +48,18 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="migration-process" routerLinkActive="active"
-                            [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <!-- <fa-icon icon="asterisk" fixedWidth="true"></fa-icon> -->
-                            <i class="fa fa-database" aria-hidden="true"></i>
-                            <span jhiTranslate="global.menu.entities.migrationProcess">Snow Acquisition Hub</span>
-                        </a>
-                    </li>
-                    <li>
                         <a class="dropdown-item" routerLink="delta-process" routerLinkActive="active"
                             [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <!-- <fa-icon icon="asterisk" fixedWidth="true"></fa-icon> -->
                             <i class="fa fa-database" aria-hidden="true"></i>
                             <span jhiTranslate="global.menu.entities.deltaProcess">Snow Delta</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="snow-ddl" routerLinkActive="active"
+                            [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <i class="fa fa-cog" aria-hidden="true"></i>
+                            <span jhiTranslate="global.menu.entities.snowDDL">Snow DDL</span>
                         </a>
                     </li>
                     <!-- <li>

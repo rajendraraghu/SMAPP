@@ -38,7 +38,7 @@ public class UserDTO {
     @Size(max = 256)
     private String imageUrl;
 
-    private boolean activated = false;
+    // private boolean activated = false;
 
     // @Size(min = 2, max = 10)
     // private String langKey;
@@ -63,7 +63,7 @@ public class UserDTO {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
-        this.activated = user.getActivated();
+        // this.activated = user.getActivated();
         this.imageUrl = user.getImageUrl();
         // this.langKey = user.getLangKey();
         this.createdBy = user.getCreatedBy();
@@ -123,13 +123,13 @@ public class UserDTO {
         this.imageUrl = imageUrl;
     }
 
-    public boolean isActivated() {
-        return activated;
-    }
+    // public boolean isActivated() {
+    //     return activated;
+    // }
 
-    public void setActivated(boolean activated) {
-        this.activated = activated;
-    }
+    // public void setActivated(boolean activated) {
+    //     this.activated = activated;
+    // }
 
     // public String getLangKey() {
     //     return langKey;
@@ -187,7 +187,7 @@ public class UserDTO {
             ", lastName='" + lastName + '\'' +
             ", email='" + email + '\'' +
             ", imageUrl='" + imageUrl + '\'' +
-            ", activated=" + activated +
+            // ", activated=" + activated +
             // ", langKey='" + langKey + '\'' +
             ", createdBy=" + createdBy +
             ", createdDate=" + createdDate +
