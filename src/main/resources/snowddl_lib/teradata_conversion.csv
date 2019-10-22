@@ -1,5 +1,6 @@
 ﻿Teradata Data Type,Snowflake Data Type
 unsigned,
+character set latin not casespecific,						 
 `,
 set,
 multiset,
@@ -9,7 +10,7 @@ multiset,
 "fallback ,",
 "checksum = default,",
 default mergeblockratio,
-character set latin not casespecific,
+
 ", no mergeblockratio",
 casespecific,
 not casespecific,
@@ -17,3 +18,4 @@ cs,
 not cs,
 uppercase,
 uc,
+unique primary index,primary key

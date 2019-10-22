@@ -1,10 +1,10 @@
 ﻿SQLServer Data Type,Snowflake Data Type
-money,"decimal(38,2)"
-tinyint,number
-int,number
+ money ," decimal(38,2) "
+ tinyint, number
+ int, number
 unsigned,
 `,
-smallint,number
+ smallint, number
 rowguidcol,
 filestream,
 (max),
@@ -15,3 +15,4 @@ sparse,
 persisted,
 clustered,
 nonclustered,
+collate sql_latin1_general_cp1_ci_as,

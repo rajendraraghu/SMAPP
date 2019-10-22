@@ -36,7 +36,7 @@ export class SnowDDLUpdateComponent implements OnInit {
     name: [null, [Validators.required]],
     description: [null, [Validators.maxLength(650)]],
     sourceType: [null, [Validators.required]],
-    sourcePath: [],
+    sourcePath: [null, [Validators.required]],
     sourceConnectionId: [],
     snowflakeConnectionId: []
     // sourceConnectionId: [null, Validators.required],
@@ -54,7 +54,7 @@ export class SnowDDLUpdateComponent implements OnInit {
 
   ngOnInit() {
     this.isSaving = false;
-    this.sourceTypes = ['MySQL', 'Netezza', 'Teradata', 'Oracle'];
+    this.sourceTypes = ['MySQL', 'Netezza', 'Teradata', 'Oracle', 'SqlServer'];
     this.activatedRoute.data.subscribe(({ snowDDL }) => {
       this.updateForm(snowDDL);
     });

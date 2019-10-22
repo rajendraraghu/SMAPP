@@ -1,6 +1,8 @@
 ﻿MySQL Data Type,Snowflake Data Type
 geometry,varbinary
 tinyint,int
+bigint,int
+tinytext,text		 
 mediumint,int
 unsigned,
 `,
