@@ -4,12 +4,12 @@ spatial
 idx_
 go
 index
-constraint
+check
 with
 period for system_time
 xml
 utf8string
-as
+ as
 encrypted
-on
+ on
 constraint

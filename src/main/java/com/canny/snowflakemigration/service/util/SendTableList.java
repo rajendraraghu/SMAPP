@@ -474,15 +474,18 @@ public class SendTableList  {
         }
 		else if(system.equals("SQLServer")) 
         {
-			ddl6 = "(";
+			ddl6 = "\n(";
 			rs1 = stmt1.executeQuery("SELECT TABLE_NAME,string_agg(ddl,',') as ddl FROM (SELECT TABLE_NAME,COLUMN_NAME +' '+ DATA_TYPE +'('+ ISNULL(CAST(CHARACTER_MAXIMUM_LENGTH AS VARCHAR),'')+')' as DDL FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"+dbname+"'AND TABLE_NAME = '"+tableName+"')a GROUP BY a.TABLE_NAME;");
 			rs1.next();
 			ddl6 = ddl6.concat(rs1.getString("ddl"));
 			ddl6 = ddl6.replace("int()","int");
 			ddl6 = ddl6.replace("datetime()","datetime");
-			ddl6 = ddl6.concat("\n");
-			String[] inpsql = ddl6.split("\n");
-			ddl6 = convertToSnowDDL(system,inpsql);
+            ddl6 = ddl6.replace("money()","decimal(38,2)");			
+			logger.info("ddl6:"+ddl6);
+			//ddl6 = ddl6.concat("\n");
+			//logger.info("ddl6:"+ddl6);
+			//String[] inpsql = ddl6.split("\n");
+			//ddl6 = convertToSnowDDL(system,inpsql);
 			
 
 		}

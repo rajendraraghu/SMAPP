@@ -53,10 +53,12 @@ public class ConvertDDL {
 			List<String[]> convRecords = convReader.readAll();
 			List<String[]> ignoRecords = ignoReader.readAll();
 			System.out.println("Start of loops");
-			outer : while ((line = inpSql.readLine()) != null) {
+			outer : while ((line = inpSql.readLine()) != null) {try{
 				line = line.toLowerCase();
+				line = line.replace("\"","");				 
 				if(line.contains("create table")) {
 					int x = line.indexOf(" (");
+					 if(x==-1) { x = (line.length())-1;} 
 					int y = line.indexOf(".");
 					int count =0;
 					int z = 0;
@@ -67,9 +69,14 @@ public class ConvertDDL {
                        y = line.indexOf('.', y+1);
 					 }
 					System.out.println("y:"+y);
+					System.out.println("count:"+count);
 					if(count ==0){tblNm = line.substring(13,x).replace("`", "");}
 					else if(count >0){tblNm = line.substring(z,x).replace("`", "");}
 					System.out.println("tablename:"+tblNm);
+					if(count > 0){
+					String str = line.substring(13,z);
+					System.out.println("substr:"+str);
+					line = line.replace(str,"");}
 					// totalcount = totalcount++;
 					// System.out.println("Total objects count" + totalcount);
                     // snowDDLJobStatusDTO.setBatchId(write.getBatchId());
@@ -86,9 +93,57 @@ public class ConvertDDL {
                     snowDDLJobStatusDTO.setName(tblNm);
 					snowDDLJobStatusDTO.setStartTime(Instant.now());
 					// Resource resource3 = new ClassPathResource("/snowddl_lib/"+tblNm+".sql");
-					opSql = new BufferedWriter(new FileWriter("./snowddl_op/"+tblNm+".sql"));
+					opSql = new BufferedWriter(new FileWriter("F:/POC/snowddl_op/"+tblNm+".sql"));
 					parse = true;
 				}
+				else if(line.contains("create set table")) {
+					int x = line.indexOf(" ,");
+					if(x==-1) { x = (line.length())-1;} 
+					/*int y = line.indexOf(".");
+					int count =0;
+					int z = 0;
+                     while(y >= 0) {
+					   count = count+1;	
+					   z = y+1;
+                       System.out.println("y:"+y);
+                       y = line.indexOf('.', y+1);
+					 }
+					System.out.println("y:"+y);*/
+					tblNm = line.substring(17,x);
+					/*else if(count >0){tblNm = line.substring(z,x).replace("`", "");}*/
+					System.out.println("tablename:"+tblNm);
+					if(parse) {
+                        snowDDLJobStatusDTO.setEndTime(Instant.now());
+                        snowDDLJobStatusDTO.setStatus("SUCCESS");
+                        SnowDDLJobStatusDTO jobStatus = snowDDLJobStatusService.save(snowDDLJobStatusDTO);
+						opSql.write(");");
+						opSql.close();
+                    }
+                    snowDDLJobStatusDTO.setBatchId(processStatus.getBatchId());
+                    snowDDLJobStatusDTO.setName(tblNm);
+					snowDDLJobStatusDTO.setStartTime(Instant.now());
+					opSql = new BufferedWriter(new FileWriter("F:/POC/snowddl_op/"+tblNm+".sql"));
+					parse = true;
+				}
+				else if(line.contains("create multiset table")) {
+					int x = line.indexOf(" ,");
+					if(x==-1) { x = (line.length())-1;} 
+					tblNm = line.substring(22,x);
+					System.out.println("tablename:"+tblNm);
+					if(parse) {
+                        snowDDLJobStatusDTO.setEndTime(Instant.now());
+                        snowDDLJobStatusDTO.setStatus("SUCCESS");
+                        SnowDDLJobStatusDTO jobStatus = snowDDLJobStatusService.save(snowDDLJobStatusDTO);
+						opSql.write(");");
+						opSql.close();
+                    }
+                    snowDDLJobStatusDTO.setBatchId(processStatus.getBatchId());
+                    snowDDLJobStatusDTO.setName(tblNm);
+					snowDDLJobStatusDTO.setStartTime(Instant.now());
+					opSql = new BufferedWriter(new FileWriter("F:/POC/snowddl_op/"+tblNm+".sql"));
+					parse = true;
+				}
+				System.out.println("line:"+line);
 				for (String [] record : convRecords) {
 					if (line.contains(record[0])) {
 						line = line.replace(record[0], record[1]);
@@ -99,8 +154,21 @@ public class ConvertDDL {
 						continue outer;
 					}
 				}
+				System.out.println("line:"+line);
 				opSql.write(line);
 				opSql.newLine();
+			}
+			catch(Exception e)
+			{
+				System.out.println("exc:"+e.toString());
+				snowDDLJobStatusDTO.setEndTime(Instant.now());
+			    snowDDLJobStatusDTO.setStatus("FAILURE");
+			    SnowDDLJobStatusDTO jobStatus = snowDDLJobStatusService.save(snowDDLJobStatusDTO);
+				opSql.write(");");
+			    opSql.close();
+				continue;
+			}
+			
             }
             snowDDLJobStatusDTO.setEndTime(Instant.now());
             snowDDLJobStatusDTO.setStatus("SUCCESS");
@@ -121,7 +189,7 @@ public class ConvertDDL {
 			// SnowDDLJobStatusDTO jobStatus = snowDDLJobStatusService.save(snowDDLJobStatusDTO);
 			processStatus.setStatus(status);
 			processStatus.setEndTime(Instant.now());
-			System.out.println(e);
+			System.out.println("exc:"+e.toString());
 			processStatus = snowDDLProcessStatusService.save(processStatus);
 		}
 	return status;

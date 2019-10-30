@@ -7,3 +7,5 @@ pctincrease
 segment
 buffer_pool
 nocompress logging
+lob
+nocache   
