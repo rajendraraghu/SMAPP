@@ -24,19 +24,19 @@ public class SourceConnectionDTO implements Serializable {
     @Size(max = 1200)
     private String url;
 
-    @NotNull
+    // @NotNull
     private String username;
 
-    @NotNull
+    // @NotNull
     private String password;
 
-    @NotNull
+    // @NotNull
     private String database;
 
-    @NotNull
+    // @NotNull
     private String host;
 
-    @NotNull
+    // @NotNull
     private String portNumber;
 
     private String schema;

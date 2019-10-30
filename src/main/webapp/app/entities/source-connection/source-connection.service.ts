@@ -16,6 +16,7 @@ type EntityArrayResponseType = HttpResponse<ISourceConnection[]>;
 export class SourceConnectionService {
   public resourceUrl = SERVER_API_URL + 'api/source-connections';
   public testConnectionUrl = SERVER_API_URL + 'api/migration-processes/TestConnectionSource';
+  httpClient: any;
 
   constructor(protected http: HttpClient) {}
 
@@ -66,6 +67,19 @@ export class SourceConnectionService {
     });
     return copy;
   }
+
+  //   postFile(fileToUpload: File): Observable<boolean> {
+  //     const endpoint = 'your-destination-url';
+  //     const formData: FormData = new FormData();
+  //     formData.append('fileKey', fileToUpload, fileToUpload.name);
+  //     return this.httpClient
+  //       .post(endpoint, formData, { headers: yourHeadersConfig })
+  //       .map(() => { return true; })
+  //       .catch((e) => this.handleError(e));
+  // }
+  //   handleError(e: any) {
+  //     throw new Error('Method not implemented.');
+  //   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {

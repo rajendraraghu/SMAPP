@@ -102,6 +102,8 @@ export class MigrationProcessUpdateComponent implements OnInit {
   }
 
   private createFromForm(): IMigrationProcess {
+    // this.sourceconnections;
+    console.log('To check source model' + this.sourceconnections);
     return {
       ...new MigrationProcess(),
       id: this.editForm.get(['id']).value,

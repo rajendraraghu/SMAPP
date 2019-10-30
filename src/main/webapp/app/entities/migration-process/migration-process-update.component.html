@@ -62,7 +62,7 @@
                             <div class="col-sm-4">
                                 <select class="col-sm-12 form-control-input" id="field_sourceConnection" name="sourceConnection"
                                     formControlName="sourceConnectionId">
-                                    <option *ngIf="!editForm.get('sourceConnectionId').value" [ngValue]="null" selected></option>
+                                    <!-- <option *ngIf="!editForm.get('sourceConnectionId').value" [ngValue]="null" selected></option> -->
                                     <option [ngValue]="sourceConnectionOption.id"
                                         *ngFor="let sourceConnectionOption of sourceconnections; trackBy: trackSourceConnectionById">
                                         {{sourceConnectionOption.name}}</option>
@@ -88,7 +88,7 @@
                             <div class="col-sm-4">
                                 <select class="col-sm-12 form-control-input" id="field_snowflakeConnection" name="snowflakeConnection"
                                     formControlName="snowflakeConnectionId">
-                                    <option *ngIf="!editForm.get('snowflakeConnectionId').value" [ngValue]="null" selected></option>
+                                    <!-- <option *ngIf="!editForm.get('snowflakeConnectionId').value" [ngValue]="null" selected></option> -->
                                     <option [ngValue]="snowflakeConnectionOption.id"
                                         *ngFor="let snowflakeConnectionOption of snowflakeconnections; trackBy: trackSnowflakeConnectionById">
                                         {{snowflakeConnectionOption.name}}</option>

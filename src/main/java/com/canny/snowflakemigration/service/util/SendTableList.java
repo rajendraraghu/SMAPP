@@ -30,6 +30,16 @@ import liquibase.datatype.core.DateTimeType;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Cell;
+import java.io.InputStream;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.*;
+import com.opencsv.*;
+import java.util.Iterator;
 
 
 public class SendTableList  {
@@ -42,27 +52,44 @@ public class SendTableList  {
 	public static String sendSelectedTables(MigrationProcessDTO processDTO, MigrationProcessService migrationProcessService,MigrationProcessStatusService migrationProcessStatusService,MigrationProcessJobStatusService migrationProcessJobStatusService) throws SQLException,ClassNotFoundException
 	{
 		String status = new String();
+		String filepath = null;
 		String timeStamp = new SimpleDateFormat().format( new Date() );
 		logger = Logger.getLogger("MyLog");  
 	    FileHandler fh;
 		long failure_count = 0;
+		String[] tableNamescdc = null;
+		String[] tableNamesbulk = null;
+		String[] pkcdc = null;												 
+		String[] pkbulk = null;
+		String[] cdcColumn = null;
+		String schema = new String();
+		String lastruntime = new String();
+        	
+		System.out.println("before try");
 		try{
-			Long jobid=(long)0;
+	        
+     		Long jobid=(long)0;
 			String system = processDTO.getSourceType();											
 			fh = new FileHandler("F:/POC/CSV/MyLogFile.log");  
 		    logger.addHandler(fh);
 		    SimpleFormatter formatter = new SimpleFormatter();  
 		    fh.setFormatter(formatter);		        
 		    logger.info("My first log");
+			Connection con1 = null;
+			if(system.equals("Flatfiles")){
+				System.out.println("inside flatfiles");	
+				filepath = processDTO.getSourceConnectionUrl();
+				}
+			else{
 			Properties properties0 = new Properties();
 			properties0.put("user", processDTO.getSourceConnectionUsername());
 			properties0.put("password", processDTO.getSourceConnectionPassword());
 			properties0.put("db",processDTO.getSourceConnectionDatabase());
 		    properties0.put("schema",processDTO.getSourceConnectionSchema());				 
-	        Connection con1 = DriverManager.getConnection(processDTO.getSourceConnectionUrl(), properties0);
+	        con1 = DriverManager.getConnection(processDTO.getSourceConnectionUrl(), properties0);
 	        logger.info("source connection connected");
 			
-			String lastruntime = new String();	
+			
      		//lastruntime = migrationProcessStatusService.findLastUpdateTime(processDTO.getId());
 		    lastruntime = processDTO.getLastRunTime();
 			
@@ -84,7 +111,7 @@ public class SendTableList  {
 				processDTO.setLastRunTime(lastruntimestart);
 				System.out.print(lastruntimestart);
 			}
-			migrationProcessService.save(processDTO);													   
+			migrationProcessService.save(processDTO);	}												   
 	        
 	        Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");  
 		    Properties properties = new Properties();
@@ -96,29 +123,44 @@ public class SendTableList  {
 	        properties.put("schema",processDTO.getSnowflakeConnectionSchema());
 		    Connection con2=DriverManager.getConnection(processDTO.getSnowflakeConnectionUrl(),properties);
 		    logger.info("destination connection connected");
-		    
-     	    String cdc = processDTO.getCdc();
+		    String tabletoMigrate = processDTO.getTablesToMigrate();
+			String[] tablesToMigrate = tabletoMigrate.split(",");
+			logger.info(tabletoMigrate);
+			
+			if(system.equals("Flatfiles")){     	    
     		String bulk = processDTO.getBulk();
-    		String cdcpk = processDTO.getCdcPk();
-    		String bulkpk = processDTO.getBulkPk();
+			String bulkpk = processDTO.getBulkPk();			
+			tableNamesbulk = bulk.split(",");
+			pkbulk = bulkpk.split(",");		
+            String cdc = processDTO.getCdc();
+			tableNamescdc = cdc.split(",");	
+            			
+			}
+			else{
+			String bulk = processDTO.getBulk();
+			String bulkpk = processDTO.getBulkPk();
+    		String cdc = processDTO.getCdc();
+			String cdcpk = processDTO.getCdcPk();    		
     		String cdccol = processDTO.getCdcCols();
-    		String tablestoMigrate = processDTO.getTablesToMigrate();
-		    String[] tableNamescdc = cdc.split(",");
-		    String[] tableNamesbulk = bulk.split(",");
-		    String[] pkcdc = cdcpk.split(",");
-		    String[] pkbulk = bulkpk.split(",");
-		    String[] cdcColumn = cdccol.split(",");
-		    String[] tablesToMigrate = tablestoMigrate.split(",");
+    		tableNamescdc = cdc.split(",");
+		    tableNamesbulk = bulk.split(",");
+		    pkcdc = cdcpk.split(",");
+		    pkbulk = bulkpk.split(",");
+		    cdcColumn = cdccol.split(",");
+			logger.info("cdc array length :"+tableNamescdc.length);
+			schema = processDTO.getSourceConnectionSchema();
+		    }
 		
 		    int tablecount = tablesToMigrate.length;
-		    logger.info("cdc array length :"+tableNamescdc.length);
-			logger.info("bulk array length :"+tableNamesbulk.length);
+			logger.info("tablecount"+tablecount);
+		    logger.info("bulk array length :"+tableNamesbulk.length);
+			
 		
 		    int i = 0;
 		    int j = 0;
 		    long tableLoadid = (long)0;
      		
-		    String schema = processDTO.getSourceConnectionSchema();
+		    
 		     migrationProcessStatusDTO.setJobId(jobid);
 		     migrationProcessStatusDTO.setJobStartTime(Instant.now());
 		     migrationProcessStatusDTO.setProcessId(processDTO.getId());
@@ -134,6 +176,7 @@ public class SendTableList  {
 		     
 		       	 while(i<tableNamescdc.length && tableNamescdc.length >0 && !tableNamescdc[i].equals("[]"))
 		         {
+					 	
 					 try {
 		       		logger.info("length is :"+tableNamescdc.length+"i value is :"+i);
 					String tn = tableNamescdc[i].replace("[\"", "");
@@ -179,12 +222,22 @@ public class SendTableList  {
 				 }
 		       	 while(j<tableNamesbulk.length &&  tableNamesbulk.length >0 && !tableNamesbulk[j].equals("[]"))
 		         {
+					 System.out.println("inside while loop");
 					 try {
 			        logger.info("length is :"+tableNamesbulk.length+"i value is :"+i);
+					String tableName;
+					String bkey2;
+					if(system.equals("Flatfiles"))
+					{
+					  tableName = tableNamesbulk[j];
+					  bkey2 = pkbulk[j];
+					}
+					else{
 		            String tn = tableNamesbulk[j].replace("[\"", "");
-					String tableName = tn.replaceAll("\"]|\"", "");
+					tableName = tn.replaceAll("\"]|\"", "");
 					String bkey1  = pkbulk[j].replace("[\"", "");
-					String bkey2 = bkey1.replaceAll("\"]|\"", "");
+					bkey2 = bkey1.replaceAll("\"]|\"", "");
+					}
 					   migrationProcessJobStatusDTO.setJobId(write.getJobId());
 		               migrationProcessJobStatusDTO.setTableLoadId(tableLoadid);
 		               migrationProcessJobStatusDTO.setTableName(tableName);
@@ -200,7 +253,12 @@ public class SendTableList  {
 				       migrationProcessJobStatusDTO.setDestName(processDTO.getSnowflakeConnectionName());
 				       write1 = migrationProcessJobStatusService.save(migrationProcessJobStatusDTO);
      	    	    logger.info("starting bulk process for the table: "+tableName);
+					if(system.equals("Flatfiles")){
+						filebulkprocess(tableName,filepath,con2,jobid,tableLoadid,processDTO.getId(),system,bkey2,migrationProcessJobStatusService);
+					}
+					else{
 					bulkprocess(tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase(),bkey2,migrationProcessJobStatusService,schema);
+					}
 					success_count = success_count + 1;
 					write.setSuccessCount(success_count);
 					   write1.setTableLoadEndTime(Instant.now());
@@ -265,6 +323,75 @@ public class SendTableList  {
 
 	    csvWriter.close();
 	}
+	
+	public static void FilestoCSV(String filepath, String csvFilename)
+	{
+		File inputFile = new File(filepath);
+	    File outputFile = new File(csvFilename);
+		StringBuffer data = new StringBuffer();	        
+	        System.out.println("inside method call");
+	        try {
+	            FileOutputStream fos = new FileOutputStream(outputFile);
+	             // Get the workbook object for XLSX file
+	            InputStream in = new BufferedInputStream(new FileInputStream(inputFile));
+	            XSSFWorkbook wBook = new XSSFWorkbook(in);
+	            // Get first sheet from the workbook
+	            System.out.println("after file initialization");
+	            XSSFSheet sheet = wBook.getSheetAt(0);
+	            System.out.println("after sheet initialization");
+	            Row row;
+	            Cell cell;
+	            // Iterate through each rows from first sheet
+	            Iterator<Row> rowIterator = sheet.iterator();
+	            System.out.println("outside while loop");
+	            while (rowIterator.hasNext()) {
+	            	System.out.println("inside while loop");
+	                row = rowIterator.next();
+
+	                // For each row, iterate through each columns
+	                Iterator<Cell> cellIterator = row.cellIterator();
+	                while (cellIterator.hasNext()) {
+	                    cell = cellIterator.next();
+	                    System.out.println("before switch case");
+	                    switch (cell.getCellType()) {
+	                        case BOOLEAN:
+	                            data.append(cell.getBooleanCellValue() + ",");
+
+	                            break;
+	                        case NUMERIC:
+	                            data.append(cell.getNumericCellValue() + ",");
+
+	                            break;
+	                        case STRING:
+	                            data.append(cell.getStringCellValue() + ",");
+	                            break;
+
+	                        case BLANK:
+	                            data.append("" + ",");
+	                            break;
+	                        default:
+	                            data.append(cell + ",");
+
+	                    }
+	                   
+	                }
+	                data.append('\n');
+	            }
+
+	            fos.write(data.toString().getBytes());
+	            System.out.println("after file write");
+	            fos.close();
+	            wBook.close();
+
+	        } 
+	        catch (Exception ioe) {
+	            ioe.printStackTrace();
+	            System.out.println("inside catch");
+	        }
+		
+		
+		
+	}	
 	public static void bulkprocess(String tableName,Connection con1, Connection con2, long jobid, long tableLoadid,long processid,String system,String dbname, String primarykey,MigrationProcessJobStatusService migrationProcessJobStatusService,String schema)
 	throws SQLException, IOException{
 	
@@ -273,6 +400,43 @@ public class SendTableList  {
 	logger.info("query is :"+query);
 	String srcCols = stageLoad(query,con1,con2,tableName,system,dbname,schema);
 	histLoad(con2,tableName,"BULK", srcCols,jobid,tableLoadid,processid,primarykey,migrationProcessJobStatusService);	
+	}
+	public static void filebulkprocess(String tableName,String filepath, Connection con2, long jobid, long tableLoadid,long processid,String system,String primarykey,MigrationProcessJobStatusService migrationProcessJobStatusService)
+	throws SQLException, IOException{
+		filepath = filepath.concat("\\");
+		String c1 = tableName.replace("[\"", "");
+		tableName = c1.replace("\"]", "");
+		filepath = filepath.concat(tableName);
+		tableName = tableName.replace(".xlsx","");
+		tableName = tableName.replace(".xls","");
+        tableName = tableName.replace(".csv","");
+	    String srcCols = getfileColNames(filepath);
+	    String csvFilename = "F:/POC/CSV/"+tableName+".csv";
+    	FilestoCSV(filepath,csvFilename);   	
+    	logger.info("Stage file writing complete");    	
+       	Statement stmt2=con2.createStatement();
+    	logger.info("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
+    	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");    	
+		stmt2.executeQuery("PUT 'file://F:/POC/CSV/"+tableName+".csv' @"+tableName+"_stage;");
+		// stmt2.executeQuery("PUT 'file://./temp/"+tableName+".csv' @"+tableName+"_stage;");
+    	int m = 1;
+    	int k = srcCols.replaceAll("[^,]","").length() + 1;
+    	String stageCols = "t.$1,";
+    	while(m<k) {
+    		m = m+1;
+    		stageCols =stageCols + "t.$"+m+",";
+    		}
+    	stageCols =stageCols.substring(0,stageCols.length() - 1);
+    	String hashCol = gethashColNames(stageCols);
+		createAlterDDLfiles(srcCols,con2,tableName);
+    	logger.info("stagecols:"+stageCols);
+		stmt2.executeQuery("TRUNCATE TABLE "+tableName);
+		logger.info("Truncating "+tableName);
+		logger.info("INSERT INTO "+tableName+" SELECT "+stageCols+",0 as sah_isdeleted,MD5("+hashCol+") as sah_md5hash,sah_MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as sah_md5hashpk FROM @"+tableName+"_stage t;");
+    	stmt2.executeQuery("INSERT INTO "+tableName+" SELECT "+stageCols+",0 as sah_isdeleted,MD5("+hashCol+") as sah_md5hash,sah_MD5HASH || '~' || TO_VARCHAR(CURRENT_TIMESTAMP, 'YYYYMMDDHH24MISSFF6') as sah_md5hashpk FROM @"+tableName+"_stage t;"); 	
+		logger.info("table creation  and loading (stg) complete");
+		logger.info("srccols:"+srcCols);
+		histLoad(con2,tableName,"BULK", srcCols,jobid,tableLoadid,processid,primarykey,migrationProcessJobStatusService);	
 	}
 	public static void cdcprocess(String lastruntime,String tableName,Connection con1, Connection con2,long jobid, long tableLoadid,long processid, String system,String dbname,String primarykey,String columncdc,MigrationProcessJobStatusService migrationProcessJobStatusService,String schema) 
       throws SQLException, IOException
@@ -502,7 +666,23 @@ public class SendTableList  {
 		logger.info("STAGE and HIST TABLE CREATED");
     	
     }
-    public static String pkgenNew(String primarykey)
+    public static void createAlterDDLfiles(String srcCols,Connection con2, String tableName) throws SQLException
+	{
+		String ddl6 = "(";
+		ddl6 = ddl6.concat(srcCols.replace(","," TEXT,"));
+	    String stagecreate = ddl6.concat(" TEXT,sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT);");		
+		String histcreate = ddl6.concat(" TEXT,sah_isdeleted INT,sah_currentind boolean,sah_updatedtime timestamp,sah_MD5HASH TEXT,sah_createdTime timestamp,sah_MD5HASHPK TEXT);");
+		
+		Statement stmt2 = con2.createStatement();
+		logger.info("CREATE TABLE IF NOT EXISTS "+tableName+ stagecreate);
+		logger.info("CREATE TABLE IF NOT EXISTS "+tableName+"hist "+histcreate);
+		ResultSet rs2 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+ stagecreate);
+		ResultSet rs3 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS "+tableName+"hist "+histcreate);
+		
+		logger.info("STAGE and HIST TABLE CREATED");
+	}
+	
+	public static String pkgenNew(String primarykey)
     {
 	 try {
 		
@@ -527,6 +707,56 @@ public class SendTableList  {
 		 return ("Failure");				
 		} 
      }
+	 
+	public static String getfileColNames(String filepath) throws IOException
+	 {
+		 ArrayList headercols = new ArrayList(); 
+		String[] colNames = null;
+		String s = new String();
+		if(filepath.contains("xls"))
+		{
+		File inputFile = new File(filepath);
+		InputStream in = new BufferedInputStream(new FileInputStream(inputFile));
+	    XSSFWorkbook wBook = new XSSFWorkbook(in);
+		XSSFSheet sheet = wBook.getSheetAt(0);
+		Row row;
+	    Cell cell;
+		Iterator<Row> rowIterator = sheet.iterator();		
+		if(rowIterator.hasNext())
+		{
+			row = rowIterator.next();
+			Iterator<Cell> cellIterator = row.cellIterator();
+			while (cellIterator.hasNext()) 
+			{
+	          cell = cellIterator.next();
+	          headercols.add(cell.toString());
+	        }
+		}
+		else
+		{
+			headercols.add("NoColsAvailable");
+	    }
+		colNames = (String[])headercols.toArray(new String[headercols.size()]);
+		}
+		else if(filepath.contains("csv"))
+		{
+			 BufferedReader reader = new BufferedReader(new FileReader(filepath));			 
+			 String line = null;
+             line = reader.readLine();
+             if(line!= null)
+             { 
+            	 colNames = line.split(",");
+             }
+			 	 
+		}
+		for(int i=0;i<colNames.length;i++)
+		{
+			s = s.concat(colNames[i]);
+    	    s = s.concat(",");
+		}
+    	return s.substring(0,s.length()-1).toLowerCase();
+	 }
+	 
     }
     
 

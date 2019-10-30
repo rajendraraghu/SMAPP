@@ -29,19 +29,6 @@
                             [routerLink]="['/snowflake-connection', migrationProcess.snowflakeConnectionId, 'view']">{{migrationProcess.snowflakeConnectionName}}</a>
                     </div>
                 </dd>
-
-                <!-- <dt><span jhiTranslate="snowpoleApp.migrationProcess.type">Type</span></dt>
-                <dd>
-                    <span>{{migrationProcess.type}}</span>
-                </dd>
-                <dt><span jhiTranslate="snowpoleApp.migrationProcess.tablesToMigrate">Tables To Migrate</span></dt>
-                <dd>
-                    <span>{{migrationProcess.tablesToMigrate}}</span>
-                </dd>
-                <dt><span jhiTranslate="snowpoleApp.migrationProcess.lastStatus">Last Status</span></dt>
-                <dd>
-                    <span>{{migrationProcess.lastStatus}}</span>
-                </dd> -->
                 <dt><span jhiTranslate="snowpoleApp.migrationProcess.createdBy">Created By</span></dt>
                 <dd>
                     <span>{{migrationProcess.createdBy}}</span>
@@ -70,7 +57,7 @@
             </button>
         </div>
     </div>
-    <div class="col-4">
+    <div class="col-4" *ngIf='discdc'>
         <fieldset>
             <h4>Select the tables to be migrated</h4>
             <hr>
@@ -80,7 +67,9 @@
                     (input)="searchForTables($event.target.value)">
             </div>
             <div>
-            <input type="checkbox" [(ngModel)]="masterSelected" name="list_name" value="m1" (change)="checkUncheckAll($event)"/> <strong style="color:darkorange;font-weight:bold">Select/ Unselect All</strong>
+                <input type="checkbox" [(ngModel)]="masterSelected" name="list_name" value="m1"
+                    (change)="checkUncheckAll($event)" /> <strong style="color:darkorange;font-weight:bold">Select/
+                    Unselect All</strong>
             </div>
 
             <div class="form-group" style="height: 40vh; overflow-y: auto;">
@@ -101,48 +90,55 @@
                 <div class="row m-0" *ngFor="let item of tables; let i=index">
                     <div class="col-4 pl-0">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" [id]="i"  name="list_name" [(ngModel)]="item.selected" value="{{item.name}}"  (change)= "onSelectionChange(item)">
+                            <input type="checkbox" class="custom-control-input" [id]="i" name="list_name"
+                                [(ngModel)]="item.selected" value="{{item.name}}" (change)="onSelectionChange(item)">
                             <label class="custom-control-label" [for]="i">{{item.name}}</label>
                         </div>
                     </div>
                     <div class="col-3 pl-0">
-                        <!-- <button type="button" [routerLink]="['/migration-process',{ outlets: { popup: item.name+'/selectPK'} }]" class="btn btn-primary"> -->
-                        <button type="button" class="btn btn-primary" [disabled]="!item.selected" (click) = "selectPK(item,templatePK)">
+                        <button type="button" class="btn btn-primary" [disabled]="!item.selected"
+                            style="height:40px;width:100%; font-size: 15px; text-align: left;"
+                            (click)="selectPK(item,templatePK)">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> {{item.primaryKey}} </span>
                         </button>
                         <ng-template #templatePK let-modal>
-                                <div class="modal-header">
-                                  <h4 class="modal-title" id="modal-basic-title">Select Primary Key</h4>
-                                  <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button> -->
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row m-0" *ngFor="let column of columns; let j=index">
-                                        <div class="col-12 pl-0">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" [id]="'columnName'+j" class="custom-control-input" name="column_name_list" [(ngModel)]="column.selected" value="{{column.columnName}}" (change)="onPKSelection(item.name,column)">
-                                                <label class="custom-control-label" [for]="'columnName'+j">{{column.columnName}}</label>
-                                            </div>
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="modal-basic-title">Select Primary Key</h4>
+                            </div>
+                            <div class="modal-body">
+                                <!-- <loading-spinner *ngIf = "showSpinner"></loading-spinner> -->
+                                <div class="row m-0" *ngFor="let column of columns; let j=index">
+                                    <div class="col-12 pl-0">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" [id]="'columnName'+j" class="custom-control-input"
+                                                name="column_name_list" [(ngModel)]="column.selected"
+                                                value="{{column.columnName}}"
+                                                (change)="onPKSelection(item.name,column)">
+                                            <label class="custom-control-label"
+                                                [for]="'columnName'+j">{{column.columnName}}</label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-primary" (click)="modal.close()">Close</button>
-                                </div>
-                              </ng-template>
-                        <!-- <label [for]="i">{{item.primaryKey}}</label> -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary btn-block"
+                                    (click)="modal.close()">Close</button>
+                            </div>
+                        </ng-template>
                     </div>
                     <div class="col-2 pl-0 ">
                         <div class="custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input" [id]="customSwitchId(i)"
-                                [disabled]="!item.selected" [checked]="item.cdc && item.selected" (change)="onProcessSelection(item);">
+                                [disabled]="!item.selected" [checked]="item.cdc && item.selected"
+                                (change)="onProcessSelection(item);">
                             <label class="custom-control-label" [for]="customSwitchId(i)"> </label>
                         </div>
                     </div>
                     <div class="col-3 pl-0">
-                        <select class="form-control" id="field_system" name="system"  [disabled]="!item.cdc||!item.selected" [(ngModel)]="item.selectedCdcCol">
-                            <option *ngFor="let cdcColumn of item.cdcColumnList; let i=index " [value]="cdcColumn">{{cdcColumn}}</option>
+                        <select class="form-control" id="field_system" name="system"
+                            [disabled]="!item.cdc||!item.selected" [(ngModel)]="item.selectedCdcCol">
+                            <option *ngFor="let cdcColumn of item.cdcColumnList; let i=index " [value]="cdcColumn">
+                                {{cdcColumn}}</option>
                         </select>
                     </div>
                 </div>
@@ -158,6 +154,85 @@
             <div class="col-6 pl-0">
                 <button type="reset" class="btn btn-danger" (click)="reset()" style="width: 100%;">
                     <i class="fa fa-refresh  fa-fw"></i>
+                    &nbsp;<span>Undo</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-3" *ngIf='!discdc'>
+        <fieldset>
+            <h4>Select the Files to be migrated</h4>
+            <hr>
+            <div class="form-group has-search">
+                <fa-icon class="form-control-feedback" [icon]="'search'"></fa-icon>
+                <input type="text" class="form-control rounded-search-bar" placeholder="Search for files"
+                    (input)="searchForTables($event.target.value)">
+            </div>
+            <div>
+                <input type="checkbox" [(ngModel)]="masterSelected" name="list_name" value="m1"
+                    (change)="checkUncheckAll($event)" /> <strong style="color:darkorange;font-weight:bold">Select/
+                    Unselect All</strong>
+            </div>
+
+            <div class="form-group" style="height: 40vh; overflow-y: auto;">
+                <div class="row m-0">
+                    <div class="col-8 pl-0">
+                        <h6> Tables Name </h6>
+                    </div>
+                    <div class="col-4 pl-0">
+                        <h6> Primary Key </h6>
+                    </div>
+                </div>
+                <div class="row m-0" *ngFor="let item of tables; let i=index">
+                    <div class="col-8 pl-0">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" [id]="i" name="list_name"
+                                [(ngModel)]="item.selected" value="{{item.name}}" (change)="onSelectionChange(item)">
+                            <label class="custom-control-label" [for]="i">{{item.name}}</label>
+                        </div>
+                    </div>
+                    <div class="col-4 pl-0">
+                        <button type="button" class="btn btn-primary" [disabled]="!item.selected"
+                            style="height:30px;width:50px; font-size: 15px; text-align: center;"
+                            (click)="selectFilePK(item,templatePK)">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> {{item.primaryKey}} </span>
+                        </button>
+                        <ng-template #templatePK let-modal>
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="modal-basic-title">Select Primary Key</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row m-0" *ngFor="let column of columns; let j=index">
+                                    <div class="col-12 pl-0">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" [id]="'columnName'+j" class="custom-control-input"
+                                                name="column_name_list" [(ngModel)]="column.selected"
+                                                value="{{column.columnName}}"
+                                                (change)="onPKSelection(item.name,column)">
+                                            <label class="custom-control-label"
+                                                [for]="'columnName'+j">{{column.columnName}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" (click)="modal.close()">Close</button>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <div class="row m-0">
+            <div class="col-6 pl-0">
+                <button type="button" class="btn btn-primary" (click)="testAndMigrate()" style="width: 100%;">
+                    <i class="fa fa-save fa-fw"></i>
+                    &nbsp;<span>Save tables to be migrated</span>
+                </button>
+            </div>
+            <div class="col-6 pl-0">
+                <button type="reset" class="btn btn-danger" (click)="reset()" style="width: 100%;">
+                    <i class="fa fa-refresh fa-fw"></i>
                     &nbsp;<span>Undo</span>
                 </button>
             </div>

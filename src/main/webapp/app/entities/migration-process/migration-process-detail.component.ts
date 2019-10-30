@@ -10,6 +10,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstra
 import { callbackify } from 'util';
 import { sample } from 'rxjs/operators';
 import { Validators } from '@angular/forms';
+import { thisTypeAnnotation } from '@babel/types';
 
 @Component({
   selector: 'jhi-migration-process-detail',
@@ -19,6 +20,8 @@ import { Validators } from '@angular/forms';
 export class MigrationProcessDetailComponent implements OnInit {
   migrationProcess: IMigrationProcess;
   tables: any;
+  discdc: boolean;
+  type: string;
   columns: any;
   closeResult: string;
   tablesCopy: any;
@@ -33,6 +36,8 @@ export class MigrationProcessDetailComponent implements OnInit {
   str: string;
   tb = [];
   add: any;
+  tableName: string;
+  showSpinner: true;
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
@@ -44,6 +49,12 @@ export class MigrationProcessDetailComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.data.subscribe(({ migrationProcess }) => {
       this.migrationProcess = migrationProcess;
+      this.type = migrationProcess.sourceType;
+      if (this.type === 'Flatfiles') {
+        this.discdc = false;
+      } else {
+        this.discdc = true;
+      }
       this.bulkTables = this.migrationProcess.bulk ? JSON.parse(this.migrationProcess.bulk) : [];
       this.cdcTables = this.migrationProcess.cdc ? JSON.parse(this.migrationProcess.cdc) : [];
       this.selectedTables = this.migrationProcess.tablesToMigrate ? JSON.parse(this.migrationProcess.tablesToMigrate) : [];
@@ -61,7 +72,6 @@ export class MigrationProcessDetailComponent implements OnInit {
 
   getTableList() {
     this.migrationProcessService.getTableList(this.migrationProcess).subscribe(response => {
-      // this.tables = this.tablesCopy = response.body;
       this.prepareData(response.body);
     });
   }
@@ -69,10 +79,6 @@ export class MigrationProcessDetailComponent implements OnInit {
   prepareData(response) {
     this.tables = [];
     response.tableinfo.forEach(element => {
-      // const column = {
-      //   column: this.prepareColumn(element.columnList),
-      //   selectedColumn: this.isCheckedPK(column)
-      // };
       const table = {
         name: element.tableName,
         primaryKey: element.PrimaryKey,
@@ -81,13 +87,7 @@ export class MigrationProcessDetailComponent implements OnInit {
         cdcColumnList: element.cdcColumnList,
         selectedCdcCol: element.cdcColumnList[0],
         columnList: element.columnList
-        // column: this.prepareColumn(element.tableName, element.columnList)
       };
-      // const column = {
-      //   tableName: element.tableName,
-      //   columnList: element.columnList,
-      //   selectedPK: []
-      // };
       this.setPK(table.name, table.primaryKey);
       this.tables.push(table);
     });
@@ -151,6 +151,17 @@ export class MigrationProcessDetailComponent implements OnInit {
     this.modalService.open(content);
   }
 
+  selectFilePK(item, content) {
+    this.getFileColumn(item.name);
+    this.modalService.open(content);
+  }
+
+  getFileColumn(fileName) {
+    this.migrationProcessService.getFileColumnList(this.migrationProcess, fileName).subscribe(response => {
+      this.prepareColumn(fileName, response.body);
+    });
+  }
+
   searchStringInArray(a, b) {
     for (let j = 0; j < b.length; j++) {
       if (b[j].match(a)) {
@@ -158,7 +169,6 @@ export class MigrationProcessDetailComponent implements OnInit {
       }
     }
     return -1;
-    console.log('return' + -1);
   }
 
   setPK(tableName, PK) {

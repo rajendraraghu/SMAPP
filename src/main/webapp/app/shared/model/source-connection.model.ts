@@ -39,6 +39,6 @@ export class SourceConnection implements ISourceConnection {
     public lastModifiedDate?: Moment
   ) {
     // this.valid = this.valid || false;
-    this.url = 'jdbc:' + this.sourceType + '://' + this.host + ':' + this.portNumber + '/' + this.database;
+    // this.url = 'jdbc:' + this.sourceType + '://' + this.host + ':' + this.portNumber + '/' + this.database;
   }
 }

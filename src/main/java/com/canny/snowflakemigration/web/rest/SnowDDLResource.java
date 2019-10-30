@@ -33,7 +33,7 @@ import java.io.*;
 import java.util.List;
 import java.util.Optional;
 
-import static com.canny.snowflakemigration.service.util.listTables.listTable;
+import static com.canny.snowflakemigration.service.util.ListTables.listTable;
 import static com.canny.snowflakemigration.service.util.ConvertDDL.convertToSnowDDL;
 
 

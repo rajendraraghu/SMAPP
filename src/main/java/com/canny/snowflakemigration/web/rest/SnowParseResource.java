@@ -42,7 +42,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static com.canny.snowflakemigration.service.util.listTables.listTable;
+import static com.canny.snowflakemigration.service.util.ListTables.listTable;
 // import static com.canny.snowflakemigration.service.util.ConvertParse.convertToSnowParse;
 
 

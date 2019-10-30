@@ -39,24 +39,24 @@ public class SourceConnection extends AbstractAuditingEntity implements Serializ
     @Column(name = "url", length = 1200, nullable = false)
     private String url;
 
-    @NotNull
-    @Column(name = "username", nullable = false)
+    // @NotNull
+    @Column(name = "username")
     private String username;
 
-    @NotNull
-    @Column(name = "password", nullable = false)
+    // @NotNull
+    @Column(name = "password")
     private String password;
 
-    @NotNull
-    @Column(name = "database", nullable = false)
+    // @NotNull
+    @Column(name = "database")
     private String database;
 
-    @NotNull
-    @Column(name = "host", nullable = false)
+    // @NotNull
+    @Column(name = "host")
     private String host;
 
-    @NotNull
-    @Column(name = "port_number", nullable = false)
+    // @NotNull
+    @Column(name = "port_number")
     private String portNumber;
 
     @Column(name = "schema")

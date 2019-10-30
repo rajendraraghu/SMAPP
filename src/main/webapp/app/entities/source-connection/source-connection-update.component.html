@@ -29,8 +29,7 @@
                                     jhiTranslate="entity.validation.required">
                                     This field is required.
                                 </small>
-                            </div> 
-                            
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -43,8 +42,8 @@
                                     for="field_description">Description</label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class=" form-control-input col-sm-12" name="description" id="field_description"
-                                    formControlName="description" />
+                                <input type="text" class=" form-control-input col-sm-12" name="description"
+                                    id="field_description" formControlName="description" />
                             </div>
                             <div class="col-sm-2"
                                 *ngIf="editForm.get('description').invalid && (editForm.get('description').dirty || editForm.get('description').touched)">
@@ -66,141 +65,343 @@
                                     jhiTranslate="snowpoleApp.sourceConnection.sourceType">sourceType</label>
                             </div>
                             <div class="col-sm-4">
-                                <select class=" form-control-input col-sm-12" id="field_sourceType" name="sourceType"
-                                    formControlName="sourceType">
-                                    <option *ngFor="let sourceType of sourceTypes" [value]="sourceType" size="45">
+                                <!-- <select class=" form-control-input col-sm-12" id="field_sourceType" name="sourceType" value = sourceType[i]
+                                    formControlName="sourceType" (change)="display($event.target.value)">
+                                    <option *ngFor="let sourceType of sourceTypes let i of index" [value]="sourceType[i]" size="45">
                                         {{sourceType}}
                                     </option>
-                                </select>
+                                </select> -->
+                                <select class=" form-control-input col-sm-12" id="field_sourceType" name="sourceType" 
+                                formControlName="sourceType" (change)="display($event.target.value)">
+                                <option *ngFor="let sourceType of sourceTypes" [value]="sourceType" size="45">
+                                    {{sourceType}}
+                                </option>
+                            </select>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="container">
+                <!-- <div *ngIf="sourceType"> -->
+                    <div class="form-group" id="databasediv" *ngIf="!disflat">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.host"
+                                        for="field_host">Host</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control-input col-sm-12" name="host"
+                                        style="margin-bottom: 20px;" id="field_host" formControlName="host"
+                                        joyrideStep="Step 5" title="Host" text="Give the Host address" />
+                                </div>
+                                <div class="col-sm-2"
+                                    *ngIf="editForm.get('host').invalid && (editForm.get('host').dirty || editForm.get('host').touched)">
+                                    <small class="form-text text-danger" *ngIf="editForm.get('host').errors.required"
+                                        jhiTranslate="entity.validation.required">
+                                        This field is required.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label class="form-control-label"
+                                        jhiTranslate="snowpoleApp.sourceConnection.portnumber"
+                                        for="field_portnumber">Port Number</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control-input col-sm-12" style="margin-bottom: 20px;"
+                                        name="portnumber" id="field_portnumber" formControlName="portNumber" />
+                                </div>
+                                <div class="col-sm-2"
+                                    *ngIf="editForm.get('portNumber').invalid && (editForm.get('portNumber').dirty || editForm.get('portNumber').touched)">
+                                    <small class="form-text text-danger"
+                                        *ngIf="editForm.get('portNumber').errors.required"
+                                        jhiTranslate="entity.validation.required">
+                                        This field is required.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label class="form-control-label"
+                                        jhiTranslate="snowpoleApp.sourceConnection.database"
+                                        for="field_database">Database</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control-input col-sm-12" name="database"
+                                        style="margin-bottom: 20px;" id="field_database" formControlName="database"
+                                        joyrideStep="Step 7" title="Database" text="Give the database name" />
+                                </div>
+                                <div class="col-sm-2"
+                                    *ngIf="editForm.get('database').invalid && (editForm.get('database').dirty || editForm.get('database').touched)">
+                                    <small class="form-text text-danger"
+                                        *ngIf="editForm.get('database').errors.required"
+                                        jhiTranslate="entity.validation.required">
+                                        This field is required.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.schema"
+                                        for="field_schema">Schema</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control-input col-sm-12" name="schema"
+                                        style="margin-bottom: 20px;" id="field_schema" formControlName="schema"
+                                        joyrideStep="Step 8" title="Schema" text="Give the Schema name" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label class="form-control-label"
+                                        jhiTranslate="snowpoleApp.sourceConnection.username"
+                                        for="field_username">Username</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control-input col-sm-12" name="username"
+                                        style="margin-bottom: 20px;" id="field_username" formControlName="username"
+                                        joyrideStep="Step 9" title="Username" text="Give the datasource username" />
+                                </div>
+                                <div class="col-sm-2"
+                                    *ngIf="editForm.get('username').invalid && (editForm.get('username').dirty || editForm.get('username').touched)">
+                                    <small class="form-text text-danger"
+                                        *ngIf="editForm.get('username').errors.required"
+                                        jhiTranslate="entity.validation.required">
+                                        This field is required.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label class="form-control-label"
+                                        jhiTranslate="snowpoleApp.sourceConnection.password"
+                                        for="field_password">Password</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="password" class="form-control-input col-sm-12" name="password"
+                                        id="field_password" style="margin-bottom: 20px;" formControlName="password"
+                                        joyrideStep="Step 10" title="Password" text="Give the datasource password" />
+                                </div>
+                                <div class="col-sm-2"
+                                    *ngIf="editForm.get('password').invalid && (editForm.get('password').dirty || editForm.get('password').touched)">
+                                    <small class="form-text text-danger"
+                                        *ngIf="editForm.get('password').errors.required"
+                                        jhiTranslate="entity.validation.required">
+                                        This field is required.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" id="flatfilesdiv" *ngIf="disflat">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label class="form-control-label"
+                                        jhiTranslate="snowpoleApp.sourceConnection.serverType">serverType</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <select class=" form-control-input col-sm-12" id="field_sourceType"
+                                        name="serverType" formControlName="serverType"
+                                        (change)="displayserver($event.target.value)" style="margin-bottom: 20px;">
+                                        <option *ngFor="let serverType of serverTypes" [value]="serverType" size="45">
+                                            {{serverType}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="localdiv" *ngIf="disflat && !dislocal">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label class="form-control-label"
+                                            jhiTranslate="snowpoleApp.sourceConnection.filepath"
+                                            for="field_localFilePath">File Path</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control-input col-sm-12" name="localFilePath"
+                                            style="margin-bottom: 20px;" id="field_localFilePath"
+                                            formControlName="localFilePath" />
+                                    </div>
+                                    <div class="col-sm-2"
+                                        *ngIf="editForm.get('localFilePath').invalid && (editForm.get('localFilePath').dirty || editForm.get('localFilePath').touched)">
+                                        <small class="form-text text-danger"
+                                            *ngIf="editForm.get('localFilePath').errors.required"
+                                            jhiTranslate="entity.validation.required">
+                                            This field is required.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="internaldiv" *ngIf="disflat && !disinternal">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label class="form-control-label"
+                                            jhiTranslate="snowpoleApp.sourceConnection.ftphost"
+                                            for="field_ftpHost">FTP Host</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control-input col-sm-12" name="ftpHost"
+                                            style="margin-bottom: 20px;" id="field_ftpHost"
+                                            formControlName="ftpHost" />
+                                    </div>
+                                    <div class="col-sm-2"
+                                        *ngIf="editForm.get('ftpHost').invalid && (editForm.get('ftpHost').dirty || editForm.get('ftpHost').touched)">
+                                        <small class="form-text text-danger"
+                                            *ngIf="editForm.get('ftpHost').errors.required"
+                                            jhiTranslate="entity.validation.required">
+                                            This field is required.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label class="form-control-label"
+                                            jhiTranslate="snowpoleApp.sourceConnection.ftpportnumber"
+                                            for="field_ftpPortNumber">Ftp Port Number</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control-input col-sm-12" name="ftpPortNumber"
+                                            style="margin-bottom: 20px;" id="field_ftpPortNumber"
+                                            formControlName="ftpPortNumber" />
+                                    </div>
+                                    <div class="col-sm-2"
+                                        *ngIf="editForm.get('ftpPortNumber').invalid && (editForm.get('ftpPortNumber').dirty || editForm.get('ftpPortNumber').touched)">
+                                        <small class="form-text text-danger"
+                                            *ngIf="editForm.get('ftpPortNumber').errors.required"
+                                            jhiTranslate="entity.validation.required">
+                                            This field is required.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label class="form-control-label"
+                                            jhiTranslate="snowpoleApp.sourceConnection.ftpusername"
+                                            for="field_ftpUserName">Ftp User Name</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control-input col-sm-12" name="ftpUserName"
+                                            style="margin-bottom: 20px;" id="field_ftpUserName"
+                                            formControlName="ftpUserName" />
+                                    </div>
+                                    <div class="col-sm-2"
+                                        *ngIf="editForm.get('ftpUserName').invalid && (editForm.get('ftpUserName').dirty || editForm.get('ftpUserName').touched)">
+                                        <small class="form-text text-danger"
+                                            *ngIf="editForm.get('ftpUserName').errors.required"
+                                            jhiTranslate="entity.validation.required">
+                                            This field is required.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <label class="form-control-label"
+                                            jhiTranslate="snowpoleApp.sourceConnection.ftppassword"
+                                            for="field_ftpPassword">Ftp Password</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control-input col-sm-12" name="ftpPassword"
+                                            style="margin-bottom: 20px;" id="field_fttpPassword"
+                                            formControlName="ftpPassword" />
+                                    </div>
+                                    <div class="col-sm-2"
+                                        *ngIf="editForm.get('ftpPassword').invalid && (editForm.get('ftpPassword').dirty || editForm.get('ftpPassword').touched)">
+                                        <small class="form-text text-danger"
+                                            *ngIf="editForm.get('ftpPassword').errors.required"
+                                            jhiTranslate="entity.validation.required">
+                                            This field is required.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" id="externaldiv" *ngIf="disflat && !disexternal">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label class="form-control-label"
+                                        jhiTranslate="snowpoleApp.sourceConnection.awskeyid" for="field_awskeyid">AWS
+                                        Key Id</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control-input col-sm-12" name="awskeyid"
+                                        style="margin-bottom: 20px;" id="field_awskeyid" formControlName="awskeyid" />
+                                </div>
+                                <div class="col-sm-2"
+                                    *ngIf="editForm.get('awskeyid').invalid && (editForm.get('awskeyid').dirty || editForm.get('awskeyid').touched)">
+                                    <small class="form-text text-danger"
+                                        *ngIf="editForm.get('awskeyid').errors.required"
+                                        jhiTranslate="entity.validation.required">
+                                        This field is required.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <label class="form-control-label"
+                                        jhiTranslate="snowpoleApp.sourceConnection.awssecretkey"
+                                        for="field_awssecretkey">AWS Secret Key</label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control-input col-sm-12" name="awssecretkey"
+                                        style="margin-bottom: 20px;" id="field_awssecretkey"
+                                        formControlName="awssecretkey" />
+                                </div>
+                                <div class="col-sm-2"
+                                    *ngIf="editForm.get('awssecretkey').invalid && (editForm.get('awssecretkey').dirty || editForm.get('awssecretkey').touched)">
+                                    <small class="form-text text-danger"
+                                        *ngIf="editForm.get('awssecretkey').errors.required"
+                                        jhiTranslate="entity.validation.required">
+                                        This field is required.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="container">
                         <div class="row">
                             <div class="col-sm-2">
-                                <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.host"
-                                    for="field_name">Host</label>
+                                <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.masterkey"
+                                    for="field_masterkey">Master Key</label>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control-input col-sm-12" name="host" id="field_host"
-                                    formControlName="host" joyrideStep="Step 5" title="Host"
-                                    text="Give the Host address"/>
+                                <input type="text" class="form-control-input col-sm-12" name="masterkey"
+                                    style="margin-bottom: 20px;" id="field_masterkey" formControlName="masterkey" />
                             </div>
                             <div class="col-sm-2"
-                                *ngIf="editForm.get('host').invalid && (editForm.get('host').dirty || editForm.get('host').touched)">
-                                <small class="form-text text-danger" *ngIf="editForm.get('host').errors.required"
+                                *ngIf="editForm.get('masterkey').invalid && (editForm.get('masterkey').dirty || editForm.get('masterkey').touched)">
+                                <small class="form-text text-danger" *ngIf="editForm.get('masterkey').errors.required"
                                     jhiTranslate="entity.validation.required">
                                     This field is required.
                                 </small>
                             </div>
                         </div>
+                    </div> -->
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.portnumber"
-                                    for="field_name">Port
-                                    Number</label>
-                            </div>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control-input col-sm-12" name="portnumber" id="field_portnumber"
-                                    formControlName="portNumber" />
-                            </div>
-                            <div class="col-sm-2"
-                                *ngIf="editForm.get('portNumber').invalid && (editForm.get('portNumber').dirty || editForm.get('portNumber').touched)">
-                                <small class="form-text text-danger" *ngIf="editForm.get('portNumber').errors.required"
-                                    jhiTranslate="entity.validation.required">
-                                    This field is required.
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.database"
-                                    for="field_database">Database</label>
-                            </div>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control-input col-sm-12" name="database" id="field_database"
-                                    formControlName="database" joyrideStep="Step 7" title="Database"
-                                    text="Give the database name" />
-                            </div>
-                            <div class="col-sm-2"
-                                *ngIf="editForm.get('database').invalid && (editForm.get('database').dirty || editForm.get('database').touched)">
-                                <small class="form-text text-danger" *ngIf="editForm.get('database').errors.required"
-                                    jhiTranslate="entity.validation.required">
-                                    This field is required.
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.schema"
-                                    for="field_schema">Schema</label>
-                            </div>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control-input col-sm-12" name="schema" id="field_schema"
-                                    formControlName="schema" joyrideStep="Step 8" title="Schema"
-                                    text="Give the Schema name" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.username"
-                                    for="field_username">Username</label>
-                            </div>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control-input col-sm-12" name="username" id="field_username"
-                                    formControlName="username" joyrideStep="Step 9" title="Username"
-                                    text="Give the datasource username"/>
-                            </div>
-                            <div class="col-sm-2"
-                                *ngIf="editForm.get('username').invalid && (editForm.get('username').dirty || editForm.get('username').touched)">
-                                <small class="form-text text-danger" *ngIf="editForm.get('username').errors.required"
-                                    jhiTranslate="entity.validation.required">
-                                    This field is required.
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <label class="form-control-label" jhiTranslate="snowpoleApp.sourceConnection.password"
-                                    for="field_password">Password</label>
-                            </div>
-                            <div class="col-sm-4">
-                                <input type="password" class="form-control-input col-sm-12" name="password"
-                                    id="field_password" formControlName="password" joyrideStep="Step 10"
-                                    title="Password" text="Give the datasource password" />
-                            </div>
-                            <div class="col-sm-2"
-                                *ngIf="editForm.get('password').invalid && (editForm.get('password').dirty || editForm.get('password').touched)">
-                                <small class="form-text text-danger" *ngIf="editForm.get('password').errors.required"
-                                    jhiTranslate="entity.validation.required">
-                                    This field is required.
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- </div> -->
                 <div>
                     <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
                         <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
@@ -216,6 +417,7 @@
                         <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
                     </button>
                 </div>
+            </div>
         </form>
     </div>
 </div>
