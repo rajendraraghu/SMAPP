@@ -34,12 +34,16 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import java.io.InputStream;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.*;
 import com.opencsv.*;
 import java.util.Iterator;
+
 
 
 public class SendTableList  {
@@ -65,7 +69,7 @@ public class SendTableList  {
 		String schema = new String();
 		String lastruntime = new String();
         	
-		System.out.println("before try");
+		logger.info("before try");
 		try{
 	        
      		Long jobid=(long)0;
@@ -77,7 +81,7 @@ public class SendTableList  {
 		    logger.info("My first log");
 			Connection con1 = null;
 			if(system.equals("Flatfiles")){
-				System.out.println("inside flatfiles");	
+				logger.info("inside flatfiles");	
 				filepath = processDTO.getSourceConnectionUrl();
 				}
 			else{
@@ -131,6 +135,7 @@ public class SendTableList  {
     		String bulk = processDTO.getBulk();
 			String bulkpk = processDTO.getBulkPk();			
 			tableNamesbulk = bulk.split(",");
+			bulkpk = bulkpk.replace("-","");
 			pkbulk = bulkpk.split(",");		
             String cdc = processDTO.getCdc();
 			tableNamescdc = cdc.split(",");	
@@ -222,15 +227,17 @@ public class SendTableList  {
 				 }
 		       	 while(j<tableNamesbulk.length &&  tableNamesbulk.length >0 && !tableNamesbulk[j].equals("[]"))
 		         {
-					 System.out.println("inside while loop");
+					 logger.info("inside while loop");
 					 try {
 			        logger.info("length is :"+tableNamesbulk.length+"i value is :"+i);
 					String tableName;
 					String bkey2;
 					if(system.equals("Flatfiles"))
 					{
-					  tableName = tableNamesbulk[j];
-					  bkey2 = pkbulk[j];
+					  String tn = tableNamesbulk[j].replace("[\"", "");					  
+					  tableName = tn.replaceAll("\"]|\"", "");
+					  String bkey1  = pkbulk[j].replace("[\"", "");
+					  bkey2 = bkey1.replaceAll("\"]|\"", "");
 					}
 					else{
 		            String tn = tableNamesbulk[j].replace("[\"", "");
@@ -283,7 +290,7 @@ public class SendTableList  {
 		       	status = "SUCCESS";
 		        write.setJobEndTime(Instant.now());	      
 		        write = migrationProcessStatusService.save(write);
-		con1.close();
+		//con1.close();
 		con2.close();
 		}
 			catch(Exception e)
@@ -326,33 +333,34 @@ public class SendTableList  {
 	
 	public static void FilestoCSV(String filepath, String csvFilename)
 	{
-		File inputFile = new File(filepath);
-	    File outputFile = new File(csvFilename);
-		StringBuffer data = new StringBuffer();	        
-	        System.out.println("inside method call");
+		     File inputFile = new File(filepath);
+			 File outputFile = new File(csvFilename);  
+			 
+      		StringBuffer data = new StringBuffer();	        
+	        logger.info("inside method call");
 	        try {
+				if(filepath.contains(".xls")){
 	            FileOutputStream fos = new FileOutputStream(outputFile);
 	             // Get the workbook object for XLSX file
 	            InputStream in = new BufferedInputStream(new FileInputStream(inputFile));
-	            XSSFWorkbook wBook = new XSSFWorkbook(in);
+	            Workbook wBook = WorkbookFactory.create(in);
+		        Sheet sheet = wBook.getSheetAt(0);
 	            // Get first sheet from the workbook
-	            System.out.println("after file initialization");
-	            XSSFSheet sheet = wBook.getSheetAt(0);
-	            System.out.println("after sheet initialization");
+	            logger.info("after file and sheet initialization");	                        
 	            Row row;
 	            Cell cell;
 	            // Iterate through each rows from first sheet
 	            Iterator<Row> rowIterator = sheet.iterator();
-	            System.out.println("outside while loop");
+	            logger.info("outside while loop");
 	            while (rowIterator.hasNext()) {
-	            	System.out.println("inside while loop");
+	            	logger.info("inside while loop");
 	                row = rowIterator.next();
 
 	                // For each row, iterate through each columns
 	                Iterator<Cell> cellIterator = row.cellIterator();
 	                while (cellIterator.hasNext()) {
 	                    cell = cellIterator.next();
-	                    System.out.println("before switch case");
+	                    logger.info("before switch case");
 	                    switch (cell.getCellType()) {
 	                        case BOOLEAN:
 	                            data.append(cell.getBooleanCellValue() + ",");
@@ -379,14 +387,20 @@ public class SendTableList  {
 	            }
 
 	            fos.write(data.toString().getBytes());
-	            System.out.println("after file write");
+	            logger.info("after file write");
 	            fos.close();
 	            wBook.close();
-
+				}
+				else if(filepath.contains(".csv"))
+				{
+					if (inputFile.renameTo(outputFile)) { logger.info("File is renamed"); }     
+                    else { logger.info("File cannot be renamed"); } 
+				}
+				
 	        } 
 	        catch (Exception ioe) {
 	            ioe.printStackTrace();
-	            System.out.println("inside catch");
+	            logger.info("inside catch");
 	        }
 		
 		
@@ -515,7 +529,7 @@ public class SendTableList  {
     		}
     	stageCols =stageCols.substring(0,stageCols.length() - 1);
     	String hashCol = gethashColNames(stageCols);
-		System.out.println(con1+":"+con2+":"+tableName+":"+system+":*:");
+		logger.info(con1+":"+con2+":"+tableName+":"+system+":*:");
     	createAlterDDL(con1,con2,tableName,system,dbname,schema);
     	logger.info("stagecols:"+stageCols);
 		stmt2.executeQuery("TRUNCATE TABLE "+tableName);
@@ -605,7 +619,7 @@ public class SendTableList  {
 
 		else if(system.equals("Oracle")) 
         {
-			System.out.println("select dbms_metadata.get_ddl('TABLE', '"+tableName+"') as \"Create Table\" from dual");
+			logger.info("select dbms_metadata.get_ddl('TABLE', '"+tableName+"') as \"Create Table\" from dual");
    rs1=stmt1.executeQuery("select LTRIM(REPLACE(a.CT,'"+schema+".',''),CHR(10)) as \"Create Table\" FROM (SELECT dbms_metadata.get_ddl('TABLE','"+tableName+"') as \"CT\" from dual)a");
         	rs1.next();
     		String ddl = rs1.getString("Create Table");
@@ -620,21 +634,21 @@ public class SendTableList  {
 			ddl6 = convertToSnowDDL(system,inpsql);
 			ddl6 = ddl6.replace("GENERATED ALWAYS AS","AS");
 			ddl6 = ddl6.replace("\"","");
-			/*System.out.println("ddl1:"+ddl);
+			/*logger.info("ddl1:"+ddl);
     		int ind1 = ddl.indexOf("USING");
-			System.out.println("ind1:"+ind1);
+			logger.info("ind1:"+ind1);
     		String ddl2 = ddl.substring(0,ind1);
-			System.out.println("ddl2:"+ddl2);
+			logger.info("ddl2:"+ddl2);
     		String ddl3 = ddl2.replaceAll("NUMBER\\(\\*,[0-9]+\\)","NUMBER");
-			System.out.println("ddl3:"+ddl3);
+			logger.info("ddl3:"+ddl3);
     		String ddl4 = ddl3.substring(ddl3.indexOf("("));
-			System.out.println("ddl4:"+ddl4);
+			logger.info("ddl4:"+ddl4);
     		String ddl5 = ddl4.substring(0, ddl4.length()-2);		
-			System.out.println("ddl5:"+ddl5);
+			logger.info("ddl5:"+ddl5);
 			ddl5 = ddl5.replaceAll("\"","");
-			System.out.println("ddl5:"+ddl5);
+			logger.info("ddl5:"+ddl5);
 			ddl6 = ddl5.replaceAll("ENABLE","");*/			
-			System.out.println("ddl6:"+ddl6);
+			logger.info("ddl6:"+ddl6);
         }
 		else if(system.equals("SQLServer")) 
         {
@@ -717,8 +731,8 @@ public class SendTableList  {
 		{
 		File inputFile = new File(filepath);
 		InputStream in = new BufferedInputStream(new FileInputStream(inputFile));
-	    XSSFWorkbook wBook = new XSSFWorkbook(in);
-		XSSFSheet sheet = wBook.getSheetAt(0);
+	    Workbook wBook = WorkbookFactory.create(in);
+		Sheet sheet = wBook.getSheetAt(0);
 		Row row;
 	    Cell cell;
 		Iterator<Row> rowIterator = sheet.iterator();		

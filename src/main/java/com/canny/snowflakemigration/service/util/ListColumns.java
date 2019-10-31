@@ -15,6 +15,9 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 public class ListColumns {
     public static String[] listFileColumns(MigrationProcessDTO migrationProcessDTO, String fileName) throws IOException  {
@@ -26,8 +29,8 @@ public class ListColumns {
         if (filepath.contains("xls")) {
             File inputFile = new File(filepath);
             InputStream in = new BufferedInputStream(new FileInputStream(inputFile));
-            XSSFWorkbook wBook = new XSSFWorkbook(in);
-            XSSFSheet sheet = wBook.getSheetAt(0);
+            Workbook wBook = WorkbookFactory.create(in);
+		    Sheet sheet = wBook.getSheetAt(0);
             Row row;
             Cell cell;
             Iterator<Row> rowIterator = sheet.iterator();
