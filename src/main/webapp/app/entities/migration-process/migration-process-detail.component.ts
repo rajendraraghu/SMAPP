@@ -176,7 +176,7 @@ export class MigrationProcessDetailComponent implements OnInit {
       this.tb.push(element.split('-')[1]);
     });
     this.add = this.searchStringInArray(tableName, this.tb);
-    if (PK !== null) {
+    if (PK !== null && PK !== '') {
       PK = PK.split('-');
       for (const pkCol of PK) {
         const columnName = pkCol + '-' + tableName;
