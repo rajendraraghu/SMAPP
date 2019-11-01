@@ -119,9 +119,9 @@
     </div>
     <div id="navbarResponsive" [ngSwitch]="isAuthenticated()">
         <div *ngSwitchCase="true">
-            <span id="logged name " *ngIf="account" class="login">
+            <!-- <span id="logged name " *ngIf="account" class="login">
                 Hello, {{account.login}}.
-            </span>
+            </span> -->
         </div>
         <ul class="navbar-nav mr-auto">
             <li ngbDropdown class="nav-item dropdown pointer" placement="bottom-right" routerLinkActive="active"

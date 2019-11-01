@@ -28,17 +28,17 @@ export class UserMgmtUpdateComponent implements OnInit {
     email: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]],
     // activated: [true],
     // langKey: [],
-    authorities: ['', [Validators.required]],
-    password: [
-      '',
-      [
-        Validators.required,
-        Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-zd$@$!%*?&].{8,}'),
-        Validators.minLength(8),
-        Validators.maxLength(12)
-      ]
-    ],
-    confirmPassword: ['', [Validators.required]]
+    authorities: ['', [Validators.required]]
+    // password: [
+    //   '',
+    //   [
+    //     Validators.required,
+    //     Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-zd$@$!%*?&].{8,}'),
+    //     Validators.minLength(8),
+    //     Validators.maxLength(12)
+    //   ]
+    // ],
+    // confirmPassword: ['', [Validators.required]]
   });
   passwordService: any;
 
@@ -70,8 +70,8 @@ export class UserMgmtUpdateComponent implements OnInit {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      authorities: user.authorities,
-      password: user.password
+      authorities: user.authorities
+      // password: user.password
     });
   }
 
@@ -79,19 +79,19 @@ export class UserMgmtUpdateComponent implements OnInit {
     window.history.back();
   }
 
-  changePassword() {
-    const password = this.editForm.get(['password']).value;
-    if (password !== this.editForm.get(['confirmPassword']).value) {
-      const smsg = 'global.messages.error.notmatching';
-      this.jhiAlertService.error(smsg);
-      this.doNotMatch = 'ERROR';
-    } else {
-      this.doNotMatch = null;
-      // const smsg = 'global.messages.error.matching';
-      // this.jhiAlertService.success(smsg);
-      this.save();
-    }
-  }
+  // changePassword() {
+  //   const password = this.editForm.get(['password']).value;
+  //   if (password !== this.editForm.get(['confirmPassword']).value) {
+  //     const smsg = 'global.messages.error.notmatching';
+  //     this.jhiAlertService.error(smsg);
+  //     this.doNotMatch = 'ERROR';
+  //   } else {
+  //     this.doNotMatch = null;
+  //     // const smsg = 'global.messages.error.matching';
+  //     // this.jhiAlertService.success(smsg);
+  //     this.save();
+  //   }
+  // }
 
   save() {
     this.isSaving = true;
@@ -112,7 +112,7 @@ export class UserMgmtUpdateComponent implements OnInit {
     // user.activated = this.editForm.get(['activated']).value;
     // user.langKey = this.editForm.get(['langKey']).value;
     user.authorities.push(this.editForm.get(['authorities']).value);
-    user.password = this.editForm.get(['password']).value;
+    // user.password = this.editForm.get(['password']).value;
   }
 
   private onSaveSuccess(result) {
