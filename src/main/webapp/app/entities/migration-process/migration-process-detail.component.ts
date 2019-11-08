@@ -38,6 +38,7 @@ export class MigrationProcessDetailComponent implements OnInit {
   add: any;
   tableName: string;
   showSpinner: true;
+  save_disable: boolean;
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
@@ -186,6 +187,9 @@ export class MigrationProcessDetailComponent implements OnInit {
         }
       }
     }
+    // else {
+    //   this.save_disable = true;
+    // }
   }
 
   pushTables(item) {
@@ -268,9 +272,19 @@ export class MigrationProcessDetailComponent implements OnInit {
             const columnSplit = column.split('-');
             if (element.name === columnSplit[1] && firstFlag) {
               pkList = pkList + columnSplit[0];
+              if (pkList === '') {
+                this.save_disable = true;
+              } else {
+                this.save_disable = false;
+              }
               firstFlag = false;
             } else if (element.name === columnSplit[1] && !firstFlag) {
               pkList = pkList + '-' + columnSplit[0];
+              if (pkList === '') {
+                this.save_disable = true;
+              } else {
+                this.save_disable = false;
+              }
             }
           });
           cdcPrimaryKey.push(pkList);
@@ -282,24 +296,44 @@ export class MigrationProcessDetailComponent implements OnInit {
             const columnSplit = column.split('-');
             if (element.name === columnSplit[1] && firstFlag) {
               pkList = pkList + columnSplit[0];
+              if (pkList === '') {
+                this.save_disable = true;
+              } else {
+                this.save_disable = false;
+              }
               firstFlag = false;
             } else if (element.name === columnSplit[1] && !firstFlag) {
               pkList = pkList + '-' + columnSplit[0];
+              if (pkList === '') {
+                this.save_disable = true;
+              } else {
+                this.save_disable = false;
+              }
             }
           });
           bulkPrimaryKey.push(pkList);
+          if (pkList === '') {
+            this.save_disable = true;
+          } else {
+            this.save_disable = false;
+          }
           // bulkPrimaryKey.push(element.primaryKey);
         }
       }
     });
-    this.migrationProcess.selectedColumns = JSON.stringify(this.selectedColumns);
-    this.migrationProcess.tablesToMigrate = JSON.stringify(this.selectedTables);
-    this.migrationProcess.cdc = cdc ? JSON.stringify(cdc) : null;
-    this.migrationProcess.bulk = bulk ? JSON.stringify(bulk) : null;
-    this.migrationProcess.cdcPk = cdcPrimaryKey ? JSON.stringify(cdcPrimaryKey) : null;
-    this.migrationProcess.bulkPk = bulkPrimaryKey ? JSON.stringify(bulkPrimaryKey) : null;
-    this.migrationProcess.cdcCols = cdcColumns ? JSON.stringify(cdcColumns) : null;
-    this.subscribeToSaveResponse(this.migrationProcessService.update(this.migrationProcess));
+    if (this.save_disable) {
+      const smsg = 'snowpoleApp.migrationProcess.primaryValidation';
+      this.jhiAlertService.error(smsg);
+    } else {
+      this.migrationProcess.selectedColumns = JSON.stringify(this.selectedColumns);
+      this.migrationProcess.tablesToMigrate = JSON.stringify(this.selectedTables);
+      this.migrationProcess.cdc = cdc ? JSON.stringify(cdc) : null;
+      this.migrationProcess.bulk = bulk ? JSON.stringify(bulk) : null;
+      this.migrationProcess.cdcPk = cdcPrimaryKey ? JSON.stringify(cdcPrimaryKey) : null;
+      this.migrationProcess.bulkPk = bulkPrimaryKey ? JSON.stringify(bulkPrimaryKey) : null;
+      this.migrationProcess.cdcCols = cdcColumns ? JSON.stringify(cdcColumns) : null;
+      this.subscribeToSaveResponse(this.migrationProcessService.update(this.migrationProcess));
+    }
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IMigrationProcess>>) {
