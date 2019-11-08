@@ -11,6 +11,7 @@ import { JhiAlertService } from 'ng-jhipster';
 })
 export class SourceConnectionDetailComponent implements OnInit {
   sourceConnection: ISourceConnection;
+  disable: boolean;
 
   constructor(
     protected activatedRoute: ActivatedRoute,
@@ -25,6 +26,7 @@ export class SourceConnectionDetailComponent implements OnInit {
   }
 
   testConnection() {
+    this.disable = true;
     this.sourceConnectionService.testConnection(this.sourceConnection).subscribe(response => {
       if (response.body) {
         const smsg = 'snowpoleApp.sourceConnection.testConnectionSuccess';

@@ -27,6 +27,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
   sourceType: string;
   sourcetypelc: string;
   localFilePath: string;
+  testDisable: boolean;
   host: string;
   portNumber: string;
   dbname: string;
@@ -173,7 +174,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
   save() {
     this.isSaving = true;
     const sourceConnection = this.createFromForm();
-    this.testConnection();
+    // this.testConnection();
     sourceConnection.valid = this.valid;
     if (sourceConnection.id !== undefined) {
       this.subscribeToSaveResponse(this.sourceConnectionService.update(sourceConnection));
@@ -250,6 +251,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
   }
 
   testConnection() {
+    this.testDisable = true;
     const connection = this.createFromForm();
     this.sourceConnectionService.testConnection(connection).subscribe(response => {
       if (response.body) {
