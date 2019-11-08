@@ -16,6 +16,8 @@ import { JhiAlertService } from 'ng-jhipster';
 export class SnowflakeConnectionUpdateComponent implements OnInit {
   isSaving: boolean;
   valid: boolean;
+  testDisable: boolean;
+  snowflakeConnection: ISnowflakeConnection;
 
   editForm = this.fb.group({
     id: [],
@@ -47,6 +49,7 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
     this.valid = false;
     this.activatedRoute.data.subscribe(({ snowflakeConnection }) => {
       this.updateForm(snowflakeConnection);
+      this.snowflakeConnection = snowflakeConnection;
     });
   }
 
@@ -76,8 +79,9 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
 
   save() {
     this.isSaving = true;
+    // this.testConnection();
     const snowflakeConnection = this.createFromForm();
-    snowflakeConnection.valid = this.valid;
+    snowflakeConnection.valid = snowflakeConnection.valid;
     if (snowflakeConnection.id !== undefined) {
       this.subscribeToSaveResponse(this.snowflakeConnectionService.update(snowflakeConnection));
     } else {
@@ -124,16 +128,21 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
   }
 
   testConnection() {
+    this.testDisable = true;
     const connection = this.createFromForm();
     this.snowflakeConnectionService.testConnection(connection).subscribe(response => {
       if (response.body) {
+        this.snowflakeConnection.valid = !!response.body;
+        this.snowflakeConnectionService.update(this.snowflakeConnection).subscribe(res => {});
         const smsg = 'snowpoleApp.sourceConnection.testConnectionSuccess';
         this.jhiAlertService.success(smsg);
         this.valid = true;
       } else {
+        this.snowflakeConnection.valid = !!response.body;
+        this.snowflakeConnectionService.update(this.snowflakeConnection).subscribe(res => {});
+        this.valid = false;
         const smsg = 'snowpoleApp.sourceConnection.testConnectionInvalid';
         this.jhiAlertService.error(smsg);
-        this.valid = false;
       }
     });
   }

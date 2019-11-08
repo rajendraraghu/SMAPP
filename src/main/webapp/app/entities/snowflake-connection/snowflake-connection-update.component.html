@@ -232,7 +232,7 @@
                 <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
                     <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
                 </button>
-                <button type="button" (click)="testConnection()" [disabled]="editForm.invalid || isSaving"
+                <button type="button" (click)="testConnection()" [disabled]="editForm.invalid || isSaving || testDisable"
                     class="btn btn-info">
                     <fa-icon [icon]="'save'"></fa-icon>
                     <span class="d-none d-md-inline">Test Connection</span>

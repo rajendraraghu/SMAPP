@@ -175,7 +175,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
     this.isSaving = true;
     const sourceConnection = this.createFromForm();
     // this.testConnection();
-    sourceConnection.valid = this.valid;
+    sourceConnection.valid = sourceConnection.valid;
     if (sourceConnection.id !== undefined) {
       this.subscribeToSaveResponse(this.sourceConnectionService.update(sourceConnection));
     } else {
@@ -258,10 +258,14 @@ export class SourceConnectionUpdateComponent implements OnInit {
         const smsg = 'snowpoleApp.sourceConnection.testConnectionSuccess';
         this.valid = true;
         this.jhiAlertService.success(smsg);
+        this.sourceConnection.valid = !!response.body;
+        this.sourceConnectionService.update(this.sourceConnection).subscribe(res => {});
       } else {
         const smsg = 'snowpoleApp.sourceConnection.testConnectionInvalid';
         this.valid = false;
         this.jhiAlertService.error(smsg);
+        this.sourceConnection.valid = !!response.body;
+        this.sourceConnectionService.update(this.sourceConnection).subscribe(res => {});
       }
       // if (connection.valid !== response.body) {
       //   connection.valid = !!response.body;

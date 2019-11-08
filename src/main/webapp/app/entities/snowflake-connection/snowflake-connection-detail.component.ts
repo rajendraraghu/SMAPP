@@ -11,6 +11,7 @@ import { JhiAlertService } from 'ng-jhipster';
 })
 export class SnowflakeConnectionDetailComponent implements OnInit {
   snowflakeConnection: ISnowflakeConnection;
+  disable: boolean;
 
   constructor(
     protected activatedRoute: ActivatedRoute,
@@ -29,6 +30,7 @@ export class SnowflakeConnectionDetailComponent implements OnInit {
   }
 
   testConnection() {
+    this.disable = true;
     this.snowflakeConnectionService.testConnection(this.snowflakeConnection).subscribe(response => {
       if (response.body) {
         const smsg = 'snowpoleApp.sourceConnection.testConnectionSuccess';
