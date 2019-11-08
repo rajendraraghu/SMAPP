@@ -115,7 +115,8 @@ public class SendTableList  {
 				processDTO.setLastRunTime(lastruntimestart);
 				System.out.print(lastruntimestart);
 			}
-			migrationProcessService.save(processDTO);	}												   
+			migrationProcessService.save(processDTO);	
+		}												   
 	        
 	        Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");  
 		    Properties properties = new Properties();
@@ -371,9 +372,13 @@ public class SendTableList  {
 
 	                            break;
 	                        case STRING:
-	                            data.append(cell.getStringCellValue() + ",");
+							{
+								String cellvalue = cell.getStringCellValue();
+								if(cellvalue.contains(",")){
+	                            data.append("\""+cell.getStringCellValue() +"\""+ ",");}
+								else{data.append(cell.getStringCellValue() + ",");}
 	                            break;
-
+							}
 	                        case BLANK:
 	                            data.append("" + ",");
 	                            break;
@@ -393,18 +398,20 @@ public class SendTableList  {
 				}
 				else if(filepath.contains(".csv"))
 				{
-					if (inputFile.renameTo(outputFile)) { logger.info("File is renamed"); }     
-                    else { logger.info("File cannot be renamed"); } 
+					boolean result = inputFile.renameTo(outputFile);
+					if (result) { 
+						logger.info("File is renamed"); 
+					}     
+                    else { 
+						logger.info("File cannot be renamed"); 
+					} 
 				}
 				
 	        } 
 	        catch (Exception ioe) {
 	            ioe.printStackTrace();
 	            logger.info("inside catch");
-	        }
-		
-		
-		
+	        }		
 	}	
 	public static void bulkprocess(String tableName,Connection con1, Connection con2, long jobid, long tableLoadid,long processid,String system,String dbname, String primarykey,MigrationProcessJobStatusService migrationProcessJobStatusService,String schema)
 	throws SQLException, IOException{
@@ -424,6 +431,7 @@ public class SendTableList  {
 		tableName = tableName.replace(".xlsx","");
 		tableName = tableName.replace(".xls","");
         tableName = tableName.replace(".csv","");
+		tableName = tableName.replaceAll("[^a-zA-Z0-9_-]", "");
 	    String srcCols = getfileColNames(filepath);
 	    String csvFilename = "F:/POC/CSV/"+tableName+".csv";
     	FilestoCSV(filepath,csvFilename);   	
@@ -743,7 +751,10 @@ public class SendTableList  {
 			while (cellIterator.hasNext()) 
 			{
 	          cell = cellIterator.next();
-	          headercols.add(cell.toString());
+			  String cellvalue = cell.toString();
+			  if(cellvalue.contains(",")){cellvalue = cellvalue.replace(",","");}
+			  else if(cellvalue.contains(" ")){cellvalue = cellvalue.replace(" ","");}
+	          headercols.add(cellvalue);
 	        }
 		}
 		else
@@ -765,6 +776,15 @@ public class SendTableList  {
 		}
 		for(int i=0;i<colNames.length;i++)
 		{
+			if (colNames[i].contains("-")) {
+				colNames[i] = colNames[i].replace("-","");
+			} else if (colNames[i].contains(" ")) {
+			 colNames[i] = colNames[i].replace(" ","");
+			} else if (colNames[i].contains(" ")) {
+				colNames[i] = colNames[i].replace("_",""); 
+			} else {
+				colNames[i] = colNames[i];
+			}
 			s = s.concat(colNames[i]);
     	    s = s.concat(",");
 		}

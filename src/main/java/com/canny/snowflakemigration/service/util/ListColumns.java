@@ -39,18 +39,37 @@ public class ListColumns {
                 Iterator<Cell> cellIterator = row.cellIterator();
                 while (cellIterator.hasNext()) {
                     cell = cellIterator.next();
-                    headercols.add(cell.toString());
+					String cellvalue = cell.toString();
+					if(cellvalue.contains(",")){cellvalue = cellvalue.replace(",","");headercols.add(cellvalue);}
+                    else if(cellvalue.contains("-")){cellvalue = cellvalue.replace("-","");headercols.add(cellvalue);}
+                    else if(cellvalue.contains(" ")){cellvalue = cellvalue.replace(" ","");headercols.add(cellvalue);}
+					else {headercols.add(cellvalue);}
                 }
             } else {
                 headercols.add("NoColsAvailable");
             }
             colNames = (String[]) headercols.toArray(new String[headercols.size()]);
         } else if (filepath.contains("csv")) {
-            BufferedReader reader = new BufferedReader(new FileReader(filepath));
+            FileReader filereader = new FileReader(filepath); 
+            BufferedReader reader = new BufferedReader(filereader);
             String line = null;
             line = reader.readLine();
+            // system.out.print(line);
             if (line != null) {
                 colNames = line.split(",");
+                System.out.print(colNames);
+                // int cols = colNames.length;
+                for (int i = 0; i < colNames.length; i++) {
+                    if (colNames[i].contains("-")) {
+                        colNames[i] = colNames[i].replace("-","");
+                    } else if (colNames[i].contains(" ")) {
+                     colNames[i] = colNames[i].replace(" ","");
+                    } else if (colNames[i].contains(" ")) {
+                        colNames[i] = colNames[i].replace("_",""); 
+                    } else {
+                        colNames[i] = colNames[i];
+                    }
+                }  
             }
         }
         return colNames;
