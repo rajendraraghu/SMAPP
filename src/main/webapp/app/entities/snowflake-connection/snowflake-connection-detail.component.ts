@@ -37,12 +37,15 @@ export class SnowflakeConnectionDetailComponent implements OnInit {
         this.jhiAlertService.success(smsg);
         this.snowflakeConnection.valid = !!response.body;
         this.snowflakeConnectionService.update(this.snowflakeConnection).subscribe(res => {});
+        this.disable = false;
       } else {
         const smsg = 'snowpoleApp.sourceConnection.testConnectionInvalid';
         this.jhiAlertService.error(smsg);
         this.snowflakeConnection.valid = !!response.body;
         this.snowflakeConnectionService.update(this.snowflakeConnection).subscribe(res => {});
+        this.disable = false;
       }
     });
+    // this.disable = false;
   }
 }

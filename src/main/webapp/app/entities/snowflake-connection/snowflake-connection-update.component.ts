@@ -137,12 +137,14 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
         const smsg = 'snowpoleApp.sourceConnection.testConnectionSuccess';
         this.jhiAlertService.success(smsg);
         this.valid = true;
+        this.testDisable = false;
       } else {
         this.snowflakeConnection.valid = !!response.body;
         this.snowflakeConnectionService.update(this.snowflakeConnection).subscribe(res => {});
         this.valid = false;
         const smsg = 'snowpoleApp.sourceConnection.testConnectionInvalid';
         this.jhiAlertService.error(smsg);
+        this.testDisable = false;
       }
     });
   }

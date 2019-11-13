@@ -260,12 +260,14 @@ export class SourceConnectionUpdateComponent implements OnInit {
         this.jhiAlertService.success(smsg);
         this.sourceConnection.valid = !!response.body;
         this.sourceConnectionService.update(this.sourceConnection).subscribe(res => {});
+        this.testDisable = false;
       } else {
         const smsg = 'snowpoleApp.sourceConnection.testConnectionInvalid';
         this.valid = false;
         this.jhiAlertService.error(smsg);
         this.sourceConnection.valid = !!response.body;
         this.sourceConnectionService.update(this.sourceConnection).subscribe(res => {});
+        this.testDisable = false;
       }
       // if (connection.valid !== response.body) {
       //   connection.valid = !!response.body;

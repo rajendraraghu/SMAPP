@@ -33,24 +33,15 @@ export class SourceConnectionDetailComponent implements OnInit {
         this.jhiAlertService.success(smsg);
         this.sourceConnection.valid = !!response.body;
         this.sourceConnectionService.update(this.sourceConnection).subscribe(res => {});
+        this.disable = false;
       } else {
         const smsg = 'snowpoleApp.sourceConnection.testConnectionInvalid';
         this.jhiAlertService.error(smsg);
         this.sourceConnection.valid = !!response.body;
         this.sourceConnectionService.update(this.sourceConnection).subscribe(res => {});
+        this.disable = false;
       }
-      // if (connection.valid !== response.body) {
-      //   connection.valid = !!response.body;
-      //   const smsg = 'snowpoleApp.sourceConnection.testConnectionSuccess';
-      //   this.jhiAlertService.success(smsg);
-      // }
     });
-    // this.sourceConnectionService.testConnection(connection).subscribe(response => {
-    //   if (connection.valid !== response.body) {
-    //     connection.valid = response.body;
-    //     this.sourceConnectionService.update(connection).subscribe(res => {});
-    //   }
-    // });
   }
 
   previousState() {
