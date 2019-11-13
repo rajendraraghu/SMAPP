@@ -26,6 +26,7 @@ export class DeltaProcessDetailComponent implements OnInit {
   selectedColumns: any[];
   selectedColumnsBuffer: any[];
   isSaving: boolean;
+  save_disable: boolean;
   masterSelected: boolean;
   check: any[];
   str: string;
@@ -224,18 +225,38 @@ export class DeltaProcessDetailComponent implements OnInit {
           const columnSplit = column.split('-');
           if (element.name === columnSplit[1] && firstFlag) {
             pkList = pkList + columnSplit[0];
+            if (pkList === '') {
+              this.save_disable = true;
+            } else {
+              this.save_disable = false;
+            }
             firstFlag = false;
           } else if (element.name === columnSplit[1] && !firstFlag) {
             pkList = pkList + '-' + columnSplit[0];
+            if (pkList === '') {
+              this.save_disable = true;
+            } else {
+              this.save_disable = false;
+            }
           }
         });
         PrimaryKey.push(pkList);
+        if (pkList === '') {
+          this.save_disable = true;
+        } else {
+          this.save_disable = false;
+        }
       }
     });
-    this.deltaProcess.selectedColumns = JSON.stringify(this.selectedColumns);
-    this.deltaProcess.tablesList = JSON.stringify(this.selectedTables);
-    this.deltaProcess.pk = PrimaryKey ? JSON.stringify(PrimaryKey) : null;
-    this.subscribeToSaveResponse(this.deltaProcessService.update(this.deltaProcess));
+    if (this.save_disable) {
+      const smsg = 'snowpoleApp.deltaProcess.primarykeyvalidation';
+      this.jhiAlertService.error(smsg);
+    } else {
+      this.deltaProcess.selectedColumns = JSON.stringify(this.selectedColumns);
+      this.deltaProcess.tablesList = JSON.stringify(this.selectedTables);
+      this.deltaProcess.pk = PrimaryKey ? JSON.stringify(PrimaryKey) : null;
+      this.subscribeToSaveResponse(this.deltaProcessService.update(this.deltaProcess));
+    }
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IDeltaProcess>>) {
