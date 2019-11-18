@@ -98,9 +98,10 @@
                     </div>
                     <div class="col-3 pl-0">
                         <button type="button" class="btn btn-primary" [disabled]="!item.selected"
-                            style="height:40px;width:100%; font-size: 15px; text-align: left;"
+                            style="height:80%;width:50%; font-size: 15px; text-align: center;"
                             (click)="selectPK(item,templatePK)">
-                            <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> {{item.primaryKey}} </span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;
+                                <!-- <span> {{item.primaryKey}} </span> -->
                         </button>
                         <ng-template #templatePK let-modal>
                             <div class="modal-header">

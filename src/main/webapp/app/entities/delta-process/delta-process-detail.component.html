@@ -108,8 +108,10 @@
                     </div>
                     <div class="col-3 pl-0">
                         <!-- <button type="button" [routerLink]="['/migration-process',{ outlets: { popup: item.name+'/selectPK'} }]" class="btn btn-primary"> -->
-                        <button type="button" class="btn btn-primary" [disabled]="!item.selected" (click) = "selectPK(item,templatePK)">
-                            <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> {{item.primaryKey}} </span>
+                        <button type="button" class="btn btn-primary" [disabled]="!item.selected" style="height:80%;width:50%; font-size: 15px; text-align: center;"
+                        (click) = "selectPK(item,templatePK)">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;
+                            <!-- <span> {{item.primaryKey}} </span> -->
                         </button>
                         <ng-template #templatePK let-modal>
                                 <div class="modal-header">
