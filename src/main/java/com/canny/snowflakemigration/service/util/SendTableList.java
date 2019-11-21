@@ -30,6 +30,7 @@ import liquibase.datatype.core.DateTimeType;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import com.google.gson.JsonObject;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -55,7 +56,8 @@ public class SendTableList  {
 	public static Logger logger;
 	public static String sendSelectedTables(MigrationProcessDTO processDTO, MigrationProcessService migrationProcessService,MigrationProcessStatusService migrationProcessStatusService,MigrationProcessJobStatusService migrationProcessJobStatusService) throws SQLException,ClassNotFoundException
 	{
-		String status = new String();
+		// String status = new String();
+		JsonObject status = new JsonObject();
 		String filepath = null;
 		String timeStamp = new SimpleDateFormat().format( new Date() );
 		logger = Logger.getLogger("MyLog");  
@@ -288,7 +290,8 @@ public class SendTableList  {
 				 }
 		       	write.setJobStatus("SUCCESS");
 				write.setRunby("admin");
-		       	status = "SUCCESS";
+				status.addProperty("status","SUCCESS");
+		       	// status = "SUCCESS";
 		        write.setJobEndTime(Instant.now());	      
 		        write = migrationProcessStatusService.save(write);
 		//con1.close();
@@ -304,10 +307,11 @@ public class SendTableList  {
 			    write1.setTableLoadEndTime(Instant.now());
 			    write1.setTableLoadStatus("FAILURE");
 				write1 = migrationProcessJobStatusService.save(write1);
-			    status = "FAILURE";
+				status.addProperty("status","SUCCESS");
+			    // status = "FAILURE";
 			
 		}  
-	    return status;
+	    return status.toString();
 	}
 	public static void toCSV(ResultSet rs, String csvFilename)
 

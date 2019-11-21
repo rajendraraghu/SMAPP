@@ -53,7 +53,7 @@ export class SourceConnectionUpdateComponent implements OnInit {
     host: [],
     portNumber: [],
     schema: [],
-    valid: [],
+    // valid: [],
     createdBy: [],
     createdDate: [],
     lastModifiedBy: [],
@@ -73,9 +73,8 @@ export class SourceConnectionUpdateComponent implements OnInit {
     this.sourceTypes = ['MySQL', 'Netezza', 'Teradata', 'Oracle', 'SQLServer', 'Flatfiles'];
     this.serverTypes = ['Local', 'InternalServer', 'ExternalServer'];
     this.activatedRoute.data.subscribe(({ sourceConnection }) => {
-      // this.sourceType = sourceConnection.sourceType;
-      this.updateForm(sourceConnection);
       this.sourceConnection = sourceConnection;
+      this.updateForm(sourceConnection);
     });
   }
 
@@ -185,38 +184,41 @@ export class SourceConnectionUpdateComponent implements OnInit {
 
   private createFromForm(): ISourceConnection {
     this.concatUrl();
-    if (this.sourceType === 'Flatfiles' && this.serverType === 'Local') {
-      return {
-        ...new SourceConnection(),
-        id: this.editForm.get(['id']).value,
-        name: this.editForm.get(['name']).value,
-        description: this.editForm.get(['description']).value,
-        sourceType: this.editForm.get(['sourceType']).value,
-        host: '',
-        portNumber: '',
-        schema: '',
-        database: this.editForm.get(['serverType']).value,
-        url: this.editForm.get(['localFilePath']).value,
-        username: '',
-        password: '',
-        valid: this.editForm.get(['valid']).value
-      };
-    } else if (this.sourceType === 'Flatfiles' && this.serverType === 'InternalServer') {
-      return {
-        ...new SourceConnection(),
-        id: this.editForm.get(['id']).value,
-        name: this.editForm.get(['name']).value,
-        description: this.editForm.get(['description']).value,
-        sourceType: this.editForm.get(['sourceType']).value,
-        host: this.editForm.get(['ftpHost']).value,
-        portNumber: this.editForm.get(['ftpPortNumber']).value,
-        schema: '',
-        database: this.editForm.get(['serverType']).value,
-        url: '',
-        username: this.editForm.get(['ftpUserName']).value,
-        password: this.editForm.get(['ftpPassword']).value,
-        valid: this.editForm.get(['valid']).value
-      };
+    if (this.sourceType === 'Flatfiles') {
+      if (this.serverType === 'Local') {
+        return {
+          ...new SourceConnection(),
+          id: this.editForm.get(['id']).value,
+          name: this.editForm.get(['name']).value,
+          description: this.editForm.get(['description']).value,
+          sourceType: this.editForm.get(['sourceType']).value,
+          host: '',
+          portNumber: '',
+          schema: '',
+          database: this.editForm.get(['serverType']).value,
+          url: this.editForm.get(['localFilePath']).value,
+          username: '',
+          password: '',
+          valid: this.valid
+        };
+      } else {
+        return {
+          ...new SourceConnection(),
+          id: this.editForm.get(['id']).value,
+          name: this.editForm.get(['name']).value,
+          description: this.editForm.get(['description']).value,
+          sourceType: this.editForm.get(['sourceType']).value,
+          host: this.editForm.get(['ftpHost']).value,
+          portNumber: this.editForm.get(['ftpPortNumber']).value,
+          schema: '',
+          database: this.editForm.get(['serverType']).value,
+          url: '',
+          username: this.editForm.get(['ftpUserName']).value,
+          password: this.editForm.get(['ftpPassword']).value,
+          valid: this.valid
+          // valid: this.editForm.get(['valid']).value
+        };
+      }
     } else {
       // this.concatUrl();
       return {
@@ -232,7 +234,8 @@ export class SourceConnectionUpdateComponent implements OnInit {
         url: this.url,
         username: this.editForm.get(['username']).value,
         password: this.editForm.get(['password']).value,
-        valid: this.editForm.get(['valid']).value
+        valid: this.valid
+        // valid: this.editForm.get(['valid']).value
       };
     }
   }

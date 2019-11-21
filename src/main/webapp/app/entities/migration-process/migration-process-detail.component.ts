@@ -187,9 +187,6 @@ export class MigrationProcessDetailComponent implements OnInit {
         }
       }
     }
-    // else {
-    //   this.save_disable = true;
-    // }
   }
 
   pushTables(item) {
@@ -261,78 +258,66 @@ export class MigrationProcessDetailComponent implements OnInit {
     const cdcColumns = [],
       cdcPrimaryKey = [],
       bulkPrimaryKey = [];
-    this.tables.forEach(element => {
-      if (element.selected) {
-        if (element.cdc) {
-          cdc.push(element.name);
-          cdcColumns.push(element.selectedCdcCol);
-          let firstFlag = true;
-          let pkList = '';
-          this.selectedColumns.forEach(column => {
-            const columnSplit = column.split('-');
-            if (element.name === columnSplit[1] && firstFlag) {
-              pkList = pkList + columnSplit[0];
-              if (pkList === '') {
-                this.save_disable = true;
-              } else {
-                this.save_disable = false;
+    if (this.selectedTables.length > 0) {
+      this.tables.forEach(element => {
+        if (element.selected) {
+          if (element.cdc) {
+            cdc.push(element.name);
+            cdcColumns.push(element.selectedCdcCol);
+            let firstFlag = true;
+            let pkList = '';
+            this.selectedColumns.forEach(column => {
+              const columnSplit = column.split('-');
+              if (element.name === columnSplit[1] && firstFlag) {
+                pkList = pkList + columnSplit[0];
+                firstFlag = false;
+              } else if (element.name === columnSplit[1] && !firstFlag) {
+                pkList = pkList + '-' + columnSplit[0];
               }
-              firstFlag = false;
-            } else if (element.name === columnSplit[1] && !firstFlag) {
-              pkList = pkList + '-' + columnSplit[0];
-              if (pkList === '') {
-                this.save_disable = true;
-              } else {
-                this.save_disable = false;
-              }
+            });
+            if (pkList === '') {
+              this.save_disable = true;
+            } else {
+              cdcPrimaryKey.push(pkList);
             }
-          });
-          cdcPrimaryKey.push(pkList);
-        } else {
-          bulk.push(element.name);
-          let firstFlag = true;
-          let pkList = '';
-          this.selectedColumns.forEach(column => {
-            const columnSplit = column.split('-');
-            if (element.name === columnSplit[1] && firstFlag) {
-              pkList = pkList + columnSplit[0];
-              if (pkList === '') {
-                this.save_disable = true;
-              } else {
-                this.save_disable = false;
-              }
-              firstFlag = false;
-            } else if (element.name === columnSplit[1] && !firstFlag) {
-              pkList = pkList + '-' + columnSplit[0];
-              if (pkList === '') {
-                this.save_disable = true;
-              } else {
-                this.save_disable = false;
-              }
-            }
-          });
-          bulkPrimaryKey.push(pkList);
-          if (pkList === '') {
-            this.save_disable = true;
           } else {
-            this.save_disable = false;
+            bulk.push(element.name);
+            let firstFlag = true;
+            let pkList = '';
+            this.selectedColumns.forEach(column => {
+              const columnSplit = column.split('-');
+              if (element.name === columnSplit[1] && firstFlag) {
+                pkList = pkList + columnSplit[0];
+                firstFlag = false;
+              } else if (element.name === columnSplit[1] && !firstFlag) {
+                pkList = pkList + '-' + columnSplit[0];
+              }
+            });
+            if (pkList === '') {
+              this.save_disable = true;
+            } else {
+              bulkPrimaryKey.push(pkList);
+            }
+            // bulkPrimaryKey.push(element.primaryKey);
           }
-          // bulkPrimaryKey.push(element.primaryKey);
         }
+      });
+      if (this.save_disable) {
+        const smsg = 'snowpoleApp.migrationProcess.primaryValidation';
+        this.jhiAlertService.error(smsg);
+      } else {
+        this.migrationProcess.selectedColumns = JSON.stringify(this.selectedColumns);
+        this.migrationProcess.tablesToMigrate = JSON.stringify(this.selectedTables);
+        this.migrationProcess.cdc = cdc ? JSON.stringify(cdc) : null;
+        this.migrationProcess.bulk = bulk ? JSON.stringify(bulk) : null;
+        this.migrationProcess.cdcPk = cdcPrimaryKey ? JSON.stringify(cdcPrimaryKey) : null;
+        this.migrationProcess.bulkPk = bulkPrimaryKey ? JSON.stringify(bulkPrimaryKey) : null;
+        this.migrationProcess.cdcCols = cdcColumns ? JSON.stringify(cdcColumns) : null;
+        this.subscribeToSaveResponse(this.migrationProcessService.update(this.migrationProcess));
       }
-    });
-    if (this.save_disable) {
-      const smsg = 'snowpoleApp.migrationProcess.primaryValidation';
-      this.jhiAlertService.error(smsg);
     } else {
-      this.migrationProcess.selectedColumns = JSON.stringify(this.selectedColumns);
-      this.migrationProcess.tablesToMigrate = JSON.stringify(this.selectedTables);
-      this.migrationProcess.cdc = cdc ? JSON.stringify(cdc) : null;
-      this.migrationProcess.bulk = bulk ? JSON.stringify(bulk) : null;
-      this.migrationProcess.cdcPk = cdcPrimaryKey ? JSON.stringify(cdcPrimaryKey) : null;
-      this.migrationProcess.bulkPk = bulkPrimaryKey ? JSON.stringify(bulkPrimaryKey) : null;
-      this.migrationProcess.cdcCols = cdcColumns ? JSON.stringify(cdcColumns) : null;
-      this.subscribeToSaveResponse(this.migrationProcessService.update(this.migrationProcess));
+      const smsg = 'snowpoleApp.migrationProcess.atleastOneTable';
+      this.jhiAlertService.error(smsg);
     }
   }
 

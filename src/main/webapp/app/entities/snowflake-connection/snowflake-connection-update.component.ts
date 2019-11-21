@@ -102,7 +102,7 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
       warehouse: this.editForm.get(['warehouse']).value,
       database: this.editForm.get(['database']).value,
       schema: this.editForm.get(['schema']).value,
-      valid: this.editForm.get(['valid']).value
+      valid: this.valid
       // createdBy: this.editForm.get(['createdBy']).value,
       // createdDate:
       //   this.editForm.get(['createdDate']).value != null ? moment(this.editForm.get(['createdDate']).value, DATE_TIME_FORMAT) : undefined,

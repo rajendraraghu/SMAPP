@@ -8,6 +8,7 @@
         "notFound": "No Migration Process found"
       },
       "primaryValidation": "Select atleast one primary key for each Table/File",
+      "atleastOneTable": "Select atleast one Table/File for migration",
       "created": "A new Migration Process is created with identifier {{ param }}",
       "updated": "A Migration Process is updated with identifier {{ param }}",
       "deleted": "A Migration Process is deleted with identifier {{ param }}",
