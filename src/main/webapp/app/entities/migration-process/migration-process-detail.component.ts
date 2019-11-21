@@ -51,6 +51,7 @@ export class MigrationProcessDetailComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ migrationProcess }) => {
       this.migrationProcess = migrationProcess;
       this.type = migrationProcess.sourceType;
+      this.save_disable = false;
       if (this.type === 'Flatfiles') {
         this.discdc = false;
       } else {
@@ -260,6 +261,7 @@ export class MigrationProcessDetailComponent implements OnInit {
       bulkPrimaryKey = [];
     if (this.selectedTables.length > 0) {
       this.tables.forEach(element => {
+        this.save_disable = false;
         if (element.selected) {
           if (element.cdc) {
             cdc.push(element.name);
@@ -297,6 +299,7 @@ export class MigrationProcessDetailComponent implements OnInit {
               this.save_disable = true;
             } else {
               bulkPrimaryKey.push(pkList);
+              // this.save_disable = false;
             }
             // bulkPrimaryKey.push(element.primaryKey);
           }
