@@ -50,12 +50,16 @@ import java.util.Iterator;
 public class SendTableList  {
 	public static MigrationProcessStatusDTO migrationProcessStatusDTO = new MigrationProcessStatusDTO();
 	public static MigrationProcessJobStatusDTO migrationProcessJobStatusDTO = new MigrationProcessJobStatusDTO();
+	public static MigrationProcessDTO migrationProcessDTO = new MigrationProcessDTO();
+	// public static MigrationProcessDTO write2;
 	public static MigrationProcessStatusDTO write;
 	public static MigrationProcessJobStatusDTO write1;
 	public static SourceConnectionDTO sourceConnDTO = new SourceConnectionDTO();	
 	public static Logger logger;
-	public static String sendSelectedTables(MigrationProcessDTO processDTO, MigrationProcessService migrationProcessService,MigrationProcessStatusService migrationProcessStatusService,MigrationProcessJobStatusService migrationProcessJobStatusService) throws SQLException,ClassNotFoundException
-	{
+	public static String sendSelectedTables(MigrationProcessDTO write2,MigrationProcessService migrationProcessService,MigrationProcessStatusService migrationProcessStatusService,MigrationProcessJobStatusService migrationProcessJobStatusService) throws SQLException,ClassNotFoundException
+	{   
+		write2.setIsRunning(true);
+		// write2.setIsRunning(false);
 		// String status = new String();
 		JsonObject status = new JsonObject();
 		String filepath = null;
@@ -75,7 +79,7 @@ public class SendTableList  {
 		try{
 	        
      		Long jobid=(long)0;
-			String system = processDTO.getSourceType();											
+			String system = write2.getSourceType();											
 			fh = new FileHandler("F:/POC/CSV/MyLogFile.log");  
 		    logger.addHandler(fh);
 		    SimpleFormatter formatter = new SimpleFormatter();  
@@ -84,20 +88,20 @@ public class SendTableList  {
 			Connection con1 = null;
 			if(system.equals("Flatfiles")){
 				logger.info("inside flatfiles");	
-				filepath = processDTO.getSourceConnectionUrl();
+				filepath = write2.getSourceConnectionUrl();
 				}
 			else{
 			Properties properties0 = new Properties();
-			properties0.put("user", processDTO.getSourceConnectionUsername());
-			properties0.put("password", processDTO.getSourceConnectionPassword());
-			properties0.put("db",processDTO.getSourceConnectionDatabase());
-		    properties0.put("schema",processDTO.getSourceConnectionSchema());				 
-	        con1 = DriverManager.getConnection(processDTO.getSourceConnectionUrl(), properties0);
+			properties0.put("user", write2.getSourceConnectionUsername());
+			properties0.put("password", write2.getSourceConnectionPassword());
+			properties0.put("db",write2.getSourceConnectionDatabase());
+		    properties0.put("schema",write2.getSourceConnectionSchema());				 
+	        con1 = DriverManager.getConnection(write2.getSourceConnectionUrl(), properties0);
 	        logger.info("source connection connected");
 			
 			
-     		//lastruntime = migrationProcessStatusService.findLastUpdateTime(processDTO.getId());
-		    lastruntime = processDTO.getLastRunTime();
+     		//lastruntime = migrationProcessStatusService.findLastUpdateTime(write2.getId());
+		    lastruntime = write2.getLastRunTime();
 			
 			
 		     if (system.equals("Oracle")) {
@@ -107,56 +111,56 @@ public class SendTableList  {
 				String lastruntimestart = rs.getTimestamp(1).toString();
 				String lts = lastruntimestart.substring(0,19);
 				System.out.print(lts);
-				processDTO.setLastRunTime(lts);
+				write2.setLastRunTime(lts);
 				System.out.print(lastruntimestart);
 			} else {
 				Statement stmt = con1.createStatement();
 				ResultSet rs = stmt.executeQuery("SELECT CURRENT_TIMESTAMP;");
 				rs.next();
 				String lastruntimestart = rs.getTimestamp(1).toString();
-				processDTO.setLastRunTime(lastruntimestart);
+				write2.setLastRunTime(lastruntimestart);
 				System.out.print(lastruntimestart);
 			}
-			migrationProcessService.save(processDTO);	
+			write2 = migrationProcessService.save(write2);	
 		}												   
 	        
 	        Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");  
 		    Properties properties = new Properties();
-		    properties.put("user", processDTO.getSnowflakeConnectionUsername());
-		    properties.put("password", processDTO.getSnowflakeConnectionPassword());
-		    properties.put("account", processDTO.getSnowflakeConnectionAcct());
-            properties.put("warehouse",processDTO.getSnowflakeConnectionWarehouse());
-		    properties.put("db",processDTO.getSnowflakeConnectionDatabase());
-	        properties.put("schema",processDTO.getSnowflakeConnectionSchema());
-		    Connection con2=DriverManager.getConnection(processDTO.getSnowflakeConnectionUrl(),properties);
+		    properties.put("user", write2.getSnowflakeConnectionUsername());
+		    properties.put("password", write2.getSnowflakeConnectionPassword());
+		    properties.put("account", write2.getSnowflakeConnectionAcct());
+            properties.put("warehouse",write2.getSnowflakeConnectionWarehouse());
+		    properties.put("db",write2.getSnowflakeConnectionDatabase());
+	        properties.put("schema",write2.getSnowflakeConnectionSchema());
+		    Connection con2=DriverManager.getConnection(write2.getSnowflakeConnectionUrl(),properties);
 		    logger.info("destination connection connected");
-		    String tabletoMigrate = processDTO.getTablesToMigrate();
+		    String tabletoMigrate = write2.getTablesToMigrate();
 			String[] tablesToMigrate = tabletoMigrate.split(",");
 			logger.info(tabletoMigrate);
 			
 			if(system.equals("Flatfiles")){     	    
-    		String bulk = processDTO.getBulk();
-			String bulkpk = processDTO.getBulkPk();			
+    		String bulk = write2.getBulk();
+			String bulkpk = write2.getBulkPk();			
 			tableNamesbulk = bulk.split(",");
 			bulkpk = bulkpk.replace("-","");
 			pkbulk = bulkpk.split(",");		
-            String cdc = processDTO.getCdc();
+            String cdc = write2.getCdc();
 			tableNamescdc = cdc.split(",");	
             			
 			}
 			else{
-			String bulk = processDTO.getBulk();
-			String bulkpk = processDTO.getBulkPk();
-    		String cdc = processDTO.getCdc();
-			String cdcpk = processDTO.getCdcPk();    		
-    		String cdccol = processDTO.getCdcCols();
+			String bulk = write2.getBulk();
+			String bulkpk = write2.getBulkPk();
+    		String cdc = write2.getCdc();
+			String cdcpk = write2.getCdcPk();    		
+    		String cdccol = write2.getCdcCols();
     		tableNamescdc = cdc.split(",");
 		    tableNamesbulk = bulk.split(",");
 		    pkcdc = cdcpk.split(",");
 		    pkbulk = bulkpk.split(",");
 		    cdcColumn = cdccol.split(",");
 			logger.info("cdc array length :"+tableNamescdc.length);
-			schema = processDTO.getSourceConnectionSchema();
+			schema = write2.getSourceConnectionSchema();
 		    }
 		
 		    int tablecount = tablesToMigrate.length;
@@ -171,10 +175,10 @@ public class SendTableList  {
 		    
 		     migrationProcessStatusDTO.setJobId(jobid);
 		     migrationProcessStatusDTO.setJobStartTime(Instant.now());
-		     migrationProcessStatusDTO.setProcessId(processDTO.getId());
-		     migrationProcessStatusDTO.setName(processDTO.getName());
+		     migrationProcessStatusDTO.setProcessId(write2.getId());
+		     migrationProcessStatusDTO.setName(write2.getName());
 		     migrationProcessStatusDTO.setRunby("admin");
-		     //migrationProcessStatusDTO.setRunby(processDTO.getRunBy());
+		     //migrationProcessStatusDTO.setRunby(write2.getRunBy());
 		     migrationProcessStatusDTO.setTableCount((long)tablecount);
 		     migrationProcessStatusDTO.setJobStatus("In Progress");
 		     migrationProcessStatusDTO.setSuccessCount((long)0);
@@ -203,14 +207,14 @@ public class SendTableList  {
 				       migrationProcessJobStatusDTO.setUpdateCount((long)0);
 				       migrationProcessJobStatusDTO.setDeleteCount((long)0);
 				       migrationProcessJobStatusDTO.setRunType("cdc");
-				       migrationProcessJobStatusDTO.setProcessId(processDTO.getId());
-				       migrationProcessJobStatusDTO.setProcessName(processDTO.getName());
-				       migrationProcessJobStatusDTO.setSourceName(processDTO.getSourceConnectionName());
-				       migrationProcessJobStatusDTO.setDestName(processDTO.getSnowflakeConnectionName());
+				       migrationProcessJobStatusDTO.setProcessId(write2.getId());
+				       migrationProcessJobStatusDTO.setProcessName(write2.getName());
+				       migrationProcessJobStatusDTO.setSourceName(write2.getSourceConnectionName());
+				       migrationProcessJobStatusDTO.setDestName(write2.getSnowflakeConnectionName());
 				       write1 = migrationProcessJobStatusService.save(migrationProcessJobStatusDTO);
 					logger.info("starting cdc delta process for the table: ");
      	    	    logger.info(tableName);
-					cdcprocess(lastruntime,tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase(),key2,col2,migrationProcessJobStatusService,schema);
+					cdcprocess(lastruntime,tableName,con1,con2,jobid,tableLoadid,write2.getId(),system,write2.getSourceConnectionDatabase(),key2,col2,migrationProcessJobStatusService,schema);
 					success_count = success_count + 1;
 					write.setSuccessCount(success_count);
 					   write1.setTableLoadEndTime(Instant.now());
@@ -257,17 +261,17 @@ public class SendTableList  {
 				       migrationProcessJobStatusDTO.setUpdateCount((long)0);
 				       migrationProcessJobStatusDTO.setDeleteCount((long)0);
 				       migrationProcessJobStatusDTO.setRunType("bulk");
-				       migrationProcessJobStatusDTO.setProcessId(processDTO.getId());
-				       migrationProcessJobStatusDTO.setProcessName(processDTO.getName());
-				       migrationProcessJobStatusDTO.setSourceName(processDTO.getSourceConnectionName());
-				       migrationProcessJobStatusDTO.setDestName(processDTO.getSnowflakeConnectionName());
+				       migrationProcessJobStatusDTO.setProcessId(write2.getId());
+				       migrationProcessJobStatusDTO.setProcessName(write2.getName());
+				       migrationProcessJobStatusDTO.setSourceName(write2.getSourceConnectionName());
+				       migrationProcessJobStatusDTO.setDestName(write2.getSnowflakeConnectionName());
 				       write1 = migrationProcessJobStatusService.save(migrationProcessJobStatusDTO);
      	    	    logger.info("starting bulk process for the table: "+tableName);
 					if(system.equals("Flatfiles")){
-						filebulkprocess(tableName,filepath,con2,jobid,tableLoadid,processDTO.getId(),system,bkey2,migrationProcessJobStatusService);
+						filebulkprocess(tableName,filepath,con2,jobid,tableLoadid,write2.getId(),system,bkey2,migrationProcessJobStatusService);
 					}
 					else{
-					bulkprocess(tableName,con1,con2,jobid,tableLoadid,processDTO.getId(),system,processDTO.getSourceConnectionDatabase(),bkey2,migrationProcessJobStatusService,schema);
+					bulkprocess(tableName,con1,con2,jobid,tableLoadid,write2.getId(),system,write2.getSourceConnectionDatabase(),bkey2,migrationProcessJobStatusService,schema);
 					}
 					success_count = success_count + 1;
 					write.setSuccessCount(success_count);
@@ -293,7 +297,9 @@ public class SendTableList  {
 				status.addProperty("status","SUCCESS");
 		       	// status = "SUCCESS";
 		        write.setJobEndTime(Instant.now());	      
-		        write = migrationProcessStatusService.save(write);
+				write = migrationProcessStatusService.save(write);
+				write2.setIsRunning(false);
+				write2 = migrationProcessService.save(write2);
 		//con1.close();
 		con2.close();
 		}
@@ -308,10 +314,12 @@ public class SendTableList  {
 			    write1.setTableLoadStatus("FAILURE");
 				write1 = migrationProcessJobStatusService.save(write1);
 				status.addProperty("status","SUCCESS");
+				write2.setIsRunning(false);
+				write2 = migrationProcessService.save(write2);
 			    // status = "FAILURE";
 			
 		}  
-	    return status.toString();
+		return status.toString();
 	}
 	public static void toCSV(ResultSet rs, String csvFilename)
 
@@ -601,7 +609,7 @@ public class SendTableList  {
     	write1.setInsertCount((long)targetInsertCount);
     	write1.setUpdateCount((long)targetUpdateCount);
     	write1.setDeleteCount((long)targetDeleteCount);
-    	write1 = migrationProcessJobStatusService.save(write1);
+		write1 = migrationProcessJobStatusService.save(write1);
     }
     public static void createAlterDDL(Connection con1,Connection con2,String tableName,String system,String dbname,String schema)  throws SQLException,IOException
     {

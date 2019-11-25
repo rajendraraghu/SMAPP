@@ -39,7 +39,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="selected_all" type="boolean">
+            <column name="valid" type="boolean">
                 <constraints nullable="true" />
             </column>
 

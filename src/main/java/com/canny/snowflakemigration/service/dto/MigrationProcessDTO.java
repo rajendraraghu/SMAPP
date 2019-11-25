@@ -39,6 +39,10 @@ public class MigrationProcessDTO implements Serializable {
 
     private String lastStatus;
 
+    private Boolean valid;
+
+    private Boolean isRunning;
+
     private String createdBy;
 
     private Instant createdDate;
@@ -192,6 +196,22 @@ public class MigrationProcessDTO implements Serializable {
 
     public void setLastStatus(String lastStatus) {
         this.lastStatus = lastStatus;
+    }
+
+    public Boolean getValid() {
+        return valid;
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid = valid;
+    }
+
+    public Boolean getIsRunning() {
+        return isRunning;
+    }
+
+    public void setIsRunning(Boolean isRunning) {
+        this.isRunning = isRunning;
     }
 
     public String getCreatedBy() {
@@ -429,6 +449,8 @@ public class MigrationProcessDTO implements Serializable {
             ", bulkPk='" + getBulkPk() + "'" +
             ", cdcCols='" + getCdcCols() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
+            ", valid='" + getValid() + "'" +
+            ", isRunning='" + getIsRunning() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +

@@ -38,7 +38,8 @@ export class MigrationProcessDetailComponent implements OnInit {
   add: any;
   tableName: string;
   showSpinner: true;
-  save_disable: boolean;
+  // save_disable: string[];
+  disable: boolean;
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
@@ -51,7 +52,6 @@ export class MigrationProcessDetailComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ migrationProcess }) => {
       this.migrationProcess = migrationProcess;
       this.type = migrationProcess.sourceType;
-      this.save_disable = false;
       if (this.type === 'Flatfiles') {
         this.discdc = false;
       } else {
@@ -256,12 +256,13 @@ export class MigrationProcessDetailComponent implements OnInit {
   testAndMigrate() {
     const bulk = [];
     const cdc = [];
+    const save_disable = [];
     const cdcColumns = [],
       cdcPrimaryKey = [],
       bulkPrimaryKey = [];
     if (this.selectedTables.length > 0) {
       this.tables.forEach(element => {
-        this.save_disable = false;
+        // this.save_disable = false;
         if (element.selected) {
           if (element.cdc) {
             cdc.push(element.name);
@@ -278,8 +279,9 @@ export class MigrationProcessDetailComponent implements OnInit {
               }
             });
             if (pkList === '') {
-              this.save_disable = true;
+              save_disable.push(true);
             } else {
+              save_disable.push(false);
               cdcPrimaryKey.push(pkList);
             }
           } else {
@@ -296,16 +298,22 @@ export class MigrationProcessDetailComponent implements OnInit {
               }
             });
             if (pkList === '') {
-              this.save_disable = true;
+              save_disable.push(true);
             } else {
               bulkPrimaryKey.push(pkList);
-              // this.save_disable = false;
+              save_disable.push(false);
             }
             // bulkPrimaryKey.push(element.primaryKey);
           }
         }
       });
-      if (this.save_disable) {
+      for (let i = 0; i < save_disable.length; i++) {
+        console.log(save_disable);
+        if (save_disable[i] === true) {
+          this.disable = true;
+        }
+      }
+      if (this.disable) {
         const smsg = 'snowpoleApp.migrationProcess.primaryValidation';
         this.jhiAlertService.error(smsg);
       } else {

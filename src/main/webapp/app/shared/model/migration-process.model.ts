@@ -17,7 +17,8 @@ export interface IMigrationProcess {
   createdDate?: Moment;
   lastModifiedBy?: string;
   lastModifiedDate?: Moment;
-  // selectedAll?: Boolean;
+  valid?: Boolean;
+  isRunning?: Boolean;
   sourceConnectionName?: string;
   sourceConnectionId?: number;
   snowflakeConnectionName?: string;
@@ -43,7 +44,8 @@ export class MigrationProcess implements IMigrationProcess {
     public createdDate?: Moment,
     public lastModifiedBy?: string,
     public lastModifiedDate?: Moment,
-    // public selectedAll?: Boolean,
+    public valid?: Boolean,
+    public isRunning?: Boolean,
     public sourceConnectionName?: string,
     public sourceConnectionId?: number,
     public snowflakeConnectionName?: string,

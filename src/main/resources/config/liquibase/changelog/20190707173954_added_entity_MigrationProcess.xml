@@ -59,7 +59,11 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="selected_all" type="boolean">
+            <column name="valid" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="is_running" type="boolean">
                 <constraints nullable="true" />
             </column>
 
@@ -123,7 +127,8 @@
             <column name="tables_to_migrate" type="string"/>
             <column name="selected_columns" type="string"/>
             <column name="last_status" type="string"/>
-            <column name="selected_all" type="boolean"/>
+            <column name="valid" type="boolean"/>
+            <column name="is_running" type="boolean"/>
             <column name="created_by" type="string"/>
             <column name="created_date" type="datetime"/>
             <column name="last_modified_by" type="string"/>

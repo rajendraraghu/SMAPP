@@ -46,6 +46,10 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
 
     private StringFilter lastStatus;
 
+    private BooleanFilter valid;
+
+    private BooleanFilter isRunning;
+
     private StringFilter createdBy;
 
     private InstantFilter createdDate;
@@ -71,6 +75,8 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
         this.tablesToMigrate = other.tablesToMigrate == null ? null : other.tablesToMigrate.copy();
         this.selectedColumns = other.selectedColumns == null ? null : other.selectedColumns.copy();
         this.lastStatus = other.lastStatus == null ? null : other.lastStatus.copy();
+        this.valid = other.valid == null ? null : other.valid.copy();
+        this.isRunning = other.isRunning == null ? null : other.isRunning.copy();
         this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
         this.createdDate = other.createdDate == null ? null : other.createdDate.copy();
         this.lastModifiedBy = other.lastModifiedBy == null ? null : other.lastModifiedBy.copy();
@@ -140,6 +146,22 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
 
     public void setLastStatus(StringFilter lastStatus) {
         this.lastStatus = lastStatus;
+    }
+
+    public BooleanFilter getValid() {
+        return valid;
+    }
+
+    public void setvalid(BooleanFilter valid) {
+        this.valid = valid;
+    }
+
+    public BooleanFilter getIsRunning() {
+        return isRunning;
+    }
+
+    public void setLastStatus(BooleanFilter isRunning) {
+        this.isRunning = isRunning;
     }
 
     public StringFilter getCreatedBy() {
@@ -216,6 +238,8 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
             Objects.equals(tablesToMigrate, that.tablesToMigrate) &&
             Objects.equals(selectedColumns, that.selectedColumns) &&
             Objects.equals(lastStatus, that.lastStatus) &&
+            Objects.equals(valid, that.valid) &&
+            Objects.equals(isRunning, that.isRunning) &&
             Objects.equals(createdBy, that.createdBy) &&
             Objects.equals(createdDate, that.createdDate) &&
             Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
@@ -236,6 +260,8 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
         tablesToMigrate,
         selectedColumns,
         lastStatus,
+        valid,
+        isRunning,
         createdBy,
         createdDate,
         lastModifiedBy,
@@ -256,6 +282,8 @@ public class MigrationProcessCriteria implements Serializable, Criteria {
                 (tablesToMigrate != null ? "tablesToMigrate=" + tablesToMigrate + ", " : "") +
                 (selectedColumns != null ? "selectedColumns=" + selectedColumns+ ", " : "") +
                 (lastStatus != null ? "lastStatus=" + lastStatus + ", " : "") +
+                (valid != null ? "valid=" + valid + ", " : "") +
+                (isRunning != null ? "isRunning=" + isRunning + ", " : "") +
                 (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
                 (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
                 (lastModifiedBy != null ? "lastModifiedBy=" + lastModifiedBy + ", " : "") +

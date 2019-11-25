@@ -68,8 +68,11 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
     @Column(name = "last_status")
     private String lastStatus;
 
-    @Column(name = "selected_all")
-    private Boolean selectedAll;
+    @Column(name = "valid")
+    private Boolean valid;
+
+    @Column(name = "is_running")
+    private Boolean isRunning;
 
     // @Column(name = "created_by")
     // private String createdBy;
@@ -247,17 +250,30 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
         this.lastStatus = lastStatus;
     }
 
-    public Boolean getSelectedAll() {
-        return selectedAll;
+    public Boolean getValid() {
+        return valid;
     }
 
-    public MigrationProcess selectedAll(Boolean selectedAll) {
-        this.selectedAll = selectedAll;
+    public MigrationProcess valid(Boolean valid) {
+        this.valid = valid;
         return this;
     }
 
-    public void setSelecteAll(Boolean selectedAll) {
-        this.selectedAll = selectedAll;
+    public void setSelecteAll(Boolean valid) {
+        this.valid = valid;
+    }
+
+    public Boolean getIsRunning() {
+        return isRunning;
+    }
+
+    public MigrationProcess isRunning(Boolean isRunning) {
+        this.isRunning = isRunning;
+        return this;
+    }
+
+    public void setIsRunning(Boolean isRunning) {
+        this.isRunning = isRunning;
     }
 
     // public String getCreatedBy() {
@@ -384,7 +400,8 @@ public class MigrationProcess extends AbstractAuditingEntity implements Serializ
             ", bulkPk='" + getBulkPk() + "'" +
             ", cdcCols='" + getCdcCols() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
-            ", selectedAll='" + getSelectedAll() + "'" +
+            ", valid='" + getValid() + "'" +
+            ", isRunning='" + getIsRunning() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +

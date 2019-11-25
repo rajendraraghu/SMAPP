@@ -47,8 +47,8 @@ public class DeltaProcess extends AbstractAuditingEntity implements Serializable
     @Column(name = "last_status")
     private String lastStatus;
 
-    @Column(name = "selected_all")
-    private Boolean selectedAll;
+    @Column(name = "valid")
+    private Boolean valid;
 
     // @Column(name = "created_by")
     // private String createdBy;
@@ -157,17 +157,17 @@ public class DeltaProcess extends AbstractAuditingEntity implements Serializable
         this.lastStatus = lastStatus;
     }
 
-    public Boolean getSelectedAll() {
-        return selectedAll;
+    public Boolean valid() {
+        return valid;
     }
 
-    public DeltaProcess selectedAll(Boolean selectedAll) {
-        this.selectedAll = selectedAll;
+    public DeltaProcess valid(Boolean valid) {
+        this.valid = valid;
         return this;
     }
 
-    public void setSelecteAll(Boolean selectedAll) {
-        this.selectedAll = selectedAll;
+    public void setSelecteAll(Boolean valid) {
+        this.valid = valid;
     }
 
     // public String getCreatedBy() {
@@ -275,7 +275,7 @@ public class DeltaProcess extends AbstractAuditingEntity implements Serializable
             ", selectedColumns='" + getSelectedColumns() + "'" +
             ", pk='" + getPk() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
-            ", selectedAll='" + getSelectedAll() + "'" +
+            ", valid='" + valid() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +

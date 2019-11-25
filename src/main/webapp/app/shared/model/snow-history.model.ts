@@ -16,7 +16,7 @@ export interface ISnowHistory {
   createdDate?: Moment;
   lastModifiedBy?: string;
   lastModifiedDate?: Moment;
-  // selectedAll?: Boolean;
+  // valid?: Boolean;
   sourceConnectionName?: string;
   sourceConnectionId?: number;
   snowflakeConnectionName?: string;
@@ -41,7 +41,7 @@ export class SnowHistory implements ISnowHistory {
     public createdDate?: Moment,
     public lastModifiedBy?: string,
     public lastModifiedDate?: Moment,
-    // public selectedAll?: Boolean,
+    // public valid?: Boolean,
     public sourceConnectionName?: string,
     public sourceConnectionId?: number,
     public snowflakeConnectionName?: string,

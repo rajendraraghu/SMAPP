@@ -20,7 +20,7 @@
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
             <!-- <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
             <th jhiSortBy="name"><span jhiTranslate="snowpoleApp.snowDDL.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="sourceConnectionName"><span jhiTranslate="snowpoleApp.snowDDL.sourceConnection">Source Connection</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <!-- <th jhiSortBy="sourceConnectionName"><span jhiTranslate="snowpoleApp.snowDDL.sourceConnection">Source Connection</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
             <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.snowDDL.createdBy">Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="createdDate"><span jhiTranslate="snowpoleApp.snowDDL.createdDate">Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.snowDDL.lastModifiedBy">Last Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
@@ -33,11 +33,11 @@
                 <!-- <td><a [routerLink]="['/snow-ddl', snowDDL.id, 'view' ]">{{snowDDL.id}}</a></td> -->
                 <!-- <td>{{snowDDL.id}}</td> -->
                 <td>{{snowDDL.name}}</td>
-                <td>
+                <!-- <td>
                     <div *ngIf="snowDDL.sourceConnectionId">
                         <a [routerLink]="['../source-connection', snowDDL.sourceConnectionId , 'view' ]" >{{snowDDL.sourceConnectionName}}</a>
                     </div>
-                </td>
+                </td> -->
                 <td>{{snowDDL.createdBy}}</td>
                 <td>{{snowDDL.createdDate | date:'medium'}}</td>
                 <td>{{snowDDL.lastModifiedBy}}</td>
