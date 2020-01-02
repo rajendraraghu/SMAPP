@@ -9,9 +9,9 @@
         "main": "Process",
         "sourceConnection": "Source Connection",
         "snowflakeConnection": "Snowflake Connection",
-        "migrationProcess": "Data Acquisition Hub",
-        "historyMigration": "History Migration",
-        "sourceDelta": "Source Delta",
+        "migrationProcess": "Snow Acquisition Hub",
+        "SnowHistory": "Snow History",
+        "deltaProcess": "Snow Delta",
         "snowParse": "Snow Parse",
         "snowDDL": "Snow DDL",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
@@ -28,6 +28,7 @@
       "admin": {
         "main": "Administration",
         "userManagement": "User Management",
+        "roleManagement": "Role Management",
         "tracker": "User tracker",
         "metrics": "Metrics",
         "health": "Health",
@@ -50,7 +51,7 @@
       "confirmpassword.label": "New password confirmation",
       "confirmpassword.placeholder": "Confirm the new password",
       "email.label": "Email",
-      "email.placeholder": "Your email"
+      "email.placeholder": "Registered Email Address"
     },
     "messages": {
       "info": {
@@ -65,19 +66,22 @@
         }
       },
       "error": {
-        "dontmatch": "The password and its confirmation do not match!"
+        "dontmatch": "The password and its confirmation do not match!",
+        "notmatching": "password and confirm password are not Matching",
+        "matching": "password and confirm password are Matching"
       },
       "validate": {
         "newpassword": {
           "required": "Your password is required.",
-          "minlength": "Your password is required to be at least 4 characters.",
-          "maxlength": "Your password cannot be longer than 50 characters.",
+          "minlength": "Your password is required to be at least 8 characters.",
+          "maxlength": "Your password cannot be longer than 12 characters.",
+          "pattern": "Password should have atleast one Lowercase letters, Uppercase letters, Numbers, Special characters.",
           "strength": "Password strength:"
         },
         "confirmpassword": {
           "required": "Your confirmation password is required.",
-          "minlength": "Your confirmation password is required to be at least 4 characters.",
-          "maxlength": "Your confirmation password cannot be longer than 50 characters."
+          "minlength": "Your confirmation password is required to be at least 8 characters.",
+          "maxlength": "Your confirmation password cannot be longer than 12 characters."
         },
         "email": {
           "required": "Your email is required.",
@@ -105,7 +109,8 @@
       "edit": "Edit",
       "open": "Open",
       "save": "Save",
-      "view": "View"
+      "view": "View",
+      "editpreviliges": "Edit Previliges"
     },
     "detail": {
       "field": "Field",

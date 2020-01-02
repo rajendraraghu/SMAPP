@@ -15,6 +15,8 @@ type EntityArrayResponseType = HttpResponse<ISourceConnection[]>;
 @Injectable({ providedIn: 'root' })
 export class SourceConnectionService {
   public resourceUrl = SERVER_API_URL + 'api/source-connections';
+  public testConnectionUrl = SERVER_API_URL + 'api/migration-processes/TestConnectionSource';
+  httpClient: any;
 
   constructor(protected http: HttpClient) {}
 
@@ -49,6 +51,11 @@ export class SourceConnectionService {
     return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
+  testConnection(sourceConnection: ISourceConnection): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClient(sourceConnection);
+    return this.http.post<ISourceConnection>(this.testConnectionUrl, copy, { observe: 'response' });
+  }
+
   protected convertDateFromClient(sourceConnection: ISourceConnection): ISourceConnection {
     const copy: ISourceConnection = Object.assign({}, sourceConnection, {
       createdDate:
@@ -60,6 +67,19 @@ export class SourceConnectionService {
     });
     return copy;
   }
+
+  //   postFile(fileToUpload: File): Observable<boolean> {
+  //     const endpoint = 'your-destination-url';
+  //     const formData: FormData = new FormData();
+  //     formData.append('fileKey', fileToUpload, fileToUpload.name);
+  //     return this.httpClient
+  //       .post(endpoint, formData, { headers: yourHeadersConfig })
+  //       .map(() => { return true; })
+  //       .catch((e) => this.handleError(e));
+  // }
+  //   handleError(e: any) {
+  //     throw new Error('Method not implemented.');
+  //   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {

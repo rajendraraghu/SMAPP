@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { ISnowflakeConnection, SnowflakeConnection } from 'app/shared/model/snowflake-connection.model';
 import { SnowflakeConnectionService } from './snowflake-connection.service';
+import { JhiAlertService } from 'ng-jhipster';
 
 @Component({
   selector: 'jhi-snowflake-connection-update',
@@ -14,6 +15,9 @@ import { SnowflakeConnectionService } from './snowflake-connection.service';
 })
 export class SnowflakeConnectionUpdateComponent implements OnInit {
   isSaving: boolean;
+  valid: boolean;
+  testDisable: boolean;
+  snowflakeConnection: ISnowflakeConnection;
 
   editForm = this.fb.group({
     id: [],
@@ -36,13 +40,16 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
   constructor(
     protected snowflakeConnectionService: SnowflakeConnectionService,
     protected activatedRoute: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private jhiAlertService: JhiAlertService
   ) {}
 
   ngOnInit() {
     this.isSaving = false;
+    this.valid = false;
     this.activatedRoute.data.subscribe(({ snowflakeConnection }) => {
       this.updateForm(snowflakeConnection);
+      this.snowflakeConnection = snowflakeConnection;
     });
   }
 
@@ -58,11 +65,11 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
       warehouse: snowflakeConnection.warehouse,
       database: snowflakeConnection.database,
       schema: snowflakeConnection.schema,
-      valid: snowflakeConnection.valid,
-      createdBy: snowflakeConnection.createdBy,
-      createdDate: snowflakeConnection.createdDate != null ? snowflakeConnection.createdDate.format(DATE_TIME_FORMAT) : null,
-      lastModifiedBy: snowflakeConnection.lastModifiedBy,
-      lastModifiedDate: snowflakeConnection.lastModifiedDate != null ? snowflakeConnection.lastModifiedDate.format(DATE_TIME_FORMAT) : null
+      valid: snowflakeConnection.valid
+      // createdBy: snowflakeConnection.createdBy,
+      // createdDate: snowflakeConnection.createdDate != null ? snowflakeConnection.createdDate.format(DATE_TIME_FORMAT) : null,
+      // lastModifiedBy: snowflakeConnection.lastModifiedBy,
+      // lastModifiedDate: snowflakeConnection.lastModifiedDate != null ? snowflakeConnection.lastModifiedDate.format(DATE_TIME_FORMAT) : null
     });
   }
 
@@ -72,7 +79,9 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
 
   save() {
     this.isSaving = true;
+    // this.testConnection();
     const snowflakeConnection = this.createFromForm();
+    snowflakeConnection.valid = snowflakeConnection.valid;
     if (snowflakeConnection.id !== undefined) {
       this.subscribeToSaveResponse(this.snowflakeConnectionService.update(snowflakeConnection));
     } else {
@@ -93,15 +102,15 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
       warehouse: this.editForm.get(['warehouse']).value,
       database: this.editForm.get(['database']).value,
       schema: this.editForm.get(['schema']).value,
-      valid: this.editForm.get(['valid']).value,
-      createdBy: this.editForm.get(['createdBy']).value,
-      createdDate:
-        this.editForm.get(['createdDate']).value != null ? moment(this.editForm.get(['createdDate']).value, DATE_TIME_FORMAT) : undefined,
-      lastModifiedBy: this.editForm.get(['lastModifiedBy']).value,
-      lastModifiedDate:
-        this.editForm.get(['lastModifiedDate']).value != null
-          ? moment(this.editForm.get(['lastModifiedDate']).value, DATE_TIME_FORMAT)
-          : undefined
+      valid: this.valid
+      // createdBy: this.editForm.get(['createdBy']).value,
+      // createdDate:
+      //   this.editForm.get(['createdDate']).value != null ? moment(this.editForm.get(['createdDate']).value, DATE_TIME_FORMAT) : undefined,
+      // lastModifiedBy: this.editForm.get(['lastModifiedBy']).value,
+      // lastModifiedDate:
+      //   this.editForm.get(['lastModifiedDate']).value != null
+      //     ? moment(this.editForm.get(['lastModifiedDate']).value, DATE_TIME_FORMAT)
+      //     : undefined
     };
   }
 
@@ -116,5 +125,27 @@ export class SnowflakeConnectionUpdateComponent implements OnInit {
 
   protected onSaveError() {
     this.isSaving = false;
+  }
+
+  testConnection() {
+    this.testDisable = true;
+    const connection = this.createFromForm();
+    this.snowflakeConnectionService.testConnection(connection).subscribe(response => {
+      if (response.body) {
+        this.snowflakeConnection.valid = !!response.body;
+        this.snowflakeConnectionService.update(this.snowflakeConnection).subscribe(res => {});
+        const smsg = 'snowpoleApp.sourceConnection.testConnectionSuccess';
+        this.jhiAlertService.success(smsg);
+        this.valid = true;
+        this.testDisable = false;
+      } else {
+        this.snowflakeConnection.valid = !!response.body;
+        this.snowflakeConnectionService.update(this.snowflakeConnection).subscribe(res => {});
+        this.valid = false;
+        const smsg = 'snowpoleApp.sourceConnection.testConnectionInvalid';
+        this.jhiAlertService.error(smsg);
+        this.testDisable = false;
+      }
+    });
   }
 }

@@ -7,6 +7,9 @@
         "createOrEditLabel": "Create or edit a Migration Process",
         "notFound": "No Migration Process found"
       },
+      "primaryValidation": "Select atleast one primary key for each Table/File",
+      "atleastOneTable": "Select atleast one Table/File for migration",
+      "migrationCompleted": "SuccessFully completed",
       "created": "A new Migration Process is created with identifier {{ param }}",
       "updated": "A Migration Process is updated with identifier {{ param }}",
       "deleted": "A Migration Process is deleted with identifier {{ param }}",
@@ -26,7 +29,15 @@
       "lastModifiedBy": "Last Modified By",
       "lastModifiedDate": "Last Modified Date",
       "sourceConnection": "Source Connection",
-      "snowflakeConnection": "Snowflake Connection"
+      "snowflakeConnection": "Snowflake Connection",
+      "processStatus": {
+        "title": "Migration Process Status",
+        "notFound": "No Migration Process found"
+      },
+      "jobStatus": {
+        "title": "Migration Process Job Status",
+        "notFound": "No Migration Process Job Found"
+      }
     }
   }
 }

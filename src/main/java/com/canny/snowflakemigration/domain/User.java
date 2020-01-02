@@ -59,13 +59,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(length = 254, unique = true)
     private String email;
 
-    @NotNull
-    @Column(nullable = false)
-    private boolean activated = false;
+    // @NotNull
+    // @Column(nullable = false)
+    // private boolean activated = false;
 
-    @Size(min = 2, max = 10)
-    @Column(name = "lang_key", length = 10)
-    private String langKey;
+    // @Size(min = 2, max = 10)
+    // @Column(name = "lang_key", length = 10)
+    // private String langKey;
 
     @Size(max = 256)
     @Column(name = "image_url", length = 256)
@@ -151,13 +151,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public boolean getActivated() {
-        return activated;
-    }
+    // public boolean getActivated() {
+    //     return activated;
+    // }
 
-    public void setActivated(boolean activated) {
-        this.activated = activated;
-    }
+    // public void setActivated(boolean activated) {
+    //     this.activated = activated;
+    // }
 
     public String getActivationKey() {
         return activationKey;
@@ -183,13 +183,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.resetDate = resetDate;
     }
 
-    public String getLangKey() {
-        return langKey;
-    }
+    // public String getLangKey() {
+    //     return langKey;
+    // }
 
-    public void setLangKey(String langKey) {
-        this.langKey = langKey;
-    }
+    // public void setLangKey(String langKey) {
+    //     this.langKey = langKey;
+    // }
 
     public Set<Authority> getAuthorities() {
         return authorities;
@@ -223,8 +223,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
             ", lastName='" + lastName + '\'' +
             ", email='" + email + '\'' +
             ", imageUrl='" + imageUrl + '\'' +
-            ", activated='" + activated + '\'' +
-            ", langKey='" + langKey + '\'' +
+            // ", activated='" + activated + '\'' +
+            // ", langKey='" + langKey + '\'' +
             ", activationKey='" + activationKey + '\'' +
             "}";
     }

@@ -1,0 +1,104 @@
+<div>
+    <h2 id="page-heading">
+        <span>Snow History</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-snow-history" [routerLink]="['/snow-history/new']"
+            joyrideStep="twelthStep" title="Snowflake Connection" text="Create new DAH process with source and Snowflake connection">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="snowpoleApp.snowHistory.home.createLabel">
+            Create new Snow History
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="alert alert-warning" *ngIf="snowHistories?.length === 0">
+        <span jhiTranslate="snowpoleApp.snowHistory.home.notFound">No Snow History Process found</span>
+    </div>
+    <div class="table-responsive" *ngIf="snowHistories?.length > 0">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <!-- <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="name"><span jhiTranslate="snowpoleApp.snowHistory.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <!-- <th jhiSortBy="type"><span jhiTranslate="snowpoleApp.snowHistory.type">Type</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <!-- <th jhiSortBy="tablesToMigrate"><span jhiTranslate="snowpoleApp.snowHistory.tablesToMigrate">Tables To Migrate</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="sourceConnectionName"><span jhiTranslate="snowpoleApp.snowHistory.sourceConnection">Source Connection</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="snowflakeConnectionName"><span jhiTranslate="snowpoleApp.snowHistory.snowflakeConnection">Snowflake Connection</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <!-- <th jhiSortBy="lastStatus"><span jhiTranslate="snowpoleApp.snowHistory.lastStatus">Last Status</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.snowHistory.createdBy">Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th> 
+            <th jhiSortBy="createdDate"><span jhiTranslate="snowpoleApp.snowHistory.createdDate">Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.snowHistory.lastModifiedBy">Last Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th> 
+            <th jhiSortBy="lastModifiedDate"><span jhiTranslate="snowpoleApp.snowHistory.lastModifiedDate">Last Modified Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let snowHistory of snowHistories ;trackBy: trackId">
+                <!-- <td><a [routerLink]="['/snow-history', snowHistory.id, 'view' ]">{{snowHistory.id}}</a></td> -->
+                <td>{{snowHistory.name}}</td>
+                <!-- <td>{{snowHistory.type}}</td> -->
+                <!-- <td>{{snowHistory.tablesToMigrate}}</td> -->
+                <td>
+                    <div *ngIf="snowHistory.sourceConnectionId">
+                        <a [routerLink]="['../source-connection', snowHistory.sourceConnectionId , 'view' ]" >{{snowHistory.sourceConnectionName}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="snowHistory.snowflakeConnectionId">
+                        <a [routerLink]="['../snowflake-connection', snowHistory.snowflakeConnectionId , 'view' ]" >{{snowHistory.snowflakeConnectionName}}</a>
+                    </div>
+                </td>
+                <!-- <td>{{snowHistory.lastStatus}}</td> -->
+                 <td>{{snowHistory.createdBy}}</td> 
+                <td>{{snowHistory.createdDate | date:'medium'}}</td>
+               <td>{{snowHistory.lastModifiedBy}}</td> 
+                <td>{{snowHistory.lastModifiedDate | date:'medium'}}</td>
+                <td class="text-right">
+                    <div>
+                        <!-- <button type="submit"
+                                [routerLink]="['/snow-history', snowHistory.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button> -->
+                        <button type="submit"
+                                (click)="sendTableList(snowHistory)"
+                                class="btn btn-info btn-sm">
+                                <i class="fa fa-play" aria-hidden="true"></i>
+                            <span class="d-none d-md-inline">Run</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/snow-history', snowHistory.id, 'view']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                (click)="viewProcessStatus(snowHistory.id)"
+                                class="btn btn-info btn-sm">
+                            <fa-icon icon="book" fixedWidth="true"></fa-icon>
+                            <span class="d-none d-md-inline">Report</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'snow-history', { outlets: { popup: snowHistory.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div [hidden]="snowHistories?.length === 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

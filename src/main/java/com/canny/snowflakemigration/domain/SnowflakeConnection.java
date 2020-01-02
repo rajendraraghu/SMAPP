@@ -6,7 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.Instant;
 
 /**
  * A SnowflakeConnection.
@@ -14,7 +13,7 @@ import java.time.Instant;
 @Entity
 @Table(name = "snowflake_connection")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class SnowflakeConnection implements Serializable {
+public class SnowflakeConnection extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -59,17 +58,17 @@ public class SnowflakeConnection implements Serializable {
     @Column(name = "valid")
     private Boolean valid;
 
-    @Column(name = "created_by")
-    private String createdBy;
+    // @Column(name = "created_by")
+    // private String createdBy;
 
-    @Column(name = "created_date")
-    private Instant createdDate;
+    // @Column(name = "created_date")
+    // private Instant createdDate;
 
-    @Column(name = "last_modified_by")
-    private String lastModifiedBy;
+    // @Column(name = "last_modified_by")
+    // private String lastModifiedBy;
 
-    @Column(name = "last_modified_date")
-    private Instant lastModifiedDate;
+    // @Column(name = "last_modified_date")
+    // private Instant lastModifiedDate;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -210,57 +209,57 @@ public class SnowflakeConnection implements Serializable {
         this.valid = valid;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
+    // public String getCreatedBy() {
+    //     return createdBy;
+    // }
 
-    public SnowflakeConnection createdBy(String createdBy) {
-        this.createdBy = createdBy;
-        return this;
-    }
+    // public SnowflakeConnection createdBy(String createdBy) {
+    //     this.createdBy = createdBy;
+    //     return this;
+    // }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
+    // public void setCreatedBy(String createdBy) {
+    //     this.createdBy = createdBy;
+    // }
 
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
+    // public Instant getCreatedDate() {
+    //     return createdDate;
+    // }
 
-    public SnowflakeConnection createdDate(Instant createdDate) {
-        this.createdDate = createdDate;
-        return this;
-    }
+    // public SnowflakeConnection createdDate(Instant createdDate) {
+    //     this.createdDate = createdDate;
+    //     return this;
+    // }
 
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
+    // public void setCreatedDate(Instant createdDate) {
+    //     this.createdDate = createdDate;
+    // }
 
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
+    // public String getLastModifiedBy() {
+    //     return lastModifiedBy;
+    // }
 
-    public SnowflakeConnection lastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-        return this;
-    }
+    // public SnowflakeConnection lastModifiedBy(String lastModifiedBy) {
+    //     this.lastModifiedBy = lastModifiedBy;
+    //     return this;
+    // }
 
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
+    // public void setLastModifiedBy(String lastModifiedBy) {
+    //     this.lastModifiedBy = lastModifiedBy;
+    // }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
+    // public Instant getLastModifiedDate() {
+    //     return lastModifiedDate;
+    // }
 
-    public SnowflakeConnection lastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-        return this;
-    }
+    // public SnowflakeConnection lastModifiedDate(Instant lastModifiedDate) {
+    //     this.lastModifiedDate = lastModifiedDate;
+    //     return this;
+    // }
 
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
+    // public void setLastModifiedDate(Instant lastModifiedDate) {
+    //     this.lastModifiedDate = lastModifiedDate;
+    // }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override

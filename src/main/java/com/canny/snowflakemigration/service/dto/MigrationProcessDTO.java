@@ -1,11 +1,15 @@
 package com.canny.snowflakemigration.service.dto;
+
 import java.time.Instant;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 /**
- * A DTO for the {@link com.canny.snowflakemigration.domain.MigrationProcess} entity.
+ * A DTO for the {@link com.canny.snowflakemigration.domain.MigrationProcess}
+ * entity.
  */
 public class MigrationProcessDTO implements Serializable {
 
@@ -21,11 +25,23 @@ public class MigrationProcessDTO implements Serializable {
 
     private String tablesToMigrate;
 
+    private String selectedColumns;
+
     private String cdc;
 
     private String bulk;
 
+    private String cdcPk;
+
+    private String bulkPk;
+
+    private String cdcCols;
+
     private String lastStatus;
+
+    private Boolean valid;
+
+    private Boolean isRunning;
 
     private String createdBy;
 
@@ -35,12 +51,19 @@ public class MigrationProcessDTO implements Serializable {
 
     private Instant lastModifiedDate;
 
+    private String runBy;
 
     private Long sourceConnectionId;
 
     private String sourceConnectionName;
 
+    private String sourceType;
+
     private String sourceConnectionUrl;
+
+    private String sourceConnectionHost;
+
+    private String sourceConnectionPortNumber;
 
     private String sourceConnectionUsername;
 
@@ -53,6 +76,8 @@ public class MigrationProcessDTO implements Serializable {
     private Long snowflakeConnectionId;
 
     private String snowflakeConnectionName;
+
+    // private String snowflakeConnectionRegionId;
 
     private String snowflakeConnectionUrl;
 
@@ -67,6 +92,16 @@ public class MigrationProcessDTO implements Serializable {
     private String snowflakeConnectionDatabase;
 
     private String snowflakeConnectionSchema;
+
+    private String lastRunTime = "1970-01-01 00:00:00";
+
+    public String getLastRunTime() {
+        return lastRunTime;
+    }
+    
+    public void setLastRunTime(String lastRunTime) {
+        this.lastRunTime = lastRunTime;
+    }
 
     public Long getId() {
         return id;
@@ -108,6 +143,14 @@ public class MigrationProcessDTO implements Serializable {
         this.tablesToMigrate = tablesToMigrate;
     }
 
+    public String getSelectedColumns() {
+        return selectedColumns;
+    }
+
+    public void setSelectedColumns(String selectedColumns) {
+        this.selectedColumns = selectedColumns;
+    }
+
     public String getCdc() {
         return cdc;
     }
@@ -116,6 +159,22 @@ public class MigrationProcessDTO implements Serializable {
         this.cdc = cdc;
     }
 
+    public String getCdcPk() {
+        return cdcPk;
+    }
+
+    public void setCdcPk(String cdcPk) {
+        this.cdcPk = cdcPk;
+    }
+    
+    public String getCdcCols() {
+        return cdcCols;
+    }
+
+    public void setCdcCols(String cdcCols) {
+        this.cdcCols = cdcCols;
+    }
+    
     public String getBulk() {
         return bulk;
     }
@@ -123,13 +182,36 @@ public class MigrationProcessDTO implements Serializable {
     public void setBulk(String bulk) {
         this.bulk = bulk;
     }
+    
+    public String getBulkPk() {
+        return bulkPk;
+    }
 
+    public void setBulkPk(String bulkPk) {
+        this.bulkPk = bulkPk;
+    }
     public String getLastStatus() {
         return lastStatus;
     }
 
     public void setLastStatus(String lastStatus) {
         this.lastStatus = lastStatus;
+    }
+
+    public Boolean getValid() {
+        return valid;
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid = valid;
+    }
+
+    public Boolean getIsRunning() {
+        return isRunning;
+    }
+
+    public void setIsRunning(Boolean isRunning) {
+        this.isRunning = isRunning;
     }
 
     public String getCreatedBy() {
@@ -164,6 +246,14 @@ public class MigrationProcessDTO implements Serializable {
         this.lastModifiedDate = lastModifiedDate;
     }
 
+    public String getRunBy() {
+        return runBy;
+    }
+
+    public void setRunBy(String runBy) {
+        this.runBy = runBy;
+    }
+
     public Long getSourceConnectionId() {
         return sourceConnectionId;
     }
@@ -172,6 +262,13 @@ public class MigrationProcessDTO implements Serializable {
         this.sourceConnectionId = sourceConnectionId;
     }
 
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
+    }
     public String getSourceConnectionName() {
         return sourceConnectionName;
     }
@@ -186,6 +283,22 @@ public class MigrationProcessDTO implements Serializable {
 
     public void setSourceConnectionUrl(String sourceConnectionUrl) {
         this.sourceConnectionUrl = sourceConnectionUrl;
+    }
+
+    public String getSourceConnectionHost() {
+        return sourceConnectionHost;
+    }
+
+    public void setSourceConnectionHost(String sourceConnectionHost) {
+        this.sourceConnectionHost = sourceConnectionHost;
+    }
+
+    public String getSourceConnectionPortNumber() {
+        return sourceConnectionPortNumber;
+    }
+
+    public void setSourceConnectionPortNumber(String sourceConnectionPortNumber) {
+        this.sourceConnectionPortNumber = sourceConnectionPortNumber;
     }
 
     public String getSourceConnectionUsername() {
@@ -235,6 +348,14 @@ public class MigrationProcessDTO implements Serializable {
     public void setSnowflakeConnectionName(String snowflakeConnectionName) {
         this.snowflakeConnectionName = snowflakeConnectionName;
     }
+
+    // public String getSnowflakeConnectionRegionId() {
+    //     return snowflakeConnectionRegionId;
+    // }
+
+    // public void setSnowflakeConnectionRegionId(String snowflakeConnectionRegionId) {
+    //     this.snowflakeConnectionRegionId = snowflakeConnectionRegionId;
+    // }
 
     public String getSnowflakeConnectionUrl() {
         return snowflakeConnectionUrl;
@@ -321,17 +442,25 @@ public class MigrationProcessDTO implements Serializable {
             ", description='" + getDescription() + "'" +
             ", type='" + getType() + "'" +
             ", tablesToMigrate='" + getTablesToMigrate() + "'" +
+            ", selectedColumns='" + getSelectedColumns() + "'" +
             ", cdc='" + getCdc() + "'" +
             ", bulk='" + getBulk() + "'" +
+            ", cdcPk='" + getCdcPk() + "'" +
+            ", bulkPk='" + getBulkPk() + "'" +
+            ", cdcCols='" + getCdcCols() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
+            ", valid='" + getValid() + "'" +
+            ", isRunning='" + getIsRunning() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
-            ", sourceConnection=" + getSourceConnectionId() +
+            ", runBy='" + getRunBy() + "'" +
+            ", sourceConnectionId=" + getSourceConnectionId() +
             ", sourceConnection='" + getSourceConnectionName() + "'" +
-            ", snowflakeConnection=" + getSnowflakeConnectionId() +
+            ", snowflakeConnectionId=" + getSnowflakeConnectionId() +
             ", snowflakeConnection='" + getSnowflakeConnectionName() + "'" +
+            ", lastRunTime='" + getLastRunTime() + "'" +
             "}";
     }
 }

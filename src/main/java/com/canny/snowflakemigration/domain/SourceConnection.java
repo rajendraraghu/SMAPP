@@ -6,7 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.Instant;
 
 /**
  * A SourceConnection.
@@ -14,7 +13,7 @@ import java.time.Instant;
 @Entity
 @Table(name = "source_connection")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class SourceConnection implements Serializable {
+public class SourceConnection extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,25 +31,33 @@ public class SourceConnection implements Serializable {
     private String description;
 
     @NotNull
-    @Column(name = "system", nullable = false)
-    private String system;
+    @Column(name = "source_type", nullable = false)
+    private String sourceType;
 
     @NotNull
     @Size(max = 1200)
     @Column(name = "url", length = 1200, nullable = false)
     private String url;
 
-    @NotNull
-    @Column(name = "username", nullable = false)
+    // @NotNull
+    @Column(name = "username")
     private String username;
 
-    @NotNull
-    @Column(name = "password", nullable = false)
+    // @NotNull
+    @Column(name = "password")
     private String password;
 
-    @NotNull
-    @Column(name = "database", nullable = false)
+    // @NotNull
+    @Column(name = "database")
     private String database;
+
+    // @NotNull
+    @Column(name = "host")
+    private String host;
+
+    // @NotNull
+    @Column(name = "port_number")
+    private String portNumber;
 
     @Column(name = "schema")
     private String schema;
@@ -58,17 +65,17 @@ public class SourceConnection implements Serializable {
     @Column(name = "valid")
     private Boolean valid;
 
-    @Column(name = "created_by")
-    private String createdBy;
+    // @Column(name = "created_by")
+    // private String createdBy;
 
-    @Column(name = "created_date")
-    private Instant createdDate;
+    // @Column(name = "created_date")
+    // private Instant createdDate;
 
-    @Column(name = "last_modified_by")
-    private String lastModifiedBy;
+    // @Column(name = "last_modified_by")
+    // private String lastModifiedBy;
 
-    @Column(name = "last_modified_date")
-    private Instant lastModifiedDate;
+    // @Column(name = "last_modified_date")
+    // private Instant lastModifiedDate;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -105,17 +112,17 @@ public class SourceConnection implements Serializable {
         this.description = description;
     }
 
-    public String getSystem() {
-        return system;
+    public String getSourceType() {
+        return sourceType;
     }
 
-    public SourceConnection system(String system) {
-        this.system = system;
+    public SourceConnection sourceType(String sourceType) {
+        this.sourceType = sourceType;
         return this;
     }
 
-    public void setSystem(String system) {
-        this.system = system;
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 
     public String getUrl() {
@@ -170,6 +177,32 @@ public class SourceConnection implements Serializable {
         this.database = database;
     }
 
+    public String getHost() {
+        return host;
+    }
+
+    public SourceConnection host(String host) {
+        this.host = host;
+        return this;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getPortNumber() {
+        return portNumber;
+    }
+
+    public SourceConnection portNumber(String portNumber) {
+        this.portNumber = portNumber;
+        return this;
+    }
+
+    public void setPortNumber(String portNumber) {
+        this.portNumber = portNumber;
+    }
+
     public String getSchema() {
         return schema;
     }
@@ -196,57 +229,57 @@ public class SourceConnection implements Serializable {
         this.valid = valid;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
+    // public String getCreatedBy() {
+    //     return createdBy;
+    // }
 
-    public SourceConnection createdBy(String createdBy) {
-        this.createdBy = createdBy;
-        return this;
-    }
+    // public SourceConnection createdBy(String createdBy) {
+    //     this.createdBy = createdBy;
+    //     return this;
+    // }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
+    // public void setCreatedBy(String createdBy) {
+    //     this.createdBy = createdBy;
+    // }
 
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
+    // public Instant getCreatedDate() {
+    //     return createdDate;
+    // }
 
-    public SourceConnection createdDate(Instant createdDate) {
-        this.createdDate = createdDate;
-        return this;
-    }
+    // public SourceConnection createdDate(Instant createdDate) {
+    //     this.createdDate = createdDate;
+    //     return this;
+    // }
 
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
+    // public void setCreatedDate(Instant createdDate) {
+    //     this.createdDate = createdDate;
+    // }
 
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
+    // public String getLastModifiedBy() {
+    //     return lastModifiedBy;
+    // }
 
-    public SourceConnection lastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-        return this;
-    }
+    // public SourceConnection lastModifiedBy(String lastModifiedBy) {
+    //     this.lastModifiedBy = lastModifiedBy;
+    //     return this;
+    // }
 
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
+    // public void setLastModifiedBy(String lastModifiedBy) {
+    //     this.lastModifiedBy = lastModifiedBy;
+    // }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
+    // public Instant getLastModifiedDate() {
+    //     return lastModifiedDate;
+    // }
 
-    public SourceConnection lastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-        return this;
-    }
+    // public SourceConnection lastModifiedDate(Instant lastModifiedDate) {
+    //     this.lastModifiedDate = lastModifiedDate;
+    //     return this;
+    // }
 
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
+    // public void setLastModifiedDate(Instant lastModifiedDate) {
+    //     this.lastModifiedDate = lastModifiedDate;
+    // }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -271,11 +304,13 @@ public class SourceConnection implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", system='" + getSystem() + "'" +
+            ", sourceType='" + getSourceType() + "'" +
             ", url='" + getUrl() + "'" +
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +
             ", database='" + getDatabase() + "'" +
+            ", host='" + getHost() + "'" +
+            ", portNumber='" + getPortNumber() + "'" +
             ", schema='" + getSchema() + "'" +
             ", valid='" + isValid() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

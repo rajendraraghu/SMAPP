@@ -2,6 +2,7 @@
     <div class="col-8">
         <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-migration-process-heading" jhiTranslate="snowpoleApp.migrationProcess.home.createOrEditLabel">Create or edit a Migration Process</h2>
+            <br>
             <div>
                 <jhi-alert-error></jhi-alert-error>
                 <!-- <div class="form-group" [hidden]="!editForm.get('id').value">
@@ -10,104 +11,124 @@
                         readonly />
                 </div> -->
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.name" for="field_name">Name</label>
-                    <input type="text" class="form-control" name="name" id="field_name"
-                           formControlName="name"/>
-                    <div *ngIf="editForm.get('name').invalid && (editForm.get('name').dirty || editForm.get('name').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('name').errors.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.name"
+                                    for="field_name">Name</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="col-sm-12 form-control-input" name="name" id="field_name"
+                                    formControlName="name" />
+                            </div>
+                            <div class="col-sm-2"
+                                *ngIf="editForm.get('name').invalid && (editForm.get('name').dirty || editForm.get('name').touched)">
+                                <small class="form-text text-danger" *ngIf="editForm.get('name').errors.required"
+                                    jhiTranslate="entity.validation.required">
+                                    This field is required.
+                                </small>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.description" for="field_description">Description</label>
-                    <input type="text" class="form-control" name="description" id="field_description"
-                           formControlName="description"/>
-                    <div *ngIf="editForm.get('description').invalid && (editForm.get('description').dirty || editForm.get('description').touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('description').errors.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 650 }">
-                        This field cannot be longer than 650 characters.
-                        </small>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.description"
+                                    for="field_description">Description</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="text" class="col-sm-12 form-control-input" name="description" id="field_description"
+                                    formControlName="description" />
+                            </div>
+                            <div class="col-sm-2"
+                                *ngIf="editForm.get('description').invalid && (editForm.get('description').dirty || editForm.get('description').touched)">
+                                <small class="form-text text-danger" *ngIf="editForm.get('description').errors.maxlength"
+                                    jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 650 }">
+                                    This field cannot be longer than 650 characters.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+                <div class="form-group">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.sourceConnection"
+                                    for="field_sourceConnection">Source Connection</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <select class="col-sm-12 form-control-input" id="field_sourceConnection" name="sourceConnection"
+                                    formControlName="sourceConnectionId">
+                                    <!-- <option *ngIf="!editForm.get('sourceConnectionId').value" [ngValue]="null" selected></option> -->
+                                    <option [ngValue]="sourceConnectionOption.id"
+                                        *ngFor="let sourceConnectionOption of sourceconnections; trackBy: trackSourceConnectionById">
+                                        {{sourceConnectionOption.name}}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2"
+                                *ngIf="editForm.get('sourceConnectionId').invalid && (editForm.get('sourceConnectionId').dirty || editForm.get('sourceConnectionId').touched)">
+                                <small class="form-text text-danger" *ngIf="editForm.get('sourceConnectionId').errors.required"
+                                    jhiTranslate="entity.validation.required">
+                                    This field is required.
+                                </small>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.sourceConnection" for="field_sourceConnection">Source Connection</label>
-                    <select class="form-control" id="field_sourceConnection" name="sourceConnection" formControlName="sourceConnectionId">
-                        <option *ngIf="!editForm.get('sourceConnectionId').value" [ngValue]="null" selected></option>
-                        <option [ngValue]="sourceConnectionOption.id" *ngFor="let sourceConnectionOption of sourceconnections; trackBy: trackSourceConnectionById">{{sourceConnectionOption.name}}</option>
-                    </select>
-                </div>
-                <div *ngIf="editForm.get('sourceConnectionId').invalid && (editForm.get('sourceConnectionId').dirty || editForm.get('sourceConnectionId').touched)">
-                    <small class="form-text text-danger"
-                           *ngIf="editForm.get('sourceConnectionId').errors.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                    </small>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.snowflakeConnection" for="field_snowflakeConnection">Snowflake Connection</label>
-                    <select class="form-control" id="field_snowflakeConnection" name="snowflakeConnection" formControlName="snowflakeConnectionId">
-                        <option *ngIf="!editForm.get('snowflakeConnectionId').value" [ngValue]="null" selected></option>
-                        <option [ngValue]="snowflakeConnectionOption.id" *ngFor="let snowflakeConnectionOption of snowflakeconnections; trackBy: trackSnowflakeConnectionById">{{snowflakeConnectionOption.name}}</option>
-                    </select>
-                </div>
-                <div *ngIf="editForm.get('snowflakeConnectionId').invalid && (editForm.get('snowflakeConnectionId').dirty || editForm.get('snowflakeConnectionId').touched)">
-                    <small class="form-text text-danger"
-                           *ngIf="editForm.get('snowflakeConnectionId').errors.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                    </small>
-                </div>
-
-                <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.type" for="field_type">Type</label>
-                    <input type="text" class="form-control" name="type" id="field_type"
-                           formControlName="type"/>
-                </div> -->
-                <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.tablesToMigrate" for="field_tablesToMigrate">Tables To Migrate</label>
-                    <input type="text" class="form-control" name="tablesToMigrate" id="field_tablesToMigrate"
-                           formControlName="tablesToMigrate"/>
-                </div> -->
-                <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.lastStatus" for="field_lastStatus">Last Status</label>
-                    <input type="text" class="form-control" name="lastStatus" id="field_lastStatus"
-                           formControlName="lastStatus"/>
-                </div> -->
-                <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.createdBy" for="field_createdBy">Created By</label>
-                    <input type="text" class="form-control" name="createdBy" id="field_createdBy"
-                           formControlName="createdBy"/>
-                </div> -->
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.createdDate" for="field_createdDate">Created Date</label>
-                    <div class="d-flex">
-                        <input id="field_createdDate" type="datetime-local" class="form-control" name="createdDate" formControlName="createdDate" placeholder="YYYY-MM-DD HH:mm"/>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.snowflakeConnection"
+                                    for="field_snowflakeConnection">Snowflake Connection</label>
+                            </div>
+                            <div class="col-sm-4">
+                                <select class="col-sm-12 form-control-input" id="field_snowflakeConnection" name="snowflakeConnection"
+                                    formControlName="snowflakeConnectionId">
+                                    <!-- <option *ngIf="!editForm.get('snowflakeConnectionId').value" [ngValue]="null" selected></option> -->
+                                    <option [ngValue]="snowflakeConnectionOption.id"
+                                        *ngFor="let snowflakeConnectionOption of snowflakeconnections; trackBy: trackSnowflakeConnectionById">
+                                        {{snowflakeConnectionOption.name}}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2"
+                                *ngIf="editForm.get('snowflakeConnectionId').invalid && (editForm.get('snowflakeConnectionId').dirty || editForm.get('snowflakeConnectionId').touched)">
+                                <small class="form-text text-danger" *ngIf="editForm.get('snowflakeConnectionId').errors.required"
+                                    jhiTranslate="entity.validation.required">
+                                    This field is required.
+                                </small>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.lastModifiedBy" for="field_lastModifiedBy">Last Modified By</label>
-                    <input type="text" class="form-control" name="lastModifiedBy" id="field_lastModifiedBy"
-                           formControlName="lastModifiedBy"/>
-                </div> -->
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="snowpoleApp.migrationProcess.lastModifiedDate" for="field_lastModifiedDate">Last Modified Date</label>
-                    <div class="d-flex">
-                        <input id="field_lastModifiedDate" type="datetime-local" class="form-control" name="lastModifiedDate" formControlName="lastModifiedDate" placeholder="YYYY-MM-DD HH:mm"/>
-                    </div>
-                </div>
-
-                
-            </div>
-            <div>
-                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
-                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
-                </button>
-                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary"
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                                <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                            </button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary"
                     joyrideStep="thirteenthStep" stepPosition="top" title="Snowflake Connection" text="Create new DAH process with source and Snowflake connection">
                     <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
                 </button>
-            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="container">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary"
+                    joyrideStep="thirteenthStep" stepPosition="top" title="Snowflake Connection" text="Create new DAH process with source and Snowflake connection">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+                        </div>
+                    </div>
+                </div> -->
         </form>
     </div>
 </div>

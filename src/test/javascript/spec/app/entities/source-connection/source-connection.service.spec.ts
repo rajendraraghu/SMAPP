@@ -1,4 +1,3 @@
-/* tslint:disable max-line-length */
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient, HttpResponse } from '@angular/common/http';
@@ -29,6 +28,8 @@ describe('Service Tests', () => {
 
       elemDefault = new SourceConnection(
         0,
+        'AAAAAAA',
+        'AAAAAAA',
         'AAAAAAA',
         'AAAAAAA',
         'AAAAAAA',
@@ -94,11 +95,13 @@ describe('Service Tests', () => {
           {
             name: 'BBBBBB',
             description: 'BBBBBB',
-            system: 'BBBBBB',
+            sourceType: 'BBBBBB',
             url: 'BBBBBB',
             username: 'BBBBBB',
             password: 'BBBBBB',
             database: 'BBBBBB',
+            host: 'BBBBBB',
+            portnumber: 'BBBBBB',
             schema: 'BBBBBB',
             valid: true,
             createdBy: 'BBBBBB',
@@ -130,11 +133,13 @@ describe('Service Tests', () => {
           {
             name: 'BBBBBB',
             description: 'BBBBBB',
-            system: 'BBBBBB',
+            sourceType: 'BBBBBB',
             url: 'BBBBBB',
             username: 'BBBBBB',
             password: 'BBBBBB',
             database: 'BBBBBB',
+            host: 'BBBBBB',
+            portnumber: 'BBBBBB',
             schema: 'BBBBBB',
             valid: true,
             createdBy: 'BBBBBB',

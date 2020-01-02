@@ -1,0 +1,62 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "tablename",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "startTime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "endTime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "insertCount",
+            "fieldType": "bigint"
+        },
+        {
+            "fieldName": "updateCount",
+            "fieldType": "bigint"
+        },
+        {
+            "fieldName": "deleteCount",
+            "fieldType": "bigint"
+        },
+        {
+            "fieldName": "processid",
+            "fieldType": "bigint"
+        },
+        {
+            "fieldName": "processname",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "sourcename",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "destname",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20190809105436",
+    "dto": "mapstruct",
+    "searchEngine": false,
+    "service": "serviceImpl",
+    "entityTableName": "delta_process_job_status",
+    "databaseType": "sql",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
+}

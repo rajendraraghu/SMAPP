@@ -4,11 +4,13 @@ export interface ISourceConnection {
   id?: number;
   name?: string;
   description?: string;
-  system?: string;
+  sourceType?: string;
   url?: string;
   username?: string;
   password?: string;
   database?: string;
+  host?: string;
+  portNumber?: string;
   schema?: string;
   valid?: boolean;
   createdBy?: string;
@@ -22,11 +24,13 @@ export class SourceConnection implements ISourceConnection {
     public id?: number,
     public name?: string,
     public description?: string,
-    public system?: string,
+    public sourceType?: string,
     public url?: string,
     public username?: string,
     public password?: string,
     public database?: string,
+    public host?: string,
+    public portNumber?: string,
     public schema?: string,
     public valid?: boolean,
     public createdBy?: string,
@@ -34,6 +38,7 @@ export class SourceConnection implements ISourceConnection {
     public lastModifiedBy?: string,
     public lastModifiedDate?: Moment
   ) {
-    this.valid = this.valid || false;
+    // this.valid = this.valid || false;
+    // this.url = 'jdbc:' + this.sourceType + '://' + this.host + ':' + this.portNumber + '/' + this.database;
   }
 }

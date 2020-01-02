@@ -1,0 +1,14 @@
+﻿MySQL Data Type,Snowflake Data Type
+geometry,varbinary
+tinyint,int
+bigint,int
+tinytext,text		 
+mediumint,int
+unsigned,
+`,
+auto_increment,autoincrement
+smallint,number
+on update current_timestamp,
+unique key,unique
+blob,binary
+int,number

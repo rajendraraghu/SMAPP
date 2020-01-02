@@ -27,6 +27,10 @@ export class PasswordResetInitComponent implements AfterViewInit {
     this.renderer.invokeElementMethod(this.elementRef.nativeElement.querySelector('#email'), 'focus', []);
   }
 
+  previousState() {
+    window.history.back();
+  }
+
   requestReset() {
     this.error = null;
     this.errorEmailNotExists = null;

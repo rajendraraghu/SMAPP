@@ -18,20 +18,26 @@ public class SourceConnectionDTO implements Serializable {
     private String description;
 
     @NotNull
-    private String system;
+    private String sourceType;
 
     @NotNull
     @Size(max = 1200)
     private String url;
 
-    @NotNull
+    // @NotNull
     private String username;
 
-    @NotNull
+    // @NotNull
     private String password;
 
-    @NotNull
+    // @NotNull
     private String database;
+
+    // @NotNull
+    private String host;
+
+    // @NotNull
+    private String portNumber;
 
     private String schema;
 
@@ -70,12 +76,12 @@ public class SourceConnectionDTO implements Serializable {
         this.description = description;
     }
 
-    public String getSystem() {
-        return system;
+    public String getSourceType() {
+        return sourceType;
     }
 
-    public void setSystem(String system) {
-        this.system = system;
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 
     public String getUrl() {
@@ -108,6 +114,22 @@ public class SourceConnectionDTO implements Serializable {
 
     public void setDatabase(String database) {
         this.database = database;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getPortNumber() {
+        return portNumber;
+    }
+
+    public void setPortNumber(String portNumber) {
+        this.portNumber = portNumber;
     }
 
     public String getSchema() {
@@ -185,11 +207,13 @@ public class SourceConnectionDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", system='" + getSystem() + "'" +
+            ", sourceType='" + getSourceType() + "'" +
             ", url='" + getUrl() + "'" +
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +
             ", database='" + getDatabase() + "'" +
+            ", host='" + getHost() + "'" +
+            ", portNumber='" + getPortNumber() + "'" +
             ", schema='" + getSchema() + "'" +
             ", valid='" + isValid() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

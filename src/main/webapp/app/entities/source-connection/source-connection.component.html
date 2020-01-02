@@ -1,92 +1,115 @@
 <div>
     <h2 id="page-heading">
         <span jhiTranslate="snowpoleApp.sourceConnection.home.title">Source Connections</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-source-connection" 
-            [routerLink]="['/source-connection/new']"
-            joyrideStep="secondStep" title="Source Connection" text="Create new Source Connection">
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-source-connection"
+            [routerLink]="['/source-connection/new']" joyrideStep="Step 2" title="Source Connection"
+            text="Create new Source Connection">
             <fa-icon [icon]="'plus'"></fa-icon>
-            <span  jhiTranslate="snowpoleApp.sourceConnection.home.createLabel">
-            Create new Source Connection
+            <span jhiTranslate="snowpoleApp.sourceConnection.home.createLabel">
+                Create new Source Connection
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <br/>
+    <br />
     <div class="alert alert-warning" *ngIf="sourceConnections?.length === 0">
         <span jhiTranslate="snowpoleApp.sourceConnection.home.notFound">No sourceConnections found</span>
     </div>
     <div class="table-responsive" *ngIf="sourceConnections?.length > 0">
         <table class="table table-striped">
             <thead>
-            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="name"><span jhiTranslate="snowpoleApp.sourceConnection.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="system"><span jhiTranslate="snowpoleApp.sourceConnection.system">System</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <!-- <th jhiSortBy="url"><span jhiTranslate="snowpoleApp.sourceConnection.url">Url</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
-            <th jhiSortBy="username"><span jhiTranslate="snowpoleApp.sourceConnection.username">Username</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <!-- <th jhiSortBy="password"><span jhiTranslate="snowpoleApp.sourceConnection.password">Password</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
-            <th jhiSortBy="database"><span jhiTranslate="snowpoleApp.sourceConnection.database">Database</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="schema"><span jhiTranslate="snowpoleApp.sourceConnection.schema">Schema</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="valid"><span jhiTranslate="snowpoleApp.sourceConnection.valid">Valid</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <!-- <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.sourceConnection.createdBy">Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
-            <th jhiSortBy="createdDate"><span jhiTranslate="snowpoleApp.sourceConnection.createdDate">Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <!-- <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.sourceConnection.lastModifiedBy">Last Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
-            <th jhiSortBy="lastModifiedDate"><span jhiTranslate="snowpoleApp.sourceConnection.lastModifiedDate">Last Modified Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th></th>
-            </tr>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+                    <!-- <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+                    <th jhiSortBy="name"><span jhiTranslate="snowpoleApp.sourceConnection.name">Name</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </th>
+                    <th jhiSortBy="sourceType"><span jhiTranslate="snowpoleApp.sourceConnection.sourceType">Source
+                            Type</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </th>
+                    <!-- <th jhiSortBy="url"><span jhiTranslate="snowpoleApp.sourceConnection.url">Url</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+                    <th jhiSortBy="username"><span jhiTranslate="snowpoleApp.sourceConnection.username">Username</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </th>
+                    <!-- <th jhiSortBy="password"><span jhiTranslate="snowpoleApp.sourceConnection.password">Password</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+                    <th jhiSortBy="database"><span jhiTranslate="snowpoleApp.sourceConnection.database">Database</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </th>
+                    <th jhiSortBy="schema"><span jhiTranslate="snowpoleApp.sourceConnection.schema">Schema</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </th>
+                    <th jhiSortBy="valid"><span jhiTranslate="snowpoleApp.sourceConnection.valid">Valid</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </th>
+                    <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.sourceConnection.createdBy">Created
+                            By</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </th>
+                    <th jhiSortBy="createdDate"><span jhiTranslate="snowpoleApp.sourceConnection.createdDate">Created
+                            Date</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </th>
+                    <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.sourceConnection.lastModifiedBy">Last
+                            Modified By</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </th>
+                    <th jhiSortBy="lastModifiedDate"><span
+                            jhiTranslate="snowpoleApp.sourceConnection.lastModifiedDate">Last Modified Date</span>
+                        <fa-icon [icon]="'sort'"></fa-icon>
+                    </th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let sourceConnection of sourceConnections ;trackBy: trackId">
-                <td><a [routerLink]="['/source-connection', sourceConnection.id, 'view' ]">{{sourceConnection.id}}</a></td>
-                <td>{{sourceConnection.name}}</td>
-                <td>{{sourceConnection.system}}</td>
-                <!-- <td>{{sourceConnection.url}}</td> -->
-                <td>{{sourceConnection.username}}</td>
-                <!-- <td>{{sourceConnection.password}}</td> -->
-                <td>{{sourceConnection.database}}</td>
-                <td>{{sourceConnection.schema}}</td>
-                <td>
-                    <span *ngIf="sourceConnection.valid" class="badge badge-success">Yes</span>
-                    <span *ngIf="!sourceConnection.valid" class="badge badge-danger">No</span>
-                </td>
-                <!-- <td>{{sourceConnection.createdBy}}</td> -->
-                <td>{{sourceConnection.createdDate | date:'medium'}}</td>
-                <!-- <td>{{sourceConnection.lastModifiedBy}}</td> -->
-                <td>{{sourceConnection.lastModifiedDate | date:'medium'}}</td>
-                <td class="text-right">
-                    <div class="btn-group">
-                        <button type="submit"
-                                [routerLink]="['/source-connection', sourceConnection.id, 'view' ]"
+                <tr *ngFor="let sourceConnection of sourceConnections ;trackBy: trackId">
+                    <!-- <td><a [routerLink]="['/source-connection', sourceConnection.id, 'view' ]">{{sourceConnection.id}}</a></td> -->
+                    <td>{{sourceConnection.name}}</td>
+                    <td>{{sourceConnection.sourceType}}</td>
+                    <!-- <td>{{sourceConnection.url}}</td> -->
+                    <td>{{sourceConnection.username}}</td>
+                    <!-- <td>{{sourceConnection.password}}</td> -->
+                    <td>{{sourceConnection.database}}</td>
+                    <td>{{sourceConnection.schema}}</td>
+                    <td>
+                        <span *ngIf="sourceConnection.valid" class="badge badge-success">Yes</span>
+                        <span *ngIf="!sourceConnection.valid" class="badge badge-danger">No</span>
+                    </td>
+                    <td>{{sourceConnection.createdBy}}</td>
+                    <td>{{sourceConnection.createdDate | date:'medium'}}</td>
+                    <td>{{sourceConnection.lastModifiedBy}}</td>
+                    <td>{{sourceConnection.lastModifiedDate | date:'medium'}}</td>
+                    <td class="text-right">
+                        <div>
+                            <button type="submit" [routerLink]="['/source-connection', sourceConnection.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <fa-icon [icon]="'eye'"></fa-icon>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
-                        </button>
-                        <button type="submit"
-                                [routerLink]="['/source-connection', sourceConnection.id, 'edit']"
+                                <fa-icon [icon]="'eye'"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+                            <button type="submit" [routerLink]="['/source-connection', sourceConnection.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-                        </button>
-                        <button type="submit"
+                                <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+                            <button type="submit"
                                 [routerLink]="['/', 'source-connection', { outlets: { popup: sourceConnection.id + '/delete'} }]"
-                                replaceUrl="true"
-                                queryParamsHandling="merge"
-                                class="btn btn-danger btn-sm">
-                            <fa-icon [icon]="'times'"></fa-icon>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-                        </button>
-                    </div>
-                </td>
-            </tr>
+                                replaceUrl="true" queryParamsHandling="merge" class="btn btn-danger btn-sm">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
     <div [hidden]="sourceConnections?.length === 0">
         <div class="row justify-content-center">
-            <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+            <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage">
+            </jhi-item-count>
         </div>
         <div class="row justify-content-center">
-            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5"
+                [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
         </div>
     </div>
 </div>

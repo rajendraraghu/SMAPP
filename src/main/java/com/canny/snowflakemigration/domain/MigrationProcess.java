@@ -1,4 +1,5 @@
 package com.canny.snowflakemigration.domain;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -8,6 +9,7 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Date;
 
 /**
  * A MigrationProcess.
@@ -15,7 +17,7 @@ import java.time.Instant;
 @Entity
 @Table(name = "migration_process")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class MigrationProcess implements Serializable {
+public class MigrationProcess extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,32 +37,54 @@ public class MigrationProcess implements Serializable {
     @Column(name = "type")
     private String type;
 
-    @Size(max = 3200)
-    @Column(name = "tables_to_migrate", length = 3200)
+    @Size(max = 30000)
+    @Column(name = "tables_to_migrate", length = 30000)
     private String tablesToMigrate;
 
-    @Size(max = 3200)
-    @Column(name = "cdc", length = 3200)
+    @Size(max = 30000)
+    @Column(name = "selected_columns", length = 30000)
+    private String selectedColumns;
+
+    @Size(max = 30000)
+    @Column(name = "cdc", length = 30000)
     private String cdc;
 
-    @Size(max = 3200)
-    @Column(name = "bulk", length = 3200)
+    @Size(max = 30000)
+    @Column(name = "bulk", length = 30000)
     private String bulk;
+    
+    @Size(max = 30000)
+    @Column(name = "cdc_pk", length = 30000)
+    private String cdcPk;
+
+    @Size(max = 30000)   
+    @Column(name = "bulk_pk", length = 30000)
+    private String bulkPk;
+
+    @Size(max = 30000)
+    @Column(name = "cdc_cols", length = 30000)
+    private String cdcCols;
 
     @Column(name = "last_status")
     private String lastStatus;
 
-    @Column(name = "created_by")
-    private String createdBy;
+    @Column(name = "valid")
+    private Boolean valid;
 
-    @Column(name = "created_date")
-    private Instant createdDate;
+    @Column(name = "is_running")
+    private Boolean isRunning;
 
-    @Column(name = "last_modified_by")
-    private String lastModifiedBy;
+    // @Column(name = "created_by")
+    // private String createdBy;
 
-    @Column(name = "last_modified_date")
-    private Instant lastModifiedDate;
+    // @Column(name = "created_date")
+    // private Instant createdDate;
+
+    // @Column(name = "last_modified_by")
+    // private String lastModifiedBy;
+
+    // @Column(name = "last_modified_date")
+    // private Instant lastModifiedDate;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -69,6 +93,9 @@ public class MigrationProcess implements Serializable {
     @ManyToOne(optional = false)
     @NotNull
     private SnowflakeConnection snowflakeConnection;
+
+    @Column(name = "last_run_time")
+    private String lastRunTime;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -131,6 +158,19 @@ public class MigrationProcess implements Serializable {
         this.tablesToMigrate = tablesToMigrate;
     }
 
+    public String getSelectedColumns() {
+        return selectedColumns;
+    }
+
+    public MigrationProcess selectedColumns(String selectedColumns) {
+        this.selectedColumns = selectedColumns;
+        return this;
+    }
+
+    public void setSelectedColumns(String selectedColumns) {
+        this.selectedColumns = selectedColumns;
+    }
+
     public String getCdc() {
         return cdc;
     }
@@ -158,6 +198,45 @@ public class MigrationProcess implements Serializable {
         this.bulk = bulk;
     }
 
+    public String getCdcPk() {
+        return cdcPk;
+    }
+
+    public MigrationProcess cdcPk(String cdcPk) {
+        this.cdcPk = cdcPk;
+        return this;
+    }
+
+    public void setCdcPk(String cdcPk) {
+        this.cdcPk = cdcPk;
+    }
+
+    public String getBulkPk() {
+        return bulkPk;
+    }
+
+    public MigrationProcess bulkPk(String bulkPk) {
+        this.bulkPk = bulkPk;
+        return this;
+    }
+
+    public void setBulkPk(String bulkPk) {
+        this.bulkPk = bulkPk;
+    }
+
+    public String getCdcCols() {
+        return cdcCols;
+    }
+
+    public MigrationProcess cdcCols(String cdcCols) {
+        this.cdcCols = cdcCols;
+        return this;
+    }
+
+    public void setCdcCols(String cdcCols) {
+        this.cdcCols = cdcCols;
+    }
+
     public String getLastStatus() {
         return lastStatus;
     }
@@ -171,57 +250,83 @@ public class MigrationProcess implements Serializable {
         this.lastStatus = lastStatus;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public Boolean getValid() {
+        return valid;
     }
 
-    public MigrationProcess createdBy(String createdBy) {
-        this.createdBy = createdBy;
+    public MigrationProcess valid(Boolean valid) {
+        this.valid = valid;
         return this;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setSelecteAll(Boolean valid) {
+        this.valid = valid;
     }
 
-    public Instant getCreatedDate() {
-        return createdDate;
+    public Boolean getIsRunning() {
+        return isRunning;
     }
 
-    public MigrationProcess createdDate(Instant createdDate) {
-        this.createdDate = createdDate;
+    public MigrationProcess isRunning(Boolean isRunning) {
+        this.isRunning = isRunning;
         return this;
     }
 
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
+    public void setIsRunning(Boolean isRunning) {
+        this.isRunning = isRunning;
     }
 
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
+    // public String getCreatedBy() {
+    //     return createdBy;
+    // }
 
-    public MigrationProcess lastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-        return this;
-    }
+    // public MigrationProcess createdBy(String createdBy) {
+    //     this.createdBy = createdBy;
+    //     return this;
+    // }
 
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
+    // public void setCreatedBy(String createdBy) {
+    //     this.createdBy = createdBy;
+    // }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
+    // public Instant getCreatedDate() {
+    //     return createdDate;
+    // }
 
-    public MigrationProcess lastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-        return this;
-    }
+    // public MigrationProcess createdDate(Instant createdDate) {
+    //     this.createdDate = createdDate;
+    //     return this;
+    // }
 
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
+    // public void setCreatedDate(Instant createdDate) {
+    //     this.createdDate = createdDate;
+    // }
+
+    // public String getLastModifiedBy() {
+    //     return lastModifiedBy;
+    // }
+
+    // public MigrationProcess lastModifiedBy(String lastModifiedBy) {
+    //     this.lastModifiedBy = lastModifiedBy;
+    //     return this;
+    // }
+
+    // public void setLastModifiedBy(String lastModifiedBy) {
+    //     this.lastModifiedBy = lastModifiedBy;
+    // }
+
+    // public Instant getLastModifiedDate() {
+    //     return lastModifiedDate;
+    // }
+
+    // public MigrationProcess lastModifiedDate(Instant lastModifiedDate) {
+    //     this.lastModifiedDate = lastModifiedDate;
+    //     return this;
+    // }
+
+    // public void setLastModifiedDate(Instant lastModifiedDate) {
+    //     this.lastModifiedDate = lastModifiedDate;
+    // }
 
     public SourceConnection getSourceConnection() {
         return sourceConnection;
@@ -248,6 +353,20 @@ public class MigrationProcess implements Serializable {
     public void setSnowflakeConnection(SnowflakeConnection snowflakeConnection) {
         this.snowflakeConnection = snowflakeConnection;
     }
+
+    public String getLastRunTime() {
+            return lastRunTime;
+        }
+    
+        public MigrationProcess lastRunTime(String lastRunTime) {
+            this.lastRunTime = lastRunTime;
+            return this;
+        }
+    
+        public void setlastRunTime(String lastRunTime) {
+            this.lastRunTime = lastRunTime;
+        }
+    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -274,13 +393,20 @@ public class MigrationProcess implements Serializable {
             ", description='" + getDescription() + "'" +
             ", type='" + getType() + "'" +
             ", tablesToMigrate='" + getTablesToMigrate() + "'" +
+            ", selectedColumns='" + getSelectedColumns() + "'" +
             ", cdc='" + getCdc() + "'" +
             ", bulk='" + getBulk() + "'" +
+            ", cdcPk='" + getCdcPk() + "'" +
+            ", bulkPk='" + getBulkPk() + "'" +
+            ", cdcCols='" + getCdcCols() + "'" +
             ", lastStatus='" + getLastStatus() + "'" +
+            ", valid='" + getValid() + "'" +
+            ", isRunning='" + getIsRunning() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
+            ", lastRunTime='" + getLastRunTime() + "'" +
             "}";
     }
 }

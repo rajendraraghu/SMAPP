@@ -1,0 +1,87 @@
+<div>
+    <h2 id="page-heading">
+        <span>SnowParse</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-snow-parse" [routerLink]="['/snow-parse/new']"
+            joyrideStep="twelthStep" title="SnowParse" text="Create new Snow Parse">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span>
+            Create new Snow Parse Process
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="alert alert-warning" *ngIf="snowParses?.length === 0">
+        <span jhiTranslate="snowpoleApp.snowParse.home.notFound">No SnowParse Process found</span>
+    </div>
+    <div class="table-responsive" *ngIf="snowParses?.length > 0">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <!-- <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th> -->
+            <th jhiSortBy="name"><span jhiTranslate="snowpoleApp.snowDDL.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="sourceConnectionName"><span jhiTranslate="snowpoleApp.snowDDL.sourceConnection">Source Connection</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="createdBy"><span jhiTranslate="snowpoleApp.snowDDL.createdBy">Created By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="createdDate"><span jhiTranslate="snowpoleApp.snowDDL.createdDate">Created Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="lastModifiedBy"><span jhiTranslate="snowpoleApp.snowDDL.lastModifiedBy">Last Modified By</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="lastModifiedDate"><span jhiTranslatpe="snowpoleApp.snowDDL.lastModifiedDate">Last Modified Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let snowParse of snowParses ;trackBy: trackId">
+                <!-- <td><a [routerLink]="['/snow-ddl', snowDDL.id, 'view' ]">{{snowDDL.id}}</a></td> -->
+                <!-- <td>{{snowDDL.id}}</td> -->
+                <td>{{snowParse.name}}</td>
+                <td>
+                    <div *ngIf="snowParse.sourceConnectionId">
+                        <a [routerLink]="['../source-connection', snowParse.sourceConnectionId , 'view' ]" >{{snowParse.sourceConnectionName}}</a>
+                    </div>
+                </td>
+                <td>{{snowParse.createdBy}}</td>
+                <td>{{snowParse.createdDate | date:'medium'}}</td>
+                <td>{{snowParse.lastModifiedBy}}</td>
+                <td>{{snowParse.lastModifiedDate | date:'medium'}}</td>
+                <td class="text-right">
+                    <div>
+                        <button type="submit"
+                                (click)="parse(snowParse)"
+                                class="btn btn-info btn-sm">
+                                <i class="fa fa-play" aria-hidden="true"></i>
+                            <span class="d-none d-md-inline">Run</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/snow-parse', snowParse.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                (click)="viewProcessStatus(snowParse.id)"
+                                class="btn btn-info btn-sm">
+                            <fa-icon icon="book" fixedWidth="true"></fa-icon>
+                            <span class="d-none d-md-inline">Report</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'snow-parse', { outlets: { popup: snowParse.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div [hidden]="snowParses?.length === 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

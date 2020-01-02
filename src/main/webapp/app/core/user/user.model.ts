@@ -4,8 +4,8 @@ export interface IUser {
   firstName?: string;
   lastName?: string;
   email?: string;
-  activated?: boolean;
-  langKey?: string;
+  // activated?: boolean;
+  // langKey?: string;
   authorities?: any[];
   createdBy?: string;
   createdDate?: Date;
@@ -21,8 +21,8 @@ export class User implements IUser {
     public firstName?: string,
     public lastName?: string,
     public email?: string,
-    public activated?: boolean,
-    public langKey?: string,
+    // public activated?: boolean,
+    // public langKey?: string,
     public authorities?: any[],
     public createdBy?: string,
     public createdDate?: Date,
@@ -35,8 +35,8 @@ export class User implements IUser {
     this.firstName = firstName ? firstName : null;
     this.lastName = lastName ? lastName : null;
     this.email = email ? email : null;
-    this.activated = activated ? activated : false;
-    this.langKey = langKey ? langKey : null;
+    // this.activated = activated ? activated : false;
+    // this.langKey = langKey ? langKey : null;
     this.authorities = authorities ? authorities : null;
     this.createdBy = createdBy ? createdBy : null;
     this.createdDate = createdDate ? createdDate : null;

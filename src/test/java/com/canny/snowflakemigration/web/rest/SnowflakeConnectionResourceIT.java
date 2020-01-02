@@ -142,11 +142,11 @@ public class SnowflakeConnectionResourceIT {
             .warehouse(DEFAULT_WAREHOUSE)
             .database(DEFAULT_DATABASE)
             .schema(DEFAULT_SCHEMA)
-            .valid(DEFAULT_VALID)
-            .createdBy(DEFAULT_CREATED_BY)
-            .createdDate(DEFAULT_CREATED_DATE)
-            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
-            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
+            .valid(DEFAULT_VALID);
+            // .createdBy(DEFAULT_CREATED_BY)
+            // .createdDate(DEFAULT_CREATED_DATE)
+            // .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            // .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
         return snowflakeConnection;
     }
     /**
@@ -166,11 +166,11 @@ public class SnowflakeConnectionResourceIT {
             .warehouse(UPDATED_WAREHOUSE)
             .database(UPDATED_DATABASE)
             .schema(UPDATED_SCHEMA)
-            .valid(UPDATED_VALID)
-            .createdBy(UPDATED_CREATED_BY)
-            .createdDate(UPDATED_CREATED_DATE)
-            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
-            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
+            .valid(UPDATED_VALID);
+            // .createdBy(UPDATED_CREATED_BY)
+            // .createdDate(UPDATED_CREATED_DATE)
+            // .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            // .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         return snowflakeConnection;
     }
 
@@ -205,10 +205,10 @@ public class SnowflakeConnectionResourceIT {
         assertThat(testSnowflakeConnection.getDatabase()).isEqualTo(DEFAULT_DATABASE);
         assertThat(testSnowflakeConnection.getSchema()).isEqualTo(DEFAULT_SCHEMA);
         assertThat(testSnowflakeConnection.isValid()).isEqualTo(DEFAULT_VALID);
-        assertThat(testSnowflakeConnection.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testSnowflakeConnection.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
-        assertThat(testSnowflakeConnection.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
-        assertThat(testSnowflakeConnection.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
+        // assertThat(testSnowflakeConnection.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        // assertThat(testSnowflakeConnection.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        // assertThat(testSnowflakeConnection.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        // assertThat(testSnowflakeConnection.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -347,11 +347,11 @@ public class SnowflakeConnectionResourceIT {
             .andExpect(jsonPath("$.[*].warehouse").value(hasItem(DEFAULT_WAREHOUSE.toString())))
             .andExpect(jsonPath("$.[*].database").value(hasItem(DEFAULT_DATABASE.toString())))
             .andExpect(jsonPath("$.[*].schema").value(hasItem(DEFAULT_SCHEMA.toString())))
-            .andExpect(jsonPath("$.[*].valid").value(hasItem(DEFAULT_VALID.booleanValue())))
-            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())))
-            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
-            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY.toString())))
-            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
+            .andExpect(jsonPath("$.[*].valid").value(hasItem(DEFAULT_VALID.booleanValue())));
+            // .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())))
+            // .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            // .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY.toString())))
+            // .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
     }
     
     @Test
@@ -374,11 +374,11 @@ public class SnowflakeConnectionResourceIT {
             .andExpect(jsonPath("$.warehouse").value(DEFAULT_WAREHOUSE.toString()))
             .andExpect(jsonPath("$.database").value(DEFAULT_DATABASE.toString()))
             .andExpect(jsonPath("$.schema").value(DEFAULT_SCHEMA.toString()))
-            .andExpect(jsonPath("$.valid").value(DEFAULT_VALID.booleanValue()))
-            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY.toString()))
-            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
-            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY.toString()))
-            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
+            .andExpect(jsonPath("$.valid").value(DEFAULT_VALID.booleanValue()));
+            // .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY.toString()))
+            // .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            // .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY.toString()))
+            // .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -771,161 +771,161 @@ public class SnowflakeConnectionResourceIT {
         defaultSnowflakeConnectionShouldNotBeFound("valid.specified=false");
     }
 
-    @Test
-    @Transactional
-    public void getAllSnowflakeConnectionsByCreatedByIsEqualToSomething() throws Exception {
-        // Initialize the database
-        snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
+    // @Test
+    // @Transactional
+    // public void getAllSnowflakeConnectionsByCreatedByIsEqualToSomething() throws Exception {
+    //     // Initialize the database
+    //     snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
 
-        // Get all the snowflakeConnectionList where createdBy equals to DEFAULT_CREATED_BY
-        defaultSnowflakeConnectionShouldBeFound("createdBy.equals=" + DEFAULT_CREATED_BY);
+    //     // Get all the snowflakeConnectionList where createdBy equals to DEFAULT_CREATED_BY
+    //     defaultSnowflakeConnectionShouldBeFound("createdBy.equals=" + DEFAULT_CREATED_BY);
 
-        // Get all the snowflakeConnectionList where createdBy equals to UPDATED_CREATED_BY
-        defaultSnowflakeConnectionShouldNotBeFound("createdBy.equals=" + UPDATED_CREATED_BY);
-    }
+    //     // Get all the snowflakeConnectionList where createdBy equals to UPDATED_CREATED_BY
+    //     defaultSnowflakeConnectionShouldNotBeFound("createdBy.equals=" + UPDATED_CREATED_BY);
+    // }
 
-    @Test
-    @Transactional
-    public void getAllSnowflakeConnectionsByCreatedByIsInShouldWork() throws Exception {
-        // Initialize the database
-        snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
+    // @Test
+    // @Transactional
+    // public void getAllSnowflakeConnectionsByCreatedByIsInShouldWork() throws Exception {
+    //     // Initialize the database
+    //     snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
 
-        // Get all the snowflakeConnectionList where createdBy in DEFAULT_CREATED_BY or UPDATED_CREATED_BY
-        defaultSnowflakeConnectionShouldBeFound("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY);
+    //     // Get all the snowflakeConnectionList where createdBy in DEFAULT_CREATED_BY or UPDATED_CREATED_BY
+    //     defaultSnowflakeConnectionShouldBeFound("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY);
 
-        // Get all the snowflakeConnectionList where createdBy equals to UPDATED_CREATED_BY
-        defaultSnowflakeConnectionShouldNotBeFound("createdBy.in=" + UPDATED_CREATED_BY);
-    }
+    //     // Get all the snowflakeConnectionList where createdBy equals to UPDATED_CREATED_BY
+    //     defaultSnowflakeConnectionShouldNotBeFound("createdBy.in=" + UPDATED_CREATED_BY);
+    // }
 
-    @Test
-    @Transactional
-    public void getAllSnowflakeConnectionsByCreatedByIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
+    // @Test
+    // @Transactional
+    // public void getAllSnowflakeConnectionsByCreatedByIsNullOrNotNull() throws Exception {
+    //     // Initialize the database
+    //     snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
 
-        // Get all the snowflakeConnectionList where createdBy is not null
-        defaultSnowflakeConnectionShouldBeFound("createdBy.specified=true");
+    //     // Get all the snowflakeConnectionList where createdBy is not null
+    //     defaultSnowflakeConnectionShouldBeFound("createdBy.specified=true");
 
-        // Get all the snowflakeConnectionList where createdBy is null
-        defaultSnowflakeConnectionShouldNotBeFound("createdBy.specified=false");
-    }
+    //     // Get all the snowflakeConnectionList where createdBy is null
+    //     defaultSnowflakeConnectionShouldNotBeFound("createdBy.specified=false");
+    // }
 
-    @Test
-    @Transactional
-    public void getAllSnowflakeConnectionsByCreatedDateIsEqualToSomething() throws Exception {
-        // Initialize the database
-        snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
+    // @Test
+    // @Transactional
+    // public void getAllSnowflakeConnectionsByCreatedDateIsEqualToSomething() throws Exception {
+    //     // Initialize the database
+    //     snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
 
-        // Get all the snowflakeConnectionList where createdDate equals to DEFAULT_CREATED_DATE
-        defaultSnowflakeConnectionShouldBeFound("createdDate.equals=" + DEFAULT_CREATED_DATE);
+    //     // Get all the snowflakeConnectionList where createdDate equals to DEFAULT_CREATED_DATE
+    //     defaultSnowflakeConnectionShouldBeFound("createdDate.equals=" + DEFAULT_CREATED_DATE);
 
-        // Get all the snowflakeConnectionList where createdDate equals to UPDATED_CREATED_DATE
-        defaultSnowflakeConnectionShouldNotBeFound("createdDate.equals=" + UPDATED_CREATED_DATE);
-    }
+    //     // Get all the snowflakeConnectionList where createdDate equals to UPDATED_CREATED_DATE
+    //     defaultSnowflakeConnectionShouldNotBeFound("createdDate.equals=" + UPDATED_CREATED_DATE);
+    // }
 
-    @Test
-    @Transactional
-    public void getAllSnowflakeConnectionsByCreatedDateIsInShouldWork() throws Exception {
-        // Initialize the database
-        snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
+    // @Test
+    // @Transactional
+    // public void getAllSnowflakeConnectionsByCreatedDateIsInShouldWork() throws Exception {
+    //     // Initialize the database
+    //     snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
 
-        // Get all the snowflakeConnectionList where createdDate in DEFAULT_CREATED_DATE or UPDATED_CREATED_DATE
-        defaultSnowflakeConnectionShouldBeFound("createdDate.in=" + DEFAULT_CREATED_DATE + "," + UPDATED_CREATED_DATE);
+    //     // Get all the snowflakeConnectionList where createdDate in DEFAULT_CREATED_DATE or UPDATED_CREATED_DATE
+    //     defaultSnowflakeConnectionShouldBeFound("createdDate.in=" + DEFAULT_CREATED_DATE + "," + UPDATED_CREATED_DATE);
 
-        // Get all the snowflakeConnectionList where createdDate equals to UPDATED_CREATED_DATE
-        defaultSnowflakeConnectionShouldNotBeFound("createdDate.in=" + UPDATED_CREATED_DATE);
-    }
+    //     // Get all the snowflakeConnectionList where createdDate equals to UPDATED_CREATED_DATE
+    //     defaultSnowflakeConnectionShouldNotBeFound("createdDate.in=" + UPDATED_CREATED_DATE);
+    // }
 
-    @Test
-    @Transactional
-    public void getAllSnowflakeConnectionsByCreatedDateIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
+    // @Test
+    // @Transactional
+    // public void getAllSnowflakeConnectionsByCreatedDateIsNullOrNotNull() throws Exception {
+    //     // Initialize the database
+    //     snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
 
-        // Get all the snowflakeConnectionList where createdDate is not null
-        defaultSnowflakeConnectionShouldBeFound("createdDate.specified=true");
+    //     // Get all the snowflakeConnectionList where createdDate is not null
+    //     defaultSnowflakeConnectionShouldBeFound("createdDate.specified=true");
 
-        // Get all the snowflakeConnectionList where createdDate is null
-        defaultSnowflakeConnectionShouldNotBeFound("createdDate.specified=false");
-    }
+    //     // Get all the snowflakeConnectionList where createdDate is null
+    //     defaultSnowflakeConnectionShouldNotBeFound("createdDate.specified=false");
+    // }
 
-    @Test
-    @Transactional
-    public void getAllSnowflakeConnectionsByLastModifiedByIsEqualToSomething() throws Exception {
-        // Initialize the database
-        snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
+    // @Test
+    // @Transactional
+    // public void getAllSnowflakeConnectionsByLastModifiedByIsEqualToSomething() throws Exception {
+    //     // Initialize the database
+    //     snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
 
-        // Get all the snowflakeConnectionList where lastModifiedBy equals to DEFAULT_LAST_MODIFIED_BY
-        defaultSnowflakeConnectionShouldBeFound("lastModifiedBy.equals=" + DEFAULT_LAST_MODIFIED_BY);
+    //     // Get all the snowflakeConnectionList where lastModifiedBy equals to DEFAULT_LAST_MODIFIED_BY
+    //     defaultSnowflakeConnectionShouldBeFound("lastModifiedBy.equals=" + DEFAULT_LAST_MODIFIED_BY);
 
-        // Get all the snowflakeConnectionList where lastModifiedBy equals to UPDATED_LAST_MODIFIED_BY
-        defaultSnowflakeConnectionShouldNotBeFound("lastModifiedBy.equals=" + UPDATED_LAST_MODIFIED_BY);
-    }
+    //     // Get all the snowflakeConnectionList where lastModifiedBy equals to UPDATED_LAST_MODIFIED_BY
+    //     defaultSnowflakeConnectionShouldNotBeFound("lastModifiedBy.equals=" + UPDATED_LAST_MODIFIED_BY);
+    // }
 
-    @Test
-    @Transactional
-    public void getAllSnowflakeConnectionsByLastModifiedByIsInShouldWork() throws Exception {
-        // Initialize the database
-        snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
+    // @Test
+    // @Transactional
+    // public void getAllSnowflakeConnectionsByLastModifiedByIsInShouldWork() throws Exception {
+    //     // Initialize the database
+    //     snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
 
-        // Get all the snowflakeConnectionList where lastModifiedBy in DEFAULT_LAST_MODIFIED_BY or UPDATED_LAST_MODIFIED_BY
-        defaultSnowflakeConnectionShouldBeFound("lastModifiedBy.in=" + DEFAULT_LAST_MODIFIED_BY + "," + UPDATED_LAST_MODIFIED_BY);
+    //     // Get all the snowflakeConnectionList where lastModifiedBy in DEFAULT_LAST_MODIFIED_BY or UPDATED_LAST_MODIFIED_BY
+    //     defaultSnowflakeConnectionShouldBeFound("lastModifiedBy.in=" + DEFAULT_LAST_MODIFIED_BY + "," + UPDATED_LAST_MODIFIED_BY);
 
-        // Get all the snowflakeConnectionList where lastModifiedBy equals to UPDATED_LAST_MODIFIED_BY
-        defaultSnowflakeConnectionShouldNotBeFound("lastModifiedBy.in=" + UPDATED_LAST_MODIFIED_BY);
-    }
+    //     // Get all the snowflakeConnectionList where lastModifiedBy equals to UPDATED_LAST_MODIFIED_BY
+    //     defaultSnowflakeConnectionShouldNotBeFound("lastModifiedBy.in=" + UPDATED_LAST_MODIFIED_BY);
+    // }
 
-    @Test
-    @Transactional
-    public void getAllSnowflakeConnectionsByLastModifiedByIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
+    // @Test
+    // @Transactional
+    // public void getAllSnowflakeConnectionsByLastModifiedByIsNullOrNotNull() throws Exception {
+    //     // Initialize the database
+    //     snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
 
-        // Get all the snowflakeConnectionList where lastModifiedBy is not null
-        defaultSnowflakeConnectionShouldBeFound("lastModifiedBy.specified=true");
+    //     // Get all the snowflakeConnectionList where lastModifiedBy is not null
+    //     defaultSnowflakeConnectionShouldBeFound("lastModifiedBy.specified=true");
 
-        // Get all the snowflakeConnectionList where lastModifiedBy is null
-        defaultSnowflakeConnectionShouldNotBeFound("lastModifiedBy.specified=false");
-    }
+    //     // Get all the snowflakeConnectionList where lastModifiedBy is null
+    //     defaultSnowflakeConnectionShouldNotBeFound("lastModifiedBy.specified=false");
+    // }
 
-    @Test
-    @Transactional
-    public void getAllSnowflakeConnectionsByLastModifiedDateIsEqualToSomething() throws Exception {
-        // Initialize the database
-        snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
+    // @Test
+    // @Transactional
+    // public void getAllSnowflakeConnectionsByLastModifiedDateIsEqualToSomething() throws Exception {
+    //     // Initialize the database
+    //     snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
 
-        // Get all the snowflakeConnectionList where lastModifiedDate equals to DEFAULT_LAST_MODIFIED_DATE
-        defaultSnowflakeConnectionShouldBeFound("lastModifiedDate.equals=" + DEFAULT_LAST_MODIFIED_DATE);
+    //     // Get all the snowflakeConnectionList where lastModifiedDate equals to DEFAULT_LAST_MODIFIED_DATE
+    //     defaultSnowflakeConnectionShouldBeFound("lastModifiedDate.equals=" + DEFAULT_LAST_MODIFIED_DATE);
 
-        // Get all the snowflakeConnectionList where lastModifiedDate equals to UPDATED_LAST_MODIFIED_DATE
-        defaultSnowflakeConnectionShouldNotBeFound("lastModifiedDate.equals=" + UPDATED_LAST_MODIFIED_DATE);
-    }
+    //     // Get all the snowflakeConnectionList where lastModifiedDate equals to UPDATED_LAST_MODIFIED_DATE
+    //     defaultSnowflakeConnectionShouldNotBeFound("lastModifiedDate.equals=" + UPDATED_LAST_MODIFIED_DATE);
+    // }
 
-    @Test
-    @Transactional
-    public void getAllSnowflakeConnectionsByLastModifiedDateIsInShouldWork() throws Exception {
-        // Initialize the database
-        snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
+    // @Test
+    // @Transactional
+    // public void getAllSnowflakeConnectionsByLastModifiedDateIsInShouldWork() throws Exception {
+    //     // Initialize the database
+    //     snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
 
-        // Get all the snowflakeConnectionList where lastModifiedDate in DEFAULT_LAST_MODIFIED_DATE or UPDATED_LAST_MODIFIED_DATE
-        defaultSnowflakeConnectionShouldBeFound("lastModifiedDate.in=" + DEFAULT_LAST_MODIFIED_DATE + "," + UPDATED_LAST_MODIFIED_DATE);
+    //     // Get all the snowflakeConnectionList where lastModifiedDate in DEFAULT_LAST_MODIFIED_DATE or UPDATED_LAST_MODIFIED_DATE
+    //     defaultSnowflakeConnectionShouldBeFound("lastModifiedDate.in=" + DEFAULT_LAST_MODIFIED_DATE + "," + UPDATED_LAST_MODIFIED_DATE);
 
-        // Get all the snowflakeConnectionList where lastModifiedDate equals to UPDATED_LAST_MODIFIED_DATE
-        defaultSnowflakeConnectionShouldNotBeFound("lastModifiedDate.in=" + UPDATED_LAST_MODIFIED_DATE);
-    }
+    //     // Get all the snowflakeConnectionList where lastModifiedDate equals to UPDATED_LAST_MODIFIED_DATE
+    //     defaultSnowflakeConnectionShouldNotBeFound("lastModifiedDate.in=" + UPDATED_LAST_MODIFIED_DATE);
+    // }
 
-    @Test
-    @Transactional
-    public void getAllSnowflakeConnectionsByLastModifiedDateIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
+    // @Test
+    // @Transactional
+    // public void getAllSnowflakeConnectionsByLastModifiedDateIsNullOrNotNull() throws Exception {
+    //     // Initialize the database
+    //     snowflakeConnectionRepository.saveAndFlush(snowflakeConnection);
 
-        // Get all the snowflakeConnectionList where lastModifiedDate is not null
-        defaultSnowflakeConnectionShouldBeFound("lastModifiedDate.specified=true");
+    //     // Get all the snowflakeConnectionList where lastModifiedDate is not null
+    //     defaultSnowflakeConnectionShouldBeFound("lastModifiedDate.specified=true");
 
-        // Get all the snowflakeConnectionList where lastModifiedDate is null
-        defaultSnowflakeConnectionShouldNotBeFound("lastModifiedDate.specified=false");
-    }
+    //     // Get all the snowflakeConnectionList where lastModifiedDate is null
+    //     defaultSnowflakeConnectionShouldNotBeFound("lastModifiedDate.specified=false");
+    // }
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -943,11 +943,11 @@ public class SnowflakeConnectionResourceIT {
             .andExpect(jsonPath("$.[*].warehouse").value(hasItem(DEFAULT_WAREHOUSE)))
             .andExpect(jsonPath("$.[*].database").value(hasItem(DEFAULT_DATABASE)))
             .andExpect(jsonPath("$.[*].schema").value(hasItem(DEFAULT_SCHEMA)))
-            .andExpect(jsonPath("$.[*].valid").value(hasItem(DEFAULT_VALID.booleanValue())))
-            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
-            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
-            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
-            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
+            .andExpect(jsonPath("$.[*].valid").value(hasItem(DEFAULT_VALID.booleanValue())));
+            // .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            // .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            // .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            // .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
 
         // Check, that the count call also returns 1
         restSnowflakeConnectionMockMvc.perform(get("/api/snowflake-connections/count?sort=id,desc&" + filter))
@@ -1004,11 +1004,11 @@ public class SnowflakeConnectionResourceIT {
             .warehouse(UPDATED_WAREHOUSE)
             .database(UPDATED_DATABASE)
             .schema(UPDATED_SCHEMA)
-            .valid(UPDATED_VALID)
-            .createdBy(UPDATED_CREATED_BY)
-            .createdDate(UPDATED_CREATED_DATE)
-            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
-            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
+            .valid(UPDATED_VALID);
+            // .createdBy(UPDATED_CREATED_BY)
+            // .createdDate(UPDATED_CREATED_DATE)
+            // .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            // .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         SnowflakeConnectionDTO snowflakeConnectionDTO = snowflakeConnectionMapper.toDto(updatedSnowflakeConnection);
 
         restSnowflakeConnectionMockMvc.perform(put("/api/snowflake-connections")
@@ -1030,10 +1030,10 @@ public class SnowflakeConnectionResourceIT {
         assertThat(testSnowflakeConnection.getDatabase()).isEqualTo(UPDATED_DATABASE);
         assertThat(testSnowflakeConnection.getSchema()).isEqualTo(UPDATED_SCHEMA);
         assertThat(testSnowflakeConnection.isValid()).isEqualTo(UPDATED_VALID);
-        assertThat(testSnowflakeConnection.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testSnowflakeConnection.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testSnowflakeConnection.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testSnowflakeConnection.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+        // assertThat(testSnowflakeConnection.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        // assertThat(testSnowflakeConnection.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        // assertThat(testSnowflakeConnection.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        // assertThat(testSnowflakeConnection.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

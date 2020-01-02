@@ -13,8 +13,9 @@ import {
   migrationProcessRoute,
   migrationProcessPopupRoute
 } from './';
-import { ReportComponent } from 'app/entities/migration-process/report.component';
 import { JoyrideModule } from 'ngx-joyride';
+import { MigrationProcessStatusComponent } from './migration-process-status.component';
+import { MigrationProcessJobStatusComponent } from './migration-process-job-status.component';
 
 const ENTITY_STATES = [...migrationProcessRoute, ...migrationProcessPopupRoute];
 
@@ -26,7 +27,8 @@ const ENTITY_STATES = [...migrationProcessRoute, ...migrationProcessPopupRoute];
     MigrationProcessUpdateComponent,
     MigrationProcessDeleteDialogComponent,
     MigrationProcessDeletePopupComponent,
-    ReportComponent
+    MigrationProcessStatusComponent,
+    MigrationProcessJobStatusComponent
   ],
   entryComponents: [
     MigrationProcessComponent,

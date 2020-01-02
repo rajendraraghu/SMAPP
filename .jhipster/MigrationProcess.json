@@ -46,6 +46,10 @@
             "fieldType": "String"
         },
         {
+            "fieldName": "selectedColumns",
+            "fieldType": "String"
+        },
+        {
             "fieldName": "lastStatus",
             "fieldType": "String"
         },
@@ -64,6 +68,10 @@
         {
             "fieldName": "lastModifiedDate",
             "fieldType": "Instant"
+        },
+        {
+            "fieldName": "lastRunTime",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20190707173954",

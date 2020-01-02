@@ -74,13 +74,13 @@ public class AccountResource {
      * @param key the activation key.
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be activated.
      */
-    @GetMapping("/activate")
-    public void activateAccount(@RequestParam(value = "key") String key) {
-        Optional<User> user = userService.activateRegistration(key);
-        if (!user.isPresent()) {
-            throw new AccountResourceException("No user was found for this activation key");
-        }
-    }
+    // @GetMapping("/activate")
+    // public void activateAccount(@RequestParam(value = "key") String key) {
+    //     Optional<User> user = userService.activateRegistration(key);
+    //     if (!user.isPresent()) {
+    //         throw new AccountResourceException("No user was found for this activation key");
+    //     }
+    // }
 
     /**
      * {@code GET  /authenticate} : check if the user is authenticated, and return its login.
@@ -126,7 +126,7 @@ public class AccountResource {
             throw new AccountResourceException("User could not be found");
         }
         userService.updateUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(),
-            userDTO.getLangKey(), userDTO.getImageUrl());
+             userDTO.getImageUrl());
     }
 
     /**

@@ -23,7 +23,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="system" type="varchar(255)">
+            <column name="source_type" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
 
@@ -32,15 +32,23 @@
             </column>
 
             <column name="username" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
 
             <column name="password" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
 
             <column name="database" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
+            </column>
+
+             <column name="host" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+             <column name="port_number" type="varchar(255)">
+                <constraints nullable="true" />
             </column>
 
             <column name="schema" type="varchar(255)">
@@ -95,11 +103,13 @@
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
             <column name="description" type="string"/>
-            <column name="system" type="string"/>
+            <column name="source_Type" type="string"/>
             <column name="url" type="string"/>
             <column name="username" type="string"/>
             <column name="password" type="string"/>
             <column name="database" type="string"/>
+            <column name="host" type="string"/>
+            <column name="port_number" type="string"/>
             <column name="schema" type="string"/>
             <column name="valid" type="boolean"/>
             <column name="created_by" type="string"/>

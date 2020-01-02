@@ -97,8 +97,8 @@ public class SourceConnectionQueryService extends QueryService<SourceConnection>
             if (criteria.getDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), SourceConnection_.description));
             }
-            if (criteria.getSystem() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getSystem(), SourceConnection_.system));
+            if (criteria.getSourceType() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getSourceType(), SourceConnection_.sourceType));
             }
             if (criteria.getUrl() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getUrl(), SourceConnection_.url));
@@ -111,6 +111,12 @@ public class SourceConnectionQueryService extends QueryService<SourceConnection>
             }
             if (criteria.getDatabase() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDatabase(), SourceConnection_.database));
+            }
+            if (criteria.getHost() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getHost(), SourceConnection_.host));
+            }
+            if (criteria.getPortNumber() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getPortNumber(), SourceConnection_.portNumber));
             }
             if (criteria.getSchema() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getSchema(), SourceConnection_.schema));

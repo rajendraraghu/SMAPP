@@ -37,7 +37,7 @@ export const snowflakeConnectionRoute: Routes = [
       pagingParams: JhiResolvePagingParams
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN'],
       defaultSort: 'id,asc',
       pageTitle: 'snowpoleApp.snowflakeConnection.home.title'
     },
@@ -50,7 +50,7 @@ export const snowflakeConnectionRoute: Routes = [
       snowflakeConnection: SnowflakeConnectionResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN', 'ROLE_DEVELOPER'],
       pageTitle: 'snowpoleApp.snowflakeConnection.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -62,7 +62,7 @@ export const snowflakeConnectionRoute: Routes = [
       snowflakeConnection: SnowflakeConnectionResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN'],
       pageTitle: 'snowpoleApp.snowflakeConnection.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -74,7 +74,7 @@ export const snowflakeConnectionRoute: Routes = [
       snowflakeConnection: SnowflakeConnectionResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN'],
       pageTitle: 'snowpoleApp.snowflakeConnection.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -89,7 +89,7 @@ export const snowflakeConnectionPopupRoute: Routes = [
       snowflakeConnection: SnowflakeConnectionResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: ['ROLE_ADMIN'],
       pageTitle: 'snowpoleApp.snowflakeConnection.home.title'
     },
     canActivate: [UserRouteAccessService],

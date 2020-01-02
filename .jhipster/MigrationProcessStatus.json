@@ -1,0 +1,50 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "runBy",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "jobStartTime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "jobEndTime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "tableCount",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "successCount",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "failureCount",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "jobStatus",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20190808124154",
+    "dto": "mapstruct",
+    "searchEngine": false,
+    "service": "serviceImpl",
+    "entityTableName": "sah_jobrunstatus",
+    "databaseType": "sql",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
+}

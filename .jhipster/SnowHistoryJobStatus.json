@@ -1,0 +1,46 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "startTime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "endTime",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "sourceCount",
+            "fieldType": "bigint"
+        },
+        {
+            "fieldName": "insertCount",
+            "fieldType": "bigint"
+        },
+        {
+            "fieldName": "deleteCount",
+            "fieldType": "bigint"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20190820012334",
+    "dto": "mapstruct",
+    "searchEngine": false,
+    "service": "serviceImpl",
+    "entityTableName": "snow_history_job_status",
+    "databaseType": "sql",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
+}

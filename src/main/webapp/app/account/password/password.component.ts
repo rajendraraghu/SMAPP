@@ -27,6 +27,10 @@ export class PasswordComponent implements OnInit {
     });
   }
 
+  previousState() {
+    window.history.back();
+  }
+
   changePassword() {
     const newPassword = this.passwordForm.get(['newPassword']).value;
     if (newPassword !== this.passwordForm.get(['confirmPassword']).value) {

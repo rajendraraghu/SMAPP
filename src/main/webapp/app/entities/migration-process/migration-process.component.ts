@@ -1,10 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, SystemJsNgModuleLoader } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
-
 import { IMigrationProcess } from 'app/shared/model/migration-process.model';
 import { AccountService } from 'app/core';
 
@@ -29,6 +28,8 @@ export class MigrationProcessComponent implements OnInit, OnDestroy {
   predicate: any;
   previousPage: any;
   reverse: any;
+  runDisable: boolean;
+  id: any;
 
   constructor(
     protected migrationProcessService: MigrationProcessService,
@@ -96,6 +97,9 @@ export class MigrationProcessComponent implements OnInit, OnDestroy {
     this.accountService.identity().then(account => {
       this.currentAccount = account;
     });
+    this.activatedRoute.data.subscribe(({ migrationProcess }) => {
+      this.migrationProcesses = migrationProcess;
+    });
     this.registerChangeInMigrationProcesses();
   }
 
@@ -120,14 +124,26 @@ export class MigrationProcessComponent implements OnInit, OnDestroy {
   }
 
   sendTableList(migrationProcess) {
-    this.migrationProcessService.sendTableList(migrationProcess).subscribe(response => {
-      // this.tables = this.tablesCopy = response.body;
-      alert('Sent table list to back-end');
-    });
-    this.viewReport(migrationProcess.id);
+    // migrationProcess.isRunning = true;
+    this.id = migrationProcess.id;
+    if (migrationProcess.bulk === null && migrationProcess.cdc === null) {
+      const smsg = 'snowpoleApp.migrationProcess.atleastOneTable';
+      this.jhiAlertService.error(smsg);
+    } else {
+      migrationProcess.isRunning = true;
+      migrationProcess.runBy = this.currentAccount.login;
+      this.migrationProcessService.sendTableList(migrationProcess).subscribe(response => {
+        migrationProcess.isRunning = !response.ok;
+        if (response.ok) {
+          const smsg = 'snowpoleApp.migrationProcess.migrationCompleted';
+          this.jhiAlertService.success(smsg);
+        }
+      });
+    }
+    // migrationProcess.isRunning = false;
   }
 
-  viewReport(processId) {
+  viewProcessStatus(processId) {
     this.router.navigate(['/migration-process', processId, 'history']);
   }
 

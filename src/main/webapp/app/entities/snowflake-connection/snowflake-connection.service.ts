@@ -15,6 +15,7 @@ type EntityArrayResponseType = HttpResponse<ISnowflakeConnection[]>;
 @Injectable({ providedIn: 'root' })
 export class SnowflakeConnectionService {
   public resourceUrl = SERVER_API_URL + 'api/snowflake-connections';
+  public testConnectionUrl = SERVER_API_URL + 'api/migration-processes/TestConnectionDest';
 
   constructor(protected http: HttpClient) {}
 
@@ -47,6 +48,11 @@ export class SnowflakeConnectionService {
 
   delete(id: number): Observable<HttpResponse<any>> {
     return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  testConnection(snowflakeConnection: ISnowflakeConnection): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClient(snowflakeConnection);
+    return this.http.post<ISnowflakeConnection>(this.testConnectionUrl, copy, { observe: 'response' });
   }
 
   protected convertDateFromClient(snowflakeConnection: ISnowflakeConnection): ISnowflakeConnection {

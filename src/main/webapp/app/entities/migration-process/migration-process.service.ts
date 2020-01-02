@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { DATE_FORMAT } from 'app/shared/constants/input.constants';
@@ -8,13 +8,18 @@ import { map } from 'rxjs/operators';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { IMigrationProcess } from 'app/shared/model/migration-process.model';
+import { IMigrationProcessStatus } from 'app/shared/model/migration-process-status.model';
+import { IMigrationProcessJobStatus } from 'app/shared/model/migration-process-job-status.model';
 
 type EntityResponseType = HttpResponse<IMigrationProcess>;
 type EntityArrayResponseType = HttpResponse<IMigrationProcess[]>;
+type ReportArrayResponseType = HttpResponse<IMigrationProcessStatus[]>;
+type JobArrayResponseType = HttpResponse<IMigrationProcessJobStatus[]>;
 
 @Injectable({ providedIn: 'root' })
 export class MigrationProcessService {
   public resourceUrl = SERVER_API_URL + 'api/migration-processes';
+  params: HttpParams = new HttpParams();
 
   constructor(protected http: HttpClient) {}
 
@@ -53,12 +58,25 @@ export class MigrationProcessService {
     return this.http.post<IMigrationProcess>(`${this.resourceUrl}/retrieveTableList`, migrationProcess, { observe: 'response' });
   }
 
+  getFileColumnList(migrationProcess: IMigrationProcess, fileName: string): Observable<EntityResponseType> {
+    this.params = this.params.set('fileName', fileName);
+    // return this.http.post<IMigrationProcess>(`${this.resourceUrl}/retrieveFileColumnList?fileName=` + fileName, migrationProcess, { observe: 'response' });
+    return this.http.post<IMigrationProcess>(`${this.resourceUrl}/retrieveFileColumnList`, migrationProcess, {
+      params: this.params,
+      observe: 'response'
+    });
+  }
+
   sendTableList(migrationProcess: IMigrationProcess): Observable<EntityResponseType> {
     return this.http.post<IMigrationProcess>(`${this.resourceUrl}/sendTableListforHistProcess`, migrationProcess, { observe: 'response' });
   }
 
-  getReports(migrationProcess: IMigrationProcess): Observable<EntityResponseType> {
-    return this.http.post<IMigrationProcess>(`${this.resourceUrl}/Reports`, migrationProcess, { observe: 'response' });
+  getProcessStatus(id: number): Observable<ReportArrayResponseType> {
+    return this.http.get<IMigrationProcessStatus[]>(`${this.resourceUrl}/Reports/${id}`, { observe: 'response' });
+  }
+
+  getJobStatus(id: number): Observable<JobArrayResponseType> {
+    return this.http.get<IMigrationProcessJobStatus[]>(`${this.resourceUrl}/jobStatus/${id}`, { observe: 'response' });
   }
 
   protected convertDateFromClient(migrationProcess: IMigrationProcess): IMigrationProcess {

@@ -1,0 +1,155 @@
+<jhi-alert></jhi-alert>
+<div class="row justify-content-center">
+    <div class="col-4">
+        <div *ngIf="deltaProcess">
+            <h2><span jhiTranslate="snowpoleApp.deltaProcess.detail.title">Snow Delta </span></h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="snowpoleApp.deltaProcess.name">Name</span></dt>
+                <dd>
+                    <span>{{deltaProcess.name}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.deltaProcess.description">Description</span></dt>
+                <dd>
+                    <span>{{deltaProcess.description}}</span>
+                </dd>
+
+                <dt><span jhiTranslate="snowpoleApp.deltaProcess.sourceConnection">Source Connection</span></dt>
+                <dd>
+                    <div *ngIf="deltaProcess.sourceConnectionId">
+                        <a
+                            [routerLink]="['/source-connection', deltaProcess.sourceConnectionId, 'view']">{{deltaProcess.sourceConnectionName}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.deltaProcess.snowflakeConnection">Snowflake Connection</span>
+                </dt>
+                <dd>
+                    <div *ngIf="deltaProcess.snowflakeConnectionId">
+                        <a
+                            [routerLink]="['/snowflake-connection', deltaProcess.snowflakeConnectionId, 'view']">{{deltaProcess.snowflakeConnectionName}}</a>
+                    </div>
+                </dd>
+
+                <!-- <dt><span jhiTranslate="snowpoleApp.deltaProcess.type">Type</span></dt>
+                <dd>
+                    <span>{{deltaProcess.type}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.deltaProcess.tablesToMigrate">Tables To Migrate</span></dt>
+                <dd>
+                    <span>{{deltaProcess.tablesToMigrate}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.deltaProcess.lastStatus">Last Status</span></dt>
+                <dd>
+                    <span>{{deltaProcess.lastStatus}}</span>
+                </dd> -->
+                <dt><span jhiTranslate="snowpoleApp.deltaProcess.createdBy">Created By</span></dt>
+                <dd>
+                    <span>{{deltaProcess.createdBy}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.deltaProcess.createdDate">Created Date</span></dt>
+                <dd>
+                    <span>{{deltaProcess.createdDate | date:'medium'}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.deltaProcess.lastModifiedBy">Last Modified By</span></dt>
+                <dd>
+                    <span>{{deltaProcess.lastModifiedBy}}</span>
+                </dd>
+                <dt><span jhiTranslate="snowpoleApp.deltaProcess.lastModifiedDate">Last Modified Date</span></dt>
+                <dd>
+                    <span>{{deltaProcess.lastModifiedDate | date:'medium'}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit" (click)="previousState()" class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button" [routerLink]="['/delta-process', deltaProcess.id, 'edit']"
+                class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+    <div class="col-4">
+        <fieldset>
+            <h4>Select the tables for Delta Process</h4>
+            <hr>
+            <div class="form-group has-search">
+                <fa-icon class="form-control-feedback" [icon]="'search'"></fa-icon>
+                <input type="text" class="form-control rounded-search-bar" placeholder="Search for tables"
+                    (input)="searchForTables($event.target.value)">
+            </div>
+            <div>
+            <input type="checkbox" [(ngModel)]="masterSelected" name="list_name" value="m1" (change)="checkUncheckAll($event)"/> <strong style="color:darkorange;font-weight:bold">Select/ Unselect All</strong>
+            </div>
+
+            <div class="form-group" style="height: 40vh; overflow-y: auto;">
+                <div class="row m-0">
+                    <div class="col-6 pl-0">
+                        <h6> Table Name </h6>
+                    </div>
+                    <div class="col-6 pl-0">
+                        <h6> Primary Key </h6>
+                    </div>
+              <!--      <div class="col-2 pl-0">
+                        <h6> CDC </h6>
+                    </div> -->
+                    <!-- <div class="col-3 pl-0">
+                        <h6> CDC Columns </h6>
+                    </div> -->
+                </div>
+                <div class="row m-0" *ngFor="let item of tables; let i=index">
+                    <div class="col-6 pl-0">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" [id]="i"  name="list_name" [(ngModel)]="item.selected" value="{{item.name}}"  (change)= "onSelectionChange(item)">
+                            <label class="custom-control-label" [for]="i">{{item.name}}</label>
+                        </div>
+                    </div>
+                    <div class="col-3 pl-0">
+                        <!-- <button type="button" [routerLink]="['/migration-process',{ outlets: { popup: item.name+'/selectPK'} }]" class="btn btn-primary"> -->
+                        <button type="button" class="btn btn-primary" [disabled]="!item.selected" style="height:80%;width:50%; font-size: 15px; text-align: center;"
+                        (click) = "selectPK(item,templatePK)">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;
+                            <!-- <span> {{item.primaryKey}} </span> -->
+                        </button>
+                        <ng-template #templatePK let-modal>
+                                <div class="modal-header">
+                                  <h4 class="modal-title" id="modal-basic-title">Select Primary Key</h4>
+                                  <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button> -->
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row m-0" *ngFor="let column of columns; let j=index">
+                                        <div class="col-12 pl-0">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" [id]="'columnName'+j" class="custom-control-input" name="column_name_list" [(ngModel)]="column.selected" value="{{column.columnName}}" (change)="onPKSelection(item.name,column)">
+                                                <label class="custom-control-label" [for]="'columnName'+j">{{column.columnName}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-primary" (click)="modal.close()">Close</button>
+                                </div>
+                              </ng-template>
+                </div>
+            </div>
+        </fieldset>
+        <div class="row m-0">
+            <div class="col-6 pl-0">
+                <button type="button" class="btn btn-primary" (click)="testAndMigrate()" style="width: 100%;">
+                    <i class="fa fa-save   fa-fw"></i>
+                    &nbsp;<span>Save tables</span>
+                </button>
+            </div>
+            <div class="col-6 pl-0">
+                <button type="reset" class="btn btn-danger" (click)="reset()" style="width: 100%;">
+                    <i class="fa fa-refresh  fa-fw"></i>
+                    &nbsp;<span>Undo</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

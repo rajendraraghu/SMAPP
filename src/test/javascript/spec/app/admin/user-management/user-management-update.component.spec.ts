@@ -15,7 +15,7 @@ describe('Component Tests', () => {
     let service: UserService;
     let mockLanguageHelper: any;
     const route = ({
-      data: of({ user: new User(1, 'user', 'first', 'last', 'first@last.com', true, 'en', ['ROLE_USER'], 'admin', null, null, null) })
+      data: of({ user: new User(1, 'user', 'first', 'last', 'first@last.com', ['ROLE_DEVELOPER'], 'admin', null, null, null) })
     } as any) as ActivatedRoute;
 
     beforeEach(async(() => {
@@ -54,7 +54,7 @@ describe('Component Tests', () => {
           // THEN
           expect(service.authorities).toHaveBeenCalled();
           expect(comp.authorities).toEqual(['USER']);
-          expect(mockLanguageHelper.getAllSpy).toHaveBeenCalled();
+          // expect(mockLanguageHelper.getAllSpy).toHaveBeenCalled();
         })
       ));
     });

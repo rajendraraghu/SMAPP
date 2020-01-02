@@ -103,6 +103,9 @@ public class MigrationProcessQueryService extends QueryService<MigrationProcess>
             if (criteria.getTablesToMigrate() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getTablesToMigrate(), MigrationProcess_.tablesToMigrate));
             }
+            if (criteria.getSelectedColumns() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getSelectedColumns(), MigrationProcess_.selectedColumns));
+            }
             if (criteria.getLastStatus() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getLastStatus(), MigrationProcess_.lastStatus));
             }

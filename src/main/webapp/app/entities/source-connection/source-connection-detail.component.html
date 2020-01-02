@@ -3,7 +3,7 @@
         <div *ngIf="sourceConnection">
             <h2><span jhiTranslate="snowpoleApp.sourceConnection.detail.title">Source Connection</span></h2>
             <hr>
-            <jhi-alert-error></jhi-alert-error>
+            <jhi-alert></jhi-alert>
             <dl class="row-md jh-entity-details">
                 <dt><span jhiTranslate="snowpoleApp.sourceConnection.name">Name</span></dt>
                 <dd>
@@ -13,9 +13,9 @@
                 <dd>
                     <span>{{sourceConnection.description}}</span>
                 </dd>
-                <dt><span jhiTranslate="snowpoleApp.sourceConnection.system">System</span></dt>
+                <dt><span jhiTranslate="snowpoleApp.sourceConnection.sourceType">sourceType</span></dt>
                 <dd>
-                    <span>{{sourceConnection.system}}</span>
+                    <span>{{sourceConnection.sourceType}}</span>
                 </dd>
                 <dt><span jhiTranslate="snowpoleApp.sourceConnection.url">Url</span></dt>
                 <dd>
@@ -27,7 +27,7 @@
                 </dd>
                 <dt><span jhiTranslate="snowpoleApp.sourceConnection.password">Password</span></dt>
                 <dd>
-                    <span>{{sourceConnection.password}}</span>
+                    <span>**********</span>
                 </dd>
                 <dt><span jhiTranslate="snowpoleApp.sourceConnection.database">Database</span></dt>
                 <dd>
@@ -65,6 +65,11 @@
                     class="btn btn-info">
                 <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
             </button>
+            
+            <button type="submit" (click)="testConnection()" class="btn btn-info" [disabled]="disable">
+                <fa-icon [icon]="'eye'"></fa-icon>
+                <span class="d-none d-md-inline">Test Connection</span>
+            </button>  
 
             <button type="button"
                     [routerLink]="['/source-connection', sourceConnection.id, 'edit']"
