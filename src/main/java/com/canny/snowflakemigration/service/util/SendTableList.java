@@ -678,7 +678,9 @@ public class SendTableList  {
 			ddl6 = ddl6.concat(rs1.getString("ddl"));
 			ddl6 = ddl6.replace("int()","int");
 			ddl6 = ddl6.replace("datetime()","datetime");
-            ddl6 = ddl6.replace("money()","decimal(38,2)");			
+			ddl6 = ddl6.replace("money()","decimal(38,2)");	
+			ddl6 = ddl6.replace("decimal()","decimal");
+			ddl6 = ddl6.replace("bit()","boolean");		
 			logger.info("ddl6:"+ddl6);
 			//ddl6 = ddl6.concat("\n");
 			//logger.info("ddl6:"+ddl6);
