@@ -11,6 +11,7 @@ import { callbackify } from 'util';
 import { sample } from 'rxjs/operators';
 import { Validators } from '@angular/forms';
 import { thisTypeAnnotation } from '@babel/types';
+import { Content } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
   selector: 'jhi-migration-process-detail',
@@ -40,6 +41,10 @@ export class MigrationProcessDetailComponent implements OnInit {
   showSpinner: true;
   // save_disable: string[];
   disable: boolean;
+  load: boolean;
+  spinner3: boolean;
+  spinner4: boolean;
+
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
@@ -49,6 +54,7 @@ export class MigrationProcessDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.load = true;
     this.activatedRoute.data.subscribe(({ migrationProcess }) => {
       this.migrationProcess = migrationProcess;
       this.type = migrationProcess.sourceType;
@@ -75,6 +81,7 @@ export class MigrationProcessDetailComponent implements OnInit {
   getTableList() {
     this.migrationProcessService.getTableList(this.migrationProcess).subscribe(response => {
       this.prepareData(response.body);
+      this.load = false;
     });
   }
 
@@ -106,8 +113,8 @@ export class MigrationProcessDetailComponent implements OnInit {
       };
       this.columns.push(column);
     });
+    this.spinner4 = false;
   }
-
   checkUncheckAll(event) {
     if (event.target.checked) {
       this.selectedTables = [];
@@ -149,18 +156,23 @@ export class MigrationProcessDetailComponent implements OnInit {
   }
 
   selectPK(item, content) {
-    this.prepareColumn(item.name, item.columnList);
+    this.columns = [];
     this.modalService.open(content);
+    this.spinner4 = true;
+    this.prepareColumn(item.name, item.columnList);
   }
 
   selectFilePK(item, content) {
-    this.getFileColumn(item.name);
+    this.columns = [];
     this.modalService.open(content);
+    this.spinner3 = true;
+    this.getFileColumn(item.name);
   }
 
   getFileColumn(fileName) {
     this.migrationProcessService.getFileColumnList(this.migrationProcess, fileName).subscribe(response => {
       this.prepareColumn(fileName, response.body);
+      this.spinner3 = false;
     });
   }
 
@@ -200,7 +212,6 @@ export class MigrationProcessDetailComponent implements OnInit {
       this.selectedTables.splice(index, 1);
     }
   }
-
   reset() {
     this.ngOnInit();
   }
@@ -260,6 +271,7 @@ export class MigrationProcessDetailComponent implements OnInit {
     const cdcColumns = [],
       cdcPrimaryKey = [],
       bulkPrimaryKey = [];
+    this.disable = false;
     if (this.selectedTables.length > 0) {
       this.tables.forEach(element => {
         // this.save_disable = false;
