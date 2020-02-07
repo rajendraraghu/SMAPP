@@ -135,7 +135,7 @@ public class DeltaSendTableList  {
 					String srcCols = getColNames2(con1,tableName,system,processDTO.getSourceConnectionDatabase(),schema);
 					toCSV(rs1,csvFilename);	
 					Statement stmt2=con2.createStatement();
-					stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
+					stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");
 					stmt2.executeQuery("PUT 'file://F:/POC/CSV/"+tableName+".csv' @"+tableName+"_stage;");
 					logger.info("stage writing completed");
 					int j = 1;
