@@ -26,6 +26,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -43,6 +45,7 @@ import java.sql.Statement;
 
 import static com.canny.snowflakemigration.service.util.DeltaListTables.listTable;
 import static com.canny.snowflakemigration.service.util.DeltaSendTableList.sendSelectedTables;
+import static com.canny.snowflakemigration.service.util.DeltaListColumns.listFileColumns;
 
 
 import com.google.gson.JsonPrimitive;
@@ -317,5 +320,11 @@ public class DeltaProcessResource {
          }
          String[] colNames = (String[])tn.toArray(new String[tn.size()]);
     	 return colNames;
+     }
+     @PostMapping(value = "/delta-processes/retrieveFileColumnList")
+     public @ResponseBody String[] callListFileColumns(@Valid @RequestBody DeltaProcessDTO DeltaProcessDTO,
+             @RequestParam String fileName) throws IOException {
+         String[] fileColumns = listFileColumns(DeltaProcessDTO, fileName);
+         return fileColumns;
      }
 }

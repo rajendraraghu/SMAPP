@@ -449,8 +449,8 @@ public class SendTableList  {
     	FilestoCSV(filepath,csvFilename);   	
     	logger.info("Stage file writing complete");    	
        	Statement stmt2=con2.createStatement();
-    	logger.info("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
-    	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");    	
+    	logger.info("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");
+    	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");    	
 		stmt2.executeQuery("PUT 'file://F:/POC/CSV/"+tableName+".csv' @"+tableName+"_stage;");
 		// stmt2.executeQuery("PUT 'file://./temp/"+tableName+".csv' @"+tableName+"_stage;");
     	int m = 1;
@@ -536,8 +536,8 @@ public class SendTableList  {
     	toCSV(rs1,csvFilename);   	
     	logger.info("Stage file writing complete");    	
        	Statement stmt2=con2.createStatement();
-    	logger.info("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
-    	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");    	
+    	logger.info("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");
+    	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");    	
 		stmt2.executeQuery("PUT 'file://F:/POC/CSV/"+tableName+".csv' @"+tableName+"_stage;");
 		// stmt2.executeQuery("PUT 'file://./temp/"+tableName+".csv' @"+tableName+"_stage;");
     	int m = 1;
@@ -678,7 +678,9 @@ public class SendTableList  {
 			ddl6 = ddl6.concat(rs1.getString("ddl"));
 			ddl6 = ddl6.replace("int()","int");
 			ddl6 = ddl6.replace("datetime()","datetime");
-            ddl6 = ddl6.replace("money()","decimal(38,2)");			
+			ddl6 = ddl6.replace("money()","decimal(38,2)");	
+			ddl6 = ddl6.replace("decimal()","decimal");
+			ddl6 = ddl6.replace("bit()","boolean");		
 			logger.info("ddl6:"+ddl6);
 			//ddl6 = ddl6.concat("\n");
 			//logger.info("ddl6:"+ddl6);

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { IDeltaProcess } from 'app/shared/model/delta-process.model';
@@ -6,10 +6,7 @@ import { DeltaProcessService } from 'app/entities/delta-process/delta-process.se
 import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { JhiAlertService } from 'ng-jhipster';
-import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { callbackify } from 'util';
-import { sample } from 'rxjs/operators';
-import { Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'jhi-delta-process-detail',
@@ -28,10 +25,14 @@ export class DeltaProcessDetailComponent implements OnInit {
   isSaving: boolean;
   save_disable: boolean;
   masterSelected: boolean;
+  fileFlag: boolean;
   check: any[];
   str: string;
   tb = [];
   add: any;
+  deltaspin: boolean;
+  delmodspin: boolean;
+  delfilemodspin: boolean;
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
@@ -41,8 +42,10 @@ export class DeltaProcessDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.deltaspin = true;
     this.activatedRoute.data.subscribe(({ deltaProcess }) => {
       this.deltaProcess = deltaProcess;
+      this.fileFlag = deltaProcess.sourceType === 'Flatfiles' ? true : false;
       this.selectedTables = this.deltaProcess.tablesList ? JSON.parse(this.deltaProcess.tablesList) : [];
       this.selectedColumns = this.deltaProcess.selectedColumns ? JSON.parse(this.deltaProcess.selectedColumns) : [];
       this.getTableList();
@@ -59,9 +62,16 @@ export class DeltaProcessDetailComponent implements OnInit {
     this.deltaProcessService.getTableList(this.deltaProcess).subscribe(response => {
       // this.tables = this.tablesCopy = response.body;
       this.prepareData(response.body);
+      this.deltaspin = false;
     });
   }
 
+  getFileColumn(fileName) {
+    this.deltaProcessService.getFileColumnList(this.deltaProcess, fileName).subscribe(response => {
+      this.prepareColumn(fileName, response.body);
+      this.delfilemodspin = false;
+    });
+  }
   prepareData(response) {
     this.tables = [];
     response.tableinfo.forEach(element => {
@@ -87,6 +97,7 @@ export class DeltaProcessDetailComponent implements OnInit {
       };
       this.columns.push(column);
     });
+    this.delmodspin = false;
   }
 
   checkUncheckAll(event) {
@@ -129,8 +140,16 @@ export class DeltaProcessDetailComponent implements OnInit {
     }
   }
   selectPK(item, content) {
-    this.prepareColumn(item.name, item.columnList);
     this.modalService.open(content);
+    this.delmodspin = true;
+    this.prepareColumn(item.name, item.columnList);
+  }
+
+  selectFilePK(item, content) {
+    this.columns = [];
+    this.modalService.open(content);
+    this.delfilemodspin = true;
+    this.getFileColumn(item.name);
   }
 
   searchStringInArray(a, b) {

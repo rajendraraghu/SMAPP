@@ -24,6 +24,7 @@ export class SnowHistoryDetailComponent implements OnInit {
   //   bulkTables = [];
   isSaving: boolean;
   masterSelected: boolean;
+  historyspin: boolean;
   constructor(
     protected jhiAlertService: JhiAlertService,
     protected activatedRoute: ActivatedRoute,
@@ -31,6 +32,7 @@ export class SnowHistoryDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.historyspin = true;
     this.activatedRoute.data.subscribe(({ snowHistory }) => {
       this.snowHistory = snowHistory;
       //   this.bulkTables = this.snowHistory.bulk ? JSON.parse(this.snowHistory.bulk) : [];
@@ -50,6 +52,7 @@ export class SnowHistoryDetailComponent implements OnInit {
     this.snowHistoryService.getTableList(this.snowHistory).subscribe(response => {
       // this.tables = this.tablesCopy = response.body;
       this.prepareData(response.body);
+      this.historyspin = false;
     });
   }
 

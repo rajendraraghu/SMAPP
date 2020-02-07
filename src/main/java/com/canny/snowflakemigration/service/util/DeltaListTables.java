@@ -1,5 +1,5 @@
 package com.canny.snowflakemigration.service.util;
-
+  
 import java.awt.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,77 +13,166 @@ import java.util.Properties;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import java.io.File;
+import java.io.FilenameFilter;
 
 public class DeltaListTables {
-    public static String listTable(DeltaProcessDTO deltaProcessDTO) throws SQLException,ClassNotFoundException,NullPointerException {
-       // Connection con = DriverManager.getConnection(deltaProcessDTO.getSourceConnectionUrl(), deltaProcessDTO.getSourceConnectionUsername(), deltaProcessDTO.getSourceConnectionPassword());
-        //Statement stmt = con.createStatement();
-        Properties properties0 = new Properties();
-		properties0.put("user", deltaProcessDTO.getSourceConnectionUsername());
-		properties0.put("password", deltaProcessDTO.getSourceConnectionPassword());
-		properties0.put("db",deltaProcessDTO.getSourceConnectionDatabase());
-	    properties0.put("schema",deltaProcessDTO.getSourceConnectionSchema());
-	    Connection con = DriverManager.getConnection(deltaProcessDTO.getSourceConnectionUrl(),properties0);
-        Statement stmt0 = con.createStatement();
-        Statement stmt1 = con.createStatement();
-        Statement stmt2 = con.createStatement();
+    public static String listTable(DeltaProcessDTO DeltaProcessDTO)
+            throws SQLException, ClassNotFoundException, NullPointerException {
+        String system = DeltaProcessDTO.getSourceType();
+        System.out.println("system:" + system);
         JsonObject jsonResponse = new JsonObject();
         JsonArray data = new JsonArray();
-		
-		ResultSet rs1 = null;
-		String system = deltaProcessDTO.getSourceType();
-		System.out.println("system:"+system);
-
-        if(system.equals("MySQL")) {rs1 = stmt0.executeQuery("SELECT a.TABLE_NAME,group_concat(b.COLUMN_NAME SEPARATOR'-') as PrimaryKey FROM INFORMATION_SCHEMA.TABLES a LEFT JOIN INFORMATION_SCHEMA.COLUMNS b ON a.TABLE_NAME = b.TABLE_NAME AND b.COLUMN_KEY = 'PRI' AND a.TABLE_SCHEMA = b.TABLE_SCHEMA  WHERE a.TABLE_SCHEMA = '"+deltaProcessDTO.getSourceConnectionSchema()+"' GROUP BY a.TABLE_NAME;");}
-        else if(system.equals("SQLServer")) {rs1 = stmt0.executeQuery("SELECT KU.table_name as TABLE_NAME,string_agg(column_name,'-') as PrimaryKey FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KU ON TC.CONSTRAINT_TYPE = 'PRIMARY KEY' AND TC.CONSTRAINT_NAME = KU.CONSTRAINT_NAME AND TC.TABLE_CATALOG = '"+deltaProcessDTO.getSourceConnectionDatabase() +"'  GROUP BY KU.TABLE_NAME;");}
-        else if(system.equals("Netezza")) {rs1 = stmt0.executeQuery("SELECT DISTINCT TableName as TABLE_NAME,'NoPrimaryKey' as PrimaryKey FROM DBC.ColumnsV WHERE DatabaseName = '"+deltaProcessDTO.getSourceConnectionSchema()+"';");}
-        else if(system.equals("Teradata")) {rs1 = stmt0.executeQuery("SELECT DISTINCT TABLE_NAME, 'NoPrimaryKey' as PrimaryKey FROM _V_SYS_COLUMNS WHERE TABLE_SCHEMA = '"+deltaProcessDTO.getSourceConnectionSchema()+"';");}
-        else if(system.equals("Oracle")) {
-			System.out.println("inside first query loop"+deltaProcessDTO.getSourceConnectionSchema());
-
-			rs1 = stmt0.executeQuery("SELECT cols.TABLE_NAME, LISTAGG(cols.column_name,'-') WITHIN GROUP (ORDER BY cols.column_name)as \"PrimaryKey\" FROM all_constraints cons, all_cons_columns cols WHERE cols.OWNER = '"+deltaProcessDTO.getSourceConnectionSchema()+"' AND cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner GROUP BY cols.TABLE_NAME");
-
-			}
-
-        /*ResultSet rs1 = stmt0.executeQuery("SELECT a.TABLE_NAME,group_concat(b.COLUMN_NAME SEPARATOR'-') as PrimaryKey FROM INFORMATION_SCHEMA.TABLES a LEFT JOIN INFORMATION_SCHEMA.COLUMNS b ON a.TABLE_NAME = b.TABLE_NAME AND b.COLUMN_KEY = 'PRI' AND a.TABLE_SCHEMA = b.TABLE_SCHEMA  WHERE a.TABLE_SCHEMA = '"+deltaProcessDTO.getSourceConnectionSchema()+"' GROUP BY a.TABLE_NAME;");*/
-        while(rs1.next()) {
-        	JsonObject row = new JsonObject();
-        	//JsonElement element1 = new JsonElement();
-            //JsonElement element2 = new JsonElement();
-            //element1 = (JsonElement)rs1.getString("TABLE_NAME");
-        	row.addProperty("tableName",rs1.getString("TABLE_NAME"));
-        	row.addProperty("PrimaryKey",rs1.getString("PrimaryKey"));
-			
-			ResultSet rs2 = null;
-			//stmt1.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS");
-            if(system.equals("MySQL")) {rs2 = stmt1.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '"+deltaProcessDTO.getSourceConnectionSchema()+"' AND TABLE_NAME = '"+rs1.getString("TABLE_NAME")+"';");}
-            else if(system.equals("SQLServer")) {rs2 = stmt1.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"+deltaProcessDTO.getSourceConnectionDatabase()+"' AND TABLE_NAME = '"+rs1.getString("TABLE_NAME")+"';");}
-            else if(system.equals("Netezza")) {rs2 = stmt1.executeQuery("SELECT COLUMN_NAME FROM _V_SYS_COLUMNS WHERE TABLE_SCHEMA = '"+deltaProcessDTO.getSourceConnectionSchema()+"' AND TABLE_NAME  = '"+rs1.getString("TABLE_NAME")+"';");}
-            else if(system.equals("Teradata")) {rs2 = stmt1.executeQuery("SELECT  ColumnName as COLUMN_NAME FROM DBC.ColumnsV WHERE DatabaseName = '"+deltaProcessDTO.getSourceConnectionSchema()+"' AND TableName = '"+rs1.getString("TABLE_NAME")+"';");}
-            else if(system.equals("Oracle")) {System.out.println("inside loop2 oracle if");
-				rs2 = stmt1.executeQuery("SELECT Column_Name as COLUMN_NAME FROM  All_Tab_Columns WHERE  OWNER = '"+deltaProcessDTO.getSourceConnectionSchema()+"' AND  Table_Name = '"+rs1.getString("TABLE_NAME")+"'");}
-        	//ResultSet rs2 = stmt1.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '"+deltaProcessDTO.getSourceConnectionSchema()+"' AND //TABLE_NAME = '"+rs1.getString("TABLE_NAME")+"';");
-        	JsonArray cols = new JsonArray();
-        	while(rs2.next() )
-    		{
-    		  //JsonArray row = new JsonArray();
-    		  cols.add(new JsonPrimitive(rs2.getString("COLUMN_NAME")));
+        String tablename;
+        ResultSet rs1 = null;
+        if (system.equals("Flatfiles")) {
+            String filepath = DeltaProcessDTO.getSourceConnectionUrl();
+            File folder = new File(filepath);
+            File[] listOfFiles = folder.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File folder, String name) {
+                    if (name.toLowerCase().endsWith(".csv")) {
+                        return true;
+                    } else if (name.toLowerCase().endsWith(".xls")) {
+                        return true;
+                    } else if (name.toLowerCase().endsWith(".xlsx")) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            });
+            for (int i = 0; i < listOfFiles.length; i++) {
+                JsonObject row = new JsonObject();
+                row.addProperty("tableName", listOfFiles[i].getName());
+                row.addProperty("PrimaryKey", "");
+                JsonArray cols = new JsonArray();
+                cols.add(new JsonPrimitive("selectCol"));
+                row.add("columnList", cols);
+                JsonArray cdccols = new JsonArray();
+                cdccols.add(new JsonPrimitive("NoCdcColumn"));
+                row.add("cdcColumnList", cdccols);
+                row.addProperty("selectedcdccol", "");
+                data.add(row);
             }
-            row.add("columnList",cols);
-            data.add(row);
-        }
-        jsonResponse.add("tableinfo",data);
-        return jsonResponse.toString();
+        } else {
+            Properties properties0 = new Properties();
+            properties0.put("user", DeltaProcessDTO.getSourceConnectionUsername());
+            properties0.put("password", DeltaProcessDTO.getSourceConnectionPassword());
+            properties0.put("db", DeltaProcessDTO.getSourceConnectionDatabase());
+            // properties0.put("schema",DeltaProcessDTO.getSourceConnectionSchema());
+            // Connection con =
+            // DriverManager.getConnection("jdbc:SQLServer://localhost:1433;databaseName=DEMO_DB",properties0);
+            Connection con = DriverManager.getConnection(DeltaProcessDTO.getSourceConnectionUrl(), properties0);
+            Statement stmt0 = con.createStatement();
+            Statement stmt1 = con.createStatement();
+            Statement stmt2 = con.createStatement();
 
-       /* ArrayList tn = new ArrayList();
-        while(rs1.next())
-        {
-        	String s1 = rs1.getString("TABLE_NAME");
-        	s1 =s1.concat("|");
-            tn.add(s1.concat(rs1.getString("PrimaryKey")));
+            if (system.equals("MySQL")) {
+                rs1 = stmt0.executeQuery(
+                        "SELECT a.TABLE_NAME,group_concat(b.COLUMN_NAME SEPARATOR'-') as PrimaryKey FROM INFORMATION_SCHEMA.TABLES a LEFT JOIN INFORMATION_SCHEMA.COLUMNS b ON a.TABLE_NAME = b.TABLE_NAME AND b.COLUMN_KEY = 'PRI' AND a.TABLE_SCHEMA = b.TABLE_SCHEMA  WHERE a.TABLE_SCHEMA = '"
+                                + DeltaProcessDTO.getSourceConnectionSchema() + "' GROUP BY a.TABLE_NAME;");
+            } else if (system.equals("SQLServer")) {
+                rs1 = stmt0.executeQuery(
+                        "SELECT KU.table_name as TABLE_NAME,string_agg(column_name,'-') as PrimaryKey FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KU ON TC.CONSTRAINT_TYPE = 'PRIMARY KEY' AND TC.CONSTRAINT_NAME = KU.CONSTRAINT_NAME AND TC.TABLE_CATALOG = '"
+                                + DeltaProcessDTO.getSourceConnectionDatabase() + "'  GROUP BY KU.TABLE_NAME;");
+            } else if (system.equals("Netezza")) {
+                rs1 = stmt0.executeQuery(
+                        "SELECT DISTINCT TableName as TABLE_NAME,'NoPrimaryKey' as PrimaryKey FROM DBC.ColumnsV WHERE DatabaseName = '"
+                                + DeltaProcessDTO.getSourceConnectionSchema() + "';");
+            } else if (system.equals("Teradata")) {
+                rs1 = stmt0.executeQuery(
+                        "SELECT DISTINCT TABLE_NAME, 'NoPrimaryKey' as PrimaryKey FROM _V_SYS_COLUMNS WHERE TABLE_SCHEMA = '"
+                                + DeltaProcessDTO.getSourceConnectionSchema() + "';");
+            } else if (system.equals("Oracle")) {
+                System.out.println("inside first query loop" + DeltaProcessDTO.getSourceConnectionSchema());
+                rs1 = stmt0.executeQuery(
+                        "SELECT cols.TABLE_NAME, LISTAGG(cols.column_name,'-') WITHIN GROUP (ORDER BY cols.column_name)as \"PrimaryKey\" FROM all_constraints cons, all_cons_columns cols WHERE cols.OWNER = '"
+                                + DeltaProcessDTO.getSourceConnectionSchema()
+                                + "' AND cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner GROUP BY cols.TABLE_NAME");
+            }
+            // if (listOfFiles[i].isFile()) {
+            // else if (listOfFiles[i].isDirectory()) {
+            // System.out.println("Directory " + listOfFiles[i].getName());}
+
+            while (rs1.next()) {
+                System.out.println("loop1");
+                JsonObject row = new JsonObject();
+                row.addProperty("tableName", rs1.getString("TABLE_NAME"));
+                row.addProperty("PrimaryKey", rs1.getString("PrimaryKey"));
+
+                ResultSet rs2 = null;
+                if (system.equals("MySQL")) {
+                    rs2 = stmt1.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '"
+                            + DeltaProcessDTO.getSourceConnectionSchema() + "' AND TABLE_NAME = '"
+                            + rs1.getString("TABLE_NAME") + "';");
+                } else if (system.equals("SQLServer")) {
+                    rs2 = stmt1
+                            .executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"
+                                    + DeltaProcessDTO.getSourceConnectionDatabase() + "' AND TABLE_NAME = '"
+                                    + rs1.getString("TABLE_NAME") + "';");
+                } else if (system.equals("Netezza")) {
+                    rs2 = stmt1.executeQuery("SELECT COLUMN_NAME FROM _V_SYS_COLUMNS WHERE TABLE_SCHEMA = '"
+                            + DeltaProcessDTO.getSourceConnectionSchema() + "' AND TABLE_NAME  = '"
+                            + rs1.getString("TABLE_NAME") + "';");
+                } else if (system.equals("Teradata")) {
+                    rs2 = stmt1
+                            .executeQuery("SELECT  ColumnName as COLUMN_NAME FROM DBC.ColumnsV WHERE DatabaseName = '"
+                                    + DeltaProcessDTO.getSourceConnectionSchema() + "' AND TableName = '"
+                                    + rs1.getString("TABLE_NAME") + "';");
+                } else if (system.equals("Oracle")) {
+                    System.out.println("inside loop2 oracle if");
+                    rs2 = stmt1.executeQuery("SELECT Column_Name as COLUMN_NAME FROM  All_Tab_Columns WHERE  OWNER = '"
+                            + DeltaProcessDTO.getSourceConnectionSchema() + "' AND  Table_Name = '"
+                            + rs1.getString("TABLE_NAME") + "'");
+                }
+
+                JsonArray cols = new JsonArray();
+                while (rs2.next()) {
+                    cols.add(new JsonPrimitive(rs2.getString("COLUMN_NAME")));
+                    System.out.println("loop2");
+                }
+                row.add("columnList", cols);
+
+                // ResultSet rs3 = stmt2.executeQuery("SELECT COLUMN_NAME FROM
+                // ALL_TAB_COLUMNS");
+                ResultSet rs3 = null;
+                // stmt2.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS");
+                if (system.equals("MySQL")) {
+                    rs3 = stmt2.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '"
+                            + DeltaProcessDTO.getSourceConnectionSchema() + "' AND TABLE_NAME = '"
+                            + rs1.getString("TABLE_NAME") + "' AND DATA_TYPE IN ('timestamp','datetime');");
+                } else if (system.equals("SQLServer")) {
+                    rs3 = stmt2
+                            .executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"
+                                    + DeltaProcessDTO.getSourceConnectionDatabase() + "' AND TABLE_NAME = '"
+                                    + rs1.getString("TABLE_NAME") + "' AND DATA_TYPE IN ('timestamp','datetime');");
+                } else if (system.equals("Netezza")) {
+                    rs3 = stmt2.executeQuery("SELECT COLUMN_NAME FROM _V_SYS_COLUMNS WHERE TABLE_SCHEMA = '"
+                            + DeltaProcessDTO.getSourceConnectionSchema() + "' AND TABLE_NAME  = '"
+                            + rs1.getString("TABLE_NAME") + "' AND TYPE_NAME IN ('TIMESTAMP','DATE');");
+                } else if (system.equals("Teradata")) {
+                    rs3 = stmt2
+                            .executeQuery("SELECT  ColumnName as COLUMN_NAME FROM DBC.ColumnsV WHERE DatabaseName = '"
+                                    + DeltaProcessDTO.getSourceConnectionSchema() + "' AND TableName = '"
+                                    + rs1.getString("TABLE_NAME") + "' AND COLUMNTYPE IN ('DA','TS','SZ');");
+                } else if (system.equals("Oracle")) {
+                    rs3 = stmt2.executeQuery("SELECT Column_Name as COLUMN_NAME FROM  All_Tab_Columns WHERE  OWNER = '"
+                            + DeltaProcessDTO.getSourceConnectionSchema() + "' AND  Table_Name = '"
+                            + rs1.getString("TABLE_NAME") + "' AND DATA_TYPE IN ('TIMESTAMP','DATE')");
+                }
+
+                JsonArray cdccols = new JsonArray();
+                while (rs3.next()) {
+                    System.out.println("loop3");
+                    cdccols.add(new JsonPrimitive(rs3.getString("COLUMN_NAME")));
+                }
+                row.add("cdcColumnList", cdccols);
+                row.addProperty("selectedcdccol", "");
+                data.add(row);
+            }
         }
-        String[] tableNames = (String[])tn.toArray(new String[tn.size()]);
-        return tableNames;*/
+        jsonResponse.add("tableinfo", data);
+        return jsonResponse.toString();
     }
 }
-//SELECT * FROM _v_tables;

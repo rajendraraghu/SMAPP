@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { DATE_FORMAT } from 'app/shared/constants/input.constants';
@@ -19,6 +19,7 @@ type JobArrayResponseType = HttpResponse<IDeltaProcessJobStatus[]>;
 @Injectable({ providedIn: 'root' })
 export class DeltaProcessService {
   public resourceUrl = SERVER_API_URL + 'api/delta-processes';
+  params: HttpParams = new HttpParams();
 
   constructor(protected http: HttpClient) {}
 
@@ -55,6 +56,15 @@ export class DeltaProcessService {
 
   getTableList(deltaProcess: IDeltaProcess): Observable<EntityResponseType> {
     return this.http.post<IDeltaProcess>(`${this.resourceUrl}/retrieveTableList`, deltaProcess, { observe: 'response' });
+  }
+
+  getFileColumnList(deltaProcess: IDeltaProcess, fileName: string): Observable<EntityResponseType> {
+    this.params = this.params.set('fileName', fileName);
+    // return this.http.post<IMigrationProcess>(`${this.resourceUrl}/retrieveFileColumnList?fileName=` + fileName, migrationProcess, { observe: 'response' });
+    return this.http.post<IDeltaProcess>(`${this.resourceUrl}/retrieveFileColumnList`, deltaProcess, {
+      params: this.params,
+      observe: 'response'
+    });
   }
 
   sendTableList(deltaProcess: IDeltaProcess): Observable<EntityResponseType> {
