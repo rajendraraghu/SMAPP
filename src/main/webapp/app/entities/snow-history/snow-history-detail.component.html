@@ -64,13 +64,12 @@
                 <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
             </button>
 
-            <button type="button" [routerLink]="['/snow-history', snowHistory.id, 'edit']"
-                class="btn btn-primary">
+            <button type="button" [routerLink]="['/snow-history', snowHistory.id, 'edit']" class="btn btn-primary">
                 <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
             </button>
         </div>
     </div>
-    <div class="col-3">
+    <div class="col-4">
         <fieldset>
             <h4>Select the History tables to be migrated</h4>
             <hr>
@@ -80,7 +79,9 @@
                     (input)="searchForTables($event.target.value)">
             </div>
             <div>
-            <input type="checkbox" [(ngModel)]="masterSelected" name="list_name" value="m1" (change)="checkUncheckAll($event)"/> <strong style="color:darkorange;font-weight:bold">Select/ Unselect All</strong>
+                <input type="checkbox" [(ngModel)]="masterSelected" name="list_name" value="m1"
+                    (change)="checkUncheckAll($event)" /> <strong style="color:darkorange;font-weight:bold">Select/
+                    Unselect All</strong>
             </div>
 
             <div class="form-group" style="height: 40vh; overflow-y: auto;">
@@ -89,12 +90,16 @@
                         <h6> Tables Name </h6>
                     </div>
                 </div>
-                    <!-- <div class="col-3 pl-0">
+                <div class="text-center">
+                    <div [hidden]="!historyspin" id="spinner4" class="spinner-border text-danger"
+                        style="margin-top: 25%;"></div>
+                </div>
+                <!-- <div class="col-3 pl-0">
                         <h6> Primary Key </h6>
                     </div>
                     <div class="col-2 pl-0">
                         <h6> CDC </h6>
-                    </div>
+                </div>
                     <div class="col-3 pl-0">
                         <h6> <span style="color: #f0ad4e;">*</span> CDC Columns </h6>
                     </div>
@@ -102,7 +107,8 @@
                 <div class="row m-0" *ngFor="let item of tables; let i=index">
                     <div class="col-12 pl-0">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" [id]="i"  name="list_name" [(ngModel)]="item.selected" value="{{item.name}}"  (change)= "onSelectionChange(item)">
+                            <input type="checkbox" class="custom-control-input" [id]="i" name="list_name"
+                                [(ngModel)]="item.selected" value="{{item.name}}" (change)="onSelectionChange(item)">
                             <label class="custom-control-label" [for]="i">{{item.name}}</label>
                         </div>
                     </div>
@@ -122,7 +128,7 @@
                         </select>
                     </div>
                 </div> -->
-            </div>
+                </div>
         </fieldset>
         <div class="row m-0">
             <div class="col-6 pl-0">

@@ -13,12 +13,13 @@ import java.util.Properties;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import static com.canny.snowflakemigration.service.util.PasswordProtector.decrypt;
 
 public class HistoryListTables {
     public static String historyListTable(SnowHistoryDTO snowHistoryDTO) throws SQLException,ClassNotFoundException,NullPointerException {
         Properties properties0 = new Properties();
 		properties0.put("user", snowHistoryDTO.getSourceConnectionUsername());
-		properties0.put("password", snowHistoryDTO.getSourceConnectionPassword());
+		properties0.put("password", decrypt(snowHistoryDTO.getSourceConnectionPassword()));
 		properties0.put("db",snowHistoryDTO.getSourceConnectionDatabase());
 	    properties0.put("schema",snowHistoryDTO.getSourceConnectionSchema());	
 	    Connection con = DriverManager.getConnection(snowHistoryDTO.getSourceConnectionUrl(),properties0);

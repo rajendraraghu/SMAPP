@@ -5,6 +5,7 @@ import com.canny.snowflakemigration.web.rest.errors.BadRequestAlertException;
 import com.canny.snowflakemigration.service.dto.SnowflakeConnectionDTO;
 import com.canny.snowflakemigration.service.dto.SnowflakeConnectionCriteria;
 import com.canny.snowflakemigration.service.SnowflakeConnectionQueryService;
+import static com.canny.snowflakemigration.service.util.PasswordProtector.encrypt;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -64,6 +65,7 @@ public class SnowflakeConnectionResource {
         if (snowflakeConnectionDTO.getId() != null) {
             throw new BadRequestAlertException("A new snowflakeConnection cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        snowflakeConnectionDTO.setPassword(encrypt(snowflakeConnectionDTO.getPassword()));
         SnowflakeConnectionDTO result = snowflakeConnectionService.save(snowflakeConnectionDTO);
         return ResponseEntity.created(new URI("/api/snowflake-connections/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))

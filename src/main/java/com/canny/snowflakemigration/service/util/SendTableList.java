@@ -44,6 +44,9 @@ import com.opencsv.*;
 import java.util.Iterator;
 import liquibase.datatype.core.DateTimeType;										
 import java.util.List;
+import static com.canny.snowflakemigration.service.util.PasswordProtector.decrypt;
+
+
 
 public class SendTableList  {
 	public static MigrationProcessStatusDTO migrationProcessStatusDTO = new MigrationProcessStatusDTO();
@@ -91,7 +94,7 @@ public class SendTableList  {
 			else{
 			Properties properties0 = new Properties();
 			properties0.put("user", write2.getSourceConnectionUsername());
-			properties0.put("password", write2.getSourceConnectionPassword());
+			properties0.put("password", decrypt(write2.getSourceConnectionPassword()));
 			properties0.put("db",write2.getSourceConnectionDatabase());
 		    properties0.put("schema",write2.getSourceConnectionSchema());				 
 	        con1 = DriverManager.getConnection(write2.getSourceConnectionUrl(), properties0);
@@ -125,7 +128,7 @@ public class SendTableList  {
 	        Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");  
 		    Properties properties = new Properties();
 		    properties.put("user", write2.getSnowflakeConnectionUsername());
-		    properties.put("password", write2.getSnowflakeConnectionPassword());
+		    properties.put("password", decrypt(write2.getSnowflakeConnectionPassword()));
 		    properties.put("account", write2.getSnowflakeConnectionAcct());
             properties.put("warehouse",write2.getSnowflakeConnectionWarehouse());
 		    properties.put("db",write2.getSnowflakeConnectionDatabase());
@@ -447,8 +450,8 @@ public class SendTableList  {
     	FilestoCSV(filepath,csvFilename);   	
     	logger.info("Stage file writing complete");    	
        	Statement stmt2=con2.createStatement();
-    	logger.info("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
-    	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");    	
+    	logger.info("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");
+    	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");    	
 		stmt2.executeQuery("PUT 'file://F:/POC/CSV/"+tableName+".csv' @"+tableName+"_stage;");
 		// stmt2.executeQuery("PUT 'file://./temp/"+tableName+".csv' @"+tableName+"_stage;");
     	int m = 1;
@@ -534,8 +537,8 @@ public class SendTableList  {
     	toCSV(rs1,csvFilename);   	
     	logger.info("Stage file writing complete");    	
        	Statement stmt2=con2.createStatement();
-    	logger.info("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
-    	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");    	
+    	logger.info("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");
+    	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");    	
 		stmt2.executeQuery("PUT 'file://F:/POC/CSV/"+tableName+".csv' @"+tableName+"_stage;");
 		// stmt2.executeQuery("PUT 'file://./temp/"+tableName+".csv' @"+tableName+"_stage;");
     	int m = 1;

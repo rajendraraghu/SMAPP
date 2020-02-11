@@ -23,6 +23,7 @@ import com.canny.snowflakemigration.service.SnowHistoryProcessStatusService;
 import com.canny.snowflakemigration.service.dto.SnowHistoryDTO;
 import com.canny.snowflakemigration.service.dto.SnowHistoryProcessStatusDTO;
 import com.canny.snowflakemigration.service.dto.SnowHistoryJobStatusDTO;
+import static com.canny.snowflakemigration.service.util.PasswordProtector.decrypt;
 
 import java.time.Instant;
 import com.opencsv.CSVWriter;
@@ -65,7 +66,7 @@ public class HistorySendTableList {
 			status = "FAILURE";
 			Properties properties0 = new Properties();
 			properties0.put("user", processDTO.getSourceConnectionUsername());
-			properties0.put("password", processDTO.getSourceConnectionPassword());
+			properties0.put("password", decrypt(processDTO.getSourceConnectionPassword()));
 			properties0.put("db",processDTO.getSourceConnectionDatabase());
 		    properties0.put("schema",processDTO.getSourceConnectionSchema());				 
 	        Connection con1 = DriverManager.getConnection(processDTO.getSourceConnectionUrl(), properties0);
@@ -73,7 +74,7 @@ public class HistorySendTableList {
 	        Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");  
 		    Properties properties = new Properties();
 		    properties.put("user", processDTO.getSnowflakeConnectionUsername());
-		    properties.put("password", processDTO.getSnowflakeConnectionPassword());
+		    properties.put("password", decrypt(processDTO.getSnowflakeConnectionPassword()));
 		    properties.put("account", processDTO.getSnowflakeConnectionAcct());
             properties.put("warehouse",processDTO.getSnowflakeConnectionWarehouse());
 		    properties.put("db",processDTO.getSnowflakeConnectionDatabase());
@@ -89,7 +90,7 @@ public class HistorySendTableList {
 		    snowHistoryProcessStatusDTO.setStartTime(Instant.now());
 		    snowHistoryProcessStatusDTO.setProcessId(processDTO.getId());
 		    snowHistoryProcessStatusDTO.setName(processDTO.getName());
-		    snowHistoryProcessStatusDTO.setRunBy("admin");
+		    snowHistoryProcessStatusDTO.setRunBy(processDTO.getRunBy());
 		     //migrationProcessStatusDTO.setRunby(processDTO.getRunBy());
 		    snowHistoryProcessStatusDTO.setTotalTables((long)tablecount);
 		    snowHistoryProcessStatusDTO.setStatus("In Progress");
@@ -243,9 +244,9 @@ public class HistorySendTableList {
 		logger.info("Stage file writing complete");
 		Statement stmt2 = con2.createStatement();
 		logger.info("create or replace stage " + tableName
-				+ "_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
+				+ "_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");
 		stmt2.executeQuery("create or replace stage " + tableName
-				+ "_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"');");
+				+ "_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");
 		stmt2.executeQuery("PUT 'file://F:/POC/CSV/" + tableName + ".csv' @" + tableName + "_stage;");
 		int m = 1;
 		int k = srcCols.replaceAll("[^,]", "").length() + 1;
@@ -256,7 +257,7 @@ public class HistorySendTableList {
 		}
 		stageCols = stageCols.substring(0, stageCols.length() - 1);
 		String hashCol = gethashColNames(stageCols);
-		createAlterDDL(con1, con2, tableName,system);
+		createAlterDDL(con1, con2, tableName, system, dbname);
 		logger.info("stagecols:" + stageCols);		
 		stmt2.executeQuery("TRUNCATE TABLE " + tableName);
 		logger.info("Truncating " + tableName);
@@ -291,7 +292,7 @@ public class HistorySendTableList {
 		logger.info("inscnt:"+inscnt);
 	}
 
-	public static void createAlterDDL(Connection con1, Connection con2, String tableName,String system) throws SQLException {
+	public static void createAlterDDL(Connection con1, Connection con2, String tableName,String system, String dbname) throws SQLException {
 		Statement stmt1 = con1.createStatement();
 		    	ResultSet rs1 = null;
     	String ddl6 = "";
@@ -333,7 +334,17 @@ public class HistorySendTableList {
         }
 		else if(system.equals("SQLServer")) 
         {
-			ddl6 = "(COL1 int NULL,COL2 varchar(25)";
+			ddl6 = "\n(";
+			rs1 = stmt1.executeQuery("SELECT TABLE_NAME,string_agg(ddl,',') as ddl FROM (SELECT TABLE_NAME,COLUMN_NAME +' '+ DATA_TYPE +'('+ ISNULL(CAST(CHARACTER_MAXIMUM_LENGTH AS VARCHAR),'')+')' as DDL FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = '"+dbname+"'AND TABLE_NAME = '"+tableName+"')a GROUP BY a.TABLE_NAME;");
+			rs1.next();
+			ddl6 = ddl6.concat(rs1.getString("ddl"));
+			ddl6 = ddl6.replace("int()","int");
+			ddl6 = ddl6.replace("datetime()","datetime");
+			ddl6 = ddl6.replace("money()","decimal(38,2)");	
+			ddl6 = ddl6.replace("decimal()","decimal");
+			ddl6 = ddl6.replace("bit()","boolean");	
+			ddl6 = ddl6.replace("date()","date");
+			logger.info("ddl6:"+ddl6);
 		}
 		String stagecreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT);");
 		String histcreate = ddl6.concat(",sah_isdeleted INT,sah_MD5HASH TEXT,sah_MD5HASHPK TEXT,sah_currentind boolean,sah_createdTime timestamp,sah_updatedtime timestamp);");

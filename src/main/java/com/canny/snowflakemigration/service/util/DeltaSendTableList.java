@@ -48,6 +48,9 @@ import java.util.List;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import com.google.common.io.Files;
+import static com.canny.snowflakemigration.service.util.PasswordProtector.decrypt;
+
+
 
 public class DeltaSendTableList  {
 	public static DeltaProcessStatusDTO deltaProcessStatusDTO = new DeltaProcessStatusDTO();
@@ -86,7 +89,7 @@ public class DeltaSendTableList  {
 			else{
 			
 			properties0.put("user", processDTO.getSourceConnectionUsername());
-			properties0.put("password", processDTO.getSourceConnectionPassword());
+			properties0.put("password", decrypt(processDTO.getSourceConnectionPassword()));
 			properties0.put("db",processDTO.getSourceConnectionDatabase());
 		    properties0.put("schema",processDTO.getSourceConnectionSchema());
 	        
@@ -94,7 +97,7 @@ public class DeltaSendTableList  {
 	        Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");
 		    Properties properties = new Properties();
 		    properties.put("user", processDTO.getSnowflakeConnectionUsername());
-		    properties.put("password", processDTO.getSnowflakeConnectionPassword());
+		    properties.put("password", decrypt(processDTO.getSnowflakeConnectionPassword()));
 		    properties.put("account", processDTO.getSnowflakeConnectionAcct());
             properties.put("warehouse",processDTO.getSnowflakeConnectionWarehouse());
 		    properties.put("db",processDTO.getSnowflakeConnectionDatabase());
@@ -215,6 +218,7 @@ public class DeltaSendTableList  {
 						deltaload(tableName,stageCols,hashCol,pk3,pk4,pk5,con2);
 					 }
 		
+
 			    }
 
 				i = i+1;

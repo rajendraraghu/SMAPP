@@ -5,6 +5,7 @@ import com.canny.snowflakemigration.web.rest.errors.BadRequestAlertException;
 import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
 import com.canny.snowflakemigration.service.dto.SourceConnectionCriteria;
 import com.canny.snowflakemigration.service.SourceConnectionQueryService;
+import static com.canny.snowflakemigration.service.util.PasswordProtector.encrypt;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -64,6 +65,7 @@ public class SourceConnectionResource {
         if (sourceConnectionDTO.getId() != null) {
             throw new BadRequestAlertException("A new sourceConnection cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        sourceConnectionDTO.setPassword(encrypt(sourceConnectionDTO.getPassword()));
         SourceConnectionDTO result = sourceConnectionService.save(sourceConnectionDTO);
         return ResponseEntity.created(new URI("/api/source-connections/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -85,6 +87,7 @@ public class SourceConnectionResource {
         if (sourceConnectionDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        // sourceConnectionDTO.setPassword(encrypt(sourceConnectionDTO.getPassword()));
         SourceConnectionDTO result = sourceConnectionService.save(sourceConnectionDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, sourceConnectionDTO.getId().toString()))

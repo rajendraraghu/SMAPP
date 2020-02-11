@@ -88,6 +88,10 @@
                         <h6> CDC Columns </h6>
                     </div>
                 </div>
+                <div class="text-center">
+                    <div [hidden]="!commonspin" id="spinner1" class="spinner-border text-danger"
+                        style="margin-top: 25%;"></div>
+                </div>
                 <div class="row m-0" *ngFor="let item of tables; let i=index">
                     <div class="col-4 pl-0">
                         <div class="custom-control custom-checkbox">
@@ -101,7 +105,7 @@
                             style="height:80%;width:50%; font-size: 15px; text-align: center;"
                             (click)="selectPK(item,templatePK)">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;
-                                <!-- <span> {{item.primaryKey}} </span> -->
+                            <!-- <span> {{item.primaryKey}} </span> -->
                         </button>
                         <ng-template #templatePK let-modal>
                             <div class="modal-header">
@@ -109,6 +113,10 @@
                             </div>
                             <div class="modal-body">
                                 <!-- <loading-spinner *ngIf = "showSpinner"></loading-spinner> -->
+                                <div class="text-center">
+                                    <div [hidden]="!tablemodalspin" id="spinner2" class="spinner-border text-danger">
+                                    </div>
+                                </div>
                                 <div class="row m-0" *ngFor="let column of columns; let j=index">
                                     <div class="col-12 pl-0">
                                         <div class="custom-control custom-checkbox">
@@ -161,7 +169,7 @@
             </div>
         </div>
     </div>
-    <div class="col-3" *ngIf='!discdc'>
+    <div class="col-4" *ngIf='!discdc'>
         <fieldset>
             <h4>Select the Files to be migrated</h4>
             <hr>
@@ -185,6 +193,10 @@
                         <h6> Primary Key </h6>
                     </div>
                 </div>
+                <div class="text-center">
+                    <div [hidden]="!commonspin" id="spinner1" class="spinner-border text-danger"
+                        style="margin-top: 25%;"></div>
+                </div>
                 <div class="row m-0" *ngFor="let item of tables; let i=index">
                     <div class="col-8 pl-0">
                         <div class="custom-control custom-checkbox">
@@ -202,6 +214,9 @@
                         <ng-template #templatePK let-modal>
                             <div class="modal-header">
                                 <h4 class="modal-title" id="modal-basic-title">Select Primary Key</h4>
+                            </div>
+                            <div class="text-center">
+                                <div [hidden]="!filemodalspin" id="spinner3" class="spinner-border text-danger"></div>
                             </div>
                             <div class="modal-body">
                                 <div class="row m-0" *ngFor="let column of columns; let j=index">

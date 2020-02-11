@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { IMigrationProcess } from 'app/shared/model/migration-process.model';
@@ -6,12 +6,7 @@ import { MigrationProcessService } from 'app/entities/migration-process/migratio
 import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { JhiAlertService } from 'ng-jhipster';
-import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { callbackify } from 'util';
-import { sample } from 'rxjs/operators';
-import { Validators } from '@angular/forms';
-import { thisTypeAnnotation } from '@babel/types';
-import { Content } from '@angular/compiler/src/render3/r3_ast';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'jhi-migration-process-detail',
@@ -41,9 +36,9 @@ export class MigrationProcessDetailComponent implements OnInit {
   showSpinner: true;
   // save_disable: string[];
   disable: boolean;
-  load: boolean;
-  spinner3: boolean;
-  spinner4: boolean;
+  commonspin: boolean;
+  tablemodalspin: boolean;
+  filemodalspin: boolean;
 
   constructor(
     protected jhiAlertService: JhiAlertService,
@@ -54,7 +49,7 @@ export class MigrationProcessDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.load = true;
+    this.commonspin = true;
     this.activatedRoute.data.subscribe(({ migrationProcess }) => {
       this.migrationProcess = migrationProcess;
       this.type = migrationProcess.sourceType;
@@ -81,7 +76,7 @@ export class MigrationProcessDetailComponent implements OnInit {
   getTableList() {
     this.migrationProcessService.getTableList(this.migrationProcess).subscribe(response => {
       this.prepareData(response.body);
-      this.load = false;
+      this.commonspin = false;
     });
   }
 
@@ -113,7 +108,7 @@ export class MigrationProcessDetailComponent implements OnInit {
       };
       this.columns.push(column);
     });
-    this.spinner4 = false;
+    this.tablemodalspin = false;
   }
   checkUncheckAll(event) {
     if (event.target.checked) {
@@ -158,21 +153,21 @@ export class MigrationProcessDetailComponent implements OnInit {
   selectPK(item, content) {
     this.columns = [];
     this.modalService.open(content);
-    this.spinner4 = true;
+    this.tablemodalspin = true;
     this.prepareColumn(item.name, item.columnList);
   }
 
   selectFilePK(item, content) {
     this.columns = [];
     this.modalService.open(content);
-    this.spinner3 = true;
+    this.filemodalspin = true;
     this.getFileColumn(item.name);
   }
 
   getFileColumn(fileName) {
     this.migrationProcessService.getFileColumnList(this.migrationProcess, fileName).subscribe(response => {
       this.prepareColumn(fileName, response.body);
-      this.spinner3 = false;
+      this.filemodalspin = false;
     });
   }
 
