@@ -15,6 +15,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.File;
 import java.io.FilenameFilter;
+import static com.canny.snowflakemigration.service.util.PasswordProtector.decrypt;
 
 public class DeltaListTables {
     public static String listTable(DeltaProcessDTO DeltaProcessDTO)
@@ -58,7 +59,7 @@ public class DeltaListTables {
         } else {
             Properties properties0 = new Properties();
             properties0.put("user", DeltaProcessDTO.getSourceConnectionUsername());
-            properties0.put("password", DeltaProcessDTO.getSourceConnectionPassword());
+            properties0.put("password", decrypt(DeltaProcessDTO.getSourceConnectionPassword()));
             properties0.put("db", DeltaProcessDTO.getSourceConnectionDatabase());
             // properties0.put("schema",DeltaProcessDTO.getSourceConnectionSchema());
             // Connection con =

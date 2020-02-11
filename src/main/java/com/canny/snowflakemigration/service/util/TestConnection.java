@@ -2,6 +2,7 @@ package com.canny.snowflakemigration.service.util;
 
 import com.canny.snowflakemigration.service.dto.SnowflakeConnectionDTO;
 import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
+import static com.canny.snowflakemigration.service.util.PasswordProtector.decrypt;
 
 import java.io.File;
 import java.sql.Connection;
@@ -29,7 +30,8 @@ public class TestConnection {
                         result = false;
                     }
                 } else if (type.toLowerCase().equals("internalserver") | type.toLowerCase().equals("externalserver")) {
-                    String host = connectionDTO.getHost(),  userName = connectionDTO.getUsername(), password = connectionDTO.getPassword();
+                    String host = connectionDTO.getHost(), userName = connectionDTO.getUsername(),
+                            password = connectionDTO.getPassword();
                     int port = Integer.parseInt(connectionDTO.getPortNumber());
                     FTPClient ftpClient = new FTPClient();
                     ftpClient.connect(host, port);
@@ -51,8 +53,14 @@ public class TestConnection {
 
                 System.out.println("osql loop");
                 // Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-                Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
-                        connectionDTO.getPassword());
+                Connection con1;
+                if (connectionDTO.getId() != null) {
+                    con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
+                            decrypt(connectionDTO.getPassword()));
+                } else {
+                    con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
+                            connectionDTO.getPassword());
+                }
                 result = con1.isValid(10);
                 System.out.println("Inside try before connection");
             }
@@ -69,8 +77,17 @@ public class TestConnection {
             throws SQLException, ClassNotFoundException {
         boolean result = false;
         try {
-            Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
-                    connectionDTO.getPassword());
+            Connection con1;
+            if (connectionDTO.getId() != null) {
+                con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
+                        decrypt(connectionDTO.getPassword()));
+            } else {
+                con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
+                        connectionDTO.getPassword());
+            }
+            // Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(),
+            // connectionDTO.getUsername(),
+            // connectionDTO.getPassword());
             result = con1.isValid(10);
         } catch (Exception e) {
             result = false;

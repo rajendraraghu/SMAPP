@@ -23,6 +23,7 @@ import com.canny.snowflakemigration.service.SnowHistoryProcessStatusService;
 import com.canny.snowflakemigration.service.dto.SnowHistoryDTO;
 import com.canny.snowflakemigration.service.dto.SnowHistoryProcessStatusDTO;
 import com.canny.snowflakemigration.service.dto.SnowHistoryJobStatusDTO;
+import static com.canny.snowflakemigration.service.util.PasswordProtector.decrypt;
 
 import java.time.Instant;
 import com.opencsv.CSVWriter;
@@ -65,7 +66,7 @@ public class HistorySendTableList {
 			status = "FAILURE";
 			Properties properties0 = new Properties();
 			properties0.put("user", processDTO.getSourceConnectionUsername());
-			properties0.put("password", processDTO.getSourceConnectionPassword());
+			properties0.put("password", decrypt(processDTO.getSourceConnectionPassword()));
 			properties0.put("db",processDTO.getSourceConnectionDatabase());
 		    properties0.put("schema",processDTO.getSourceConnectionSchema());				 
 	        Connection con1 = DriverManager.getConnection(processDTO.getSourceConnectionUrl(), properties0);
@@ -73,7 +74,7 @@ public class HistorySendTableList {
 	        Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");  
 		    Properties properties = new Properties();
 		    properties.put("user", processDTO.getSnowflakeConnectionUsername());
-		    properties.put("password", processDTO.getSnowflakeConnectionPassword());
+		    properties.put("password", decrypt(processDTO.getSnowflakeConnectionPassword()));
 		    properties.put("account", processDTO.getSnowflakeConnectionAcct());
             properties.put("warehouse",processDTO.getSnowflakeConnectionWarehouse());
 		    properties.put("db",processDTO.getSnowflakeConnectionDatabase());
@@ -89,7 +90,7 @@ public class HistorySendTableList {
 		    snowHistoryProcessStatusDTO.setStartTime(Instant.now());
 		    snowHistoryProcessStatusDTO.setProcessId(processDTO.getId());
 		    snowHistoryProcessStatusDTO.setName(processDTO.getName());
-		    snowHistoryProcessStatusDTO.setRunBy("admin");
+		    snowHistoryProcessStatusDTO.setRunBy(processDTO.getRunBy());
 		     //migrationProcessStatusDTO.setRunby(processDTO.getRunBy());
 		    snowHistoryProcessStatusDTO.setTotalTables((long)tablecount);
 		    snowHistoryProcessStatusDTO.setStatus("In Progress");

@@ -44,7 +44,7 @@ import java.io.File;
 import java.io.*;
 import com.opencsv.*;
 import java.util.Iterator;
-
+import static com.canny.snowflakemigration.service.util.PasswordProtector.decrypt;
 
 
 public class SendTableList  {
@@ -93,7 +93,7 @@ public class SendTableList  {
 			else{
 			Properties properties0 = new Properties();
 			properties0.put("user", write2.getSourceConnectionUsername());
-			properties0.put("password", write2.getSourceConnectionPassword());
+			properties0.put("password", decrypt(write2.getSourceConnectionPassword()));
 			properties0.put("db",write2.getSourceConnectionDatabase());
 		    properties0.put("schema",write2.getSourceConnectionSchema());				 
 	        con1 = DriverManager.getConnection(write2.getSourceConnectionUrl(), properties0);
@@ -127,7 +127,7 @@ public class SendTableList  {
 	        Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");  
 		    Properties properties = new Properties();
 		    properties.put("user", write2.getSnowflakeConnectionUsername());
-		    properties.put("password", write2.getSnowflakeConnectionPassword());
+		    properties.put("password", decrypt(write2.getSnowflakeConnectionPassword()));
 		    properties.put("account", write2.getSnowflakeConnectionAcct());
             properties.put("warehouse",write2.getSnowflakeConnectionWarehouse());
 		    properties.put("db",write2.getSnowflakeConnectionDatabase());

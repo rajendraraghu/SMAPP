@@ -15,6 +15,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.File;
 import java.io.FilenameFilter;
+import static com.canny.snowflakemigration.service.util.PasswordProtector.decrypt;
 
 public class ListTables {
     public static String listTable(MigrationProcessDTO migrationProcessDTO) throws SQLException,ClassNotFoundException,NullPointerException {
@@ -59,7 +60,7 @@ public class ListTables {
 		else{
         Properties properties0 = new Properties();
 		properties0.put("user", migrationProcessDTO.getSourceConnectionUsername());
-		properties0.put("password", migrationProcessDTO.getSourceConnectionPassword());
+		properties0.put("password", decrypt(migrationProcessDTO.getSourceConnectionPassword()));
 		properties0.put("db",migrationProcessDTO.getSourceConnectionDatabase());
 	    //properties0.put("schema",migrationProcessDTO.getSourceConnectionSchema());	
 		//Connection con = DriverManager.getConnection("jdbc:SQLServer://localhost:1433;databaseName=DEMO_DB",properties0);
