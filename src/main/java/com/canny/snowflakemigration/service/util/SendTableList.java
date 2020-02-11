@@ -1,6 +1,6 @@
 package com.canny.snowflakemigration.service.util;
 
-//import java.awt.List;
+
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,16 +20,14 @@ import java.util.logging.SimpleFormatter;
 import com.canny.snowflakemigration.service.dto.MigrationProcessDTO;
 import com.canny.snowflakemigration.service.dto.MigrationProcessStatusDTO;
 import com.canny.snowflakemigration.service.dto.MigrationProcessJobStatusDTO;
-import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
 import com.canny.snowflakemigration.service.MigrationProcessJobStatusService;
 import com.canny.snowflakemigration.service.MigrationProcessService;
 import com.canny.snowflakemigration.service.MigrationProcessStatusService;
-import static com.canny.snowflakemigration.service.util.CreateTableDDL.convertToSnowDDL;
 import com.opencsv.CSVWriter;
-import liquibase.datatype.core.DateTimeType;										
-import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
+import static com.canny.snowflakemigration.service.util.CreateTableDDL.convertToSnowDDL;
 import com.google.gson.JsonObject;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -44,8 +42,8 @@ import java.io.File;
 import java.io.*;
 import com.opencsv.*;
 import java.util.Iterator;
-
-
+import liquibase.datatype.core.DateTimeType;										
+import java.util.List;
 
 public class SendTableList  {
 	public static MigrationProcessStatusDTO migrationProcessStatusDTO = new MigrationProcessStatusDTO();
