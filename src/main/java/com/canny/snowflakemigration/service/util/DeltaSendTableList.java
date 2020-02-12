@@ -29,7 +29,7 @@ import java.time.Instant;
 import com.opencsv.CSVWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import static com.canny.snowflakemigration.service.util.PasswordProtector.decrypt;
 
 
 public class DeltaSendTableList  {
@@ -63,7 +63,7 @@ public class DeltaSendTableList  {
 			
 			Properties properties0 = new Properties();
 			properties0.put("user", processDTO.getSourceConnectionUsername());
-			properties0.put("password", processDTO.getSourceConnectionPassword());
+			properties0.put("password", decrypt(processDTO.getSourceConnectionPassword()));
 			properties0.put("db",processDTO.getSourceConnectionDatabase());
 		    properties0.put("schema",processDTO.getSourceConnectionSchema());
 	        Connection con1 = DriverManager.getConnection(processDTO.getSourceConnectionUrl(), properties0);
@@ -71,7 +71,7 @@ public class DeltaSendTableList  {
 	        Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");
 		    Properties properties = new Properties();
 		    properties.put("user", processDTO.getSnowflakeConnectionUsername());
-		    properties.put("password", processDTO.getSnowflakeConnectionPassword());
+		    properties.put("password", decrypt(processDTO.getSnowflakeConnectionPassword()));
 		    properties.put("account", processDTO.getSnowflakeConnectionAcct());
             properties.put("warehouse",processDTO.getSnowflakeConnectionWarehouse());
 		    properties.put("db",processDTO.getSnowflakeConnectionDatabase());
