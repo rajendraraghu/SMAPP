@@ -15,7 +15,7 @@ type EntityArrayResponseType = HttpResponse<ISnowflakeConnection[]>;
 @Injectable({ providedIn: 'root' })
 export class SnowflakeConnectionService {
   public resourceUrl = SERVER_API_URL + 'api/snowflake-connections';
-  public testConnectionUrl = SERVER_API_URL + 'api/migration-processes/TestConnectionDest';
+  // public testConnectionUrl = SERVER_API_URL + 'api/migration-processes/TestConnectionDest';
 
   constructor(protected http: HttpClient) {}
 
@@ -52,7 +52,7 @@ export class SnowflakeConnectionService {
 
   testConnection(snowflakeConnection: ISnowflakeConnection): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(snowflakeConnection);
-    return this.http.post<ISnowflakeConnection>(this.testConnectionUrl, copy, { observe: 'response' });
+    return this.http.post<ISnowflakeConnection>(this.resourceUrl + '/TestConnection', copy, { observe: 'response' });
   }
 
   protected convertDateFromClient(snowflakeConnection: ISnowflakeConnection): ISnowflakeConnection {

@@ -6,6 +6,7 @@ import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
 import com.canny.snowflakemigration.service.dto.SourceConnectionCriteria;
 import com.canny.snowflakemigration.service.SourceConnectionQueryService;
 import static com.canny.snowflakemigration.service.util.PasswordProtector.encrypt;
+import static com.canny.snowflakemigration.service.util.TestConnection.testConnectionSource;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -25,9 +26,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Arrays;
 
 /**
  * REST controller for managing {@link com.canny.snowflakemigration.domain.SourceConnection}.
@@ -83,9 +85,16 @@ public class SourceConnectionResource {
      */
     @PutMapping("/source-connections")
     public ResponseEntity<SourceConnectionDTO> updateSourceConnection(@Valid @RequestBody SourceConnectionDTO sourceConnectionDTO) throws URISyntaxException {
+        // Long id;
+        // SourceConnectionDTO tempDTO;
+        // id = sourceConnectionDTO.getId();
         log.debug("REST request to update SourceConnection : {}", sourceConnectionDTO);
         if (sourceConnectionDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        // tempDTO = sourceConnectionService.findOne(id).get();
+        if (!(sourceConnectionDTO.getPassword().equals(sourceConnectionService.findOne(sourceConnectionDTO.getId()).get().getPassword()))){
+            sourceConnectionDTO.setPassword(encrypt(sourceConnectionDTO.getPassword()));
         }
         // sourceConnectionDTO.setPassword(encrypt(sourceConnectionDTO.getPassword()));
         SourceConnectionDTO result = sourceConnectionService.save(sourceConnectionDTO);
@@ -147,5 +156,19 @@ public class SourceConnectionResource {
         log.debug("REST request to delete SourceConnection : {}", id);
         sourceConnectionService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+
+    @PostMapping(value = "/source-connections/TestConnection")
+    public @ResponseBody boolean TestingConnection(@RequestBody SourceConnectionDTO connectionDTO)
+            throws SQLException, ClassNotFoundException {
+        boolean result;
+        if (!(connectionDTO.getPassword()
+                .equals(sourceConnectionService.findOne(connectionDTO.getId()).get().getPassword()))) {
+            connectionDTO.setPassword(encrypt(connectionDTO.getPassword()));
+            result = testConnectionSource(connectionDTO);
+        } else {
+            result = testConnectionSource(connectionDTO);
+        }
+        return result;
     }
 }

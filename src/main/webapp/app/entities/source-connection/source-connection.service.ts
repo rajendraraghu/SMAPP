@@ -15,7 +15,7 @@ type EntityArrayResponseType = HttpResponse<ISourceConnection[]>;
 @Injectable({ providedIn: 'root' })
 export class SourceConnectionService {
   public resourceUrl = SERVER_API_URL + 'api/source-connections';
-  public testConnectionUrl = SERVER_API_URL + 'api/migration-processes/TestConnectionSource';
+  // public testConnectionUrl = SERVER_API_URL + 'api/migration-processes/TestConnectionSource';
   httpClient: any;
 
   constructor(protected http: HttpClient) {}
@@ -53,7 +53,7 @@ export class SourceConnectionService {
 
   testConnection(sourceConnection: ISourceConnection): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(sourceConnection);
-    return this.http.post<ISourceConnection>(this.testConnectionUrl, copy, { observe: 'response' });
+    return this.http.post<ISourceConnection>(this.resourceUrl + '/TestConnection', copy, { observe: 'response' });
   }
 
   protected convertDateFromClient(sourceConnection: ISourceConnection): ISourceConnection {

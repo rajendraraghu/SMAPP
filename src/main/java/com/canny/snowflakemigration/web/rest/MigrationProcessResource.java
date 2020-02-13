@@ -200,20 +200,20 @@ public class MigrationProcessResource {
         return result;
     }
 
-    @PostMapping(value = "/migration-processes/TestConnectionSource")
-    public @ResponseBody boolean TestingConnection(@RequestBody SourceConnectionDTO connectionDTO)
-            throws SQLException, ClassNotFoundException {
-        boolean result = testConnectionSource(connectionDTO);
-        return result;
-    }
+    // @PostMapping(value = "/migration-processes/TestConnectionSource")
+    // public @ResponseBody boolean TestingConnection(@RequestBody SourceConnectionDTO connectionDTO)
+    //         throws SQLException, ClassNotFoundException {
+    //     boolean result = testConnectionSource(connectionDTO);
+    //     return result;
+    // }
 
-    @PostMapping(value = "/migration-processes/TestConnectionDest")
-    public @ResponseBody boolean TestingConnection(@RequestBody SnowflakeConnectionDTO connectionDTO)
-            throws SQLException, ClassNotFoundException {
-        boolean result = testConnectionDest(connectionDTO);
-        return result;
+    // @PostMapping(value = "/migration-processes/TestConnectionDest")
+    // public @ResponseBody boolean TestingConnection(@RequestBody SnowflakeConnectionDTO connectionDTO)
+    //         throws SQLException, ClassNotFoundException {
+    //     boolean result = testConnectionDest(connectionDTO);
+    //     return result;
 
-    }
+    // }
 
     /*@PostMapping(value = "/migration-processes/Reports")
     public @ResponseBody String Reports(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO)

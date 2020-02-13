@@ -6,6 +6,7 @@ import com.canny.snowflakemigration.service.dto.SnowflakeConnectionDTO;
 import com.canny.snowflakemigration.service.dto.SnowflakeConnectionCriteria;
 import com.canny.snowflakemigration.service.SnowflakeConnectionQueryService;
 import static com.canny.snowflakemigration.service.util.PasswordProtector.encrypt;
+import static com.canny.snowflakemigration.service.util.TestConnection.testConnectionDest;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,6 +88,9 @@ public class SnowflakeConnectionResource {
         if (snowflakeConnectionDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!(snowflakeConnectionDTO.getPassword().equals(snowflakeConnectionService.findOne(snowflakeConnectionDTO.getId()).get().getPassword()))){
+            snowflakeConnectionDTO.setPassword(encrypt(snowflakeConnectionDTO.getPassword()));
+        }
         SnowflakeConnectionDTO result = snowflakeConnectionService.save(snowflakeConnectionDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, snowflakeConnectionDTO.getId().toString()))
@@ -146,5 +150,20 @@ public class SnowflakeConnectionResource {
         log.debug("REST request to delete SnowflakeConnection : {}", id);
         snowflakeConnectionService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+
+    @PostMapping(value = "/snowflake-connections/TestConnection")
+    public @ResponseBody boolean TestingConnection(@RequestBody SnowflakeConnectionDTO connectionDTO)
+            throws SQLException, ClassNotFoundException {
+        boolean result;
+        if (!(connectionDTO.getPassword()
+                .equals(snowflakeConnectionService.findOne(connectionDTO.getId()).get().getPassword()))) {
+            connectionDTO.setPassword(encrypt(connectionDTO.getPassword()));
+            result = testConnectionDest(connectionDTO);
+        } else {
+            result = testConnectionDest(connectionDTO);
+        }
+        return result;
+
     }
 }
