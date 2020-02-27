@@ -3,6 +3,7 @@ package com.canny.snowflakemigration.service.util;
 import java.awt.List;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -43,18 +44,30 @@ public class DeltaSendTableList  {
 		String status = new String();
 		String timeStamp = new SimpleDateFormat().format( new Date() );
 		DeltaProcessStatusDTO write = new DeltaProcessStatusDTO();
-		logger = Logger.getLogger("MyDeltaLog"); 
+		logger = Logger.getLogger("SnowDeltaLog"); 
 		FileHandler fh;
 		status = "FAILURE";
 		String system = processDTO.getSourceType();
 		String schema = processDTO.getSourceConnectionSchema();
+		String logPath = "logs/SnowDelta";
+		String tmpPath = "tmp/CSV";
+		File logDir=new File(logPath);
+		File tmpDir=new File(tmpPath);
+		if(logDir.exists()==false)
+		{
+			logDir.mkdirs();
+		}
+		if(tmpDir.exists()==false)
+		{
+			tmpDir.mkdirs();
+		}
 		long success_count = 0;
         long failure_count = 0;					   
 
 		try{
 			//int jobid=0;
 
-			fh = new FileHandler("F:/POC/CSV/logs/MyDeltaLogFile.log");  
+			fh = new FileHandler("logs/SnowDelta/DeltaLogFile.log");  
 		    logger.addHandler(fh);
 		    SimpleFormatter formatter = new SimpleFormatter();  
 		    fh.setFormatter(formatter);		        
@@ -131,12 +144,12 @@ public class DeltaSendTableList  {
 		        if (rs1.next())
 			     {			
 					//using local file now. Should be replaced with S3 or other filespace
-					String csvFilename = "F:/POC/CSV/"+tableName+".csv";
+					String csvFilename = "tmp/CSV/"+tableName+".csv";
 					String srcCols = getColNames2(con1,tableName,system,processDTO.getSourceConnectionDatabase(),schema);
 					toCSV(rs1,csvFilename);	
 					Statement stmt2=con2.createStatement();
 					stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");
-					stmt2.executeQuery("PUT 'file://F:/POC/CSV/"+tableName+".csv' @"+tableName+"_stage;");
+					stmt2.executeQuery("PUT 'file://tmp/CSV/"+tableName+".csv' @"+tableName+"_stage;");
 					logger.info("stage writing completed");
 					int j = 1;
 					int k = srcCols.replaceAll("[^,]","").length();
