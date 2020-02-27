@@ -88,9 +88,9 @@ export class DeltaProcessDetailComponent implements OnInit {
     this.isAllSelected();
   }
 
-  prepareColumn(tableName, columnList) {
+  prepareColumn(tableName, columnData) {
     this.columns = [];
-    columnList.forEach(columnItem => {
+    columnData.columnList.forEach(columnItem => {
       const column = {
         columnName: columnItem,
         selected: this.isCheckedPK(tableName, columnItem)
@@ -142,7 +142,15 @@ export class DeltaProcessDetailComponent implements OnInit {
   selectPK(item, content) {
     this.modalService.open(content);
     this.delmodspin = true;
-    this.prepareColumn(item.name, item.columnList);
+    this.getColumn(item.name);
+    // this.prepareColumn(item.name, item.columnList);
+  }
+
+  getColumn(tableName) {
+    this.deltaProcessService.getColumnList(this.deltaProcess, tableName).subscribe(response => {
+      this.prepareColumn(tableName, response.body);
+      this.delmodspin = false;
+    });
   }
 
   selectFilePK(item, content) {

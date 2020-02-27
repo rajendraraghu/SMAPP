@@ -43,9 +43,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static com.canny.snowflakemigration.service.util.DeltaListTables.listTable;
+import static com.canny.snowflakemigration.service.util.ListTables.listTable;
+import static com.canny.snowflakemigration.service.util.ListColumns.listColumns;
 import static com.canny.snowflakemigration.service.util.DeltaSendTableList.sendSelectedTables;
-import static com.canny.snowflakemigration.service.util.DeltaListColumns.listFileColumns;
+import static com.canny.snowflakemigration.service.util.ListColumns.listFileColumns;
 
 
 import com.google.gson.JsonPrimitive;
@@ -181,7 +182,14 @@ public class DeltaProcessResource {
 
     @PostMapping(value = "/delta-processes/retrieveTableList")
     public @ResponseBody String listTables(@Valid @RequestBody DeltaProcessDTO deltaProcessDTO) throws SQLException,ClassNotFoundException {
-        String tableName = listTable(deltaProcessDTO);
+        JsonObject conn_obj = new JsonObject();
+        conn_obj.addProperty("username",deltaProcessDTO.getSourceConnectionUsername());
+        conn_obj.addProperty("password",deltaProcessDTO.getSourceConnectionPassword());
+        conn_obj.addProperty("database",deltaProcessDTO.getSourceConnectionDatabase());
+        conn_obj.addProperty("schema",deltaProcessDTO.getSourceConnectionSchema());
+        conn_obj.addProperty("url",deltaProcessDTO.getSourceConnectionUrl());
+        conn_obj.addProperty("system",deltaProcessDTO.getSourceType());
+        String tableName = listTable(conn_obj);
         return tableName;
     } 
 
@@ -191,140 +199,153 @@ public class DeltaProcessResource {
     	String result = sendSelectedTables(deltaProcessDTO,deltaProcessStatusService,deltaProcessJobStatusService);
         return result;
     } 
-    @PostMapping(value="/delta-processes/TestConnectionSource")
-    public @ResponseBody boolean TestingConnection(@RequestBody SourceConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
-        boolean result = false;
-		try {
-    	Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());
-        result = con1.isValid(10);
-        }
-        catch(Exception e)
-        {
-        	result = false;
-        }
-        finally { return result;}
-    }
+    // @PostMapping(value="/delta-processes/TestConnectionSource")
+    // public @ResponseBody boolean TestingConnection(@RequestBody SourceConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
+    //     boolean result = false;
+	// 	try {
+    // 	Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());
+    //     result = con1.isValid(10);
+    //     }
+    //     catch(Exception e)
+    //     {
+    //     	result = false;
+    //     }
+    //     finally { return result;}
+    // }
 
-    @PostMapping(value="/delta-processes/TestConnectionDest")
-    public @ResponseBody boolean TestingConnection(@RequestBody SnowflakeConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
-        boolean result  = false;
-		try {
-    	Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());
-        result = con1.isValid(10);
-        }
-        catch(Exception e)
-        {
-        	result = false;
-        }
-        finally { return result;}
-    }
+    // @PostMapping(value="/delta-processes/TestConnectionDest")
+    // public @ResponseBody boolean TestingConnection(@RequestBody SnowflakeConnectionDTO connectionDTO)throws SQLException,ClassNotFoundException  {
+    //     boolean result  = false;
+	// 	try {
+    // 	Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(), connectionDTO.getPassword());
+    //     result = con1.isValid(10);
+    //     }
+    //     catch(Exception e)
+    //     {
+    //     	result = false;
+    //     }
+    //     finally { return result;}
+    // }
 
-     @PostMapping(value = "/delta-processes/Reports")
-    public @ResponseBody String Reports(@Valid @RequestBody DeltaProcessDTO deltaProcessDTO)throws SQLException,ClassNotFoundException  {
-        /*Properties properties = new Properties();
-		properties.put("user", deltaProcessDTO.getSnowflakeConnectionUsername());
-		properties.put("password", deltaProcessDTO.getSnowflakeConnectionPassword());
-		properties.put("account", deltaProcessDTO.getSnowflakeConnectionAcct());
-        properties.put("warehouse",deltaProcessDTO.getSnowflakeConnectionWarehouse());
-		properties.put("db",deltaProcessDTO.getSnowflakeConnectionDatabase());
-	    properties.put("schema",deltaProcessDTO.getSnowflakeConnectionSchema());
-		Connection con2=DriverManager.getConnection(deltaProcessDTO.getSnowflakeConnectionUrl(),properties);
-        Statement stmt0=con2.createStatement(); */
-        Connection con3 = DriverManager.getConnection("jdbc:postgresql://localhost:5432/smapp","postgres","password");
-	    Statement st0 = con3.createStatement();
-        ResultSet rs0 = st0.executeQuery("SELECT * FROM sah_tableLoadStatus WHERE processid ="+deltaProcessDTO.getId() +" order by tableloadstarttime desc");
+    //  @PostMapping(value = "/delta-processes/Reports")
+    // public @ResponseBody String Reports(@Valid @RequestBody DeltaProcessDTO deltaProcessDTO)throws SQLException,ClassNotFoundException  {
+    //     /*Properties properties = new Properties();
+	// 	properties.put("user", deltaProcessDTO.getSnowflakeConnectionUsername());
+	// 	properties.put("password", deltaProcessDTO.getSnowflakeConnectionPassword());
+	// 	properties.put("account", deltaProcessDTO.getSnowflakeConnectionAcct());
+    //     properties.put("warehouse",deltaProcessDTO.getSnowflakeConnectionWarehouse());
+	// 	properties.put("db",deltaProcessDTO.getSnowflakeConnectionDatabase());
+	//     properties.put("schema",deltaProcessDTO.getSnowflakeConnectionSchema());
+	// 	Connection con2=DriverManager.getConnection(deltaProcessDTO.getSnowflakeConnectionUrl(),properties);
+    //     Statement stmt0=con2.createStatement(); */
+    //     Connection con3 = DriverManager.getConnection("jdbc:postgresql://localhost:5432/smapp","postgres","password");
+	//     Statement st0 = con3.createStatement();
+    //     ResultSet rs0 = st0.executeQuery("SELECT * FROM sah_tableLoadStatus WHERE processid ="+deltaProcessDTO.getId() +" order by tableloadstarttime desc");
 
-        JsonObject jsonResponse = new JsonObject();
-		JsonArray data = new JsonArray();
-		while(rs0.next() )
-		{
-			System.out.println("Inside while loop:"+rs0.getString(3));
-		JsonArray row = new JsonArray();
-		row.add(new JsonPrimitive(rs0.getInt(1)));
-		row.add(new JsonPrimitive(rs0.getInt(2)));
-		row.add(new JsonPrimitive(rs0.getString(3)==null?"":rs0.getString(3)));
-		row.add(new JsonPrimitive(rs0.getString(4)==null?"":rs0.getString(4)));
-		row.add(new JsonPrimitive(rs0.getString(5)==null?"":rs0.getString(5)));
-		row.add(new JsonPrimitive(rs0.getString(6)==null?"":rs0.getString(6)));
-		row.add(new JsonPrimitive(rs0.getInt(7)));
-		row.add(new JsonPrimitive(rs0.getInt(8)));
-		row.add(new JsonPrimitive(rs0.getInt(9)));
-		//row.add(new JsonPrimitive(rs0.getString(10)));
-		row.add(new JsonPrimitive(rs0.getString(11)==null?"":rs0.getString(11)));
-		row.add(new JsonPrimitive(rs0.getString(12)==null?"":rs0.getString(12)));
-		row.add(new JsonPrimitive(rs0.getString(13)==null?"":rs0.getString(13)));
-		row.add(new JsonPrimitive(rs0.getString(14)==null?"":rs0.getString(14)));
+    //     JsonObject jsonResponse = new JsonObject();
+	// 	JsonArray data = new JsonArray();
+	// 	while(rs0.next() )
+	// 	{
+	// 		System.out.println("Inside while loop:"+rs0.getString(3));
+	// 	JsonArray row = new JsonArray();
+	// 	row.add(new JsonPrimitive(rs0.getInt(1)));
+	// 	row.add(new JsonPrimitive(rs0.getInt(2)));
+	// 	row.add(new JsonPrimitive(rs0.getString(3)==null?"":rs0.getString(3)));
+	// 	row.add(new JsonPrimitive(rs0.getString(4)==null?"":rs0.getString(4)));
+	// 	row.add(new JsonPrimitive(rs0.getString(5)==null?"":rs0.getString(5)));
+	// 	row.add(new JsonPrimitive(rs0.getString(6)==null?"":rs0.getString(6)));
+	// 	row.add(new JsonPrimitive(rs0.getInt(7)));
+	// 	row.add(new JsonPrimitive(rs0.getInt(8)));
+	// 	row.add(new JsonPrimitive(rs0.getInt(9)));
+	// 	//row.add(new JsonPrimitive(rs0.getString(10)));
+	// 	row.add(new JsonPrimitive(rs0.getString(11)==null?"":rs0.getString(11)));
+	// 	row.add(new JsonPrimitive(rs0.getString(12)==null?"":rs0.getString(12)));
+	// 	row.add(new JsonPrimitive(rs0.getString(13)==null?"":rs0.getString(13)));
+	// 	row.add(new JsonPrimitive(rs0.getString(14)==null?"":rs0.getString(14)));
 
-        data.add(row);
-        }
-        jsonResponse.add("audit_data", data);
-        return jsonResponse.toString();
-    }
+    //     data.add(row);
+    //     }
+    //     jsonResponse.add("audit_data", data);
+    //     return jsonResponse.toString();
+    // }
 
-     @PostMapping(value = "/delta-processes/ReportsPerJob")
-    public @ResponseBody String ReportsPerJob(@Valid @RequestBody DeltaProcessDTO deltaProcessDTO)throws SQLException,ClassNotFoundException  {
-        Properties properties = new Properties();
-		properties.put("user", deltaProcessDTO.getSnowflakeConnectionUsername());
-		properties.put("password", deltaProcessDTO.getSnowflakeConnectionPassword());
-		properties.put("account", deltaProcessDTO.getSnowflakeConnectionAcct());
-        properties.put("warehouse",deltaProcessDTO.getSnowflakeConnectionWarehouse());
-		properties.put("db",deltaProcessDTO.getSnowflakeConnectionDatabase());
-	    properties.put("schema",deltaProcessDTO.getSnowflakeConnectionSchema());
-		Connection con2=DriverManager.getConnection(deltaProcessDTO.getSnowflakeConnectionUrl(),properties);
-        Statement stmt0=con2.createStatement();
-        ResultSet rs0 = stmt0.executeQuery("SELECT MAX(jobid) FROM sah_jobRunStatus");
-        rs0.next();
-        System.out.println("SELECT * FROM sah_tableLoadStatus WHERE processid ="+deltaProcessDTO.getId() +" AND jobid ="+rs0.getInt(1)+" order by tableloadstarttime desc");
-        ResultSet rs1 = stmt0.executeQuery("SELECT * FROM sah_tableLoadStatus WHERE processid ="+deltaProcessDTO.getId() +" AND jobid ="+rs0.getInt(1)+" order by tableloadstarttime desc");
+    //  @PostMapping(value = "/delta-processes/ReportsPerJob")
+    // public @ResponseBody String ReportsPerJob(@Valid @RequestBody DeltaProcessDTO deltaProcessDTO)throws SQLException,ClassNotFoundException  {
+    //     Properties properties = new Properties();
+	// 	properties.put("user", deltaProcessDTO.getSnowflakeConnectionUsername());
+	// 	properties.put("password", deltaProcessDTO.getSnowflakeConnectionPassword());
+	// 	properties.put("account", deltaProcessDTO.getSnowflakeConnectionAcct());
+    //     properties.put("warehouse",deltaProcessDTO.getSnowflakeConnectionWarehouse());
+	// 	properties.put("db",deltaProcessDTO.getSnowflakeConnectionDatabase());
+	//     properties.put("schema",deltaProcessDTO.getSnowflakeConnectionSchema());
+	// 	Connection con2=DriverManager.getConnection(deltaProcessDTO.getSnowflakeConnectionUrl(),properties);
+    //     Statement stmt0=con2.createStatement();
+    //     ResultSet rs0 = stmt0.executeQuery("SELECT MAX(jobid) FROM sah_jobRunStatus");
+    //     rs0.next();
+    //     System.out.println("SELECT * FROM sah_tableLoadStatus WHERE processid ="+deltaProcessDTO.getId() +" AND jobid ="+rs0.getInt(1)+" order by tableloadstarttime desc");
+    //     ResultSet rs1 = stmt0.executeQuery("SELECT * FROM sah_tableLoadStatus WHERE processid ="+deltaProcessDTO.getId() +" AND jobid ="+rs0.getInt(1)+" order by tableloadstarttime desc");
 
-        JsonObject jsonResponse = new JsonObject();
-		JsonArray data = new JsonArray();
-		while(rs1.next() )
-		{
-			System.out.println("Inside while loop:"+rs1.getString(3));
-		JsonArray row = new JsonArray();
-		row.add(new JsonPrimitive(rs1.getInt(1)));
-		row.add(new JsonPrimitive(rs1.getInt(2)));
-		row.add(new JsonPrimitive(rs1.getString(3)==null?"":rs1.getString(3)));
-		row.add(new JsonPrimitive(rs1.getString(4)==null?"":rs1.getString(4)));
-		row.add(new JsonPrimitive(rs1.getString(5)==null?"":rs1.getString(5)));
-		row.add(new JsonPrimitive(rs1.getString(6)==null?"":rs1.getString(6)));
-		row.add(new JsonPrimitive(rs1.getInt(7)));
-		row.add(new JsonPrimitive(rs1.getInt(8)));
-		row.add(new JsonPrimitive(rs1.getInt(9)));
-		//row.add(new JsonPrimitive(rs0.getString(10)));
-		row.add(new JsonPrimitive(rs1.getString(11)==null?"":rs1.getString(11)));
-		row.add(new JsonPrimitive(rs1.getString(12)==null?"":rs1.getString(12)));
-		row.add(new JsonPrimitive(rs1.getString(13)==null?"":rs1.getString(13)));
-		row.add(new JsonPrimitive(rs1.getString(14)==null?"":rs1.getString(14)));
+    //     JsonObject jsonResponse = new JsonObject();
+	// 	JsonArray data = new JsonArray();
+	// 	while(rs1.next() )
+	// 	{
+	// 		System.out.println("Inside while loop:"+rs1.getString(3));
+	// 	JsonArray row = new JsonArray();
+	// 	row.add(new JsonPrimitive(rs1.getInt(1)));
+	// 	row.add(new JsonPrimitive(rs1.getInt(2)));
+	// 	row.add(new JsonPrimitive(rs1.getString(3)==null?"":rs1.getString(3)));
+	// 	row.add(new JsonPrimitive(rs1.getString(4)==null?"":rs1.getString(4)));
+	// 	row.add(new JsonPrimitive(rs1.getString(5)==null?"":rs1.getString(5)));
+	// 	row.add(new JsonPrimitive(rs1.getString(6)==null?"":rs1.getString(6)));
+	// 	row.add(new JsonPrimitive(rs1.getInt(7)));
+	// 	row.add(new JsonPrimitive(rs1.getInt(8)));
+	// 	row.add(new JsonPrimitive(rs1.getInt(9)));
+	// 	//row.add(new JsonPrimitive(rs0.getString(10)));
+	// 	row.add(new JsonPrimitive(rs1.getString(11)==null?"":rs1.getString(11)));
+	// 	row.add(new JsonPrimitive(rs1.getString(12)==null?"":rs1.getString(12)));
+	// 	row.add(new JsonPrimitive(rs1.getString(13)==null?"":rs1.getString(13)));
+	// 	row.add(new JsonPrimitive(rs1.getString(14)==null?"":rs1.getString(14)));
 
-        data.add(row);
-        }
-        jsonResponse.add("audit_data", data);
-        return jsonResponse.toString();
-    }
+    //     data.add(row);
+    //     }
+    //     jsonResponse.add("audit_data", data);
+    //     return jsonResponse.toString();
+    // }
      @PostMapping(value = "/delta-processes/retrieveColumnList")
-     public @ResponseBody String[] listColumns(@Valid @RequestBody DeltaProcessDTO deltaProcessDTO, String tableName) throws SQLException,ClassNotFoundException {
-    	 Properties properties0 = new Properties();
- 		properties0.put("user", deltaProcessDTO.getSourceConnectionUsername());
- 		properties0.put("password", deltaProcessDTO.getSourceConnectionPassword());
- 		properties0.put("db",deltaProcessDTO.getSourceConnectionDatabase());
- 	    properties0.put("schema",deltaProcessDTO.getSourceConnectionSchema());
- 	    Connection con = DriverManager.getConnection(deltaProcessDTO.getSourceConnectionUrl(),properties0);
-         Statement stmt = con.createStatement();
-         ResultSet rs1 = stmt.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME ='"+tableName+"' AND TABLE_SCHEMA = '"+deltaProcessDTO.getSourceConnectionSchema()+"';");
-         ArrayList tn = new ArrayList();
-         while(rs1.next())
-         {
-             tn.add(rs1.getString("COLUMN_NAME"));
-         }
-         String[] colNames = (String[])tn.toArray(new String[tn.size()]);
-    	 return colNames;
+     public @ResponseBody String callListColumns(@Valid @RequestBody DeltaProcessDTO deltaProcessDTO,
+            @RequestParam String tableName) throws IOException, SQLException {
+    //  public @ResponseBody String callListColumns(@Valid @RequestBody DeltaProcessDTO deltaProcessDTO, String tableName) throws IOException,SQLException{
+    	//  Properties properties0 = new Properties();
+ 		// properties0.put("user", deltaProcessDTO.getSourceConnectionUsername());
+ 		// properties0.put("password", deltaProcessDTO.getSourceConnectionPassword());
+ 		// properties0.put("db",deltaProcessDTO.getSourceConnectionDatabase());
+ 	    // properties0.put("schema",deltaProcessDTO.getSourceConnectionSchema());
+ 	    // Connection con = DriverManager.getConnection(deltaProcessDTO.getSourceConnectionUrl(),properties0);
+        //  Statement stmt = con.createStatement();
+        //  ResultSet rs1 = stmt.executeQuery("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME ='"+tableName+"' AND TABLE_SCHEMA = '"+deltaProcessDTO.getSourceConnectionSchema()+"';");
+        //  ArrayList tn = new ArrayList();
+        //  while(rs1.next())
+        //  {
+        //      tn.add(rs1.getString("COLUMN_NAME"));
+        //  }
+        //  String[] colNames = (String[])tn.toArray(new String[tn.size()]);
+        //  return colNames;
+        JsonObject conn_obj = new JsonObject();
+        conn_obj.addProperty("username",deltaProcessDTO.getSourceConnectionUsername());
+        conn_obj.addProperty("password",deltaProcessDTO.getSourceConnectionPassword());
+        conn_obj.addProperty("database",deltaProcessDTO.getSourceConnectionDatabase());
+        conn_obj.addProperty("schema",deltaProcessDTO.getSourceConnectionSchema());
+        conn_obj.addProperty("url",deltaProcessDTO.getSourceConnectionUrl());
+        conn_obj.addProperty("system",deltaProcessDTO.getSourceType());
+        String tableColumns = listColumns(conn_obj, tableName);
+        return tableColumns;
      }
      @PostMapping(value = "/delta-processes/retrieveFileColumnList")
      public @ResponseBody String[] callListFileColumns(@Valid @RequestBody DeltaProcessDTO DeltaProcessDTO,
              @RequestParam String fileName) throws IOException {
-         String[] fileColumns = listFileColumns(DeltaProcessDTO, fileName);
-         return fileColumns;
+        JsonObject conn_obj = new JsonObject();
+        conn_obj.addProperty("url",DeltaProcessDTO.getSourceConnectionUrl());
+        String[] fileColumns = listFileColumns(conn_obj, fileName);
+        return fileColumns;
      }
 }
