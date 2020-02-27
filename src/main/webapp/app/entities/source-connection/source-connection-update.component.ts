@@ -129,7 +129,16 @@ export class SourceConnectionUpdateComponent implements OnInit {
         this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host + ':' + this.portNumber + ';databaseName=' + this.dbname;
         break;
       case 'teradata':
-        this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host;
+        this.url =
+          'jdbc:' +
+          this.sourcetypelc +
+          '://' +
+          this.host +
+          '/DATABASE=' +
+          this.dbname +
+          ',DBS_PORT=' +
+          this.portNumber +
+          ',TMODE=ANSI,CHARSET=UTF8';
         break;
       default:
         this.url = 'jdbc:' + this.sourcetypelc + '://' + this.host + ':' + this.portNumber + '/' + this.dbname;
