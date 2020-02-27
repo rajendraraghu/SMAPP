@@ -1,5 +1,21 @@
 ﻿Lines to be Removed
 spatial
+no after journal
+dual after journal
+local after journal
+not local after journal
+no before journal
+dual before journal
+no journal
+dual journal
+datablocksize = <<data block size>>
+datablocksize = <<data block size>> bytes
+datablocksize = <<data block size>> kbytes
+datablocksize = <<data block size>> kilobytes
+minimum datablocksize
+maximum datablocksize
+default datablocksize
+after journal
 ;
 idx_
 format
@@ -7,6 +23,8 @@ index
 journal
 mergeblockratio
 datablocksize
+freespace = <<integer>>
+freespace = <<integer>> percent
 checksum
 freespace
 blockcompression
@@ -14,3 +32,23 @@ partition
 with
 check
 period for
+checksum = <<integrity check>>
+default mergeblockratio
+mergeblockratio = <<integer>>
+mergeblockratio = <<integer>> percent
+no mergeblockratio
+blockcompression = <<compression option>>
+replication group <<replication grp nme>>
+upper case
+uc
+casespecific
+not casespecific
+cs
+not cs
+format
+title
+character set
+no compress
+compress
+compress using
+anything
