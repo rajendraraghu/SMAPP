@@ -64,7 +64,7 @@ public class SendTableList  {
 		JsonObject status = new JsonObject();
 		String filepath = null;
 		String timeStamp = new SimpleDateFormat().format( new Date() );
-		logger = Logger.getLogger("MyLog");  
+		logger = Logger.getLogger("SAHLog");  
 	    FileHandler fh;
 		long failure_count = 0;
 		String[] tableNamescdc = null;
@@ -74,13 +74,24 @@ public class SendTableList  {
 		String[] cdcColumn = null;
 		String schema = new String();
 		String lastruntime = new String();
-        	
+		String logPath = "logs/SnowAcquisitionHub";
+		String tmpPath = "tmp/CSV";
+		File logDir=new File(logPath);
+		File tmpDir=new File(tmpPath);
+		if(logDir.exists()==false)
+		{
+			logDir.mkdirs();
+		}
+		if(tmpDir.exists()==false)
+		{
+			tmpDir.mkdirs();
+		}
 		logger.info("before try");
 		try{
 	        
      		Long jobid=(long)0;
 			String system = write2.getSourceType();											
-			fh = new FileHandler("F:/POC/CSV/MyLogFile.log");  
+			fh = new FileHandler("logs/SnowAcquisitionHub/SAHLogFile.log");  
 		    logger.addHandler(fh);
 		    SimpleFormatter formatter = new SimpleFormatter();  
 		    fh.setFormatter(formatter);		        
@@ -90,7 +101,28 @@ public class SendTableList  {
 				logger.info("inside flatfiles");	
 				filepath = write2.getSourceConnectionUrl();
 				}
-			else{
+			else if (system.equals("Teradata")){
+			Properties properties0 = new Properties();
+			properties0.put("user", write2.getSourceConnectionUsername());
+			properties0.put("password", decrypt(write2.getSourceConnectionPassword()));
+			properties0.put("db",write2.getSourceConnectionDatabase());			 
+	        con1 = DriverManager.getConnection(write2.getSourceConnectionUrl(), properties0);
+	        logger.info("source connection connected");
+			
+			
+     		//lastruntime = migrationProcessStatusService.findLastUpdateTime(write2.getId());
+		    lastruntime = write2.getLastRunTime();
+			
+			
+			Statement stmt = con1.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT CURRENT_TIMESTAMP;");
+			rs.next();
+			String lastruntimestart = rs.getTimestamp(1).toString();
+			write2.setLastRunTime(lastruntimestart);
+			System.out.print(lastruntimestart);
+			write2 = migrationProcessService.save(write2);	
+		}
+		else {
 			Properties properties0 = new Properties();
 			properties0.put("user", write2.getSourceConnectionUsername());
 			properties0.put("password", decrypt(write2.getSourceConnectionPassword()));
@@ -121,7 +153,8 @@ public class SendTableList  {
 				write2.setLastRunTime(lastruntimestart);
 				System.out.print(lastruntimestart);
 			}
-			write2 = migrationProcessService.save(write2);	
+			write2 = migrationProcessService.save(write2);
+
 		}												   
 	        
 	        Class.forName("net.snowflake.client.jdbc.SnowflakeDriver");  
@@ -132,7 +165,7 @@ public class SendTableList  {
             properties.put("warehouse",write2.getSnowflakeConnectionWarehouse());
 		    properties.put("db",write2.getSnowflakeConnectionDatabase());
 	        properties.put("schema",write2.getSnowflakeConnectionSchema());
-		    Connection con2=DriverManager.getConnection(write2.getSnowflakeConnectionUrl(),properties);
+			Connection con2=DriverManager.getConnection(write2.getSnowflakeConnectionUrl(),properties);
 		    logger.info("destination connection connected");
 		    String tabletoMigrate = write2.getTablesToMigrate();
 			String[] tablesToMigrate = tabletoMigrate.split(",");
@@ -248,7 +281,7 @@ public class SendTableList  {
 					}
 					else{
 		            String tn = tableNamesbulk[j].replace("[\"", "");
-					tableName = tn.replaceAll("\"]|\"", "");
+					tableName = tn.replaceAll("\"]|\"", "").trim();
 					String bkey1  = pkbulk[j].replace("[\"", "");
 					bkey2 = bkey1.replaceAll("\"]|\"", "");
 					}
@@ -445,14 +478,15 @@ public class SendTableList  {
         tableName = tableName.replace(".csv","");
 		tableName = tableName.replaceAll("[^a-zA-Z0-9_-]", "");
 	    String srcCols = getfileColNames(filepath);
-	    String csvFilename = "F:/POC/CSV/"+tableName+".csv";
+		// String csvFilename = "F:/POC/CSV/"+tableName+".csv";
+		String csvFilename = "tmp/CSV/"+tableName+".csv";
     	FilestoCSV(filepath,csvFilename);   	
     	logger.info("Stage file writing complete");    	
        	Statement stmt2=con2.createStatement();
     	logger.info("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");
     	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");    	
-		stmt2.executeQuery("PUT 'file://F:/POC/CSV/"+tableName+".csv' @"+tableName+"_stage;");
-		// stmt2.executeQuery("PUT 'file://./temp/"+tableName+".csv' @"+tableName+"_stage;");
+		stmt2.executeQuery("PUT 'file://tmp/CSV/"+tableName+".csv' @"+tableName+"_stage;");
+		// stmt2.executeQuery("PUT 'file://./tmp/"+tableName+".csv' @"+tableName+"_stage;");
     	int m = 1;
     	int k = srcCols.replaceAll("[^,]","").length() + 1;
     	String stageCols = "t.$1,";
@@ -531,15 +565,14 @@ public class SendTableList  {
     	Statement stmt1=con1.createStatement(); 
     	ResultSet rs1=stmt1.executeQuery(query);
        	String srcCols = getColNames2(con1,tableName,system,dbname,schema);
-		// String csvFilename = "./temp/"+tableName+".csv";
-		String csvFilename = "F:/POC/CSV/"+tableName+".csv";
+		// String csvFilename = "F:/POC/CSV/"+tableName+".csv";
+		String csvFilename = "tmp/CSV/"+tableName+".csv";
     	toCSV(rs1,csvFilename);   	
     	logger.info("Stage file writing complete");    	
        	Statement stmt2=con2.createStatement();
     	logger.info("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");
     	stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");    	
-		stmt2.executeQuery("PUT 'file://F:/POC/CSV/"+tableName+".csv' @"+tableName+"_stage;");
-		// stmt2.executeQuery("PUT 'file://./temp/"+tableName+".csv' @"+tableName+"_stage;");
+		stmt2.executeQuery("PUT 'file://tmp/CSV/"+tableName+".csv' @"+tableName+"_stage;");
     	int m = 1;
     	int k = srcCols.replaceAll("[^,]","").length() + 1;
     	String stageCols = "t.$1,";
@@ -635,7 +668,10 @@ public class SendTableList  {
     		String ddl5 = ddl4.replaceAll("`","");
     		ddl6 = ddl5.substring(0, ddl5.length()-2);*/
     	}
-        else if(system.equals("Teradata")) {rs1=stmt1.executeQuery("SHOW TABLE "+tableName+";");}
+        else if(system.equals("Teradata")) {
+			// rs1=stmt1.executeQuery("SHOW TABLE "+tableName+";");
+			ddl6 = "(col TEXT";
+		}
 
 		else if(system.equals("Oracle")) 
         {

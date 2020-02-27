@@ -3,6 +3,7 @@ package com.canny.snowflakemigration.web.rest;
 import com.canny.snowflakemigration.service.MigrationProcessService;
 import com.canny.snowflakemigration.service.MigrationProcessStatusService;
 import com.canny.snowflakemigration.web.rest.errors.BadRequestAlertException;
+import com.google.gson.JsonObject;
 import com.canny.snowflakemigration.service.dto.MigrationProcessDTO;
 import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
 import com.canny.snowflakemigration.service.dto.SnowflakeConnectionDTO;
@@ -36,6 +37,8 @@ import java.io.*;
 
 import static com.canny.snowflakemigration.service.util.ListTables.listTable;
 import static com.canny.snowflakemigration.service.util.ListColumns.listFileColumns;
+import static com.canny.snowflakemigration.service.util.ListColumns.listColumns;
+import static com.canny.snowflakemigration.service.util.ListColumns.listCdcColumns;
 import static com.canny.snowflakemigration.service.util.TestConnection.*;
 import static com.canny.snowflakemigration.service.util.SendTableList.sendSelectedTables;
 
@@ -186,7 +189,14 @@ public class MigrationProcessResource {
     public @ResponseBody String listTables(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO)
             throws SQLException, ClassNotFoundException {
         System.out.println("inside resource list tables");
-        String tableName = listTable(migrationProcessDTO);
+        JsonObject conn_obj = new JsonObject();
+        conn_obj.addProperty("username",migrationProcessDTO.getSourceConnectionUsername());
+        conn_obj.addProperty("password",migrationProcessDTO.getSourceConnectionPassword());
+        conn_obj.addProperty("database",migrationProcessDTO.getSourceConnectionDatabase());
+        conn_obj.addProperty("schema",migrationProcessDTO.getSourceConnectionSchema());
+        conn_obj.addProperty("url",migrationProcessDTO.getSourceConnectionUrl());
+        conn_obj.addProperty("system",migrationProcessDTO.getSourceType());
+        String tableName = listTable(conn_obj);
         return tableName;
     }
 
@@ -331,7 +341,37 @@ public class MigrationProcessResource {
     @PostMapping(value = "/migration-processes/retrieveFileColumnList")
     public @ResponseBody String[] callListFileColumns(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO,
             @RequestParam String fileName) throws IOException {
-        String[] fileColumns = listFileColumns(migrationProcessDTO, fileName);
+        JsonObject conn_obj = new JsonObject();
+        conn_obj.addProperty("url",migrationProcessDTO.getSourceConnectionUrl());
+        String[] fileColumns = listFileColumns(conn_obj, fileName);
         return fileColumns;
+    }
+
+    @PostMapping(value = "/migration-processes/retrieveColumnList")
+    public @ResponseBody String callListColumns(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO,
+            @RequestParam String tableName) throws IOException, SQLException {
+        JsonObject conn_obj = new JsonObject();
+        conn_obj.addProperty("username",migrationProcessDTO.getSourceConnectionUsername());
+        conn_obj.addProperty("password",migrationProcessDTO.getSourceConnectionPassword());
+        conn_obj.addProperty("database",migrationProcessDTO.getSourceConnectionDatabase());
+        conn_obj.addProperty("schema",migrationProcessDTO.getSourceConnectionSchema());
+        conn_obj.addProperty("url",migrationProcessDTO.getSourceConnectionUrl());
+        conn_obj.addProperty("system",migrationProcessDTO.getSourceType());
+        String tableColumns = listColumns(conn_obj, tableName);
+        return tableColumns;
+    }
+
+    @PostMapping(value = "/migration-processes/retrieveCdcColumnList")
+    public @ResponseBody String callListCdcColumns(@Valid @RequestBody MigrationProcessDTO migrationProcessDTO,
+            @RequestParam String tableName) throws IOException, SQLException {
+        JsonObject conn_obj = new JsonObject();
+        conn_obj.addProperty("username",migrationProcessDTO.getSourceConnectionUsername());
+        conn_obj.addProperty("password",migrationProcessDTO.getSourceConnectionPassword());
+        conn_obj.addProperty("database",migrationProcessDTO.getSourceConnectionDatabase());
+        conn_obj.addProperty("schema",migrationProcessDTO.getSourceConnectionSchema());
+        conn_obj.addProperty("url",migrationProcessDTO.getSourceConnectionUrl());
+        conn_obj.addProperty("system",migrationProcessDTO.getSourceType());
+        String cdcColumns = listCdcColumns(conn_obj, tableName);
+        return cdcColumns;
     }
 }
