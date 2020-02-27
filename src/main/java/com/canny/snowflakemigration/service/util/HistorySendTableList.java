@@ -3,6 +3,7 @@ package com.canny.snowflakemigration.service.util;
 import java.awt.List;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -47,15 +48,26 @@ public class HistorySendTableList {
 		SnowHistoryProcessStatusDTO write = new SnowHistoryProcessStatusDTO();
 		
 		// SnowHistoryJobStatusDTO snowHistoryJobStatusDTO = new SnowHistoryJobStatusDTO();
-		logger = Logger.getLogger("MySnowHistoryLog");
+		logger = Logger.getLogger("SnowHistoryLog");
 		FileHandler fh;
         String system = processDTO.getSourceSystem();
 		String schema = processDTO.getSourceConnectionSchema();
-
+		String logPath = "logs/SnowHistory";
+		String tmpPath = "tmp/CSV";
+		File logDir=new File(logPath);
+		File tmpDir=new File(tmpPath);
+		if(logDir.exists()==false)
+		{
+			logDir.mkdirs();
+		}
+		if(tmpDir.exists()==false)
+		{
+			tmpDir.mkdirs();
+		}
 		long success_count = 0;
         long failure_count = 0;
 		try{
-			fh = new FileHandler("F:/POC/CSV/logs/MySnowhistoryLogFile.log");  
+			fh = new FileHandler("logs/SnowHistory/SnowHistoryLogFile.log");  
 		    logger.addHandler(fh);
 		    SimpleFormatter formatter = new SimpleFormatter();  
 		    fh.setFormatter(formatter);		        
@@ -238,7 +250,7 @@ public class HistorySendTableList {
 		Statement stmt1 = con1.createStatement();
 		ResultSet rs1 = stmt1.executeQuery(query);
 		String srcCols = getColNames2(con1, tableName, system, dbname, schema);
-		String csvFilename = "F:/POC/CSV/" + tableName + ".csv";
+		String csvFilename = "tmp/CSV/" + tableName + ".csv";
 		toCSV(rs1, csvFilename);
 
 		logger.info("Stage file writing complete");
@@ -247,7 +259,7 @@ public class HistorySendTableList {
 				+ "_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");
 		stmt2.executeQuery("create or replace stage " + tableName
 				+ "_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");
-		stmt2.executeQuery("PUT 'file://F:/POC/CSV/" + tableName + ".csv' @" + tableName + "_stage;");
+		stmt2.executeQuery("PUT 'file://tmp/CSV/" + tableName + ".csv' @" + tableName + "_stage;");
 		int m = 1;
 		int k = srcCols.replaceAll("[^,]", "").length() + 1;
 		String stageCols = "t.$1,";
@@ -274,19 +286,19 @@ public class HistorySendTableList {
 		Statement stmt3 = con2.createStatement();
 		ResultSet rs5 = null;
 		logger.info("in hist load");
-		System.out.println("SELECT COUNT(*) as cnt FROM "+tableName+"history;");
-		rs5 = stmt3.executeQuery("SELECT COUNT(*) as cnt FROM "+tableName+"history;");
+		System.out.println("SELECT COUNT(*) as cnt FROM "+tableName+"hist;");
+		rs5 = stmt3.executeQuery("SELECT COUNT(*) as cnt FROM "+tableName+"hist;");
 		if(rs5.next()){
 			System.out.println("inside if");
 			delcnt = rs5.getInt(1);
 		logger.info("delcnt:"+rs5.getInt(1));}
-		stmt3.executeQuery("TRUNCATE TABLE " + tableName + "history");
+		stmt3.executeQuery("TRUNCATE TABLE " + tableName + "hist");
 		logger.info("truncate over");
 		stmt3.executeQuery("INSERT INTO " + tableName
-				+ "history SELECT *,1 as sah_currentind,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) as sah_createdTime,null as sah_updatedtime FROM "
+				+ "hist SELECT *,1 as sah_currentind,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) as sah_createdTime,null as sah_updatedtime FROM "
 				+ tableName + " src;");
         logger.info("insert over");
-		rs5 = stmt3.executeQuery("SELECT COUNT(*) as cnt FROM "+tableName+"history");
+		rs5 = stmt3.executeQuery("SELECT COUNT(*) as cnt FROM "+tableName+"hist");
 		rs5.next();
 		inscnt = rs5.getInt(1);
 		logger.info("inscnt:"+inscnt);
@@ -308,7 +320,10 @@ public class HistorySendTableList {
     		String ddl5 = ddl4.replaceAll("`","");
     		ddl6 = ddl5.substring(0, ddl5.length()-2);
     	}
-        else if(system.equals("Teradata")) {rs1=stmt1.executeQuery("SHOW TABLE "+tableName+";");}
+        else if (system.equals("Teradata")) {
+			// rs1 = stmt1.executeQuery("SHOW TABLE " + tableName + ";");
+			ddl6 = "(col TEXT";
+		}
 
 		else if(system.equals("Oracle")) 
         {
@@ -351,9 +366,9 @@ public class HistorySendTableList {
 
 		Statement stmt2 = con2.createStatement();
 		logger.info("CREATE TABLE IF NOT EXISTS " + tableName + stagecreate);
-		logger.info("CREATE TABLE IF NOT EXISTS " + tableName + "history " + histcreate);
+		logger.info("CREATE TABLE IF NOT EXISTS " + tableName + "hist " + histcreate);
 		ResultSet rs2 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS " + tableName + stagecreate);
-		ResultSet rs3 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS " + tableName + "history " + histcreate);
+		ResultSet rs3 = stmt2.executeQuery("CREATE TABLE IF NOT EXISTS " + tableName + "hist " + histcreate);
 
 	}
 }
