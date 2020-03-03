@@ -22,10 +22,23 @@ public class ConvertDDL {
 	{
 		String status = null;
 		SnowDDLProcessStatusDTO processStatus = new SnowDDLProcessStatusDTO();
+		String logPath = "logs/SnowDDL";
+		String tmpPath = "snowddl_op";
+		File logDir=new File(logPath);
+		File tmpDir=new File(tmpPath);
+		if(logDir.exists()==false)
+		{
+			logDir.mkdirs();
+		}
+		if(tmpDir.exists()==false)
+		{
+			tmpDir.mkdirs();
+		}
 		try{
 			System.out.println("Start of try block");
 			String line,tblNm = null;
 			boolean parse = false;
+			boolean parse1 = false;
 			BufferedWriter opSql = null;
 			String inpPath = snowDDLDTO.getSourcePath();
             String sourceType = snowDDLDTO.getSourceType();
@@ -55,7 +68,73 @@ public class ConvertDDL {
 			System.out.println("Start of loops");
 			outer : while ((line = inpSql.readLine()) != null) {try{
 				line = line.toLowerCase();
-				line = line.replace("\"","");				 
+				line = line.replace("\"","");
+				if (sourceType.contains("teradata")) {
+					int d = 0;
+					if(line.contains("create table")) {
+						int count2 = 0;
+						if (line.contains ("as")) {
+							 d = line.indexOf("as");
+							count2 = count2+1;	
+						}
+						int a = line.indexOf(",");
+						int b = line.indexOf(".");
+						int count1 = 0;
+						int c = 0;
+						while (b >= 0) {
+							count1 = count1+1;
+							c = b +1;
+							System.out.println("Index of dot"+b);
+							 b = line.indexOf('.', b+1);
+						  }
+							if (count1 == 0) {
+								tblNm = line.substring(13,a-1).replace("`", "");
+								System.out.println("Table name:" + tblNm);
+							}
+							else if (count1 > 0) {
+								if (count2 > 0) {
+									tblNm = line.substring(c,d-1).replace("`", "");
+									System.out.println("Table name:" + tblNm);
+								}
+								else {
+									tblNm = line.substring(c,a-1).replace("`", "");
+									System.out.println("Table name:" + tblNm);
+								}	
+							}
+							if(count1 > 0){
+								String str = line.substring(13,c);
+								System.out.println("substr:"+str);
+								line = line.replace(str,"");
+							}
+							if(parse1) {
+								if (count2 >0) {
+									snowDDLJobStatusDTO.setEndTime(Instant.now());
+									snowDDLJobStatusDTO.setStatus("FAILURE: Copying schema is not allowed");
+									SnowDDLJobStatusDTO jobStatus = snowDDLJobStatusService.save(snowDDLJobStatusDTO);
+
+								} else {
+									snowDDLJobStatusDTO.setEndTime(Instant.now());
+									snowDDLJobStatusDTO.setStatus("SUCCESS");
+									SnowDDLJobStatusDTO jobStatus = snowDDLJobStatusService.save(snowDDLJobStatusDTO);
+									opSql.write(";");
+									opSql.close();
+									}
+							}
+							// line = line.replace(",","(");
+							snowDDLJobStatusDTO.setBatchId(processStatus.getBatchId());
+							snowDDLJobStatusDTO.setName(tblNm);
+							snowDDLJobStatusDTO.setStartTime(Instant.now());
+							if (count2 >0) {
+								parse1 = true;
+								continue outer;
+							} else {
+							// Resource resource3 = new ClassPathResource("/snowddl_lib/"+tblNm+".sql");
+							opSql = new BufferedWriter(new FileWriter("snowddl_op/"+tblNm+".sql"));
+							parse1 = true;
+							}
+						} 
+						}
+				else {				 
 				if(line.contains("create table")) {
 					int x = line.indexOf(" (");
 					 if(x==-1) { x = (line.length())-1;} 
@@ -93,7 +172,7 @@ public class ConvertDDL {
                     snowDDLJobStatusDTO.setName(tblNm);
 					snowDDLJobStatusDTO.setStartTime(Instant.now());
 					// Resource resource3 = new ClassPathResource("/snowddl_lib/"+tblNm+".sql");
-					opSql = new BufferedWriter(new FileWriter("F:/POC/snowddl_op/"+tblNm+".sql"));
+					opSql = new BufferedWriter(new FileWriter("snowddl_op/"+tblNm+".sql"));
 					parse = true;
 				}
 				else if(line.contains("create set table")) {
@@ -122,7 +201,7 @@ public class ConvertDDL {
                     snowDDLJobStatusDTO.setBatchId(processStatus.getBatchId());
                     snowDDLJobStatusDTO.setName(tblNm);
 					snowDDLJobStatusDTO.setStartTime(Instant.now());
-					opSql = new BufferedWriter(new FileWriter("F:/POC/snowddl_op/"+tblNm+".sql"));
+					opSql = new BufferedWriter(new FileWriter("snowddl_op/"+tblNm+".sql"));
 					parse = true;
 				}
 				else if(line.contains("create multiset table")) {
@@ -136,11 +215,12 @@ public class ConvertDDL {
                         SnowDDLJobStatusDTO jobStatus = snowDDLJobStatusService.save(snowDDLJobStatusDTO);
 						opSql.write(");");
 						opSql.close();
-                    }
+					}
+				}
                     snowDDLJobStatusDTO.setBatchId(processStatus.getBatchId());
                     snowDDLJobStatusDTO.setName(tblNm);
 					snowDDLJobStatusDTO.setStartTime(Instant.now());
-					opSql = new BufferedWriter(new FileWriter("F:/POC/snowddl_op/"+tblNm+".sql"));
+					opSql = new BufferedWriter(new FileWriter("snowddl_op/"+tblNm+".sql"));
 					parse = true;
 				}
 				System.out.println("line:"+line);
@@ -167,8 +247,7 @@ public class ConvertDDL {
 				opSql.write(");");
 			    opSql.close();
 				continue;
-			}
-			
+			}		
             }
             snowDDLJobStatusDTO.setEndTime(Instant.now());
             snowDDLJobStatusDTO.setStatus("SUCCESS");

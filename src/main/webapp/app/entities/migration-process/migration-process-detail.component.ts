@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
 import { JhiAlertService } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
 
 @Component({
   selector: 'jhi-migration-process-detail',
@@ -19,6 +20,8 @@ export class MigrationProcessDetailComponent implements OnInit {
   discdc: boolean;
   type: string;
   columns: any;
+  cdcColumns: any;
+  selectedCdcCol: any;
   closeResult: string;
   tablesCopy: any;
   selectedTables = [];
@@ -87,10 +90,10 @@ export class MigrationProcessDetailComponent implements OnInit {
         name: element.tableName,
         primaryKey: element.PrimaryKey,
         selected: this.isChecked(element.tableName),
-        cdc: this.isCDC(element.tableName),
-        cdcColumnList: element.cdcColumnList,
-        selectedCdcCol: element.cdcColumnList[0],
-        columnList: element.columnList
+        cdc: this.isCDC(element.tableName)
+        // cdcColumnList: element.cdcColumnList,
+        // selectedCdcCol: element.cdcColumnList[0],
+        // columnList: element.columnList
       };
       this.setPK(table.name, table.primaryKey);
       this.tables.push(table);
@@ -99,9 +102,9 @@ export class MigrationProcessDetailComponent implements OnInit {
     this.isAllSelected();
   }
 
-  prepareColumn(tableName, columnList) {
+  prepareColumn(tableName, columnData) {
     this.columns = [];
-    columnList.forEach(columnItem => {
+    columnData.columnList.forEach(columnItem => {
       const column = {
         columnName: columnItem,
         selected: this.isCheckedPK(tableName, columnItem)
@@ -110,6 +113,17 @@ export class MigrationProcessDetailComponent implements OnInit {
     });
     this.tablemodalspin = false;
   }
+
+  prepareCdcColumn(tableName, cdcColumnData) {
+    for (let i = 0; i < this.tables.length; i++) {
+      if (this.tables[i].name === tableName) {
+        this.tables[i].cdcColumnList = cdcColumnData.cdcColumnList;
+        this.tables[i].selectedCdcCol = cdcColumnData.cdcColumnList[0];
+        break;
+      }
+    }
+  }
+
   checkUncheckAll(event) {
     if (event.target.checked) {
       this.selectedTables = [];
@@ -154,7 +168,15 @@ export class MigrationProcessDetailComponent implements OnInit {
     this.columns = [];
     this.modalService.open(content);
     this.tablemodalspin = true;
-    this.prepareColumn(item.name, item.columnList);
+    this.getColumn(item.name);
+    // this.prepareColumn(item.name, item.columnList);
+  }
+
+  getColumn(tableName) {
+    this.migrationProcessService.getColumnList(this.migrationProcess, tableName).subscribe(response => {
+      this.prepareColumn(tableName, response.body);
+      this.tablemodalspin = false;
+    });
   }
 
   selectFilePK(item, content) {
@@ -213,6 +235,9 @@ export class MigrationProcessDetailComponent implements OnInit {
 
   onProcessSelection(item) {
     item.cdc = item.cdc ? false : true;
+    this.migrationProcessService.getCdcColumnList(this.migrationProcess, item.name).subscribe(response => {
+      this.prepareCdcColumn(item.name, response.body);
+    });
   }
 
   isChecked(item) {
@@ -273,7 +298,7 @@ export class MigrationProcessDetailComponent implements OnInit {
         if (element.selected) {
           if (element.cdc) {
             cdc.push(element.name);
-            cdcColumns.push(element.selectedCdcCol);
+            // cdcColumns.push(element.selectedCdcCol);
             let firstFlag = true;
             let pkList = '';
             this.selectedColumns.forEach(column => {

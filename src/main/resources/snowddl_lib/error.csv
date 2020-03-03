@@ -4,6 +4,66 @@ collate
 generated always as
 check
 uniqueidentifier
+as (select)
 .
 named 
 title
+interval year <<prec>>
+interval year <<prec>> to month
+interval month <<prec>>
+interval day <<prec>>
+interval day <<prec>> to hour
+interval day <<prec>> to minute
+interval day <<prec>> to second
+interval day <<prec>> to second (0)
+interval day <<prec>> to second (1)
+interval day <<prec>> to second (2)
+interval day <<prec>> to second (3)
+interval day <<prec>> to second (4)
+interval day <<prec>> to second (5)
+interval day <<prec>> to second (6)
+interval hour <<prec>>
+interval hour <<prec>> to minute
+interval hour <<prec>> to second
+interval hour <<prec>> to second (0)
+interval hour <<prec>> to second (1)
+interval hour <<prec>> to second (2)
+interval hour <<prec>> to second (3)
+interval hour <<prec>> to second (4)
+interval hour <<prec>> to second (5)
+interval hour <<prec>> to second (6)
+interval minute <<prec>>
+interval minute <<prec>> to second
+interval minute <<prec>> to second (0)
+interval minute <<prec>> to second (1)
+interval minute <<prec>> to second (2)
+interval minute <<prec>> to second (3)
+interval minute <<prec>> to second (4)
+interval minute <<prec>> to second (5)
+interval minute <<prec>> to second (6)
+period(date)
+period(time)
+period(time(0))
+period(time(1))
+period(time(2))
+period(time(3))
+period(time(4))
+period(time(5))
+period(time(6))
+period(timestamp)
+period(timestamp(0))
+period(timestamp(1))
+period(timestamp(2))
+period(timestamp(3))
+period(timestamp(4))
+period(timestamp(5))
+period(timestamp(6))
+period(timestamp with timezone)
+sysudtlib
+constraint
+generate always as identity (. . . min value . . .)
+generate always as identity (. . . max value . . .)
+generate always as identity (. . . cycle. . .)
+generate by default  as identity (. . . min value . . .)
+generate by default  as identity (. . . max value . . .)
+generate by default  as identity (. . . cycle. . .)

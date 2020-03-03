@@ -151,6 +151,13 @@
                                 {{cdcColumn}}</option>
                         </select>
                     </div>
+                    <!-- <div class="col-3 pl-0">
+                        <select class="form-control" id="field_system" name="system"
+                            [disabled]="!item.cdc||!item.selected" [(ngModel)]="item.selectedCdcCol">
+                            <option *ngFor="let cdcColumn of cdcColumns; let i=index " [value]="cdcColumn">
+                                {{cdcColumn}}</option>
+                        </select>
+                    </div> -->
                 </div>
             </div>
         </fieldset>

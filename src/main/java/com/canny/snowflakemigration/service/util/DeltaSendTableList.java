@@ -3,6 +3,7 @@ package com.canny.snowflakemigration.service.util;
 //import java.awt.List;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -63,11 +64,23 @@ public class DeltaSendTableList  {
 		String timeStamp = new SimpleDateFormat().format( new Date() );
 		DeltaProcessStatusDTO write = new DeltaProcessStatusDTO();
 		String filepath1 = new String();
-		logger = Logger.getLogger("MyDeltaLog"); 
+		logger = Logger.getLogger("SnowDeltaLog"); 
 		FileHandler fh;
 		status = "FAILURE";
 		String system = processDTO.getSourceType();
 		String schema = processDTO.getSourceConnectionSchema();
+		String logPath = "logs/SnowDelta";
+		String tmpPath = "tmp/CSV";
+		File logDir=new File(logPath);
+		File tmpDir=new File(tmpPath);
+		if(logDir.exists()==false)
+		{
+			logDir.mkdirs();
+		}
+		if(tmpDir.exists()==false)
+		{
+			tmpDir.mkdirs();
+		}
 		long success_count = 0;
         long failure_count = 0;
         Properties properties0 = new Properties();	
@@ -76,7 +89,7 @@ public class DeltaSendTableList  {
 		try{
 			//int jobid=0;
 
-			fh = new FileHandler("F:/POC/CSV/logs/MyDeltaLogFile.log");  
+			fh = new FileHandler("logs/SnowDelta/DeltaLogFile.log");  
 		    logger.addHandler(fh);
 		    SimpleFormatter formatter = new SimpleFormatter();  
 		    fh.setFormatter(formatter);		        
@@ -219,6 +232,56 @@ public class DeltaSendTableList  {
 					 }
 		
 
+		        if (rs1.next())
+			     {			
+					//using local file now. Should be replaced with S3 or other filespace
+					String csvFilename = "tmp/CSV/"+tableName+".csv";
+					String srcCols = getColNames2(con1,tableName,system,processDTO.getSourceConnectionDatabase(),schema);
+					toCSV(rs1,csvFilename);	
+					Statement stmt2=con2.createStatement();
+					stmt2.executeQuery("create or replace stage "+tableName+"_stage copy_options = (on_error='skip_file') file_format = (type = 'CSV' field_delimiter = ',' skip_header = 1 FIELD_OPTIONALLY_ENCLOSED_BY = '\"' VALIDATE_UTF8=false);");
+					stmt2.executeQuery("PUT 'file://tmp/CSV/"+tableName+".csv' @"+tableName+"_stage;");
+					logger.info("stage writing completed");
+					int j = 1;
+					int k = srcCols.replaceAll("[^,]","").length();
+					String stageCols = "t.$1,";
+					while(j<=k) {
+						j = j+1;
+						stageCols =stageCols + "t.$"+j+",";
+						}
+					stageCols =stageCols.substring(0,stageCols.length() - 1);
+					String hashCol = gethashColNames(stageCols);
+					logger.info(stageCols);
+					logger.info(hashCol);
+					String pk3 = pkgenNew(pk2[i]);
+					String pk4 = pkgenNull(pk2[i]);
+					String pk5 = pk4.replaceAll("y.","t.");
+					ResultSet rs2 = stmt2.executeQuery("SELECT * FROM "+tableName+"_today;");
+					if(rs2.next())
+					{
+						stmt2.executeUpdate("TRUNCATE TABLE "+tableName+ "_yesterday");
+						logger.info("INSERT INTO "+tableName+"_yesterday SELECT * FROM "+ tableName+ "_today");
+						stmt2.executeQuery("INSERT INTO "+tableName+"_yesterday SELECT * FROM "+ tableName+ "_today");
+						stmt2.executeQuery("TRUNCATE TABLE "+tableName+ "_today");
+						logger.info("INSERT INTO "+tableName+"_today SELECT "+stageCols+",MD5("+hashCol+") as delta_MD5HASH,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) as delta_CREATEDTIME FROM @"+tableName+"_stage t;");
+						stmt2.executeQuery("INSERT INTO "+tableName+"_today SELECT "+stageCols+",MD5("+hashCol+") as delta_MD5HASH,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) as delta_CREATEDTIME FROM @"+tableName+"_stage t;");
+					}
+					else
+					{
+						logger.info("INSERT INTO "+tableName+"_today SELECT "+stageCols+",MD5("+hashCol+") as delta_MD5HASH,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) as delta_CREATEDTIME FROM @"+tableName+"_stage t;");
+						stmt2.executeQuery("INSERT INTO "+tableName+"_today SELECT "+stageCols+",MD5("+hashCol+") as delta_MD5HASH,TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) as delta_CREATEDTIME FROM @"+tableName+"_stage t;");
+					}
+					logger.info("INSERT INTO "+tableName+"_delta SELECT y.*,t.*,CASE WHEN "+pk4+" THEN 'INSERT' WHEN "+pk5+" THEN 'DELETE' WHEN "+pk3+" AND y.delta_MD5HASH <> t.delta_MD5HASH THEN 'UPDATE'  ELSE 'NO CHANGE' END AS CDC FROM "+tableName+"_yesterday y FULL OUTER JOIN "+tableName+"_today t ON "+ pk3);
+					stmt2.executeUpdate("TRUNCATE TABLE "+tableName+"_delta");
+					stmt2.executeUpdate("INSERT INTO "+tableName+"_delta SELECT y.*,t.*,CASE WHEN "+pk4+" THEN 'INSERT' WHEN "+pk5+" THEN 'DELETE' WHEN "+pk3+" AND y.delta_MD5HASH <> t.delta_MD5HASH THEN 'UPDATE'  ELSE 'NO CHANGE' END AS CDC FROM "+tableName+"_yesterday y FULL OUTER JOIN "+tableName+"_today t ON "+pk3);
+					rs3 = stmt2.executeQuery("SELECT COALESCE(INS,0) AS INS,COALESCE(UPD,0) AS UPD,COALESCE(DEL,0) AS DEL,COALESCE(NOCHANGE, 0) AS NOCHANGE FROM (SELECT cdc,COUNT(*) as cnt FROM "+tableName+"_delta GROUP BY cdc ORDER BY cdc)src pivot(MAX(cnt) for cdc in ('INSERT', 'UPDATE', 'DELETE', 'NO CHANGE')) as p (INS,UPD,DEL,NOCHANGE);");
+					if(rs3.next())
+				    {
+				      System.out.println("DEL:"+rs3.getInt("DEL"));
+				      write1.setDeleteCount((long)rs3.getInt("DEL"));				
+				       write1.setInsertCount((long)rs3.getInt("INS"));
+				       write1.setUpdateCount((long)rs3.getInt("UPD"));
+				    }
 			    }
 
 				i = i+1;

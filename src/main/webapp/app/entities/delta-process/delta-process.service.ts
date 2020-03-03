@@ -67,6 +67,14 @@ export class DeltaProcessService {
     });
   }
 
+  getColumnList(deltaProcess: IDeltaProcess, tableName: string): Observable<EntityResponseType> {
+    this.params = this.params.set('tableName', tableName);
+    return this.http.post<IDeltaProcess>(`${this.resourceUrl}/retrieveColumnList`, deltaProcess, {
+      params: this.params,
+      observe: 'response'
+    });
+  }
+
   sendTableList(deltaProcess: IDeltaProcess): Observable<EntityResponseType> {
     return this.http.post<IDeltaProcess>(`${this.resourceUrl}/sendTableListforHistProcess`, deltaProcess, { observe: 'response' });
   }

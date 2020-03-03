@@ -67,6 +67,22 @@ export class MigrationProcessService {
     });
   }
 
+  getColumnList(migrationProcess: IMigrationProcess, tableName: string): Observable<EntityResponseType> {
+    this.params = this.params.set('tableName', tableName);
+    return this.http.post<IMigrationProcess>(`${this.resourceUrl}/retrieveColumnList`, migrationProcess, {
+      params: this.params,
+      observe: 'response'
+    });
+  }
+
+  getCdcColumnList(migrationProcess: IMigrationProcess, tableName: string): Observable<EntityResponseType> {
+    this.params = this.params.set('tableName', tableName);
+    return this.http.post<IMigrationProcess>(`${this.resourceUrl}/retrieveCdcColumnList`, migrationProcess, {
+      params: this.params,
+      observe: 'response'
+    });
+  }
+
   sendTableList(migrationProcess: IMigrationProcess): Observable<EntityResponseType> {
     return this.http.post<IMigrationProcess>(`${this.resourceUrl}/sendTableListforHistProcess`, migrationProcess, { observe: 'response' });
   }
