@@ -77,7 +77,7 @@ public class ListTables {
 			} else if (system.equals("SQLServer")) {
 				rs1 = stmt0.executeQuery(
 						"SELECT KU.table_name as TABLE_NAME,string_agg(column_name,'-') as PrimaryKey FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KU ON TC.CONSTRAINT_TYPE = 'PRIMARY KEY' AND TC.CONSTRAINT_NAME = KU.CONSTRAINT_NAME AND TC.TABLE_CATALOG = '"
-								+ conn_obj.get("database").getAsString() + "'  GROUP BY KU.TABLE_NAME;");
+								+ conn_obj.get("database").getAsString() + "' AND TC.TABLE_SCHEMA ='"+ conn_obj.get("schema").getAsString() +"'  GROUP BY KU.TABLE_NAME;");
 			} else if (system.equals("Netezza")) {
 				rs1 = stmt0.executeQuery(
 						"SELECT DISTINCT TableName as TABLE_NAME,'NoPrimaryKey' as PrimaryKey FROM DBC.ColumnsV WHERE DatabaseName = '"
