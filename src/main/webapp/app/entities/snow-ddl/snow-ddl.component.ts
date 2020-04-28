@@ -123,7 +123,6 @@ export class SnowDDLComponent implements OnInit, OnDestroy {
     snowDDL.runBy = this.currentAccount.login;
     this.snowDDLService.convertDDL(snowDDL).subscribe(response => {
       // this.tables = this.tablesCopy = response.body;
-      alert('Sent DB name to back-end');
     });
     this.viewProcessStatus(snowDDL.id);
   }
