@@ -54,13 +54,15 @@ public class TestConnection {
                 System.out.println("osql loop");
                 // Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                 Connection con1;
-                if (connectionDTO.getId() != null) {
-                    con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
-                            decrypt(connectionDTO.getPassword()));
-                } else {
-                    con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
+                // if (connectionDTO.getId() != null) {
+                //     con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
+                //             decrypt(connectionDTO.getPassword()));
+                // } else {
+                //     con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
+                //             connectionDTO.getPassword());
+                // }
+                con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
                             connectionDTO.getPassword());
-                }
                 result = con1.isValid(10);
                 System.out.println("Inside try before connection");
             }
@@ -78,13 +80,15 @@ public class TestConnection {
         boolean result = false;
         try {
             Connection con1;
-            if (connectionDTO.getId() != null) {
-                con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
-                        decrypt(connectionDTO.getPassword()));
-            } else {
-                con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
+            // if (connectionDTO.getId() != null) {
+            //     con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
+            //             decrypt(connectionDTO.getPassword()));
+            // } else {
+            //     con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
+            //             connectionDTO.getPassword());
+            // }
+            con1 = DriverManager.getConnection(connectionDTO.getUrl(), connectionDTO.getUsername(),
                         connectionDTO.getPassword());
-            }
             // Connection con1 = DriverManager.getConnection(connectionDTO.getUrl(),
             // connectionDTO.getUsername(),
             // connectionDTO.getPassword());

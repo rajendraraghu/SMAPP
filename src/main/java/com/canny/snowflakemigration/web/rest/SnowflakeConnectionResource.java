@@ -6,6 +6,7 @@ import com.canny.snowflakemigration.service.dto.SnowflakeConnectionDTO;
 import com.canny.snowflakemigration.service.dto.SnowflakeConnectionCriteria;
 import com.canny.snowflakemigration.service.SnowflakeConnectionQueryService;
 import static com.canny.snowflakemigration.service.util.PasswordProtector.encrypt;
+import static com.canny.snowflakemigration.service.util.PasswordProtector.decrypt;
 import static com.canny.snowflakemigration.service.util.TestConnection.testConnectionDest;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -156,10 +157,14 @@ public class SnowflakeConnectionResource {
     public @ResponseBody boolean TestingConnection(@RequestBody SnowflakeConnectionDTO connectionDTO)
             throws SQLException, ClassNotFoundException {
         boolean result;
-        if (!(connectionDTO.getPassword()
-                .equals(snowflakeConnectionService.findOne(connectionDTO.getId()).get().getPassword()))) {
-            connectionDTO.setPassword(encrypt(connectionDTO.getPassword()));
-            result = testConnectionDest(connectionDTO);
+        if (connectionDTO.getId() != null) {
+            if (connectionDTO.getPassword()
+                    .equals(snowflakeConnectionService.findOne(connectionDTO.getId()).get().getPassword())) {
+                connectionDTO.setPassword(decrypt(connectionDTO.getPassword()));
+                result = testConnectionDest(connectionDTO);
+            } else {
+                result = testConnectionDest(connectionDTO);
+            }
         } else {
             result = testConnectionDest(connectionDTO);
         }

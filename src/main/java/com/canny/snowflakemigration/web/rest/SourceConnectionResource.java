@@ -6,6 +6,7 @@ import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
 import com.canny.snowflakemigration.service.dto.SourceConnectionCriteria;
 import com.canny.snowflakemigration.service.SourceConnectionQueryService;
 import static com.canny.snowflakemigration.service.util.PasswordProtector.encrypt;
+import static com.canny.snowflakemigration.service.util.PasswordProtector.decrypt;
 import static com.canny.snowflakemigration.service.util.TestConnection.testConnectionSource;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -162,13 +163,18 @@ public class SourceConnectionResource {
     public @ResponseBody boolean TestingConnection(@RequestBody SourceConnectionDTO connectionDTO)
             throws SQLException, ClassNotFoundException {
         boolean result;
-        if (!(connectionDTO.getPassword()
-                .equals(sourceConnectionService.findOne(connectionDTO.getId()).get().getPassword()))) {
-            connectionDTO.setPassword(encrypt(connectionDTO.getPassword()));
-            result = testConnectionSource(connectionDTO);
+        if (connectionDTO.getId() != null) {
+            if (connectionDTO.getPassword()
+                    .equals(sourceConnectionService.findOne(connectionDTO.getId()).get().getPassword())) {
+                connectionDTO.setPassword(decrypt(connectionDTO.getPassword()));
+                result = testConnectionSource(connectionDTO);
+            } else {
+                result = testConnectionSource(connectionDTO);
+            }
         } else {
             result = testConnectionSource(connectionDTO);
         }
         return result;
     }
+
 }
