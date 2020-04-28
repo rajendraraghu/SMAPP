@@ -18,19 +18,19 @@ default datablocksize
 after journal
 ;
 idx_
-format
-index
-journal
+ format
+ index
+ journal
 mergeblockratio
 datablocksize
 freespace = <<integer>>
 freespace = <<integer>> percent
-checksum
-freespace
-blockcompression
-partition
-with
-check
+ checksum
+ freespace
+ blockcompression
+ partition
+ with
+ check
 period for
 checksum = <<integrity check>>
 default mergeblockratio
@@ -40,15 +40,13 @@ no mergeblockratio
 blockcompression = <<compression option>>
 replication group <<replication grp nme>>
 upper case
-uc
+ uc
 casespecific
 not casespecific
-cs
+ cs
 not cs
-format
-title
-character set
+ title
 no compress
-compress
+ compress
 compress using
-anything
+ anything
