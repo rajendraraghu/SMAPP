@@ -60,7 +60,7 @@ public class MigrationProcessStatusDTO implements Serializable {
         return runBy;
     }
 
-    public void setRunby(String runBy) {
+    public void setRunBy(String runBy) {
         this.runBy = runBy;
     }
 

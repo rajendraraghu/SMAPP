@@ -52,6 +52,7 @@ public class HistorySendTableList {
 		FileHandler fh;
         String system = processDTO.getSourceSystem();
 		String schema = processDTO.getSourceConnectionSchema();
+		String runBy = processDTO.getRunBy();
 		String logPath = "logs/SnowHistory";
 		String tmpPath = "tmp/CSV";
 		File logDir=new File(logPath);
@@ -102,7 +103,7 @@ public class HistorySendTableList {
 		    snowHistoryProcessStatusDTO.setStartTime(Instant.now());
 		    snowHistoryProcessStatusDTO.setProcessId(processDTO.getId());
 		    snowHistoryProcessStatusDTO.setName(processDTO.getName());
-		    snowHistoryProcessStatusDTO.setRunBy(processDTO.getRunBy());
+		    snowHistoryProcessStatusDTO.setRunBy(runBy);
 		     //migrationProcessStatusDTO.setRunby(processDTO.getRunBy());
 		    snowHistoryProcessStatusDTO.setTotalTables((long)tablecount);
 		    snowHistoryProcessStatusDTO.setStatus("In Progress");
@@ -158,7 +159,7 @@ public class HistorySendTableList {
 					}					
 				  }
 		       	logger.info("bulk process completed for all the tables");
-				write.setRunBy("admin");
+				// write.setRunBy("admin");
 		       	write.setStatus("SUCCESS");
 				write.setSuccessTables(success_count);
 				write.setErrorTables(failure_count);
@@ -170,7 +171,7 @@ public class HistorySendTableList {
 		}
 			catch(Exception e)
 		{
-     		write.setRunBy("admin");
+     		// write.setRunBy("admin");
 			write.setSuccessTables(success_count);
 		    write.setErrorTables(failure_count);
 			write.setStatus("FAILURE --"+e.toString());

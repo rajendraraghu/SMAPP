@@ -1,6 +1,6 @@
 package com.canny.snowflakemigration.service.util;
 
-
+//import java.awt.List;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,14 +20,16 @@ import java.util.logging.SimpleFormatter;
 import com.canny.snowflakemigration.service.dto.MigrationProcessDTO;
 import com.canny.snowflakemigration.service.dto.MigrationProcessStatusDTO;
 import com.canny.snowflakemigration.service.dto.MigrationProcessJobStatusDTO;
+import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
 import com.canny.snowflakemigration.service.MigrationProcessJobStatusService;
 import com.canny.snowflakemigration.service.MigrationProcessService;
 import com.canny.snowflakemigration.service.MigrationProcessStatusService;
+import static com.canny.snowflakemigration.service.util.CreateTableDDL.convertToSnowDDL;
 import com.opencsv.CSVWriter;
+import liquibase.datatype.core.DateTimeType;										
+import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import com.canny.snowflakemigration.service.dto.SourceConnectionDTO;
-import static com.canny.snowflakemigration.service.util.CreateTableDDL.convertToSnowDDL;
 import com.google.gson.JsonObject;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -42,10 +44,7 @@ import java.io.File;
 import java.io.*;
 import com.opencsv.*;
 import java.util.Iterator;
-import liquibase.datatype.core.DateTimeType;										
-import java.util.List;
 import static com.canny.snowflakemigration.service.util.PasswordProtector.decrypt;
-
 
 
 public class SendTableList  {
@@ -73,6 +72,7 @@ public class SendTableList  {
 		String[] pkcdc = null;												 
 		String[] pkbulk = null;
 		String[] cdcColumn = null;
+		String runBy = write2.getRunBy();
 		String schema = new String();
 		String lastruntime = new String();
 		String logPath = "logs/SnowAcquisitionHub";
@@ -211,8 +211,8 @@ public class SendTableList  {
 		     migrationProcessStatusDTO.setJobStartTime(Instant.now());
 		     migrationProcessStatusDTO.setProcessId(write2.getId());
 		     migrationProcessStatusDTO.setName(write2.getName());
-		     migrationProcessStatusDTO.setRunby("admin");
-		     //migrationProcessStatusDTO.setRunby(write2.getRunBy());
+		     //migrationProcessStatusDTO.setRunby("admin");
+		     migrationProcessStatusDTO.setRunBy(runBy);
 		     migrationProcessStatusDTO.setTableCount((long)tablecount);
 		     migrationProcessStatusDTO.setJobStatus("In Progress");
 		     migrationProcessStatusDTO.setSuccessCount((long)0);
@@ -327,7 +327,7 @@ public class SendTableList  {
 				}
 				 }
 		       	write.setJobStatus("SUCCESS");
-				write.setRunby("admin");
+				// write.setRunby("admin");
 				status.addProperty("status","SUCCESS");
 		       	// status = "SUCCESS";
 		        write.setJobEndTime(Instant.now());	      
@@ -340,7 +340,7 @@ public class SendTableList  {
 			catch(Exception e)
 		{
 				logger.info("catch exception:"+e);
-				write.setRunby("admin");
+				// write.setRunby("admin");
 				write.setJobStatus("FAILURE --"+e.toString());
 			    write.setJobEndTime(Instant.now());
 				write = migrationProcessStatusService.save(write);
@@ -463,7 +463,7 @@ public class SendTableList  {
 	throws SQLException, IOException{
 	
 	String query = new String();	
-	query = "select * from " +tableName;
+	query = schema != "" ? "select * from " + schema + "." + tableName : "select * from " + tableName;
 	logger.info("query is :"+query);
 	String srcCols = stageLoad(query,con1,con2,tableName,system,dbname,schema);
 	histLoad(con2,tableName,"BULK", srcCols,jobid,tableLoadid,processid,primarykey,migrationProcessJobStatusService);	
@@ -526,7 +526,7 @@ public class SendTableList  {
 		histLoad(con2,tableName,"CDC", srcCols,jobid,tableLoadid,processid,primarykey,migrationProcessJobStatusService);		
 		}
 		else {
-			query = "select * from " +tableName+ " where "+c2+" >'" + lastruntime+"';";			
+			query = schema != "" ? "select * from "+ schema + "." + tableName + " where "+c2+" >'" + lastruntime+"';" : "select * from " +tableName+ " where "+c2+" >'" + lastruntime+"';";			
 			String srcCols =stageLoad(query,con1,con2,tableName,system,dbname,schema);
 			histLoad(con2,tableName,"CDC", srcCols,jobid,tableLoadid,processid,primarykey,migrationProcessJobStatusService);	
 		}
@@ -717,7 +717,11 @@ public class SendTableList  {
 			ddl6 = ddl6.replace("datetime()","datetime");
 			ddl6 = ddl6.replace("money()","decimal(38,2)");	
 			ddl6 = ddl6.replace("decimal()","decimal");
-			ddl6 = ddl6.replace("bit()","boolean");		
+			ddl6 = ddl6.replace("bit()","boolean");
+			ddl6 = ddl6.replace("uniqueidentifier()","nvarchar(200)");
+			ddl6 = ddl6.replace("geography(-1)","nvarchar(200)");
+			ddl6 = ddl6.replace("xml(-1)","TEXT");
+			ddl6 = ddl6.replace("time()","time");
 			logger.info("ddl6:"+ddl6);
 			//ddl6 = ddl6.concat("\n");
 			//logger.info("ddl6:"+ddl6);
