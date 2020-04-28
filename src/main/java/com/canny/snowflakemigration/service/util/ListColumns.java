@@ -165,7 +165,7 @@ public class ListColumns {
         JsonObject jsonResponse = new JsonObject();
         String system = conn_obj.get("system").getAsString();
         Properties properties0 = new Properties();
-        properties0.put("user", conn_obj.get("user").getAsString());
+        properties0.put("user", conn_obj.get("username").getAsString());
         properties0.put("password", decrypt(conn_obj.get("password").getAsString()));
         properties0.put("db", conn_obj.get("database").getAsString());
         Connection con = DriverManager.getConnection(conn_obj.get("url").getAsString(), properties0);
